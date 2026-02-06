@@ -1,0 +1,71 @@
+# Project Rules
+
+You are helping customize a KnowledgeOwl knowledge base. Follow these rules for every session.
+
+## At the Start of Each Session
+
+1. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
+2. Review any relevant reference materials in the `Reference/` folder
+3. Ask what the user wants to work on before making changes
+
+## Version Folders
+
+- **Format:** `YYYY.MM.DD-v#` (e.g., `2026.01.21-v1`, `2026.01.22-v3`)
+- **Date:** Use today's date
+- **Version number:** Always increment from the last version in the project — never reset, even across days
+- **Create a new version folder** for: feature additions, design changes, significant refactoring, multi-file updates, complex bug fixes
+- **Do not create a new version** for: typo fixes, single-line corrections, comment updates, minor text changes
+- **Process:** Copy the entire previous version folder, then make changes only in the new copy
+
+## Never Modify
+
+- Files in any previous version folder
+- Files in the `YYYY.MM.DD-no-changes` backup folder — this is the permanent baseline and emergency rollback point
+
+## CHANGES File
+
+Every new version folder must include a CHANGES file:
+- **First version:** `CHANGES_FROM_no-changes.md`
+- **Subsequent versions:** `CHANGES_FROM_v[previous].md` (e.g., `CHANGES_FROM_v2.md` in the v3 folder)
+
+Copy the template from the no-changes folder and update it. Required sections:
+- Summary of what changed and why
+- Which files were modified (with details)
+- Color palette (if colors were used)
+- What the user will see after deployment
+- Manual steps needed in KnowledgeOwl (if any)
+- Files to deploy (see below)
+
+## Deployment Instructions
+
+Always include explicit deployment instructions in the CHANGES file. Never assume the user knows which files to deploy. For each modified file, specify:
+
+```
+### [Section Name] — COPY THIS FILE
+**Source**: `/YYYY.MM.DD-v#/[filename]`
+**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > [exact location]
+**Changes**: [brief description]
+```
+
+End deployment instructions with: "Deploy to sandbox first. Once verified, deploy to production."
+
+## KnowledgeOwl File-to-Section Mapping
+
+| File | KnowledgeOwl Location |
+|------|-----------------------|
+| `custom-css.css` | Customize > Style (HTML & CSS) > Custom CSS |
+| `custom-head.html` | Customize > Style (HTML & CSS) > Custom HEAD |
+| `custom-html-1-body.html` | Customize > Style (HTML & CSS) > Custom HTML > Body |
+| `custom-html-2-top-navigation.html` | Customize > Style (HTML & CSS) > Custom HTML > Top Navigation |
+| `custom-html-3-article.html` | Customize > Style (HTML & CSS) > Custom HTML > Article |
+| `custom-html-4-article-version.html` | Customize > Style (HTML & CSS) > Custom HTML > Article Version |
+| `custom-html-5-homepage.html` | Customize > Style (HTML & CSS) > Custom HTML > Homepage |
+| `custom-html-6-login.html` | Customize > Style (HTML & CSS) > Custom HTML > Login |
+| `custom-html-7-manage-reader-subs.html` | Customize > Style (HTML & CSS) > Custom HTML > Manage Reader Subscriptions |
+| `custom-html-8-404-page.html` | Customize > Style (HTML & CSS) > Custom HTML > 404 Page |
+| `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
+| `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
+
+## For Full Details
+
+See `02-VERSION_CONTROL_PROCESS.md` for the complete version control process, examples, and rollback procedures.
