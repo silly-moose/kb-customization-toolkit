@@ -147,10 +147,13 @@ Your project should look like this:
 
 ## 6. Ready to Start
 
-Once setup is complete:
-1. Open Claude Code in the customer folder — it automatically reads `CLAUDE.md` and picks up the version control rules
-2. Tell Claude to review the no-changes folder and any relevant reference materials
-3. Describe the changes needed — Claude will create versioned folders (e.g., `2026.01.28-v1`) as it works
+Once setup is complete, open Claude Code in the customer folder — it automatically reads `CLAUDE.md` and picks up the version control rules. Then paste this prompt to kick off the first session:
+
+```
+Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
+```
+
+Claude will review the code, ask whether you're deploying to a sandbox or live KB, and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works.
 
 For guidance on starting subsequent sessions, see "Starting a New Claude Code Session" in `00-README.md`.
 

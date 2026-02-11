@@ -38,14 +38,19 @@ For the full walkthrough — including the file-to-KnowledgeOwl mapping table, t
 
 ## Starting a New Claude Code Session
 
-Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md`** at the start of every session. This file contains all the version control rules, so Claude picks up the conventions without you having to tell it.
+Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md`** at the start of every session. This file contains all the version control rules, so Claude picks up the conventions without you having to tell it. Claude will also ask you whether you're deploying to a sandbox or live KB, and what you want to work on.
 
-At the start of each new session, you just need to tell Claude to:
+All you need to do is paste the appropriate prompt to kick things off:
 
-1. Review the latest version folder (or the no-changes folder if this is the first session)
-2. Review any reference materials in the `Reference/` folder relevant to the current task
+**First session on a new project** (only the `no-changes` folder exists):
+```
+Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
+```
 
-Then describe what you need to work on.
+**Returning to an existing project** (version folders already exist):
+```
+Review the latest version folder and the reference materials in Reference/. Then let me know when you're ready to start.
+```
 
 ---
 
