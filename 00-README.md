@@ -95,6 +95,7 @@ Use `03-PROJECT_HANDOFF_CHECKLIST.md` to make sure nothing is missed. It covers 
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-PROJECT_HANDOFF_CHECKLIST.md` | Checklist for deployment and project completion |
 | `CLAUDE.md` | Auto-read by Claude Code at session start — contains the version control rules Claude follows |
+| `Reference/` | KnowledgeOwl CSS quirks doc and space for customer-specific reference materials (mockups, assets, etc.) |
 | `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
 | `.claude/` | Claude Code project settings (auto-generated, no need to edit) |
 

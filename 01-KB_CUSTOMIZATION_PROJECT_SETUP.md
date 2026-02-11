@@ -120,6 +120,7 @@ Your project should look like this:
     ├── CLAUDE.md                               (auto-read by Claude Code each session)
     ├── .claude/                                (Claude Code settings - no need to edit)
     ├── Reference/
+    │   ├── knowledgeowl-css-quirks.md   (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
     │   ├── (mockups, Asana exports, assets)
     │   └── marketing-site-example.com/  (optional - see section 4)
     │       ├── (downloaded site files)

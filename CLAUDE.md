@@ -5,7 +5,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 ## At the Start of Each Session
 
 1. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
-2. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites)
+2. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
 3. Ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** — this determines the deployment instructions you write in CHANGES files
 4. Ask what the user wants to work on before making changes
 
@@ -58,6 +58,8 @@ Always include explicit deployment instructions in the CHANGES file. Never assum
 End deployment instructions based on the deployment target established at the start of the session:
 - **If sandbox:** "Deploy to sandbox first. Once verified, deploy to production."
 - **If live KB:** "Deploy directly to the live KB. Verify changes immediately after deployment."
+
+After completing changes, always summarize in the conversation which files were modified and where to deploy them in KnowledgeOwl. Don't rely on the user reading the CHANGES file.
 
 ## KnowledgeOwl File-to-Section Mapping
 
