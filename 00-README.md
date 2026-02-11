@@ -129,7 +129,7 @@ Or if you prefer to run the command yourself:
 git clone https://github.com/spongetimblin/TEMPLATE-new-project.git
 ```
 
-**Before starting a new project:**
+**Before starting a new project** *(assumes you've already cloned the repo in the one-time setup above)*:
 
 Paste this prompt into Claude Code to get the latest template updates:
 ```
