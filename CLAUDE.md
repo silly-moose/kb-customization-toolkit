@@ -6,7 +6,8 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 
 1. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
 2. Review any relevant reference materials in the `Reference/` folder
-3. Ask what the user wants to work on before making changes
+3. Ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** — this determines the deployment instructions you write in CHANGES files
+4. Ask what the user wants to work on before making changes
 
 ## Version Folders
 
@@ -47,7 +48,9 @@ Always include explicit deployment instructions in the CHANGES file. Never assum
 **Changes**: [brief description]
 ```
 
-End deployment instructions with: "Deploy to sandbox first. Once verified, deploy to production."
+End deployment instructions based on the deployment target established at the start of the session:
+- **If sandbox:** "Deploy to sandbox first. Once verified, deploy to production."
+- **If live KB:** "Deploy directly to the live KB. Verify changes immediately after deployment."
 
 ## KnowledgeOwl File-to-Section Mapping
 

@@ -32,7 +32,7 @@ For the full walkthrough — including the file-to-KnowledgeOwl mapping table, t
 3. **Describe the changes you need** — Claude writes the CSS/HTML for you
 4. **Claude creates versioned folders** as it works. Each set of substantial changes gets a new folder like `2026.02.06-v1`, `2026.02.06-v2`, etc., copied from the previous version
 5. **Each version folder includes a `CHANGES_FROM_*.md`** file documenting what changed, which files were modified, and deployment instructions
-6. **You deploy** by copying the updated file contents into the corresponding KnowledgeOwl fields — first to the sandbox for testing, then to production once approved
+6. **You deploy** by copying the updated file contents into the corresponding KnowledgeOwl fields — either to a sandbox for testing first, or directly to the live KB
 
 ---
 
@@ -68,8 +68,8 @@ Claude's `CHANGES_FROM_*.md` notes tell you exactly what to do, but the pattern 
 1. Open the file from the latest version folder
 2. Copy its contents
 3. Paste into the matching KnowledgeOwl field (Customize > Style (HTML & CSS) > the relevant section)
-4. **Test in the sandbox first** — verify the changes look and work correctly
-5. Once the customer approves, deploy to production
+4. Verify the changes look and work correctly
+5. If deploying to a sandbox, move changes to production once the customer approves
 
 ---
 

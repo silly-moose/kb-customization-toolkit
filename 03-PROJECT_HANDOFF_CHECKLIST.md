@@ -4,12 +4,21 @@ Use this checklist when completing a KnowledgeOwl customization project.
 
 ---
 
+## Deployment Target
+
+Check which deployment workflow applies to this project:
+
+- [ ] **Sandbox → Production** — changes are tested in a sandbox first, then deployed to the live KB after approval
+- [ ] **Live KB** — changes are deployed directly to the live KB
+
+---
+
 ## Pre-Deployment Verification
 
-- [ ] All CSS changes tested in sandbox
-- [ ] All HTML changes tested in sandbox
-- [ ] Screenshots captured of sandbox showing completed work
-- [ ] Customer has approved changes in sandbox
+- [ ] All CSS changes tested and verified
+- [ ] All HTML changes tested and verified
+- [ ] Screenshots captured showing completed work
+- [ ] Customer has approved changes
 - [ ] CHANGES file is up to date in the final version folder
 
 ---
@@ -17,14 +26,13 @@ Use this checklist when completing a KnowledgeOwl customization project.
 ## Rollback Readiness
 
 - [ ] The `no-changes` backup folder is intact and unmodified
-- [ ] The previous version folder is intact (in case rollback is needed after production deployment)
+- [ ] The previous version folder is intact (in case rollback is needed)
 
 ---
 
-## Deployment to Production
+## Code Deployment
 
-### Code Deployment
-- [ ] Custom CSS deployed to production KB
+- [ ] Custom CSS deployed
 - [ ] Custom HEAD deployed (if modified)
 - [ ] Custom HTML sections deployed (list which ones):
   - [ ] Body
@@ -38,6 +46,12 @@ Use this checklist when completing a KnowledgeOwl customization project.
   - [ ] Restricted Access Page
   - [ ] Right Column
 
+### If Sandbox → Production
+
+- [ ] All changes verified in sandbox
+- [ ] Changes deployed from sandbox to production KB
+- [ ] Production KB tested and verified working
+
 ### Assets & Manual Updates
 - [ ] Images/icons uploaded to KnowledgeOwl file library
 - [ ] Category icons updated (if applicable)
@@ -50,8 +64,8 @@ Use this checklist when completing a KnowledgeOwl customization project.
 
 ## Post-Deployment
 
-- [ ] Production KB tested and verified working
-- [ ] Screenshots captured of production showing completed work
+- [ ] KB tested and verified working after deployment
+- [ ] Screenshots captured showing completed work
 - [ ] Customer notified that changes are live
 - [ ] Any follow-up tasks documented or handed off
 

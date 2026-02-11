@@ -77,7 +77,7 @@
 
 ## Files to Deploy
 
-<!-- Deploy to sandbox first. Once verified and approved, deploy to production. -->
+<!-- Deploy to the target KB (sandbox or live). Verify changes after deployment. -->
 
 ### Custom CSS
 **Source**: `/YYYY.MM.DD-v#/custom-css.css`

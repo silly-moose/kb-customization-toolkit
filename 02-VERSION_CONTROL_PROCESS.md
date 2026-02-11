@@ -82,7 +82,7 @@ In the CHANGES file, always specify:
 - Exactly where to deploy them in KnowledgeOwl
 - What changed in this version
 - Expected results after deployment
-- Whether changes should be tested in the **sandbox** before deploying to production
+- Where to deploy (sandbox or live KB, based on the deployment target for this project)
 
 **Example format:**
 ```markdown
@@ -192,7 +192,7 @@ Project/
 3. Make all changes in the new version folder only
 4. Create a properly named `CHANGES_FROM_*.md` documenting all updates
 5. Provide clear deployment instructions specifying exact files and KnowledgeOwl destinations
-6. Note that changes should be tested in the sandbox before production deployment
+6. Tailor deployment instructions to the deployment target (sandbox or live KB)
 
 ### Claude Should NOT:
 
@@ -242,11 +242,12 @@ Project/
 **Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom CSS
 **Changes**: Added newsletter signup form styling
 
-Deploy to sandbox first. Once verified, deploy to production.
+Deploy to the target KB (sandbox or live). Verify changes after deployment.
 ```
 
 **Step 6: User Deploys**
-- Deploys to sandbox and tests changes
+- Deploys to the target KB (sandbox or live)
+- Verifies changes look and work correctly
 - Gets customer approval
-- Deploys to production
+- If using a sandbox, deploys to production after approval
 - If issues arise, rolls back to v2
