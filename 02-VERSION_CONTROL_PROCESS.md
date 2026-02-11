@@ -143,6 +143,42 @@ The broken version remains preserved for debugging.
 
 ---
 
+## Returning to an Existing Project After a Gap
+
+When a customer comes back weeks or months later with new requests, continue working in their existing project folder — do not create a new one. The version number picks up where it left off.
+
+**Before starting new work, always create a fresh snapshot of the live KB code.** The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
+
+### Steps
+
+1. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section)
+2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date) and populate it with the fresh code
+3. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
+4. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+
+### Example
+
+```
+Project/
+├── 2026.01.20-no-changes/        # Original permanent backup (never modify)
+├── 2026.01.21-v1/
+├── 2026.01.21-v2/
+├── 2026.01.28-v3/
+├── 2026.01.28-v4/                # Last version from January work
+├── 2026.03.15-current-state/     # Fresh snapshot of live KB before resuming
+├── 2026.03.15-v5/                # New work resumes here (copied from current-state)
+│   └── CHANGES_FROM_v4.md
+└── 2026.03.16-v6/
+    └── CHANGES_FROM_v5.md
+```
+
+**Key points:**
+- The `no-changes` folder remains untouched — it's still the original baseline
+- Always create a `current-state` snapshot when returning to a project, even if you believe nothing has changed
+- Version numbering continues incrementing as usual
+
+---
+
 ## When Working with Claude
 
 ### Tell Claude:
