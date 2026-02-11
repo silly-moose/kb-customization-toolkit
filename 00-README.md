@@ -49,7 +49,7 @@ Review the no-changes folder and the reference materials in Reference/. Then let
 
 **Returning to an existing project** (version folders already exist):
 
-Before starting a new session, always create a fresh `YYYY.MM.DD-current-state` snapshot of the live KB code first (see "Returning to an Existing Project After a Gap" in `02-VERSION_CONTROL_PROCESS.md`). Then:
+Before starting a new session, copy the latest `CLAUDE.md` and other project docs from `TEMPLATE-new-project` into the customer folder, then create a fresh `YYYY.MM.DD-current-state` snapshot of the live KB code (see "Returning to an Existing Project After a Gap" in `02-VERSION_CONTROL_PROCESS.md` for full steps). Then:
 ```
 Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
