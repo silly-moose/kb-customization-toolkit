@@ -133,7 +133,7 @@ git clone https://github.com/spongetimblin/TEMPLATE-new-project.git
 
 Paste this prompt into Claude Code to get the latest template updates:
 ```
-Pull the latest updates from the TEMPLATE-new-project repo.
+Pull the latest updates from the TEMPLATE-new-project repo. It's in [path to your local copy, e.g., /Users/myname/Documents/TEMPLATE-new-project].
 ```
 
 Or run the command yourself:
