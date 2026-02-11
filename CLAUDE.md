@@ -5,7 +5,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 ## At the Start of Each Session
 
 1. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
-2. Review any relevant reference materials in the `Reference/` folder
+2. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites)
 3. Ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** — this determines the deployment instructions you write in CHANGES files
 4. Ask what the user wants to work on before making changes
 
@@ -15,13 +15,18 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 - **Date:** Use today's date
 - **Version number:** Always increment from the last version in the project — never reset, even across days
 - **Create a new version folder** for: feature additions, design changes, significant refactoring, multi-file updates, complex bug fixes
-- **Do not create a new version** for: typo fixes, single-line corrections, comment updates, minor text changes
+- **Do not create a new version** for: typo fixes, single-line corrections, comment updates, minor text changes — make these edits directly in the latest (most recent) version folder
 - **Process:** Copy the entire previous version folder, then make changes only in the new copy
 
 ## Never Modify
 
 - Files in any previous version folder
 - Files in the `YYYY.MM.DD-no-changes` backup folder — this is the permanent baseline and emergency rollback point
+- Files in any `YYYY.MM.DD-current-state` folder — these are snapshots of the live KB taken when returning to a project after a gap
+
+## Current-State Folders
+
+A `YYYY.MM.DD-current-state` folder is a snapshot of the live KB code, created when resuming work on a project after weeks or months. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
 
 ## CHANGES File
 
@@ -29,13 +34,15 @@ Every new version folder must include a CHANGES file:
 - **First version:** `CHANGES_FROM_no-changes.md`
 - **Subsequent versions:** `CHANGES_FROM_v[previous].md` (e.g., `CHANGES_FROM_v2.md` in the v3 folder)
 
-Copy the template from the no-changes folder and update it. Required sections:
+Copy the template from the no-changes folder and update it. Include these sections:
 - Summary of what changed and why
 - Which files were modified (with details)
-- Color palette (if colors were used)
+- Color palette (only if new colors were introduced)
 - What the user will see after deployment
-- Manual steps needed in KnowledgeOwl (if any)
+- Manual steps needed in KnowledgeOwl (only if applicable)
 - Files to deploy (see below)
+
+Delete any sections that don't apply to the current version. Only include files that were actually modified — do not list all 12 files every time.
 
 ## Deployment Instructions
 

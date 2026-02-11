@@ -17,45 +17,11 @@
 <!-- Brief description of what was changed and why -->
 
 ## Files Modified
-
-### custom-css.css
-<!-- Document CSS changes here, or delete this section if not modified -->
-
-### custom-head.html
-<!-- Document Custom HEAD changes here, or delete this section if not modified -->
-
-### custom-html-1-body.html
-<!-- Document Body changes here, or delete this section if not modified -->
-
-### custom-html-2-top-navigation.html
-<!-- Document Top Navigation changes here, or delete this section if not modified -->
-
-### custom-html-3-article.html
-<!-- Document Article changes here, or delete this section if not modified -->
-
-### custom-html-4-article-version.html
-<!-- Document Article Version changes here, or delete this section if not modified -->
-
-### custom-html-5-homepage.html
-<!-- Document Homepage changes here, or delete this section if not modified -->
-
-### custom-html-6-login.html
-<!-- Document Login changes here, or delete this section if not modified -->
-
-### custom-html-7-manage-reader-subs.html
-<!-- Document Manage Reader Subscriptions changes here, or delete this section if not modified -->
-
-### custom-html-8-404-page.html
-<!-- Document 404 Page changes here, or delete this section if not modified -->
-
-### custom-html-9-restricted-access-page.html
-<!-- Document Restricted Access Page changes here, or delete this section if not modified -->
-
-### custom-html-10-right-column.html
-<!-- Document Right Column changes here, or delete this section if not modified -->
+<!-- List only the files that were actually modified. For each file, describe what changed.
+     See CLAUDE.md for the full file-to-KnowledgeOwl mapping. -->
 
 ## Color Palette
-<!-- Document any colors used in this project -->
+<!-- Document any NEW colors introduced in this version. Delete this section if no new colors were added. -->
 
 | Element | Hex Code |
 |---------|----------|
@@ -71,72 +37,21 @@
      - Update category descriptions
      - Configure redirect rules
      - Update favicon
+     Delete this section if there are no manual steps.
 -->
 
 ---
 
 ## Files to Deploy
 
-<!-- Deploy to the target KB (sandbox or live). Verify changes after deployment. -->
+<!-- Deploy to the target KB (sandbox or live). Verify changes after deployment.
+     For each modified file, add a section using this format:
 
-### Custom CSS
-**Source**: `/YYYY.MM.DD-v#/custom-css.css`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom CSS
-**Changes**: <!-- Brief description -->
+     ### [Section Name] — COPY THIS FILE
+     **Source**: `/YYYY.MM.DD-v#/[filename]`
+     **Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > [exact location]
+     **Changes**: [brief description]
 
-### Custom HEAD (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-head.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HEAD
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Body (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-1-body.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Body
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Top Navigation (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-2-top-navigation.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Top Navigation
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Article (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-3-article.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Article
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Article Version (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-4-article-version.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Article Version
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Homepage (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-5-homepage.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Homepage
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Login (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-6-login.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Login
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Manage Reader Subscriptions (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-7-manage-reader-subs.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Manage Reader Subscriptions
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > 404 Page (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-8-404-page.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > 404 Page
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Restricted Access Page (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-9-restricted-access-page.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page
-**Changes**: <!-- Brief description -->
-
-### Custom HTML > Right Column (if modified)
-**Source**: `/YYYY.MM.DD-v#/custom-html-10-right-column.html`
-**Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Right Column
-**Changes**: <!-- Brief description -->
-
-<!-- Delete any "Files to Deploy" sections for files that were not modified -->
+     See CLAUDE.md for the full file-to-KnowledgeOwl mapping.
+     Only include sections for files that were actually modified.
+-->

@@ -143,6 +143,12 @@ Your project should look like this:
             └── (current state screenshots)
 ```
 
+**Optional: Protect the backup folder from accidental edits.** After populating the no-changes folder, you can make its files read-only so they can't be accidentally modified:
+```bash
+chmod -R a-w YYYY.MM.DD-no-changes/
+```
+This is not required, but it adds a safety net. If you need to undo it later: `chmod -R u+w YYYY.MM.DD-no-changes/`
+
 ---
 
 ## 6. Ready to Start

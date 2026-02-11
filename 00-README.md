@@ -48,8 +48,10 @@ Review the no-changes folder and the reference materials in Reference/. Then let
 ```
 
 **Returning to an existing project** (version folders already exist):
+
+Before starting a new session, always create a fresh `YYYY.MM.DD-current-state` snapshot of the live KB code first (see "Returning to an Existing Project After a Gap" in `02-VERSION_CONTROL_PROCESS.md`). Then:
 ```
-Review the latest version folder and the reference materials in Reference/. Then let me know when you're ready to start.
+Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
 
 ---
