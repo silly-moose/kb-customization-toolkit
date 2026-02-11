@@ -72,7 +72,7 @@ For full details on when to create new versions and naming rules, see `02-VERSIO
 
 Claude's `CHANGES_FROM_*.md` notes tell you exactly what to do, but the pattern is always:
 
-1. Open the file from the latest version folder
+1. Open the file from the latest version folder in VS Code
 2. Copy its contents
 3. Paste into the matching KnowledgeOwl field (Customize > Style (HTML & CSS) > the relevant section)
 4. Verify the changes look and work correctly
@@ -101,9 +101,54 @@ Use `03-PROJECT_HANDOFF_CHECKLIST.md` to make sure nothing is missed. It covers 
 
 ---
 
+## Prerequisites
+
+Before getting started, make sure you have:
+
+- **Visual Studio Code (VS Code)** — for opening code files and copying updated code into customers' KBs. Download at https://code.visualstudio.com
+- **Claude desktop app** — Claude Code runs inside the desktop app (the web version at claude.ai isn't optimal for this workflow). Download at https://claude.ai/download
+- **Claude Code** — Anthropic's CLI tool for writing and editing code. See your team lead for setup instructions.
+- **Git** — for cloning and updating the template repo. Pre-installed on macOS (verify with `git --version` in Terminal).
+
+---
+
+## Getting the Template
+
+This template lives in a shared GitHub repo: https://github.com/spongetimblin/TEMPLATE-new-project
+
+**First time (one-time setup):**
+
+You don't need to know git commands — just open Claude Code and paste this prompt:
+```
+Check if git is installed on my machine. If it is, clone https://github.com/spongetimblin/TEMPLATE-new-project.git into my current directory.
+```
+Claude will check for git and download the template folder for you.
+
+Or if you prefer to run the command yourself:
+```
+git clone https://github.com/spongetimblin/TEMPLATE-new-project.git
+```
+
+**Before starting a new project:**
+
+Paste this prompt into Claude Code to get the latest template updates:
+```
+Pull the latest updates from the TEMPLATE-new-project repo.
+```
+
+Or run the command yourself:
+```
+cd /path/to/TEMPLATE-new-project
+git pull
+```
+
+This ensures you have the latest version of the process docs and templates before duplicating.
+
+---
+
 ## Git Cheat Sheet
 
-This template lives in a shared GitHub repo. Here's the everyday workflow:
+For Chad (template maintainer) — the commands for updating the template repo:
 
 | What you want to do | Command | What it does |
 |----------------------|---------|--------------|
