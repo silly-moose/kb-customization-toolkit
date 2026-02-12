@@ -1,11 +1,11 @@
 <!-- TEMPLATE INSTRUCTIONS:
      When copying this file into a new version folder:
-     1. Rename the file:
-        - First version: keep as CHANGES_FROM_no-changes.md
-        - Later versions: rename to CHANGES_FROM_v[previous].md (e.g., CHANGES_FROM_v2.md)
-     2. Update the title below to match the actual version
-     3. Fill in the Date and Based On fields
-     4. Fill in each section, deleting any that don't apply
+     1. Rename the file to match the version it's based on:
+        - In v1 folder: keep as CHANGES_FROM_no-changes.md
+        - In v2 folder: rename to CHANGES_FROM_v1.md
+        - In v3 folder: rename to CHANGES_FROM_v2.md (always reference the previous version)
+     2. Update the title, Date, and Based On fields below
+     3. Fill in each section, deleting any that don't apply
 -->
 
 # Changes from YYYY.MM.DD-no-changes
@@ -21,7 +21,7 @@
      See CLAUDE.md for the full file-to-KnowledgeOwl mapping. -->
 
 ## Color Palette
-<!-- Document any NEW colors introduced in this version. Delete this section if no new colors were added. -->
+<!-- Delete this section if no new colors were added. -->
 
 | Element | Hex Code |
 |---------|----------|
@@ -30,22 +30,19 @@
 ## What User Will See After Deployment
 <!-- Bullet points describing visible changes -->
 
-## Next Steps (Manual in KnowledgeOwl)
-<!-- Any manual steps needed after deploying code, for example:
+## Manual Steps in KnowledgeOwl
+<!-- Delete this section if there are no manual steps. Examples:
      - Upload images to KnowledgeOwl file library
-     - Update category icons
-     - Update category descriptions
+     - Update category icons or descriptions
      - Configure redirect rules
      - Update favicon
-     Delete this section if there are no manual steps.
 -->
 
 ---
 
 ## Files to Deploy
 
-<!-- Deploy to the target KB (sandbox or live). Verify changes after deployment.
-     For each modified file, add a section using this format:
+<!-- For each modified file, add a section using this format:
 
      ### [Section Name] — COPY THIS FILE
      **Source**: `/YYYY.MM.DD-v#/[filename]`
@@ -54,4 +51,9 @@
 
      See CLAUDE.md for the full file-to-KnowledgeOwl mapping.
      Only include sections for files that were actually modified.
+-->
+
+<!-- Add deployment target note:
+     - If sandbox: "Deploy to sandbox first. Once verified, deploy to production."
+     - If live KB: "Deploy directly to the live KB. Verify changes immediately after deployment."
 -->

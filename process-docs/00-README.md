@@ -59,6 +59,24 @@ Review the current-state folder and the reference materials in Reference/. Then 
 
 ---
 
+## Resuming After a Session Interruption
+
+Sometimes Claude Code hits an error or context limit mid-task, forcing you to start a new session. When this happens, you need to give Claude enough context to pick up where you left off. Use this prompt template:
+
+```
+My previous Claude Code session was interrupted. Here's where I left off:
+
+- **Working in:** [path to the version folder you were editing, e.g., /Users/myname/Documents/CustomerName/2026.02.12-v7]
+- **Task:** [what you were working on, e.g., "Increase spacing above category titles on the blog-style layout"]
+- **Reference:** [path to any relevant reference files, e.g., mockups or screenshots]
+
+Review the latest version folder and the CHANGES file, then let me know when you're ready to continue.
+```
+
+Fill in the bracketed fields with your specific details. The more context you provide, the faster Claude can get back on track. If you were waiting on something specific (like providing an HTML snapshot), mention that too.
+
+---
+
 ## Version Control at a Glance
 
 - **`YYYY.MM.DD-no-changes`** — The untouched backup of the customer's original code. Never modify this.
@@ -96,7 +114,7 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 | Folder | Purpose |
 |--------|---------|
 | `project-template/` | Duplicate this for each new customer project |
-| `process-docs/` | Reference documentation (never copied into customer folders) |
+| `process-docs/` | Reference documentation — the single source of truth for all process docs. Claude fetches these directly from GitHub, so you never need a local copy. |
 
 **What's in `project-template/`:**
 
@@ -125,13 +143,19 @@ Before getting started, make sure you have:
 - **Visual Studio Code (VS Code)** — for opening code files and copying updated code into customers' KBs. Download at https://code.visualstudio.com
 - **Claude desktop app** — Claude Code runs inside the desktop app (the web version at claude.ai isn't optimal for this workflow). Download at https://claude.ai/download
 - **Claude Code** — Anthropic's CLI tool for writing and editing code. See your team lead for setup instructions.
-- **Git** — for cloning and updating the template repo. Pre-installed on macOS (verify with `git --version` in Terminal). On Windows, download and install from https://git-scm.com/downloads/win — use the default settings during installation.
+- **Git** *(optional but recommended)* — for cloning and updating the project template repo. Not required — you can also download the template manually from GitHub (see "Getting the Project Template" below). Pre-installed on macOS (verify with `git --version` in Terminal). On Windows, download and install from https://git-scm.com/downloads/win — use the default settings during installation.
 
 ---
 
-## Getting the Template
+## Getting the Project Template
 
-This template lives in a shared GitHub repo: https://github.com/spongetimblin/kb-customization-toolkit
+The project template lives in a shared GitHub repo: https://github.com/spongetimblin/kb-customization-toolkit
+
+You need a copy of the `project-template/` folder so you can duplicate it for each new customer. There are two ways to get it: **Git** (recommended) or **manual download**. You don't need the `process-docs/` folder locally — Claude fetches those directly from GitHub whenever you ask about the process.
+
+### Option A: Using Git (recommended)
+
+Git makes it easy to pull the latest template updates before each new project.
 
 **First time (one-time setup):**
 
@@ -139,7 +163,7 @@ You don't need to know git commands — just open Claude Code and paste this pro
 ```
 Check if git is installed on my machine. If it is, clone https://github.com/spongetimblin/kb-customization-toolkit.git into my current directory.
 ```
-Claude will check for git and download the template folder for you.
+Claude will check for git and download the repo for you.
 
 Or if you prefer to run the command yourself:
 ```
@@ -159,7 +183,15 @@ cd /path/to/kb-customization-toolkit
 git pull
 ```
 
-This ensures you have the latest version of the project template before duplicating.
+### Option B: Manual download from GitHub
+
+If you don't have Git installed, you can download the template directly:
+
+1. Go to https://github.com/spongetimblin/kb-customization-toolkit
+2. Click the green **Code** button → **Download ZIP**
+3. Unzip and use the `project-template/` folder inside
+
+**Before starting a new project**, re-download the ZIP to make sure you have the latest template.
 
 ---
 
@@ -187,5 +219,6 @@ You can also just ask Claude Code to "commit and push my changes" and it will ha
 - **Screenshots matter.** Claude can read images, so before/after screenshots help it understand what the KB looks like and what needs to change.
 - **The HTML snapshot gives Claude context** about the full rendered page structure, including elements generated by KnowledgeOwl's templates that aren't visible in the Custom HTML fields alone.
 - **If a customer has no existing custom code**, leave the placeholder comments in the no-changes files as-is. They serve as a record that the fields were empty at project start.
-- **Ask Claude about the process.** Claude can fetch any process doc from the GitHub repo on demand. Just ask things like "what are the steps for returning to a project?" or "show me the handoff checklist."
+- **Ask Claude about the process.** Process docs live in the GitHub repo (the single source of truth) and Claude fetches them directly on demand — no local copy needed. Just ask things like "what are the steps for returning to a project?" or "show me the handoff checklist."
 - **Mac tip: Enable the Finder path bar** (Finder > View > Show Path Bar). This adds a clickable path at the bottom of every Finder window. Right-click any segment to copy the full pathname, then paste it directly into Claude Code — e.g., "Review the files in `/Users/.../Acme/Reference/`". Much faster than typing paths manually.
+- **Work on one request at a time.** Give Claude a single task, confirm the changes are correctly implemented, then move on to the next one. Stacking multiple requests in a single prompt increases the chance of errors or missed details.
