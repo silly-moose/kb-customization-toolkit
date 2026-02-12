@@ -2,7 +2,7 @@
 
 This document is the full reference for the version control process used in KnowledgeOwl customization projects. It includes detailed explanations, examples, and rollback procedures.
 
-**Note:** Claude automatically reads the condensed rules in `CLAUDE.md` at the start of every session. This file is for human reference and for understanding the "why" behind the conventions.
+**Note:** Claude automatically reads `CLAUDE.md` at the start of every session (and auto-updates it from the GitHub repo). This file is for human reference and for understanding the "why" behind the conventions. Claude can fetch this doc on demand if you ask about the version control process.
 
 ---
 
@@ -151,12 +151,13 @@ When a customer comes back weeks or months later with new requests, continue wor
 
 ### Steps
 
-1. **Update the project docs** — copy the latest versions of these files from the `TEMPLATE-new-project` folder into the customer folder, replacing the old copies: `00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, `02-VERSION_CONTROL_PROCESS.md`, `03-PROJECT_HANDOFF_CHECKLIST.md`, `CLAUDE.md`. **Do not overwrite** `.claude/rules/project.md` — that file contains customer-specific settings and should never be replaced.
-2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
-3. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it
-4. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
-5. **Refresh supporting files** — in the `Screenshots/` folder inside the `current-state` folder, remove any screenshots from previous work sessions that are no longer relevant and add fresh screenshots of the KB's current appearance. Similarly, in the `Reference/` folder at the project root, remove outdated materials and add any new reference files relevant to the upcoming work
-6. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
+2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it
+3. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
+4. **Refresh supporting files** — in the `Screenshots/` folder inside the `current-state` folder, remove any screenshots from previous work sessions that are no longer relevant and add fresh screenshots of the KB's current appearance. Similarly, in the `Reference/` folder at the project root, remove outdated materials and add any new reference files relevant to the upcoming work
+5. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+
+**Note:** You no longer need to manually update process docs. Claude auto-updates `CLAUDE.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
 
 ### Example
 

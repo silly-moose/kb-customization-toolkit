@@ -12,22 +12,23 @@ We use Claude Code (Anthropic's CLI tool) to write and iterate on CSS/HTML custo
 
 ## The Quick Setup (Per Customer)
 
-1. **Duplicate** the `TEMPLATE-new-project` folder
+1. **Duplicate** the `project-template/` folder from your local copy of the repo
 2. **Rename** the copy to the customer's name (e.g., `Acme`)
 3. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
-4. **Paste** the customer's current code into each file in the no-changes folder (each file maps 1:1 to a KnowledgeOwl Customize > Style section)
-5. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
-6. **Capture an HTML snapshot** of the homepage via Chrome DevTools and paste it into `homepage-full-html-snapshot.html`
-7. **Drop reference materials** (mockups, Asana exports, assets) into a `Reference/` folder at the project root
-8. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
+4. **Fill in** `.claude/rules/project.md` with the customer name and KB
+5. **Paste** the customer's current code into each file in the no-changes folder (each file maps 1:1 to a KnowledgeOwl Customize > Style section)
+6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
+7. **Capture an HTML snapshot** of the homepage via Chrome DevTools and paste it into `homepage-full-html-snapshot.html`
+8. **Drop reference materials** (mockups, Asana exports, assets) into the `Reference/` folder
+9. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
 
-For the full walkthrough — including the file-to-KnowledgeOwl mapping table, the HTML snapshot steps, the marketing site download process, and a folder structure diagram — see `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`.
+For the full walkthrough — including the file-to-KnowledgeOwl mapping table, the HTML snapshot steps, the marketing site download process, and a folder structure diagram — see `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` in the template repo (or ask Claude to fetch it).
 
 ---
 
 ## How the Work Actually Happens
 
-1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` and picks up the version control rules
+1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` and `.claude/rules/project.md` and picks up the version control rules and project settings
 2. **Tell Claude to review** the latest version folder and any relevant reference materials
 3. **Describe the changes you need** — Claude writes the CSS/HTML for you
 4. **Claude creates versioned folders** as it works. Each set of substantial changes gets a new folder like `2026.02.06-v1`, `2026.02.06-v2`, etc., copied from the previous version
@@ -40,6 +41,8 @@ For the full walkthrough — including the file-to-KnowledgeOwl mapping table, t
 
 Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` contains the universal version control rules; `.claude/rules/project.md` contains customer-specific settings like the deployment target. If the deployment target is already set in the project file, Claude uses it automatically — otherwise it asks.
 
+Claude also **auto-updates `CLAUDE.md`** from the GitHub repo at the start of each session, so you always have the latest process rules without any manual copying.
+
 All you need to do is paste the appropriate prompt to kick things off:
 
 **First session on a new project** (only the `no-changes` folder exists):
@@ -48,11 +51,11 @@ Review the no-changes folder and the reference materials in Reference/. Then let
 ```
 
 **Returning to an existing project** (version folders already exist):
-
-Before starting a new session, copy the latest project docs from `TEMPLATE-new-project` into the customer folder (see "Returning to an Existing Project After a Gap" in `02-VERSION_CONTROL_PROCESS.md` for full steps — note that `.claude/rules/project.md` should never be overwritten). Then create a fresh `YYYY.MM.DD-current-state` snapshot of the live KB code, and:
 ```
 Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
+
+(Before pasting this prompt, you'll need to create a `current-state` snapshot — see "Returning to an Existing Project After a Gap" in the version control process doc, or ask Claude about the steps.)
 
 ---
 
@@ -64,7 +67,7 @@ Review the current-state folder and the reference materials in Reference/. Then 
 
 **Rollback** is straightforward: just deploy files from an earlier version folder.
 
-For full details on when to create new versions and naming rules, see `02-VERSION_CONTROL_PROCESS.md`.
+For full details on when to create new versions and naming rules, ask Claude to fetch `02-VERSION_CONTROL_PROCESS.md` from the template repo.
 
 ---
 
@@ -82,11 +85,29 @@ Claude's `CHANGES_FROM_*.md` notes tell you exactly what to do, but the pattern 
 
 ## Finishing a Project
 
-Use `03-PROJECT_HANDOFF_CHECKLIST.md` to make sure nothing is missed. It covers pre-deployment verification, production deployment, post-deployment testing, and feeding process improvements back into the master template.
+Use `03-PROJECT_HANDOFF_CHECKLIST.md` (in the template repo) to make sure nothing is missed. It covers pre-deployment verification, production deployment, post-deployment testing, and feeding process improvements back into the master template. You can ask Claude to fetch it during a session.
 
 ---
 
-## What's in the Template Folder
+## Repo Structure
+
+The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is organized into two folders:
+
+| Folder | Purpose |
+|--------|---------|
+| `project-template/` | Duplicate this for each new customer project |
+| `process-docs/` | Reference documentation (never copied into customer folders) |
+
+**What's in `project-template/`:**
+
+| File | Purpose |
+|------|---------|
+| `CLAUDE.md` | Auto-read by Claude Code at session start — universal process rules (auto-updated from GitHub) |
+| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
+| `Reference/` | KnowledgeOwl CSS quirks doc and space for customer-specific reference materials (mockups, assets, etc.) |
+| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
+
+**What's in `process-docs/`:**
 
 | File | Purpose |
 |------|---------|
@@ -94,11 +115,6 @@ Use `03-PROJECT_HANDOFF_CHECKLIST.md` to make sure nothing is missed. It covers 
 | `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` | Detailed step-by-step setup with file mappings and folder structure |
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-PROJECT_HANDOFF_CHECKLIST.md` | Checklist for deployment and project completion |
-| `CLAUDE.md` | Auto-read by Claude Code at session start — contains the universal version control rules |
-| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
-| `Reference/` | KnowledgeOwl CSS quirks doc and space for customer-specific reference materials (mockups, assets, etc.) |
-| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
-| `.claude/` | Claude Code project settings (auto-generated, no need to edit) |
 
 ---
 
@@ -115,35 +131,35 @@ Before getting started, make sure you have:
 
 ## Getting the Template
 
-This template lives in a shared GitHub repo: https://github.com/spongetimblin/TEMPLATE-new-project
+This template lives in a shared GitHub repo: https://github.com/spongetimblin/kb-customization-toolkit
 
 **First time (one-time setup):**
 
 You don't need to know git commands — just open Claude Code and paste this prompt:
 ```
-Check if git is installed on my machine. If it is, clone https://github.com/spongetimblin/TEMPLATE-new-project.git into my current directory.
+Check if git is installed on my machine. If it is, clone https://github.com/spongetimblin/kb-customization-toolkit.git into my current directory.
 ```
 Claude will check for git and download the template folder for you.
 
 Or if you prefer to run the command yourself:
 ```
-git clone https://github.com/spongetimblin/TEMPLATE-new-project.git
+git clone https://github.com/spongetimblin/kb-customization-toolkit.git
 ```
 
 **Before starting a new project** *(assumes you've already cloned the repo in the one-time setup above)*:
 
 Paste this prompt into Claude Code to get the latest template updates:
 ```
-Pull the latest updates from the TEMPLATE-new-project repo. It's in [path to your local copy, e.g., /Users/myname/Documents/TEMPLATE-new-project].
+Pull the latest updates from the kb-customization-toolkit repo. It's in [path to your local copy, e.g., /Users/myname/Documents/kb-customization-toolkit].
 ```
 
 Or run the command yourself:
 ```
-cd /path/to/TEMPLATE-new-project
+cd /path/to/kb-customization-toolkit
 git pull
 ```
 
-This ensures you have the latest version of the process docs and templates before duplicating.
+This ensures you have the latest version of the project template before duplicating.
 
 ---
 
@@ -171,4 +187,5 @@ You can also just ask Claude Code to "commit and push my changes" and it will ha
 - **Screenshots matter.** Claude can read images, so before/after screenshots help it understand what the KB looks like and what needs to change.
 - **The HTML snapshot gives Claude context** about the full rendered page structure, including elements generated by KnowledgeOwl's templates that aren't visible in the Custom HTML fields alone.
 - **If a customer has no existing custom code**, leave the placeholder comments in the no-changes files as-is. They serve as a record that the fields were empty at project start.
+- **Ask Claude about the process.** Claude can fetch any process doc from the GitHub repo on demand. Just ask things like "what are the steps for returning to a project?" or "show me the handoff checklist."
 - **Mac tip: Enable the Finder path bar** (Finder > View > Show Path Bar). This adds a clickable path at the bottom of every Finder window. Right-click any segment to copy the full pathname, then paste it directly into Claude Code — e.g., "Review the files in `/Users/.../Acme/Reference/`". Much faster than typing paths manually.

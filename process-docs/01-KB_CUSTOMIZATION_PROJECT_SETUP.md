@@ -6,7 +6,7 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 
 ## 1. Create the Project Folder Structure
 
-1. Duplicate the `TEMPLATE-new-project` folder from your local copy of the repo
+1. Duplicate the `project-template/` folder from your local copy of the repo
 
 2. Rename the duplicated folder to the customer's name:
    ```
@@ -68,7 +68,7 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 
 ## 4. Add Reference Documents
 
-Create a `Reference/` folder at the project root (same level as the markdown files) and add:
+Add materials to the `Reference/` folder (already included in the project template) :
 - Mockups/design screenshots from the customer
 - Asana task exports or requirement documents
 - Any icons, images, or assets the customer provides
@@ -113,18 +113,14 @@ Your project should look like this:
 ```
 [your projects folder]/
 └── [Customer Name]/
-    ├── 00-README.md                            (onboarding intro for new teammates)
-    ├── 01-KB_CUSTOMIZATION_PROJECT_SETUP.md   (this file - for reference)
-    ├── 02-VERSION_CONTROL_PROCESS.md
-    ├── 03-PROJECT_HANDOFF_CHECKLIST.md        (use when completing project)
-    ├── CLAUDE.md                               (auto-read by Claude Code — universal process rules)
+    ├── CLAUDE.md                       (auto-read by Claude Code — auto-updated from GitHub each session)
     ├── .claude/
     │   └── rules/
-    │       └── project.md                      (auto-read by Claude Code — customer-specific settings)
+    │       └── project.md              (auto-read by Claude Code — customer-specific settings)
     ├── Reference/
-    │   ├── knowledgeowl-css-quirks.md   (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
+    │   ├── knowledgeowl-css-quirks.md  (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
     │   ├── (mockups, Asana exports, assets)
-    │   └── marketing-site-example.com/  (optional - see section 4)
+    │   └── marketing-site-example.com/ (optional - see section 4)
     │       ├── (downloaded site files)
     │       └── Screenshots/
     └── YYYY.MM.DD-no-changes/
@@ -146,6 +142,8 @@ Your project should look like this:
             └── (current state screenshots)
 ```
 
+**Note:** Process docs (`00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, etc.) are not included in customer folders. They live in the template repo and Claude fetches them on demand.
+
 **Optional: Protect the backup folder from accidental edits.** After populating the no-changes folder, you can make its files read-only so they can't be accidentally modified:
 ```bash
 chmod -R a-w YYYY.MM.DD-no-changes/
@@ -156,7 +154,7 @@ This is not required, but it adds a safety net. If you need to undo it later: `c
 
 ## 6. Ready to Start
 
-Once setup is complete, open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (universal rules) and `.claude/rules/project.md` (customer-specific settings). Fill in the customer name and KB in `.claude/rules/project.md`, then paste this prompt to kick off the first session:
+Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (universal rules, auto-updated from GitHub) and `.claude/rules/project.md` (customer-specific settings). Paste this prompt to kick off the first session:
 
 ```
 Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
@@ -170,7 +168,7 @@ For guidance on starting subsequent sessions, see "Starting a New Claude Code Se
 
 ## 7. Project Completion
 
-When the project is complete, use `03-PROJECT_HANDOFF_CHECKLIST.md` (included in this folder) to ensure all deployment and documentation steps are completed.
+When the project is complete, use `03-PROJECT_HANDOFF_CHECKLIST.md` (in the template repo — ask Claude to fetch it) to ensure all deployment and documentation steps are completed.
 
 ---
 

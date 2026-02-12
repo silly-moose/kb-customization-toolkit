@@ -2,12 +2,31 @@
 
 You are helping customize a KnowledgeOwl knowledge base. Follow these rules for every session.
 
+## Process Documentation
+
+All process docs live in the GitHub repo and should be fetched on demand — they are not stored in customer project folders.
+
+- **Repo:** https://github.com/spongetimblin/kb-customization-toolkit
+- **Process docs location:** `process-docs/` folder in the repo
+
+Available docs (fetch from GitHub when needed):
+- `00-README.md` — Onboarding overview for new teammates
+- `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` — Detailed setup instructions
+- `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
+- `03-PROJECT_HANDOFF_CHECKLIST.md` — Checklist for deployment and project completion
+
+If the user asks a question about the process, setup, version control, or handoff, fetch the relevant doc from:
+`https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/[filename]`
+
 ## At the Start of Each Session
 
-1. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
-2. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
-3. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
-4. Ask what the user wants to work on before making changes
+1. **Update this file** — fetch the latest `CLAUDE.md` from the template repo and overwrite this file:
+   `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/project-template/CLAUDE.md`
+   Then re-read the updated file before continuing.
+2. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
+3. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
+4. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
+5. Ask what the user wants to work on before making changes
 
 ## Version Folders
 
@@ -77,7 +96,3 @@ After completing changes, always summarize in the conversation which files were 
 | `custom-html-8-404-page.html` | Customize > Style (HTML & CSS) > Custom HTML > 404 Page |
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
-
-## For Full Details
-
-See `02-VERSION_CONTROL_PROCESS.md` for the complete version control process, examples, and rollback procedures.
