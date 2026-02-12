@@ -152,10 +152,11 @@ When a customer comes back weeks or months later with new requests, continue wor
 ### Steps
 
 1. **Update the project docs** — copy the latest versions of these files from the `TEMPLATE-new-project` folder into the customer folder, replacing the old copies: `00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, `02-VERSION_CONTROL_PROCESS.md`, `03-PROJECT_HANDOFF_CHECKLIST.md`, `CLAUDE.md`
-2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section)
-3. **Create a `YYYY.MM.DD-current-state` folder** (using today's date) and populate it with the fresh code
+2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
+3. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it
 4. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
-5. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+5. **Refresh supporting files** — in the `Screenshots/` folder inside the `current-state` folder, remove any screenshots from previous work sessions that are no longer relevant and add fresh screenshots of the KB's current appearance. Similarly, in the `Reference/` folder at the project root, remove outdated materials and add any new reference files relevant to the upcoming work
+6. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
 
 ### Example
 
