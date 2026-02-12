@@ -77,6 +77,7 @@ Check which deployment workflow applies to this project:
 - [ ] CHANGES file accurately reflects all modifications
 - [ ] Reference folder contains all mockups/requirements received
 - [ ] Screenshots folder contains before/after images
+- [ ] All version folders, `no-changes` folder, and any `current-state` folders are retained (do not delete — they serve as a historical record and rollback points)
 
 ---
 

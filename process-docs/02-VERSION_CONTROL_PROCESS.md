@@ -46,6 +46,8 @@ Do **not** create a new version for:
 - Comment updates
 - Minor text changes
 
+**Rule of thumb:** When in doubt, create a new version. The cost is low (just a folder copy) and the safety net is valuable.
+
 ---
 
 ## Step-by-Step Process
@@ -68,12 +70,12 @@ Place the new version folder at the same level as previous versions.
 
 ### 3. Document Changes
 
-Copy the `CHANGES_FROM_no-changes.md` template from the no-changes folder and rename it:
+Since you copied the entire previous version folder (step 1), a CHANGES file already exists in the new folder. Rename it to reflect the new version's baseline:
 
-- **First version:** Name it `CHANGES_FROM_no-changes.md` (since it's based on the no-changes folder)
-- **Subsequent versions:** Name it `CHANGES_FROM_v[previous].md` (e.g., `CHANGES_FROM_v2.md` in the v3 folder)
+- **First version (v1):** The file is already named `CHANGES_FROM_no-changes.md` — keep that name, since v1 is based on the no-changes folder
+- **Subsequent versions:** Rename the file to `CHANGES_FROM_v[previous].md` (e.g., in the v3 folder, rename it to `CHANGES_FROM_v2.md`)
 
-Update the title and fields inside the file to reflect the actual version. See the template for the required sections: summary, files modified, color palette, visible changes, manual steps, and deployment instructions.
+Clear out the previous version's content and update the title, Date, and Based On fields. Then fill in each section. See the template for the required sections: summary, files modified, color palette, visible changes, manual steps, and deployment instructions.
 
 ### 4. Provide Deployment Instructions
 
@@ -114,19 +116,25 @@ The `YYYY.MM.DD-no-changes` folder is the permanent backup. It is created at pro
 ```
 Project/
 ├── 2026.01.20-no-changes/      # Permanent backup (never modify)
-├── 2026.01.21-v1/               # First iteration
 │   ├── custom-css.css
-│   ├── custom-html-5-homepage.html
+│   ├── custom-head.html
+│   ├── custom-html-1-body.html
+│   ├── ... (all 12 code files)
+│   ├── homepage-full-html-snapshot.html
+│   ├── CHANGES_FROM_no-changes.md
+│   └── Screenshots/
+├── 2026.01.21-v1/               # First iteration (copied from no-changes)
+│   ├── (all files from no-changes)
 │   └── CHANGES_FROM_no-changes.md
-├── 2026.01.21-v2/               # Second iteration
-│   ├── custom-css.css
-│   ├── custom-html-5-homepage.html
+├── 2026.01.21-v2/               # Second iteration (copied from v1)
+│   ├── (all files from v1)
 │   └── CHANGES_FROM_v1.md
-└── 2026.01.22-v3/               # Third iteration (next day, version continues)
-    ├── custom-css.css
-    ├── custom-html-5-homepage.html
+└── 2026.01.22-v3/               # Third iteration (copied from v2, next day)
+    ├── (all files from v2)
     └── CHANGES_FROM_v2.md
 ```
+
+**Note:** Each version folder contains **all** project files (copied from the previous version), not just the ones that were modified. Only the CHANGES file is renamed.
 
 ---
 
@@ -180,7 +188,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md`** — this is a permanent reference, always stays
 
-**Note:** You no longer need to manually update process docs. Claude auto-updates `CLAUDE.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
+**Note:** You no longer need to manually update process docs. Claude auto-updates `CLAUDE.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`, `04-`) live in the repo only — they are never copied into customer folders.
 
 ### Example
 

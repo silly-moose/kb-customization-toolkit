@@ -14,6 +14,7 @@ Available docs (fetch from GitHub when needed):
 - `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` — Detailed setup instructions
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
 - `03-PROJECT_HANDOFF_CHECKLIST.md` — Checklist for deployment and project completion
+- `04-GIT_CHEAT_SHEET.md` — Git commands reference for the template maintainer
 
 If the user asks a question about the process, setup, version control, or handoff, fetch the relevant doc from:
 `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/[filename]`
@@ -22,8 +23,8 @@ If the user asks a question about the process, setup, version control, or handof
 
 1. **Update this file** — fetch the latest `CLAUDE.md` from the template repo and overwrite this file:
    `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/project-template/CLAUDE.md`
-   Then re-read the updated file before continuing.
-2. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
+   Then re-read the updated file before continuing. If the fetch fails (e.g., network issue), continue with the existing version of this file.
+2. Review the latest version folder, the most recent `YYYY.MM.DD-current-state` folder (if one exists), or the `YYYY.MM.DD-no-changes` folder if no versions exist yet
 3. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
 4. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
 5. Ask what the user wants to work on before making changes
@@ -35,6 +36,7 @@ If the user asks a question about the process, setup, version control, or handof
 - **Version number:** Always increment from the last version in the project — never reset, even across days
 - **Create a new version folder** for: feature additions, design changes, significant refactoring, multi-file updates, complex bug fixes
 - **Do not create a new version** for: typo fixes, single-line corrections, comment updates, minor text changes — make these edits directly in the latest (most recent) version folder
+- **When in doubt, create a new version.** The cost is low (just a folder copy) and the safety net is valuable.
 - **Process:** Copy the entire previous version folder, then make changes only in the new copy
 
 ## Never Modify

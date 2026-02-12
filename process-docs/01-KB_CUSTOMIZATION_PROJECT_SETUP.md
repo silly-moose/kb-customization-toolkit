@@ -42,6 +42,8 @@ If a customer has no existing custom code in a given field, leave the placeholde
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
 
+**Note:** The canonical version of this mapping table lives in `CLAUDE.md` (which Claude reads automatically). If KnowledgeOwl adds or changes sections, update `CLAUDE.md` first.
+
 ---
 
 ## 3. Capture the Current State
@@ -68,7 +70,7 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 
 ## 4. Add Reference Documents
 
-Add materials to the `Reference/` folder (already included in the project template) :
+Add materials to the `Reference/` folder (already included in the project template):
 - Mockups/design screenshots from the customer
 - Asana task exports or requirement documents
 - Any icons, images, or assets the customer provides

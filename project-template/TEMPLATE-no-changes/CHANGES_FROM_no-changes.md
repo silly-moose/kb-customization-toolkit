@@ -1,11 +1,10 @@
-<!-- TEMPLATE INSTRUCTIONS:
-     When copying this file into a new version folder:
-     1. Rename the file to match the version it's based on:
-        - In v1 folder: keep as CHANGES_FROM_no-changes.md
-        - In v2 folder: rename to CHANGES_FROM_v1.md
-        - In v3 folder: rename to CHANGES_FROM_v2.md (always reference the previous version)
-     2. Update the title, Date, and Based On fields below
-     3. Fill in each section, deleting any that don't apply
+<!-- TEMPLATE FOR CLAUDE:
+     When creating a new version folder, rename this file to match the version's baseline:
+     - In v1 folder: keep as CHANGES_FROM_no-changes.md
+     - In v2 folder: rename to CHANGES_FROM_v1.md
+     - In v3 folder: rename to CHANGES_FROM_v2.md (always reference the previous version)
+     Then clear the previous version's content, update the title/Date/Based On fields below,
+     and fill in each section. Delete any sections that don't apply.
 -->
 
 # Changes from YYYY.MM.DD-no-changes

@@ -133,6 +133,7 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 | `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` | Detailed step-by-step setup with file mappings and folder structure |
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-PROJECT_HANDOFF_CHECKLIST.md` | Checklist for deployment and project completion |
+| `04-GIT_CHEAT_SHEET.md` | Git commands reference for the template maintainer |
 
 ---
 
@@ -192,24 +193,6 @@ If you don't have Git installed, you can download the template directly:
 3. Unzip and use the `project-template/` folder inside
 
 **Before starting a new project**, re-download the ZIP to make sure you have the latest template.
-
----
-
-## Git Cheat Sheet
-
-For Chad (template maintainer) — the commands for updating the template repo:
-
-| What you want to do | Command | What it does |
-|----------------------|---------|--------------|
-| See what's changed | `git status` | Lists new, modified, and staged files |
-| Stage specific files | `git add filename` | Marks files to include in the next commit |
-| Stage everything | `git add -A` | Stages all new and changed files at once |
-| Save a snapshot locally | `git commit -m "description"` | Bundles staged changes into a named commit on your machine |
-| Send commits to GitHub | `git push` | Uploads your local commits so others can see them |
-
-**The typical flow:** make changes → `git add` → `git commit` → `git push`.
-
-You can also just ask Claude Code to "commit and push my changes" and it will handle the commands for you.
 
 ---
 
