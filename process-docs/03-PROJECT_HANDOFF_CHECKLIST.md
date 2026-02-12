@@ -93,7 +93,3 @@ Before closing this project, review if any process improvements were discovered:
 
 **Everyone else:** Submit suggestions to Chad via a GitHub issue or direct message. Always pull the latest version from the repo before starting a new project.
 
----
-
-## Notes
-<!-- Add any project-specific notes here -->
