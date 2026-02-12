@@ -154,8 +154,31 @@ When a customer comes back weeks or months later with new requests, continue wor
 1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
 2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it
 3. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
-4. **Refresh supporting files** — in the `Screenshots/` folder inside the `current-state` folder, remove any screenshots from previous work sessions that are no longer relevant and add fresh screenshots of the KB's current appearance. Similarly, in the `Reference/` folder at the project root, remove outdated materials and add any new reference files relevant to the upcoming work
+4. **Refresh supporting files** — clean up outdated materials and add current ones (see details below)
 5. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+
+### Why Refreshing Supporting Files Matters
+
+Claude reads what you put in front of it. Old screenshots and reference files aren't just clutter — they're **misleading context** that can cause Claude to make decisions based on a design or layout that no longer exists. Every irrelevant file dilutes Claude's attention and wastes context window on information that doesn't help the current task.
+
+The goal: **the `current-state` folder and `Reference/` folder should reflect the truth _right now_ and the work _coming next_.** Old version folders already preserve the past — that's their job.
+
+### What to Clean Up
+
+**Screenshots (in `current-state/Screenshots/`):**
+- Remove screenshots from previous work sessions — they show what the KB _used to_ look like
+- Add fresh screenshots of the KB's current appearance (homepage, category page, article page, and any pages relevant to the upcoming work)
+
+**Reference files (in `Reference/` at the project root):**
+- Remove files no longer relevant to upcoming work (e.g., mockups for features already shipped, Asana exports for completed tasks)
+- Add new reference files for whatever's next (new mockups, updated Asana exports, new assets)
+- Keep files that are still accurate and relevant (e.g., a brand guide or marketing site download that hasn't changed)
+
+### What NOT to Clean Up
+
+- **Old version folders** — never touch these; their screenshots and contents stay as-is as a historical record
+- **The `no-changes` folder** — never modify for any reason
+- **`knowledgeowl-css-quirks.md`** — this is a permanent reference, always stays
 
 **Note:** You no longer need to manually update process docs. Claude auto-updates `CLAUDE.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
 

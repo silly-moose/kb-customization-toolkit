@@ -47,6 +47,11 @@ If the user asks a question about the process, setup, version control, or handof
 
 A `YYYY.MM.DD-current-state` folder is a snapshot of the live KB code, created when resuming work on a project after weeks or months. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
 
+When a `current-state` folder is created, the user should also refresh supporting files. Old screenshots and reference materials can be actively misleading — they may show a design or layout that no longer exists. Remind the user to:
+- Replace screenshots in `current-state/Screenshots/` with fresh ones showing the KB's current appearance
+- Remove outdated materials from `Reference/` (e.g., shipped mockups, completed task exports) and add any new reference files for upcoming work
+- Leave `knowledgeowl-css-quirks.md` in place — it's a permanent reference
+
 ## CHANGES File
 
 Every new version folder must include a CHANGES file:
