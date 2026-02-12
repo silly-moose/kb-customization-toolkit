@@ -6,7 +6,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 
 1. Review the latest version folder (or the `YYYY.MM.DD-no-changes` folder if no versions exist yet)
 2. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
-3. Ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** — this determines the deployment instructions you write in CHANGES files
+3. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
 4. Ask what the user wants to work on before making changes
 
 ## Version Folders

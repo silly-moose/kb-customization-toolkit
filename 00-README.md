@@ -38,7 +38,7 @@ For the full walkthrough — including the file-to-KnowledgeOwl mapping table, t
 
 ## Starting a New Claude Code Session
 
-Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md`** at the start of every session. This file contains all the version control rules, so Claude picks up the conventions without you having to tell it. Claude will also ask you whether you're deploying to a sandbox or live KB, and what you want to work on.
+Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` contains the universal version control rules; `.claude/rules/project.md` contains customer-specific settings like the deployment target. If the deployment target is already set in the project file, Claude uses it automatically — otherwise it asks.
 
 All you need to do is paste the appropriate prompt to kick things off:
 
@@ -49,7 +49,7 @@ Review the no-changes folder and the reference materials in Reference/. Then let
 
 **Returning to an existing project** (version folders already exist):
 
-Before starting a new session, copy the latest `CLAUDE.md` and other project docs from `TEMPLATE-new-project` into the customer folder, then create a fresh `YYYY.MM.DD-current-state` snapshot of the live KB code (see "Returning to an Existing Project After a Gap" in `02-VERSION_CONTROL_PROCESS.md` for full steps). Then:
+Before starting a new session, copy the latest project docs from `TEMPLATE-new-project` into the customer folder (see "Returning to an Existing Project After a Gap" in `02-VERSION_CONTROL_PROCESS.md` for full steps — note that `.claude/rules/project.md` should never be overwritten). Then create a fresh `YYYY.MM.DD-current-state` snapshot of the live KB code, and:
 ```
 Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
@@ -94,7 +94,8 @@ Use `03-PROJECT_HANDOFF_CHECKLIST.md` to make sure nothing is missed. It covers 
 | `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` | Detailed step-by-step setup with file mappings and folder structure |
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-PROJECT_HANDOFF_CHECKLIST.md` | Checklist for deployment and project completion |
-| `CLAUDE.md` | Auto-read by Claude Code at session start — contains the version control rules Claude follows |
+| `CLAUDE.md` | Auto-read by Claude Code at session start — contains the universal version control rules |
+| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
 | `Reference/` | KnowledgeOwl CSS quirks doc and space for customer-specific reference materials (mockups, assets, etc.) |
 | `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
 | `.claude/` | Claude Code project settings (auto-generated, no need to edit) |

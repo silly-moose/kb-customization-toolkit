@@ -151,7 +151,7 @@ When a customer comes back weeks or months later with new requests, continue wor
 
 ### Steps
 
-1. **Update the project docs** — copy the latest versions of these files from the `TEMPLATE-new-project` folder into the customer folder, replacing the old copies: `00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, `02-VERSION_CONTROL_PROCESS.md`, `03-PROJECT_HANDOFF_CHECKLIST.md`, `CLAUDE.md`
+1. **Update the project docs** — copy the latest versions of these files from the `TEMPLATE-new-project` folder into the customer folder, replacing the old copies: `00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, `02-VERSION_CONTROL_PROCESS.md`, `03-PROJECT_HANDOFF_CHECKLIST.md`, `CLAUDE.md`. **Do not overwrite** `.claude/rules/project.md` — that file contains customer-specific settings and should never be replaced.
 2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
 3. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it
 4. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)

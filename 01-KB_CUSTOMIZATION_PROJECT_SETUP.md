@@ -117,8 +117,10 @@ Your project should look like this:
     ├── 01-KB_CUSTOMIZATION_PROJECT_SETUP.md   (this file - for reference)
     ├── 02-VERSION_CONTROL_PROCESS.md
     ├── 03-PROJECT_HANDOFF_CHECKLIST.md        (use when completing project)
-    ├── CLAUDE.md                               (auto-read by Claude Code each session)
-    ├── .claude/                                (Claude Code settings - no need to edit)
+    ├── CLAUDE.md                               (auto-read by Claude Code — universal process rules)
+    ├── .claude/
+    │   └── rules/
+    │       └── project.md                      (auto-read by Claude Code — customer-specific settings)
     ├── Reference/
     │   ├── knowledgeowl-css-quirks.md   (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
     │   ├── (mockups, Asana exports, assets)
@@ -154,13 +156,13 @@ This is not required, but it adds a safety net. If you need to undo it later: `c
 
 ## 6. Ready to Start
 
-Once setup is complete, open Claude Code in the customer folder — it automatically reads `CLAUDE.md` and picks up the version control rules. Then paste this prompt to kick off the first session:
+Once setup is complete, open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (universal rules) and `.claude/rules/project.md` (customer-specific settings). Fill in the customer name and KB in `.claude/rules/project.md`, then paste this prompt to kick off the first session:
 
 ```
 Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
 
-Claude will review the code, ask whether you're deploying to a sandbox or live KB, and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works.
+Claude will review the code, check the deployment target (or ask if it hasn't been set yet), and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works.
 
 For guidance on starting subsequent sessions, see "Starting a New Claude Code Session" in `00-README.md`.
 
