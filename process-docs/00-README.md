@@ -125,7 +125,7 @@ Before getting started, make sure you have:
 - **Visual Studio Code (VS Code)** — for opening code files and copying updated code into customers' KBs. Download at https://code.visualstudio.com
 - **Claude desktop app** — Claude Code runs inside the desktop app (the web version at claude.ai isn't optimal for this workflow). Download at https://claude.ai/download
 - **Claude Code** — Anthropic's CLI tool for writing and editing code. See your team lead for setup instructions.
-- **Git** — for cloning and updating the template repo. Pre-installed on macOS (verify with `git --version` in Terminal).
+- **Git** — for cloning and updating the template repo. Pre-installed on macOS (verify with `git --version` in Terminal). On Windows, download and install from https://git-scm.com/downloads/win — use the default settings during installation.
 
 ---
 
