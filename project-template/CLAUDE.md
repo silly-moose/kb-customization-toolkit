@@ -83,7 +83,7 @@ End deployment instructions based on the deployment target established at the st
 - **If sandbox:** "Deploy to sandbox first. Once verified, deploy to production."
 - **If live KB:** "Deploy directly to the live KB. Verify changes immediately after deployment."
 
-After completing changes, always summarize in the conversation which files were modified and where to deploy them in KnowledgeOwl. Don't rely on the user reading the CHANGES file.
+Every time you update code and ask the user to test or deploy, tell them in the conversation exactly which file(s) to copy and where to paste them in KnowledgeOwl. Do this every single time — even if you're iterating on the same file. Never assume the user will check the CHANGES file or remember from a previous message.
 
 ## KnowledgeOwl File-to-Section Mapping
 
