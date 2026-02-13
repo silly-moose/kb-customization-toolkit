@@ -28,6 +28,7 @@ Use the format: `YYYY.MM.DD-v#`
 - Version number: `v#` — starts at 1 and always increments for the life of the project, even across days
 - Separator: Hyphen between date and version
 - The date reflects when the version was created; the version number never resets
+- **Why periods in dates?** Periods separate date components (`YYYY.MM.DD`), hyphens separate words and descriptors (`-v1`, `-no-changes`). These serve different semantic purposes, which makes folder names easier to read at a glance
 
 ---
 
