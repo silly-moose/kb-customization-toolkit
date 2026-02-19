@@ -25,9 +25,10 @@ If the user asks a question about the process, setup, version control, or handof
    `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/project-template/CLAUDE.md`
    Then re-read the updated file before continuing. If the fetch fails (e.g., network issue), continue with the existing version of this file.
 2. Review the latest version folder, the most recent `YYYY.MM.DD-current-state` folder (if one exists), or the `YYYY.MM.DD-no-changes` folder if no versions exist yet
-3. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
-4. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
-5. Ask what the user wants to work on before making changes
+3. **Prompt the user about a current-state snapshot** — check the date of the latest version folder or `current-state` folder. If more than one day has passed since the last session, ask: **"It's been more than a day since the last session. Do you want to create a `current-state` snapshot before we start? This captures any changes made in KnowledgeOwl since we last worked."** If the user confirms, walk them through copying all 12 code files from KnowledgeOwl into a new `YYYY.MM.DD-current-state` folder before proceeding.
+4. Check the `Reference/` folder and ask the user which materials are relevant to the current task — do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites). **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
+5. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
+6. Ask what the user wants to work on before making changes
 
 ## Version Folders
 
@@ -47,7 +48,9 @@ If the user asks a question about the process, setup, version control, or handof
 
 ## Current-State Folders
 
-A `YYYY.MM.DD-current-state` folder is a snapshot of the live KB code, created when resuming work on a project after weeks or months. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
+A `YYYY.MM.DD-current-state` folder is a snapshot of the live KB code — meaning all 12 code files copied from KnowledgeOwl's Customize > Style (HTML & CSS) sections. This is distinct from the `homepage-full-html-snapshot.html` file, which is a supplementary rendered-HTML reference, not part of the core code snapshot.
+
+Create a `current-state` folder whenever resuming work after more than one day has passed since the last session — or sooner if you know that you or the customer made changes directly in KnowledgeOwl. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
 
 When a `current-state` folder is created, the user should also refresh supporting files. Old screenshots and reference materials can be actively misleading — they may show a design or layout that no longer exists. Remind the user to:
 - Replace screenshots in `current-state/Screenshots/` with fresh ones showing the KB's current appearance

@@ -154,9 +154,11 @@ The broken version remains preserved for debugging.
 
 ## Returning to an Existing Project After a Gap
 
-When a customer comes back weeks or months later with new requests, continue working in their existing project folder — do not create a new one. The version number picks up where it left off.
+When returning to a project after any gap — whether days, weeks, or months — continue working in the existing project folder. Do not create a new one. The version number picks up where it left off.
 
-**Before starting new work, always create a fresh snapshot of the live KB code.** The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
+**Always create a fresh snapshot of the live KB code if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
+
+A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. This is distinct from the `homepage-full-html-snapshot.html` file, which is a supplementary rendered-HTML reference, not part of the core code snapshot.
 
 ### Steps
 
@@ -209,7 +211,7 @@ Project/
 
 **Key points:**
 - The `no-changes` folder remains untouched — it's still the original baseline
-- Always create a `current-state` snapshot when returning to a project, even if you believe nothing has changed
+- Always create a `current-state` snapshot if more than one day has passed since the last session (or sooner if changes were made)
 - Version numbering continues incrementing as usual
 
 ---
