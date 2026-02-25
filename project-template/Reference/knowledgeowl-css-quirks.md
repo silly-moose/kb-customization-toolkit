@@ -22,7 +22,7 @@ Most default selectors are scoped under a theme class like `.hg-minimalist-theme
 .hg-minimalist-theme .some-element { color: red; }
 ```
 
-Always check the existing selector specificity before writing overrides.
+**Note:** `.hg-minimalist-theme` is the selector for the Minimalist theme, which most new customers are locked into. Older customers may use different themes with different selectors, so the CSS you need can vary significantly between KBs. Always check the existing selector specificity before writing overrides.
 
 ## 3. Competing Link Selectors
 
@@ -34,7 +34,7 @@ Rules like `a:not(.btn)` appear multiple times with different color values for d
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Images get a `box-shadow` by default via a broad selector. The only clean way to remove it is adding a `.no-border` class to the image — you can't easily override the shadow without matching the original selector's specificity.
+Images get a `box-shadow` by default via a broad selector. You can override this by matching the original selector's specificity, which is standard CSS specificity behavior. The `.no-border` utility class is a convenient shortcut when you only want to remove the shadow from specific images rather than all of them.
 
 ## 5. TOC Slideout Layout Coupling
 
@@ -98,13 +98,14 @@ Source: https://support.knowledgeowl.com/help/default-custom-css
 | Class | Purpose |
 |-------|---------|
 | `.no-border` | Removes box-shadow from images |
-| `.check-list` | Styled bullet list with FontAwesome checkmarks |
+| `.check-list` | Styled bullet list with FontAwesome checkmarks (**Note:** This is a Support KB-specific artifact that was never supposed to be in the default custom CSS. It's flagged for removal, but documenting here since it currently exists in the default theme and can cause unexpected styling.) |
 | `.toc-anchor` | Invisible anchor offset for fixed nav |
 | `.margin-top-20` | Spacing utility |
 | `.hg-minimalist-theme` | Primary theme wrapper (used for selector scoping) |
 | `.hg-2column-layout` | Two-column layout variant |
 | `.hg-3column-layout` | Three-column layout variant |
 | `.slideout-menu` | TOC sidebar container |
+| `.slideout-new` | Updated TOC sidebar container used in the current default theme. Less buggy sliding in/out behavior than the older `.slideout-menu` without this class. |
 
 ## 11. Image Caption Selectors (`fr-img-caption`)
 
@@ -124,6 +125,8 @@ The default CSS enforces a three-tier numbering hierarchy for ordered lists insi
 
 These are set on `.hg-article-body ol` with child combinators. Custom list styling needs to match or override these specific selectors.
 
+**Note:** This numbering hierarchy was originally Support KB-specific and shouldn't have been hard-coded into the default theme, but it was. It's flagged for removal from the default theme.
+
 ## 13. Search Bar Border Pattern
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
@@ -135,3 +138,23 @@ Individual search input elements have their borders removed. The visible border 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
 Some elements are hidden on screen but visible in PDFs. For example, `.pdf-header` uses `display: none` by default but switches to `display: block` in PDF context. When writing CSS for elements that appear in both web and PDF views, check whether PDF-specific rules already exist.
+
+To apply styles only in PDFs, begin your selector with `.hg-pdf`:
+
+```css
+.hg-pdf .some-element { font-size: 14px; }
+```
+
+See: https://support.knowledgeowl.com/help/pdfs#styling-pdfs
+
+## 15. Page-Type Body Classes
+
+Different page types get different high-level classes applied to the `body` element. These selectors are important for writing page-specific custom styles:
+
+```css
+/* Target only category pages */
+body.hg-category-page .some-element { ... }
+
+/* Target only article pages */
+body.hg-article-page .some-element { ... }
+```
