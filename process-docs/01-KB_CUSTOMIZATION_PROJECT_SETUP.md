@@ -64,7 +64,7 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 6. Replace the placeholder comment with the copied HTML
 7. Repeat for other key pages if needed (create new files like `category-page-full-html-snapshot.html`)
 
-**Why:** This gives Claude visibility into the actual rendered HTML structure, including dynamically generated elements and template output that isn't visible in the Custom HTML fields alone.
+**Why:** Unlike View Page Source (which captures the raw server HTML before JavaScript runs), Copy outerHTML captures the page's *rendered* DOM — the HTML as it actually exists after the browser and JavaScript have fully processed the page. This gives Claude visibility into dynamically generated elements and template output that aren't visible in the Custom HTML fields alone.
 
 ---
 
