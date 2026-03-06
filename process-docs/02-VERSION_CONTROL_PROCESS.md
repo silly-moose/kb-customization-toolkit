@@ -158,7 +158,7 @@ When returning to a project after any gap — whether days, weeks, or months —
 
 **Always create a fresh snapshot of the live KB code if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
 
-A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. This is distinct from `full-html-snapshot-homepage.html` and any other `full-html-snapshot-*.html` files, which are supplementary rendered-HTML references, not part of the core code snapshot.
+A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. Any `full-html-snapshot-*.html` files are also included, but captured differently — not pulled from KnowledgeOwl, but copied from the browser's rendered DOM via Chrome DevTools.
 
 ### Steps
 
