@@ -48,7 +48,7 @@ If the user asks a question about the process, setup, version control, or handof
 
 ## Current-State Folders
 
-A `YYYY.MM.DD-current-state` folder is a snapshot of the live KB code — meaning all 12 code files copied from KnowledgeOwl's Customize > Style (HTML & CSS) sections. This is distinct from the `homepage-full-html-snapshot.html` file, which is a supplementary rendered-HTML reference, not part of the core code snapshot.
+A `YYYY.MM.DD-current-state` folder is a snapshot of the live KB code — meaning all 12 code files copied from KnowledgeOwl's Customize > Style (HTML & CSS) sections. This is distinct from the `full-html-snapshot-homepage.html` file (and any other `full-html-snapshot-*.html` files), which are supplementary rendered-HTML references, not part of the core code snapshot.
 
 Create a `current-state` folder whenever resuming work after more than one day has passed since the last session — or sooner if you know that you or the customer made changes directly in KnowledgeOwl. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
 

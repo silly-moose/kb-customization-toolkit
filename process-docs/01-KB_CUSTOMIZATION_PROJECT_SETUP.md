@@ -60,7 +60,7 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 2. Right-click anywhere on the page and select **Inspect**
 3. In the Elements panel, right-click on the `<html>` tag at the top
 4. Select **Copy > Copy outerHTML**
-5. Open `homepage-full-html-snapshot.html` in the no-changes folder
+5. Open `full-html-snapshot-homepage.html` in the no-changes folder
 6. Replace the placeholder comment with the copied HTML
 7. Repeat for other key pages if needed (create new files like `category-page-full-html-snapshot.html`)
 
@@ -138,7 +138,7 @@ Your project should look like this:
         ├── custom-html-8-404-page.html
         ├── custom-html-9-restricted-access-page.html
         ├── custom-html-10-right-column.html
-        ├── homepage-full-html-snapshot.html
+        ├── full-html-snapshot-homepage.html
         ├── CHANGES_FROM_no-changes.md
         └── Screenshots/
             └── (current state screenshots)

@@ -18,7 +18,7 @@ We use Claude Code (Anthropic's CLI tool) to write and iterate on CSS/HTML custo
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
 5. **Paste** the customer's current code into each file in the no-changes folder (each file maps 1:1 to a KnowledgeOwl Customize > Style section)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
-7. **Capture an HTML snapshot** of the homepage via Chrome DevTools and paste it into `homepage-full-html-snapshot.html`
+7. **Capture an HTML snapshot** of the homepage via Chrome DevTools and paste it into `full-html-snapshot-homepage.html`
 8. **Drop reference materials** (mockups, Asana exports, assets) into the `Reference/` folder
 9. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
 
