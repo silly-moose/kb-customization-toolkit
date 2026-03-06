@@ -21,7 +21,7 @@ If the user asks a question about the process, setup, version control, or handof
 
 ## At the Start of Each Session
 
-1. **Update this file** — fetch the latest `CLAUDE.md` from the template repo and overwrite this file:
+1. **Update this file** — fetch the latest `CLAUDE.md` from the template repo and overwrite the local copy in this project folder:
    `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/project-template/CLAUDE.md`
    Then re-read the updated file before continuing. If the fetch fails (e.g., network issue), continue with the existing version of this file.
 2. Review the latest version folder, the most recent `YYYY.MM.DD-current-state` folder (if one exists), or the `YYYY.MM.DD-no-changes` folder if no versions exist yet. **If this is the first session** (only the no-changes folder exists), run `chmod -R a-w [no-changes-folder]/` to make it read-only and protect it from accidental edits.
