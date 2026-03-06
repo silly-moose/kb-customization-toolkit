@@ -163,7 +163,7 @@ A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Sty
 ### Steps
 
 1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
-2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder — these carry forward into the next version folder. Once the folder is populated, run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only. Paste fresh HTML snapshots into the copies in the next version folder (step 3), which is writable.
+2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder, and ask the user to paste fresh HTML into each one (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML). Once all files are filled in — the 12 code files and the html snapshot files — run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
 3. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
 4. **Refresh supporting files** — clean up outdated materials and add current ones (see details below)
 5. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
