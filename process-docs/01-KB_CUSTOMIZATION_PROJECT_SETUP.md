@@ -158,6 +158,11 @@ This is not required, but it adds a safety net. If you need to undo it later: `c
 
 Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (universal rules, auto-updated from GitHub) and `.claude/rules/project.md` (customer-specific settings). Paste this prompt to kick off the first session:
 
+> **Note: `.claude/` is a hidden folder.** Files and folders starting with a dot (`.`) are hidden by default in macOS Finder and Windows File Explorer. To make it visible:
+> - **Mac:** Press **Command + Shift + .** (period) in Finder to toggle hidden files on/off
+> - **Windows:** In File Explorer, go to **View > Show > Hidden items**
+> - **Easiest option:** Open the project folder in **VS Code** — it shows dotfiles by default, no toggle needed
+
 ```
 Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
