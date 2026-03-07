@@ -146,7 +146,7 @@ Your project should look like this:
 
 **Note:** Process docs (`00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, etc.) are not included in customer folders. They live in the template repo and Claude fetches them on demand.
 
-**Claude automatically protects the backup folder.** At the start of your first session, Claude runs `chmod -R a-w YYYY.MM.DD-no-changes/` to make the folder read-only, preventing accidental edits. Similarly, Claude runs this command automatically after creating any `current-state` folder. If you need to correct a setup mistake before any real work has started, you can undo this with: `chmod -R u+w [folder-name]/`
+**Claude automatically protects the backup folder.** During your first session, after all content has been added to the no-changes folder (code files, HTML snapshots, and screenshots), Claude runs `chmod -R a-w YYYY.MM.DD-no-changes/` to make the folder read-only, preventing accidental edits. Similarly, Claude runs this command automatically after all content has been added to any `current-state` folder. If you need to correct a setup mistake before any real work has started, you can undo this with: `chmod -R u+w [folder-name]/`
 
 ---
 
