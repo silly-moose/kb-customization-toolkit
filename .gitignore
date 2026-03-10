@@ -3,3 +3,6 @@
 
 # Thumbnail cache
 Thumbs.db
+
+# Localhost preview (ephemeral, generated per session)
+preview/

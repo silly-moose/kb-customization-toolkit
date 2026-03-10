@@ -15,6 +15,7 @@ Available docs (fetch from GitHub when needed):
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
 - `03-PROJECT_HANDOFF_CHECKLIST.md` — Checklist for deployment and project completion
 - `04-GIT_CHEAT_SHEET.md` — Git commands reference for the template maintainer
+- `05-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
 
 If the user asks a question about the process, setup, version control, or handoff, fetch the relevant doc from:
 `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/[filename]`
@@ -29,6 +30,7 @@ If the user asks a question about the process, setup, version control, or handof
 4. **Review the `Reference/` folder** — list its contents and flag any files that may be stale (e.g., files that were present in earlier versions but may no longer be relevant). Ask the user: **"Here's what's in Reference/. Are all of these still relevant, or should any be removed before we start?"** Do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites) — just list the filenames and ask. **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
 5. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
 6. Ask what the user wants to work on before making changes
+7. **If the session involves CSS work**, mention that localhost preview is available: **"This involves CSS changes. Want me to set up localhost preview so you can see changes without deploying each time?"** If accepted, follow the Localhost Preview section below. If declined, use the normal deploy-and-verify workflow.
 
 ## Version Folders
 
@@ -56,6 +58,36 @@ When a `current-state` folder is created, the user should also refresh supportin
 - Replace screenshots in `current-state/Screenshots/` with fresh ones showing the KB's current appearance
 - Remove outdated materials from `Reference/` (e.g., shipped mockups, completed task exports) and add any new reference files for upcoming work
 - Leave `knowledgeowl-css-quirks.md` in place — it's a permanent reference
+
+## Localhost Preview (Optional)
+
+For CSS-heavy sessions, you can serve HTML snapshots locally to preview changes without deploying to KnowledgeOwl each time. This is optional — skip it for quick fixes or sessions where you'd rather deploy and verify directly.
+
+### How It Works
+
+The HTML snapshots already contain the full rendered page with embedded styles. By adding a `<link>` tag that loads `custom-css.css` from the same folder, the local file overrides the embedded custom CSS (same specificity, later source order). External assets (fonts, images, Bootstrap) load from their CDN URLs as usual.
+
+### Setup
+
+1. Create the preview folder: `mkdir -p preview`
+2. For each `full-html-snapshot-*.html` in the current version folder, copy it to `preview/` with a short name (e.g., `full-html-snapshot-homepage.html` → `homepage.html`). Insert `<link rel="stylesheet" href="custom-css.css">` immediately before `</head>` in each copy.
+3. Copy the CSS: `cp [version-folder]/custom-css.css preview/custom-css.css`
+4. Start the server: use `preview_start` (reads `.claude/launch.json`) or run `python3 -m http.server 8080 -d preview` from the project root
+5. Open `http://localhost:8080/homepage.html` in a browser
+
+### Keeping Preview in Sync
+
+Every time you edit `custom-css.css` in the version folder, also copy it to `preview/custom-css.css`. Tell the user the preview is updated so they can refresh the browser. If Claude Preview MCP tools are available, use `preview_screenshot` or `preview_inspect` to verify changes visually.
+
+### Teardown
+
+Delete the preview folder when done: `rm -rf preview`. The preview folder is ephemeral — never version it, never preserve it.
+
+### Limitations
+
+- **CSS only.** Changes to HTML template files (`custom-html-*.html`) are not reflected in the preview because the snapshot is a point-in-time capture. For HTML changes, deploy to KnowledgeOwl and re-capture the snapshot.
+- **Static content.** JavaScript-dependent features (search, dynamic nav, login) will not function. The preview is for visual/layout verification only.
+- **Snapshot freshness.** The preview is only as current as the last HTML snapshot. If the live KB changed since the snapshot was captured, the preview may not match production exactly.
 
 ## CHANGES File
 
