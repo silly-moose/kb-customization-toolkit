@@ -133,8 +133,7 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 | `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` | Detailed step-by-step setup with file mappings and folder structure |
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-PROJECT_HANDOFF_CHECKLIST.md` | Checklist for deployment and project completion |
-| `04-GIT_CHEAT_SHEET.md` | Git commands reference for the template maintainer |
-| `05-LOCALHOST_PREVIEW.md` | Optional localhost preview for faster CSS iteration |
+| `04-LOCALHOST_PREVIEW.md` | Optional localhost preview for faster CSS iteration |
 
 ---
 

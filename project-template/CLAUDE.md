@@ -14,8 +14,7 @@ Available docs (fetch from GitHub when needed):
 - `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` — Detailed setup instructions
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
 - `03-PROJECT_HANDOFF_CHECKLIST.md` — Checklist for deployment and project completion
-- `04-GIT_CHEAT_SHEET.md` — Git commands reference for the template maintainer
-- `05-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
+- `04-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
 
 If the user asks a question about the process, setup, version control, or handoff, fetch the relevant doc from:
 `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/[filename]`
