@@ -104,6 +104,7 @@ Key source files for targeted lookup:
 - `public/css/public/publicview_modern.css` — Modern theme layout (7,416 lines)
 - `public/css/public/standard.css` — Classic theme colors/typography (906 lines)
 - `public/css/public/standard_modern.css` — Modern theme colors/typography (876 lines)
+- `service/views/scripts/themer-templates/custom-css.css` — default custom CSS template (alert styles, TOC anchors, image captions, list numbering, PDF rules, etc.)
 - `service/views/scripts/themer-templates/` — HTML templates defining page structure and class names
 
 **Do not read these files speculatively.** Only look up a specific file when the reference files and HTML snapshot don't answer your question. Use targeted reads (specific line ranges) rather than reading entire files.

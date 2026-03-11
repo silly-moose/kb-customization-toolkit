@@ -10,7 +10,7 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-KnowledgeOwl's default styles use `!important` extensively (e.g., `font-family: 'Geomanist', sans-serif !important`). Custom CSS overrides often need `!important` too, or very high specificity selectors, to take effect.
+KnowledgeOwl's default styles use `!important` extensively — there are 300+ instances across the public CSS files, primarily on display/visibility utilities (`display: block !important`, `display: none !important`), float utilities, responsive table rules, and print styles. Custom CSS overrides often need `!important` too, or very high specificity selectors, to take effect.
 
 ## 2. Theme-Namespaced Selectors
 
@@ -28,13 +28,13 @@ Most default selectors are scoped under a theme class like `.hg-minimalist-theme
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Rules like `a:not(.btn)` appear multiple times with different color values for different contexts (article body, TOC, navigation). Link styling can be tricky — make sure your selector targets the right context.
+Rules like `a:not(.btn)` appear multiple times for different contexts (article body, TOC, navigation, search pager). The default link color uses the `--text-links-color` CSS variable, but specific contexts override it with `--primary-color` or `--secondary-color`. Link styling can be tricky — make sure your selector targets the right context and that you're overriding the correct CSS variable or specificity level.
 
-## 4. The `.no-border` Class
+## 4. Froala Image Classes and `.no-border`
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Images get a `box-shadow` by default via a broad selector. You can override this by matching the original selector's specificity, which is standard CSS specificity behavior. The `.no-border` utility class is a convenient shortcut when you only want to remove the shadow from specific images rather than all of them.
+Images inserted via the Froala editor can have classes applied: `.fr-shadow` (adds `box-shadow`), `.fr-bordered` (adds `border: solid 5px #CCC`), and `.fr-rounded` (adds `border-radius: 10px`). These are opt-in per image, not blanket defaults — but they appear frequently because the editor applies them. The `.no-border` utility class (documented by KnowledgeOwl) removes visual borders from specific images. When writing image-related CSS, be aware of these Froala classes and their specificity.
 
 ## 5. TOC Slideout Layout Coupling
 
@@ -82,14 +82,17 @@ Theme color settings (set via the KnowledgeOwl theme builder UI) are applied dir
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-KnowledgeOwl uses four breakpoints. Custom responsive CSS should align with these:
+KnowledgeOwl uses Bootstrap 3 breakpoints plus custom ones. The most important breakpoints for custom CSS:
 
 | Breakpoint | Typical Use |
 |------------|-------------|
 | 576px      | Small mobile |
-| 768px      | Tablet |
-| 991px      | Small desktop / landscape tablet |
-| 1473px     | Large desktop / three-column layout |
+| 768px      | Tablet (Bootstrap `sm`) |
+| 991px / 992px | Small desktop / landscape tablet (Bootstrap `md`) |
+| 1200px     | Large desktop (Bootstrap `lg`) |
+| 1473px     | Extra large / three-column layout (KO-specific) |
+
+**Note:** The codebase contains many additional breakpoints (e.g., 1400px, 1540px, 1600px) for fine-tuned responsive rules. The five listed above are the primary ones to align with.
 
 ## 10. Custom Utility Classes to Know
 
@@ -97,7 +100,7 @@ Source: https://support.knowledgeowl.com/help/default-custom-css
 
 | Class | Purpose |
 |-------|---------|
-| `.no-border` | Removes box-shadow from images |
+| `.no-border` | Removes visual borders/shadows from images (see quirk #4) |
 | `.check-list` | Styled bullet list with FontAwesome checkmarks (**Note:** This is a Support KB-specific artifact that was never supposed to be in the default custom CSS. It's flagged for removal, but documenting here since it currently exists in the default theme and can cause unexpected styling.) |
 | `.toc-anchor` | Invisible anchor offset for fixed nav |
 | `.margin-top-20` | Spacing utility |
@@ -105,13 +108,13 @@ Source: https://support.knowledgeowl.com/help/default-custom-css
 | `.hg-2column-layout` | Two-column layout variant |
 | `.hg-3column-layout` | Three-column layout variant |
 | `.slideout-menu` | TOC sidebar container |
-| `.slideout-new` | Updated TOC sidebar container used in the current default theme. Less buggy sliding in/out behavior than the older `.slideout-menu` without this class. |
+| `.slideout-new` | Updated TOC sidebar container used in the current default theme's HTML. Less buggy sliding in/out behavior than `.slideout-menu` alone. Note: this class appears in HTML markup but has no dedicated CSS definition — its behavior is controlled by JavaScript and inherited styles. |
 
 ## 11. Image Caption Selectors (`fr-img-caption`)
 
 Source: https://support.knowledgeowl.com/help/style-image-captions
 
-Captioned and non-captioned images use different selectors. Non-captioned images are targeted with `:not(span.fr-img-caption) img.img-responsive`, while captioned images use `span.fr-img-caption`. Captions get a dark background (`#1d284f`) with special link colors (`#F6A267`) to remain readable. Be aware of this split when writing image-related CSS.
+Captioned and non-captioned images use different selectors. Captioned images are wrapped in `span.fr-img-caption`, which gets its own border and layout styles. Caption backgrounds use `var(--primary-color)` (defaults to `#1d284f`) and caption link colors use `var(--image-caption-link-color)` (defaults to `#F6A267`). Since these are CSS variables, the actual values vary per KB based on theme settings. Be aware of this split when writing image-related CSS — you may need separate rules for captioned vs. non-captioned images.
 
 ## 12. Nested Ordered List Numbering
 
@@ -151,10 +154,56 @@ See: https://support.knowledgeowl.com/help/pdfs#styling-pdfs
 
 Different page types get different high-level classes applied to the `body` element. These selectors are important for writing page-specific custom styles:
 
+| Body Class | Applied To |
+|------------|------------|
+| `.hg-article-page` | All article and category pages |
+| `.hg-category-page` | Category pages (always paired with `.hg-article-page`) |
+| `.hg-blog-page` | Blog-style category pages (paired with both above) |
+| `.hg-home-page` | Homepage |
+| `.hg-search-page` | Search results page |
+| `.hg-contact-page` | Contact form pages |
+| `.hg-login-page` | Reader login pages |
+
 ```css
+/* Target only article pages (exclude categories) */
+body.hg-article-page:not(.hg-category-page) .some-element { ... }
+
 /* Target only category pages */
 body.hg-category-page .some-element { ... }
 
-/* Target only article pages */
-body.hg-article-page .some-element { ... }
+/* Target only homepage */
+body.hg-home-page .some-element { ... }
 ```
+
+**Gotcha:** Category pages have *both* `.hg-article-page` and `.hg-category-page`. The source CSS uses `.hg-article-page:not(.hg-category-page)` to target articles only — if you use just `.hg-article-page`, your styles will also hit category pages.
+
+## 16. Z-Index Layering Gaps
+
+The default CSS uses z-index values with large gaps between layers. If you create positioned elements (sticky headers, floating buttons, overlays), be aware of the existing layers:
+
+| Z-Index Range | Used By |
+|---------------|---------|
+| 0–5 | Slideout menu, basic positioned elements |
+| 20 | Various mid-level components |
+| 1031 | Minimalist theme TOC sidebar |
+| 1050 | Bootstrap modal dialogs |
+
+Custom positioned elements should avoid 1031+ unless you intend to overlay the TOC or modals.
+
+## 17. Colors Are CSS Variables (Theme-Dependent)
+
+Many colors in the default CSS use CSS custom properties (`var(--primary-color)`, `var(--text-links-color)`, etc.) rather than hardcoded hex values. The theme builder overrides these variables dynamically. This means:
+
+- The default hex values in the source (e.g., `--primary-color: #1d284f`) may not match what a specific customer's KB uses
+- Always check the customer's HTML snapshot or live KB to see the actual computed values
+- When overriding colors, you can either set a new value on the variable (`--primary-color: #ff0000`) to change it everywhere, or override the specific property on the specific selector
+
+## 18. Deep Selector Nesting for Theme Overrides
+
+Theme-specific styles often use deeply nested selectors (5–7 levels), for example:
+
+```css
+.hg-minimalist-theme .documentation-article .fr-img-caption .fr-img-wrap a > span { ... }
+```
+
+This creates high specificity that's difficult to override without equally deep selectors or `!important`. When your override isn't taking effect, check whether the default rule uses deep nesting — you may need to match or exceed its specificity.
