@@ -55,6 +55,13 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 - An article page
 - Any other pages relevant to the project
 
+**Tip: Use full-page screenshots.** A regular screenshot only captures the visible viewport. To capture the *entire* page (including content below the fold), use Chrome's built-in DevTools command:
+1. Open DevTools: **Cmd+Option+I** (Mac) or **Ctrl+Shift+I** (Windows)
+2. Open the command menu: **Cmd+Shift+P** (Mac) or **Ctrl+Shift+P** (Windows)
+3. Type `screenshot` and select **Capture full size screenshot**
+
+Chrome saves a full-length PNG automatically. This is especially useful for long article and category pages where the below-the-fold layout matters.
+
 ### Full HTML Snapshot (for Claude reference)
 1. Open the customer's homepage in Google Chrome
 2. Right-click anywhere on the page and select **Inspect**
