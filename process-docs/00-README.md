@@ -122,7 +122,7 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 |------|---------|
 | `CLAUDE.md` | Auto-read by Claude Code at session start — universal process rules (auto-updated from GitHub) |
 | `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
-| `Reference/` | KnowledgeOwl CSS quirks doc and space for customer-specific reference materials (mockups, assets, etc.) |
+| `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (mockups, assets, etc.) |
 | `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
 
 **What's in `process-docs/`:**

@@ -26,7 +26,7 @@ If the user asks a question about the process, setup, version control, or handof
    Then re-read the updated file before continuing. If the download fails (e.g., network issue), continue with the existing version.
 2. Review the latest version folder, the most recent `YYYY.MM.DD-current-state` folder (if one exists), or the `YYYY.MM.DD-no-changes` folder if no versions exist yet. **If this is the first session** (only the no-changes folder exists), confirm that all content is in place — code files, HTML snapshots, and screenshots — then run `chmod -R a-w [no-changes-folder]/` to make it read-only and protect it from accidental edits. Do not lock the folder until the user has finished adding all files.
 3. **Prompt the user about a current-state snapshot** — check the date of the latest version folder or `current-state` folder. If more than one day has passed since the last session, ask: **"It's been more than a day since the last session. Do you want to create a `current-state` snapshot before we start? This captures any changes made in KnowledgeOwl since we last worked."** If the user confirms, walk them through copying all 12 code files from KnowledgeOwl into a new `YYYY.MM.DD-current-state` folder, and also create placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder. Ask the user to paste fresh HTML into each placeholder (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML). Once all files are in place — the 12 code files, the html snapshot files, and screenshots — run `chmod -R a-w [current-state-folder]/` to make it read-only. Then proceed.
-4. **Review the `Reference/` folder** — list its contents and flag any files that may be stale (e.g., files that were present in earlier versions but may no longer be relevant). Ask the user: **"Here's what's in Reference/. Are all of these still relevant, or should any be removed before we start?"** Do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites) — just list the filenames and ask. **Always read `knowledgeowl-css-quirks.md` if the task involves CSS or HTML changes.**
+4. **Review the `Reference/` folder** — list its contents and flag any files that may be stale (e.g., files that were present in earlier versions but may no longer be relevant). Ask the user: **"Here's what's in Reference/. Are all of these still relevant, or should any be removed before we start?"** Do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites) — just list the filenames and ask. **Always read `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md` if the task involves CSS or HTML changes.**
 5. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
 6. Ask what the user wants to work on before making changes
 7. **If the session involves CSS work**, mention that localhost preview is available: **"This involves CSS changes. Want me to set up localhost preview so you can see changes without deploying each time?"** If accepted, follow the Localhost Preview section below. If declined, use the normal deploy-and-verify workflow.
@@ -87,6 +87,26 @@ Delete the preview folder when done: `rm -rf preview`. The preview folder is eph
 - **CSS only.** Changes to HTML template files (`custom-html-*.html`) are not reflected in the preview because the snapshot is a point-in-time capture. For HTML changes, deploy to KnowledgeOwl and re-capture the snapshot.
 - **Static content.** JavaScript-dependent features (search, dynamic nav, login) will not function. The preview is for visual/layout verification only.
 - **Snapshot freshness.** The preview is only as current as the last HTML snapshot. If the live KB changed since the snapshot was captured, the preview may not match production exactly.
+
+## KnowledgeOwl Source CSS Lookup (Chad's Machine Only)
+
+Two reference files in `Reference/` cover the most common CSS lookup needs:
+- `knowledgeowl-css-quirks.md` — platform-specific gotchas and idiosyncrasies
+- `knowledgeowl-css-defaults.md` — default selectors, property values, and CSS architecture
+
+**Start with these files.** They cover the vast majority of what you need when writing CSS overrides.
+
+If you need exact property values or full selector chains not covered in the reference files, and the KO source codebase is available at `/Users/chadtimblin/My Drive*/Claude Code desktop/ko-codebase`, you can read specific source CSS files directly for targeted lookups. **This codebase is only available on Chad's machine** — other teammates should rely on the reference files and the customer's HTML snapshot.
+
+Key source files for targeted lookup:
+- `public/css/public/ko-css.css` — CSS custom properties and KO-specific utilities (2,616 lines)
+- `public/css/public/publicview.css` — Classic theme layout (7,468 lines)
+- `public/css/public/publicview_modern.css` — Modern theme layout (7,416 lines)
+- `public/css/public/standard.css` — Classic theme colors/typography (906 lines)
+- `public/css/public/standard_modern.css` — Modern theme colors/typography (876 lines)
+- `service/views/scripts/themer-templates/` — HTML templates defining page structure and class names
+
+**Do not read these files speculatively.** Only look up a specific file when the reference files and HTML snapshot don't answer your question. Use targeted reads (specific line ranges) rather than reading entire files.
 
 ## CHANGES File
 
