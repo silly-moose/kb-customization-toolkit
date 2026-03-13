@@ -68,7 +68,7 @@ When a `current-state` folder is created, the user should also refresh supportin
 
 *Authoritative reference: `04-LOCALHOST_PREVIEW.md` in the process docs.*
 
-For CSS-heavy sessions, you can serve HTML snapshots locally to preview changes without deploying to KnowledgeOwl each time. This is optional — skip it for quick fixes or sessions where you'd rather deploy and verify directly.
+For sessions involving significant visual iteration, you can serve HTML snapshots locally to preview changes without deploying to KnowledgeOwl each time. This is most effective for CSS changes (which use a clean override mechanism) but can also support HTML edits made directly in the snapshot. Skip it for quick fixes or sessions where you'd rather deploy and verify directly.
 
 ### How It Works
 
