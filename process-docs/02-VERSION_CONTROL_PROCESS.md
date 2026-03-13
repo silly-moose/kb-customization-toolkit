@@ -304,3 +304,18 @@ Deploy to the target KB (sandbox or live). Verify changes after deployment.
 - Gets customer approval
 - If using a sandbox, deploys to production after approval
 - If issues arise, rolls back to v2
+
+---
+
+## Project Closeout
+
+Before closing out a project, review whether any process improvements were discovered during the work:
+
+- [ ] Any new steps or tips to add to `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`?
+- [ ] Any new sections to add to the `CHANGES_FROM_no-changes.md` template?
+- [ ] Any new template files needed in `TEMPLATE-no-changes`?
+- [ ] Any improvements to the version control process (`02-VERSION_CONTROL_PROCESS.md`)?
+
+**Chad (template maintainer):** Update the master template directly and push to the repo.
+
+**Everyone else:** Submit suggestions to Chad. Always pull the latest version from the repo before starting a new project.

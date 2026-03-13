@@ -179,7 +179,7 @@ For guidance on starting subsequent sessions, see "Starting a New Claude Code Se
 
 ## 7. Project Completion
 
-When the project is complete, use `03-PROJECT_HANDOFF_CHECKLIST.md` (in the template repo — ask Claude to fetch it) to ensure all deployment and documentation steps are completed.
+When the project is complete, review the "Project Closeout" section in `02-VERSION_CONTROL_PROCESS.md` to capture any process improvements discovered during the work.
 
 ---
 

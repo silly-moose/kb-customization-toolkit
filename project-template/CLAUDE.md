@@ -13,8 +13,7 @@ Available docs (fetch from GitHub when needed):
 - `00-README.md` — Onboarding overview for new teammates
 - `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` — Detailed setup instructions
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
-- `03-PROJECT_HANDOFF_CHECKLIST.md` — Checklist for deployment and project completion
-- `04-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
+- `03-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
 
 If the user asks a question about the process, setup, version control, or handoff, fetch the relevant doc from:
 `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/[filename]`
@@ -66,7 +65,7 @@ When a `current-state` folder is created, the user should also refresh supportin
 
 ## Localhost Preview (Optional)
 
-*Authoritative reference: `04-LOCALHOST_PREVIEW.md` in the process docs.*
+*Authoritative reference: `03-LOCALHOST_PREVIEW.md` in the process docs.*
 
 For sessions involving significant visual iteration, you can serve HTML snapshots locally to preview changes without deploying to KnowledgeOwl each time. This is most effective for CSS changes (which use a clean override mechanism) but can also support HTML edits made directly in the snapshot. Skip it for quick fixes or sessions where you'd rather deploy and verify directly.
 
