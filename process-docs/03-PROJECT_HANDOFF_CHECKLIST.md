@@ -32,19 +32,9 @@ Check which deployment workflow applies to this project:
 
 ## Code Deployment
 
-- [ ] Custom CSS deployed
-- [ ] Custom HEAD deployed (if modified)
-- [ ] Custom HTML sections deployed (list which ones):
-  - [ ] Body
-  - [ ] Top Navigation
-  - [ ] Article
-  - [ ] Article Version
-  - [ ] Homepage
-  - [ ] Login
-  - [ ] Manage Reader Subscriptions
-  - [ ] 404 Page
-  - [ ] Restricted Access Page
-  - [ ] Right Column
+Deploy the files listed in the final version folder's `CHANGES_FROM_*.md` — it specifies exactly which files were modified and where to paste them in KnowledgeOwl. Only deploy files that were actually changed.
+
+- [ ] All files listed in the CHANGES file deployed to KnowledgeOwl
 
 ### If Sandbox → Production
 

@@ -163,10 +163,25 @@ A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Sty
 ### Steps
 
 1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
-2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder, and ask the user to paste fresh HTML into each one (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML). Once all files are filled in — the 12 code files and the html snapshot files — run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
-3. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
-4. **Refresh supporting files** — clean up outdated materials and add current ones (see details below)
-5. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder, and ask the user to paste fresh HTML into each one (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML).
+3. **Document what changed since the last version** — see "CHANGES File in Current-State Folders" below.
+4. **Lock the folder** — once all files are in place (code files, HTML snapshots, screenshots, and CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
+5. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
+6. **Refresh supporting files** — clean up outdated materials and add current ones (see details below)
+7. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+
+### CHANGES File in Current-State Folders
+
+The `current-state` folder should include a `CHANGES_FROM_v[last].md` file (e.g., `CHANGES_FROM_v4.md` if v4 was the last version before the gap). This documents any differences between the last version and the current live KB — changes that may have been made by the customer, another teammate, or directly in KnowledgeOwl outside this system.
+
+Have Claude compare the `current-state` code files against the last version folder and note any differences. The CHANGES file should:
+- List which files differ and summarize what changed
+- Note that these changes were **not made through this system** — they were discovered during the current-state snapshot, and their origin (customer, teammate, direct KO edit) may be unknown
+- Use the summary section to flag anything unexpected or potentially problematic
+
+This preserves a record of what drifted between sessions. Without it, the gap between the last version and the next version is undocumented, and it becomes difficult to trace when and why specific changes appeared.
+
+**Note:** Like all `current-state` folder contents, this CHANGES file becomes read-only once the folder is locked.
 
 ### Why Refreshing Supporting Files Matters
 
@@ -189,7 +204,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 
 - **Old version folders** — never touch these; their screenshots and contents stay as-is as a historical record
 - **The `no-changes` folder** — never modify for any reason
-- **`knowledgeowl-css-quirks.md`** — this is a permanent reference, always stays
+- **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 
 **Note:** You no longer need to manually update process docs. Claude auto-updates `CLAUDE.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`, `04-`) live in the repo only — they are never copied into customer folders.
 
@@ -203,8 +218,9 @@ Project/
 ├── 2026.01.28-v3/
 ├── 2026.01.28-v4/                # Last version from January work
 ├── 2026.03.15-current-state/     # Fresh snapshot of live KB before resuming
+│   └── CHANGES_FROM_v4.md        # Documents drift between v4 and current live KB
 ├── 2026.03.15-v5/                # New work resumes here (copied from current-state)
-│   └── CHANGES_FROM_v4.md
+│   └── CHANGES_FROM_current-state.md
 └── 2026.03.16-v6/
     └── CHANGES_FROM_v5.md
 ```

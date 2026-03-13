@@ -29,9 +29,11 @@ If the user asks a question about the process, setup, version control, or handof
 4. **Review the `Reference/` folder** — list its contents and flag any files that may be stale (e.g., files that were present in earlier versions but may no longer be relevant). Ask the user: **"Here's what's in Reference/. Are all of these still relevant, or should any be removed before we start?"** Do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites) — just list the filenames and ask. **Always read `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md` if the task involves CSS or HTML changes.**
 5. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
 6. Ask what the user wants to work on before making changes
-7. **If the session involves CSS work**, mention that localhost preview is available: **"This involves CSS changes. Want me to set up localhost preview so you can see changes without deploying each time?"** If accepted, follow the Localhost Preview section below. If declined, use the normal deploy-and-verify workflow.
+7. **If the session involves significant visual iteration** (CSS changes, layout adjustments, or a mix of CSS and HTML work), mention that localhost preview is available: **"This involves visual changes. Want me to set up localhost preview so you can see changes without deploying each time?"** If accepted, follow the Localhost Preview section below. If declined, use the normal deploy-and-verify workflow.
 
 ## Version Folders
+
+*Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` in the process docs.*
 
 - **Format:** `YYYY.MM.DD-v#` (e.g., `2026.01.21-v1`, `2026.01.22-v3`)
 - **Date:** Use today's date
@@ -49,16 +51,22 @@ If the user asks a question about the process, setup, version control, or handof
 
 ## Current-State Folders
 
+*Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` — "Returning to an Existing Project After a Gap".*
+
 A `YYYY.MM.DD-current-state` folder contains the 12 code files copied from KnowledgeOwl's Customize > Style (HTML & CSS) sections (the core snapshot), plus placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder. The html snapshot files are not pulled from KnowledgeOwl — the user captures them from the browser. Include placeholders for each one and ask the user to paste in fresh HTML. Do not make the folder read-only until all content — code files, HTML snapshots, and screenshots — has been added.
 
 Create a `current-state` folder whenever resuming work after more than one day has passed since the last session — or sooner if you know that you or the customer made changes directly in KnowledgeOwl. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
 
+Before locking the `current-state` folder, compare its code files against the last version folder and include a `CHANGES_FROM_v[last].md` documenting any differences. These changes were not made through this system — note that their origin (customer, teammate, direct KO edit) may be unknown. When creating the next version folder from `current-state`, name its CHANGES file `CHANGES_FROM_current-state.md`.
+
 When a `current-state` folder is created, the user should also refresh supporting files. Old screenshots and reference materials can be actively misleading — they may show a design or layout that no longer exists. Remind the user to:
 - Replace screenshots in `current-state/Screenshots/` with fresh ones showing the KB's current appearance
 - Remove outdated materials from `Reference/` (e.g., shipped mockups, completed task exports) and add any new reference files for upcoming work
-- Leave `knowledgeowl-css-quirks.md` in place — it's a permanent reference
+- Leave `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md` in place — they're permanent references
 
 ## Localhost Preview (Optional)
+
+*Authoritative reference: `04-LOCALHOST_PREVIEW.md` in the process docs.*
 
 For CSS-heavy sessions, you can serve HTML snapshots locally to preview changes without deploying to KnowledgeOwl each time. This is optional — skip it for quick fixes or sessions where you'd rather deploy and verify directly.
 
@@ -84,8 +92,8 @@ Delete the preview folder when done: `rm -rf preview`. The preview folder is eph
 
 ### Limitations
 
-- **CSS only.** Changes to HTML template files (`custom-html-*.html`) are not reflected in the preview because the snapshot is a point-in-time capture. For HTML changes, deploy to KnowledgeOwl and re-capture the snapshot.
-- **Static content.** JavaScript-dependent features (search, dynamic nav, login) will not function. The preview is for visual/layout verification only.
+- **Optimized for CSS.** The override mechanism (linking a local CSS file) makes CSS iteration fast and clean. HTML changes require editing the snapshot directly, which works but is more manual.
+- **No server-dependent features.** Anything that relies on KnowledgeOwl's backend won't work locally. This includes KO template variables, search, reader group logic, login/authentication, and JavaScript that calls KO APIs.
 - **Snapshot freshness.** The preview is only as current as the last HTML snapshot. If the live KB changed since the snapshot was captured, the preview may not match production exactly.
 
 ## KnowledgeOwl Source CSS Lookup (Chad's Machine Only)
@@ -111,9 +119,13 @@ Key source files for targeted lookup:
 
 ## CHANGES File
 
-Every new version folder must include a CHANGES file:
+*Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` — "Document Changes" and "Provide Deployment Instructions".*
+
+Every new version folder and current-state folder must include a CHANGES file:
 - **First version:** `CHANGES_FROM_no-changes.md`
 - **Subsequent versions:** `CHANGES_FROM_v[previous].md` (e.g., `CHANGES_FROM_v2.md` in the v3 folder)
+- **Current-state folders:** `CHANGES_FROM_v[last].md` (documents drift between the last version and the live KB — see "Current-State Folders" above)
+- **First version after a current-state snapshot:** `CHANGES_FROM_current-state.md`
 
 Copy the template from the no-changes folder and update it. Include these sections:
 - Summary of what changed and why
@@ -126,6 +138,8 @@ Copy the template from the no-changes folder and update it. Include these sectio
 Delete any sections that don't apply to the current version. Only include files that were actually modified — do not list all 12 files every time.
 
 ## Deployment Instructions
+
+*Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` — "Provide Deployment Instructions".*
 
 Always include explicit deployment instructions in the CHANGES file. Never assume the user knows which files to deploy. For each modified file, specify:
 
