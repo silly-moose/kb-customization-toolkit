@@ -15,7 +15,7 @@ Available docs (fetch from GitHub when needed):
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
 - `03-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
 
-If the user asks a question about the process, setup, version control, or handoff, fetch the relevant doc from:
+If the user asks a question about the process, setup, or version control, fetch the relevant doc from:
 `https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/[filename]`
 
 ## At the Start of Each Session

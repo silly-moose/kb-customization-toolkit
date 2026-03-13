@@ -42,7 +42,7 @@ If a customer has no existing custom code in a given field, leave the placeholde
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
 
-**Note:** The canonical version of this mapping table lives in `CLAUDE.md` (which Claude reads automatically). If KnowledgeOwl adds or changes sections, update `CLAUDE.md` first.
+*Authoritative version: the mapping table in `CLAUDE.md` (which Claude reads automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE.md` first.*
 
 ---
 

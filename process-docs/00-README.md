@@ -10,13 +10,13 @@ We use Claude Code (Anthropic's CLI tool) to write and iterate on CSS/HTML custo
 
 ---
 
-## The Quick Setup (Per Customer)
+## Quick Setup
 
 1. **Duplicate** the `project-template/` folder from your local copy of the repo
 2. **Rename** the copy to the customer's name (e.g., `Acme`)
 3. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
-5. **Paste** the customer's current code into each file in the no-changes folder (each file maps 1:1 to a KnowledgeOwl Customize > Style section)
+5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
 7. **Capture an HTML snapshot** of the homepage via Chrome DevTools and paste it into `full-html-snapshot-homepage.html`
 8. **Drop reference materials** (mockups, Asana exports, assets) into the `Reference/` folder
@@ -77,33 +77,9 @@ Fill in the bracketed fields with your specific details. The more context you pr
 
 ---
 
-## Version Control at a Glance
+## Version Control, Deployment, and Project Closeout
 
-- **`YYYY.MM.DD-no-changes`** — The untouched backup of the customer's original code. Never modify this.
-- **`YYYY.MM.DD-v1`, `v2`, `v3`...** — Each iteration of changes. Created by copying the previous version and editing only the new copy. Version numbers always increment (they never reset, even across days).
-- **`CHANGES_FROM_*.md`** — Inside each version folder, documents what changed and includes deployment instructions. The first version's file is named `CHANGES_FROM_no-changes.md`; subsequent versions use `CHANGES_FROM_v[previous].md`.
-
-**Rollback** is straightforward: just deploy files from an earlier version folder.
-
-For full details on when to create new versions and naming rules, ask Claude to fetch `02-VERSION_CONTROL_PROCESS.md` from the template repo.
-
----
-
-## Deploying Changes
-
-Claude's `CHANGES_FROM_*.md` notes tell you exactly what to do, but the pattern is always:
-
-1. Open the file from the latest version folder in VS Code
-2. Copy its contents
-3. Paste into the matching KnowledgeOwl field (Customize > Style (HTML & CSS) > the relevant section)
-4. Verify the changes look and work correctly
-5. If deploying to a sandbox, move changes to production once the customer approves
-
----
-
-## Finishing a Project
-
-Review the "Project Closeout" section in `02-VERSION_CONTROL_PROCESS.md` to make sure process improvements are captured. You can ask Claude to fetch it during a session.
+See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deployment instructions, rollback procedures, and project closeout checklist. Ask Claude to fetch it, or find it in the template repo. Claude handles versioning and deployment instructions automatically during sessions.
 
 ---
 
