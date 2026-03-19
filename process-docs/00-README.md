@@ -95,6 +95,16 @@ Fill in the bracketed fields with your specific details. The more context you pr
 
 ---
 
+## Refreshing Process Rules Mid-Session
+
+Claude fetches the latest `CLAUDE-RULES.md` from GitHub at the start of each session. If you know the rules were updated while a session is already in progress, you can ask Claude to re-fetch without starting a new session:
+
+```
+Fetch the latest CLAUDE-RULES.md from GitHub, save it locally, and follow the updated rules for the rest of this session.
+```
+
+---
+
 ## Version Control, Deployment, and Project Closeout
 
 See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deployment instructions, rollback procedures, and project closeout checklist. Ask Claude to fetch it, or find it in the template repo. Claude handles versioning and deployment instructions automatically during sessions.
