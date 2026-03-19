@@ -173,6 +173,8 @@ Review the no-changes folder and the reference materials in Reference/. Then let
 
 Claude will review the code, check the deployment target (or ask if it hasn't been set yet), and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works.
 
+**Alternatively**, if you'd rather have Claude walk you through setup instead of doing it on your own first, see the guided setup prompts in "Starting a New Claude Code Session" in `00-README.md`.
+
 For guidance on starting subsequent sessions, see "Starting a New Claude Code Session" in `00-README.md`.
 
 ---

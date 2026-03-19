@@ -24,6 +24,16 @@ We use Claude Code (Anthropic's CLI tool) to write and iterate on CSS/HTML custo
 
 For the full walkthrough — including the file-to-KnowledgeOwl mapping table, the HTML snapshot steps, the marketing site download process, and a folder structure diagram — see `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` in the template repo (or ask Claude to fetch it).
 
+**Once setup is complete**, open Claude Code in the customer folder and paste:
+```
+Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
+```
+
+**Or let Claude walk you through setup.** Open Claude Code in the customer folder and paste:
+```
+I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me through the setup process.
+```
+
 ---
 
 ## How the Work Actually Happens
@@ -45,17 +55,27 @@ Claude also **auto-updates `CLAUDE.md`** from the GitHub repo at the start of ea
 
 All you need to do is paste the appropriate prompt to kick things off:
 
-**First session on a new project** (only the `no-changes` folder exists):
+**First session on a new project — setup already done** (no-changes folder is populated):
 ```
 Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
 
-**Returning to an existing project** (version folders already exist):
+**First session on a new project — guided setup** (you haven't created the no-changes folder yet):
+```
+I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me through the setup process.
+```
+
+**Returning to an existing project — setup already done** (current-state folder is populated):
 ```
 Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
 ```
 
-(Before pasting this prompt, you'll need to create a `current-state` snapshot — see "Returning to an Existing Project After a Gap" in the version control process doc, or ask Claude about the steps.)
+(Before pasting this prompt, you'll need to create a `current-state` snapshot — see "Returning to an Existing Project After a Gap" in the version control process doc, or use the guided setup prompt below.)
+
+**Returning to an existing project — guided setup** (you haven't created the current-state folder yet):
+```
+I want to resume work on [customer name]. Walk me through the setup process so we can get started.
+```
 
 ---
 
