@@ -2,7 +2,7 @@
 
 This document is the full reference for the version control process used in KnowledgeOwl customization projects. It includes detailed explanations, examples, and rollback procedures.
 
-**Note:** Claude automatically reads `CLAUDE.md` at the start of every session (and auto-updates it from the GitHub repo). This file is for human reference and for understanding the "why" behind the conventions. Claude can fetch this doc on demand if you ask about the version control process.
+**Note:** Claude automatically reads `CLAUDE.md` at the start of every session, which fetches the latest `CLAUDE-RULES.md` from the GitHub repo. This file is for human reference and for understanding the "why" behind the conventions. Claude can fetch this doc on demand if you ask about the version control process.
 
 ---
 
@@ -206,7 +206,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 
-**Note:** You no longer need to manually update process docs. Claude auto-updates `CLAUDE.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
+**Note:** You no longer need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
 
 ### Example
 

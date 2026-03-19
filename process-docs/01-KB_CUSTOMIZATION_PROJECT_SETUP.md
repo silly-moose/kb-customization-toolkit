@@ -42,7 +42,7 @@ If a customer has no existing custom code in a given field, leave the placeholde
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
 
-*Authoritative version: the mapping table in `CLAUDE.md` (which Claude reads automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE.md` first.*
+*Authoritative version: the mapping table in `CLAUDE-RULES.md` (which Claude fetches from GitHub automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE-RULES.md` first.*
 
 ---
 
@@ -122,7 +122,8 @@ Your project should look like this:
 ```
 [your projects folder]/
 └── [Customer Name]/
-    ├── CLAUDE.md                       (auto-read by Claude Code — auto-updated from GitHub each session)
+    ├── CLAUDE.md                       (auto-read by Claude Code — bootstrap that fetches latest rules from GitHub)
+    ├── CLAUDE-RULES.md                 (process rules — fetched fresh from GitHub each session, local copy is fallback)
     ├── .claude/
     │   └── rules/
     │       └── project.md              (auto-read by Claude Code — customer-specific settings)
@@ -160,7 +161,7 @@ Your project should look like this:
 
 ## 6. Ready to Start
 
-Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (universal rules, auto-updated from GitHub) and `.claude/rules/project.md` (customer-specific settings). Paste this prompt to kick off the first session:
+Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md` (customer-specific settings). Paste this prompt to kick off the first session:
 
 > **Note: `.claude/` is a hidden folder.** Files and folders starting with a dot (`.`) are hidden by default in macOS Finder and Windows File Explorer. To make it visible:
 > - **Mac:** Press **Command + Shift + .** (period) in Finder to toggle hidden files on/off

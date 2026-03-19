@@ -17,7 +17,7 @@
 
 ## Files Modified
 <!-- List only the files that were actually modified. For each file, describe what changed.
-     See CLAUDE.md for the full file-to-KnowledgeOwl mapping. -->
+     See CLAUDE-RULES.md for the full file-to-KnowledgeOwl mapping. -->
 
 ## Color Palette
 <!-- Delete this section if no new colors were added. -->
@@ -48,7 +48,7 @@
      **Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > [exact location]
      **Changes**: [brief description]
 
-     See CLAUDE.md for the full file-to-KnowledgeOwl mapping.
+     See CLAUDE-RULES.md for the full file-to-KnowledgeOwl mapping.
      Only include sections for files that were actually modified.
 -->
 

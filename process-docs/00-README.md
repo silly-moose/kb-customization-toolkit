@@ -38,7 +38,7 @@ I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me
 
 ## How the Work Actually Happens
 
-1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` and `.claude/rules/project.md` and picks up the version control rules and project settings
+1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md`, picking up the version control rules and project settings
 2. **Tell Claude to review** the latest version folder and any relevant reference materials
 3. **Describe the changes you need** — Claude writes the CSS/HTML for you
 4. **Claude creates versioned folders** as it works. Each set of substantial changes gets a new folder like `2026.02.06-v1`, `2026.02.06-v2`, etc., copied from the previous version
@@ -49,9 +49,7 @@ I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me
 
 ## Starting a New Claude Code Session
 
-Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` contains the universal version control rules; `.claude/rules/project.md` contains customer-specific settings like the deployment target. If the deployment target is already set in the project file, Claude uses it automatically — otherwise it asks.
-
-Claude also **auto-updates `CLAUDE.md`** from the GitHub repo at the start of each session, so you always have the latest process rules without any manual copying.
+Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` is a small bootstrap file that tells Claude to fetch the latest process rules (`CLAUDE-RULES.md`) from the GitHub repo. This ensures you always have the latest rules without any manual copying. `.claude/rules/project.md` contains customer-specific settings like the deployment target — if it's already set, Claude uses it automatically; otherwise it asks.
 
 All you need to do is paste the appropriate prompt to kick things off:
 
@@ -116,7 +114,8 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 
 | File | Purpose |
 |------|---------|
-| `CLAUDE.md` | Auto-read by Claude Code at session start — universal process rules (auto-updated from GitHub) |
+| `CLAUDE.md` | Auto-read by Claude Code at session start — bootstrap file that fetches the latest `CLAUDE-RULES.md` from GitHub |
+| `CLAUDE-RULES.md` | Process rules fetched fresh from GitHub each session (local copy serves as fallback if fetch fails) |
 | `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
 | `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (mockups, assets, etc.) |
 | `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
