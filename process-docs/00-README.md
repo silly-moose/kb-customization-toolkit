@@ -10,7 +10,9 @@ We use Claude Code (Anthropic's CLI tool) to write and iterate on CSS/HTML custo
 
 ---
 
-## Quick Setup
+## Quick Setup: New Project
+
+Use this when you're starting work on a customer's knowledge base for the first time.
 
 1. **Duplicate** the `project-template/` folder from your local copy of the repo
 2. **Rename** the copy to the customer's name (e.g., `Acme`)
@@ -36,6 +38,31 @@ I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me
 
 ---
 
+## Quick Setup: Returning to an Existing Project
+
+Use this when you're resuming work on a customer's knowledge base that you've worked on before.
+
+1. **Open the customer's existing project folder** — don't create a new one
+2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date) if more than one day has passed since the last session (or sooner if you know changes were made directly in KnowledgeOwl)
+3. **Pull fresh code** from the customer's live KB (copy from each Customize > Style section) into the `current-state` folder
+4. **Add fresh screenshots** of the customer's current KB to the `Screenshots/` folder inside the `current-state` folder
+5. **Capture fresh HTML snapshots** via Chrome DevTools and paste them into the `current-state` folder
+6. **Update the `Reference/` folder** — remove outdated materials and add any new ones (mockups, Asana exports, assets)
+
+For the full walkthrough — including how Claude documents what changed since the last version, folder locking, and why refreshing supporting files matters — see the "Returning to an Existing Project After a Gap" section in `02-VERSION_CONTROL_PROCESS.md` (or ask Claude to fetch it).
+
+**Once setup is complete**, open Claude Code in the customer folder and paste:
+```
+Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
+```
+
+**Or let Claude walk you through setup.** Open Claude Code in the customer folder and paste:
+```
+I want to resume work on [customer name]. Walk me through the setup process so we can get started.
+```
+
+---
+
 ## How the Work Actually Happens
 
 1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md`, picking up the version control rules and project settings
@@ -51,29 +78,7 @@ I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me
 
 Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` is a small bootstrap file that tells Claude to fetch the latest process rules (`CLAUDE-RULES.md`) from the GitHub repo. This ensures you always have the latest rules without any manual copying. `.claude/rules/project.md` contains customer-specific settings like the deployment target — if it's already set, Claude uses it automatically; otherwise it asks.
 
-All you need to do is paste the appropriate prompt to kick things off:
-
-**First session on a new project — setup already done** (no-changes folder is populated):
-```
-Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
-```
-
-**First session on a new project — guided setup** (you haven't created the no-changes folder yet):
-```
-I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me through the setup process.
-```
-
-**Returning to an existing project — setup already done** (current-state folder is populated):
-```
-Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
-```
-
-(Before pasting this prompt, you'll need to create a `current-state` snapshot — see "Returning to an Existing Project After a Gap" in the version control process doc, or use the guided setup prompt below.)
-
-**Returning to an existing project — guided setup** (you haven't created the current-state folder yet):
-```
-I want to resume work on [customer name]. Walk me through the setup process so we can get started.
-```
+Use the prompt templates from the Quick Setup checklists above to kick off each session.
 
 ---
 
