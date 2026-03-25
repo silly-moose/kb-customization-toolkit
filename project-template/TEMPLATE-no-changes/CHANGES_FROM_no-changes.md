@@ -31,6 +31,7 @@
 
 ## Manual Steps in KnowledgeOwl
 <!-- Delete this section if there are no manual steps. Examples:
+     - Update Style Settings colors (Customize > Style > Style Settings > Colors) — do this BEFORE deploying code files
      - Upload images to KnowledgeOwl file library
      - Update category icons or descriptions
      - Configure redirect rules

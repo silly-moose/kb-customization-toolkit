@@ -44,6 +44,12 @@ If a customer has no existing custom code in a given field, leave the placeholde
 
 *Authoritative version: the mapping table in `CLAUDE-RULES.md` (which Claude fetches from GitHub automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE-RULES.md` first.*
 
+### Record Current Style Settings Colors
+
+While you're in the Customize > Style area, also take a screenshot of the current Style Settings colors (Customize > Style > Style Settings > Colors). This records the customer's original theme-level color configuration. If the project later changes brand colors, Claude will recommend updating these settings to match — having the original values on record makes that easier and provides a rollback reference.
+
+Save the screenshot in the `Screenshots/` folder inside the no-changes folder alongside the other baseline screenshots.
+
 ---
 
 ## 3. Capture the Current State
@@ -188,6 +194,7 @@ When the project is complete, review the "Project Closeout" section in `02-VERSI
 
 ## Quick Reference: KnowledgeOwl Navigation
 
+- **Style Settings colors:** Customize > Style > Style Settings > Colors
 - **Custom CSS:** Customize > Style (HTML & CSS) > Custom CSS
 - **Custom HEAD:** Customize > Style (HTML & CSS) > Custom HEAD
 - **Custom HTML sections:** Customize > Style (HTML & CSS) > Custom HTML > [Section Name]

@@ -89,6 +89,16 @@ In the CHANGES file, always specify:
 
 **Example format:**
 ```markdown
+## Manual Steps in KnowledgeOwl
+
+### Update Style Settings Colors (do this BEFORE deploying code files)
+Go to Customize > Style > Style Settings > Colors and update:
+
+| Setting              | Current   | New       |
+|----------------------|-----------|-----------|
+| Highlights & accents | `#5b9bd5` | `#009d9c` |
+| Icon color           | `#5b9bd5` | `#009d9c` |
+
 ## Files to Deploy
 
 ### Custom CSS — COPY THIS FILE
@@ -101,6 +111,8 @@ In the CHANGES file, always specify:
 **Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Homepage
 **Changes**: Updated link colors to brand palette
 ```
+
+**Why Style Settings come first:** KnowledgeOwl's Style Settings color pickers generate dynamic theme CSS that loads *before* Custom CSS. If a version changes brand colors, the Style Settings should be updated first so the theme-level CSS and Custom CSS agree instead of competing.
 
 ---
 

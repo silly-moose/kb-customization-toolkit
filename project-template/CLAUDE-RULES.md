@@ -112,7 +112,7 @@ Copy the template from the no-changes folder and update it. Include these sectio
 - Which files were modified (with details)
 - Color palette (only if new colors were introduced)
 - What the user will see after deployment
-- Manual steps needed in KnowledgeOwl (only if applicable)
+- Manual steps needed in KnowledgeOwl (only if applicable — see below)
 - Files to deploy (see below)
 
 Delete any sections that don't apply to the current version. Only include files that were actually modified — do not list all 12 files every time.
@@ -135,6 +135,30 @@ End deployment instructions based on the deployment target established at the st
 - **If live KB:** "Deploy directly to the live KB. Verify changes immediately after deployment."
 
 Every time you update code and ask the user to test or deploy, tell them in the conversation exactly which file(s) to copy and where to paste them in KnowledgeOwl. Do this every single time — even if you're iterating on the same file. Never assume the user will check the CHANGES file or remember from a previous message.
+
+## Style Settings Colors
+
+KnowledgeOwl's Style Settings (Customize > Style > Style Settings > Colors) include color pickers that generate dynamic theme CSS. This dynamic CSS loads *before* Custom CSS. When your changes introduce new brand colors or significantly alter the color scheme, the Style Settings colors should be updated to match — otherwise the theme-level CSS and your Custom CSS will have competing color values, which can cause visual inconsistencies and confuse anyone editing the KB later.
+
+**When to update Style Settings:** Any version that changes brand colors, accent colors, or the overall color scheme. Not every version needs this — only those that shift the palette.
+
+**How to handle it:**
+1. Include the recommended Style Settings changes as a **manual step** in the CHANGES file (in the "Manual Steps in KnowledgeOwl" section), with a table showing each setting, its current value, and the recommended new value
+2. In deployment instructions, list the Style Settings changes **before** the code file deployments — the theme-level CSS should already match when Custom CSS overrides layer on top
+3. When telling the user to deploy in conversation, mention the Style Settings changes first
+
+**Available Style Settings colors** (Customize > Style > Style Settings > Colors):
+
+| Setting | What it affects |
+|---------|-----------------|
+| Header background | Top navigation bar background |
+| Header text | Top navigation text |
+| Header tags | H1s, H2s, H3s, etc. |
+| Column background | Sidebar/column background |
+| Column text | Sidebar/column text |
+| Highlights & accents | Buttons, active states, accent elements — this is usually the most impactful setting |
+| Icon color | Default category icon color |
+| Icon background | Default category icon background |
 
 ## KnowledgeOwl File-to-Section Mapping
 

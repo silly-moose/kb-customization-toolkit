@@ -156,6 +156,14 @@ The preview is only as current as the HTML snapshot. If changes were made direct
 
 ---
 
+## Claude Code's Built-in Preview
+
+Claude Code has its own in-app preview feature (powered by Claude Preview MCP tools) that can start a local server, take screenshots, inspect elements, and check console output — all without you opening a browser. Claude sometimes uses this automatically when it detects CSS changes that would benefit from visual verification. You can also ask Claude to use it at any time (e.g., "preview the homepage and show me a screenshot").
+
+This is the same toolset referenced as "Option A" in Step-by-Step Setup above. The key difference from the manual workflow is that Claude handles the entire loop — starting the server, syncing CSS, taking screenshots, and inspecting styles — so you don't need a browser tab open or need to refresh manually.
+
+---
+
 ## What This Does NOT Replace
 
 Localhost preview is a **development-time tool** for faster iteration. It does not replace:
