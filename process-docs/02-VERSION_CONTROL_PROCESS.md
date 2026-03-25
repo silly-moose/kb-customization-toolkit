@@ -168,6 +168,8 @@ The broken version remains preserved for debugging.
 
 When returning to a project after any gap — whether days, weeks, or months — continue working in the existing project folder. Do not create a new one. The version number picks up where it left off.
 
+**Claude automatically syncs template files.** The toolkit evolves over time — new reference files get added, existing ones get updated. At the start of every session, Claude fetches the latest `Reference/knowledgeowl-css-quirks.md` and `Reference/knowledgeowl-css-defaults.md` from the GitHub repo and overwrites the local copies. It also checks for `.claude/rules/project.md` and creates it from the template if missing. This means older projects automatically pick up new reference files without any manual copying.
+
 **Always create a fresh snapshot of the live KB code if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
 
 A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. Any `full-html-snapshot-*.html` files are also included, but captured differently — not pulled from KnowledgeOwl, but copied from the browser's rendered DOM via Chrome DevTools.
