@@ -6,7 +6,7 @@ A quick guide for teammates getting started with our Claude Code workflow for Kn
 
 ## What This Is
 
-We use Claude Code (Anthropic's CLI tool) to write and iterate on CSS/HTML customizations for customer knowledge bases. Instead of git, we use a **folder-based version control system** — each set of changes gets its own dated, numbered folder. Each teammate keeps their project folders locally (the master template lives in a shared GitHub repo).
+We use Claude Code (Anthropic's CLI tool) to write and iterate on HTML/CSS/JS customizations for customer knowledge bases. Instead of git, we use a **folder-based version control system** — each set of changes gets its own dated, numbered folder. Each teammate keeps their project folders locally (the master template lives in a shared GitHub repo).
 
 ---
 
@@ -67,7 +67,7 @@ I want to resume work on [customer name]. Walk me through the setup process so w
 
 1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md`, picking up the version control rules and project settings
 2. **Tell Claude to review** the latest version folder and any relevant reference materials
-3. **Describe the changes you need** — Claude writes the CSS/HTML for you
+3. **Describe the changes you need** — Claude writes the HTML/CSS/JS for you
 4. **Claude creates versioned folders** as it works. Each set of substantial changes gets a new folder like `2026.02.06-v1`, `2026.02.06-v2`, etc., copied from the previous version
 5. **Each version folder includes a `CHANGES_FROM_*.md`** file documenting what changed, which files were modified, and deployment instructions
 6. **You deploy** by copying the updated file contents into the corresponding KnowledgeOwl fields — either to a sandbox for testing first, or directly to the live KB
