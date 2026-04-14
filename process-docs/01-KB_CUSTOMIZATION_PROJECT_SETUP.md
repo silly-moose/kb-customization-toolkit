@@ -46,9 +46,12 @@ If a customer has no existing custom code in a given field, leave the placeholde
 
 ### Record Current Style Settings Colors
 
-While you're in the Customize > Style area, also take a screenshot of the current Style Settings colors (Customize > Style > Style Settings > Colors). This records the customer's original theme-level color configuration. If the project later changes brand colors, Claude will recommend updating these settings to match — having the original values on record makes that easier and provides a rollback reference.
+While you're in the Customize > Style area, also record the current Style Settings colors (Customize > Style > Style Settings > Colors). This captures the customer's original theme-level color configuration. If the project later changes brand colors, Claude will recommend updating these settings to match — having the original values on record makes that easier and provides a rollback reference.
 
-Save the screenshot in the `Screenshots/` folder inside the no-changes folder alongside the other baseline screenshots.
+The color picker only reveals one hex code at a time, so you'll need to record each swatch separately. Use whichever approach is faster for you:
+
+- **Screenshot each swatch** — click each color to reveal its hex, capture it, and save all screenshots in the `Screenshots/` folder inside the no-changes folder.
+- **Type the hex codes into a file** — open `style-settings-colors.md` in the no-changes folder and fill in each color by its label (e.g., `Top navigation bar: #1D284F`).
 
 ---
 
@@ -158,6 +161,7 @@ Your project should look like this:
         ├── custom-html-10-right-column.html
         ├── full-html-snapshot-homepage.html
         ├── full-html-snapshot-article.html
+        ├── style-settings-colors.md
         ├── CHANGES_FROM_no-changes.md
         └── Screenshots/
             └── (current state screenshots)

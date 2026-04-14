@@ -21,8 +21,9 @@ Use this when you're starting work on a customer's knowledge base for the first 
 5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
 7. **Capture HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html`
-8. **Drop reference materials** (e.g., screenshots, mockups, emails, Asana tasks, assets) into the `Reference/` folder
-9. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
+8. **Record the current Style Settings colors** (Customize > Style > Style Settings > Colors) — either screenshot each color swatch or paste the hex codes into `style-settings-colors.md` in the no-changes folder
+9. **Drop reference materials** (e.g., screenshots, mockups, emails, Asana tasks, assets) into the `Reference/` folder
+10. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
 
 For the full walkthrough — including the file-to-KnowledgeOwl mapping table, the HTML snapshot steps, the marketing site download process, and a folder structure diagram — see `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` in the template repo (or ask Claude to fetch it).
 
