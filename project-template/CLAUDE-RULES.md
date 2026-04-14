@@ -53,35 +53,15 @@ When a `current-state` folder is created, the user should also refresh supportin
 
 ## Localhost Preview (Optional)
 
-*Authoritative reference: `03-LOCALHOST_PREVIEW.md` in the process docs.*
+*Authoritative reference: `03-LOCALHOST_PREVIEW.md` in the process docs. Fetch it when the user accepts the trigger prompt below — it contains the full Step-by-Step Setup, troubleshooting, and limitations.*
 
-For sessions involving significant visual iteration, you can serve HTML snapshots locally to preview changes without deploying to KnowledgeOwl each time. This is most effective for CSS changes (which use a clean override mechanism) but can also support HTML edits made directly in the snapshot. Skip it for quick fixes or sessions where you'd rather deploy and verify directly.
+For sessions involving significant visual iteration (CSS changes, layout adjustments, or a mix of CSS and HTML work), offer localhost preview to skip the deploy-and-verify cycle. Trigger prompt:
 
-### How It Works
+> "This involves visual changes. Want me to set up localhost preview so you can see changes without deploying each time?"
 
-The HTML snapshots already contain the full rendered page with embedded styles. By adding a `<link>` tag that loads `custom-css.css` from the same folder, the local file overrides the embedded custom CSS (same specificity, later source order). External assets (fonts, images, Bootstrap) load from their CDN URLs as usual.
+If accepted, fetch `03-LOCALHOST_PREVIEW.md` from the process docs and follow its Step-by-Step Setup section. During the session, keep `preview/custom-css.css` in sync with the version folder on every CSS edit, and run `rm -rf preview` when teardown is needed. If Claude Preview MCP tools are available, use `preview_screenshot` or `preview_inspect` to verify changes visually.
 
-### Setup
-
-1. Create the preview folder: `mkdir -p preview`
-2. For each `full-html-snapshot-*.html` in the current version folder, copy it to `preview/` with a short name (e.g., `full-html-snapshot-homepage.html` → `homepage.html`). Insert `<link rel="stylesheet" href="custom-css.css">` immediately before `</head>` in each copy.
-3. Copy the CSS: `cp [version-folder]/custom-css.css preview/custom-css.css`
-4. Start the server: use `preview_start` (reads `.claude/launch.json`) or run `python3 -m http.server 8080 -d preview` from the project root
-5. Open `http://localhost:8080/homepage.html` in a browser
-
-### Keeping Preview in Sync
-
-Every time you edit `custom-css.css` in the version folder, also copy it to `preview/custom-css.css`. Tell the user the preview is updated so they can refresh the browser. If Claude Preview MCP tools are available, use `preview_screenshot` or `preview_inspect` to verify changes visually.
-
-### Teardown
-
-Delete the preview folder when done: `rm -rf preview`. The preview folder is ephemeral — never version it, never preserve it.
-
-### Limitations
-
-- **Optimized for CSS.** The override mechanism (linking a local CSS file) makes CSS iteration fast and clean. HTML changes require editing the snapshot directly, which works but is more manual.
-- **No server-dependent features.** Anything that relies on KnowledgeOwl's backend won't work locally. This includes KO template variables, search, reader group logic, login/authentication, and JavaScript that calls KO APIs.
-- **Snapshot freshness.** The preview is only as current as the last HTML snapshot. If the live KB changed since the snapshot was captured, the preview may not match production exactly.
+If declined, use the normal deploy-and-verify workflow.
 
 ## KnowledgeOwl Source CSS Lookup (Chad's Machine Only)
 
