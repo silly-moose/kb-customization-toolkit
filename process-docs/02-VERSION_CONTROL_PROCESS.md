@@ -212,7 +212,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - Add fresh screenshots of the KB's current appearance (homepage, category page, article page, and any pages relevant to the upcoming work)
 
 **Reference files (in `Reference/` at the project root):**
-- Remove files no longer relevant to upcoming work (e.g., mockups for features already shipped, Asana exports for completed tasks)
+- Remove files no longer relevant to upcoming work (e.g., mockups for designs already deployed, Asana exports of completed tasks)
 - Add new reference files for whatever's next (new mockups, updated Asana exports, new assets)
 - Keep files that are still accurate and relevant (e.g., a brand guide or marketing site download that hasn't changed)
 
@@ -222,7 +222,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 
-**Note:** You no longer need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
+**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md`, `01-`, `02-`, `03-`) live in the repo only — they are never copied into customer folders.
 
 ### Example
 

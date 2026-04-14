@@ -48,7 +48,7 @@ Before locking the `current-state` folder, compare its code files against the la
 
 When a `current-state` folder is created, the user should also refresh supporting files. Old screenshots and reference materials can be actively misleading — they may show a design or layout that no longer exists. Remind the user to:
 - Replace screenshots in `current-state/Screenshots/` with fresh ones showing the KB's current appearance
-- Remove outdated materials from `Reference/` (e.g., shipped mockups, completed task exports) and add any new reference files for upcoming work
+- Remove outdated materials from `Reference/` (e.g., deployed mockups, completed task exports) and add any new reference files for upcoming work
 - Leave `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md` in place — they're permanent references
 
 ## Localhost Preview (Optional)
