@@ -139,7 +139,7 @@ Your project should look like this:
     ├── Reference/
     │   ├── knowledgeowl-css-quirks.md  (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
     │   ├── knowledgeowl-css-defaults.md (default selectors, property values, CSS architecture — Claude reads this automatically for CSS/HTML tasks)
-    │   ├── (mockups, Asana exports, assets)
+    │   ├── (screenshots, mockups, emails, Asana tasks, assets, etc.)
     │   └── marketing-site-example.com/ (optional - see section 4)
     │       ├── (downloaded site files)
     │       └── Screenshots/
