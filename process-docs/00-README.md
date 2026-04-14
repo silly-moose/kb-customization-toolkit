@@ -6,7 +6,7 @@ A quick guide for teammates getting started with our Claude Code workflow for Kn
 
 ## What This Is
 
-We use Claude Code (Anthropic's CLI tool) to write and iterate on HTML/CSS/JS customizations for customer knowledge bases. Instead of git, we use a **folder-based version control system** — each set of changes gets its own dated, numbered folder. Each teammate keeps their project folders locally (the master template lives in a shared GitHub repo).
+We use Claude Code to write and iterate on HTML/CSS/JS customizations for customer knowledge bases. Instead of git, we use a **folder-based version control system** — each set of changes gets its own dated, numbered folder. Each teammate keeps their project folders locally (the master template lives in a shared GitHub repo).
 
 ---
 
@@ -20,7 +20,7 @@ Use this when you're starting work on a customer's knowledge base for the first 
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
 5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
-7. **Capture an HTML snapshot** of the homepage via Chrome DevTools and paste it into `full-html-snapshot-homepage.html`
+7. **Capture HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html`
 8. **Drop reference materials** (mockups, Asana exports, assets) into the `Reference/` folder
 9. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
 
@@ -46,7 +46,7 @@ Use this when you're resuming work on a customer's knowledge base that you've wo
 2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date) if more than one day has passed since the last session (or sooner if you know changes were made directly in KnowledgeOwl)
 3. **Pull fresh code** from the customer's live KB (copy from each Customize > Style section) into the `current-state` folder
 4. **Add fresh screenshots** of the customer's current KB to the `Screenshots/` folder inside the `current-state` folder
-5. **Capture fresh HTML snapshots** via Chrome DevTools and paste them into the `current-state` folder
+5. **Capture fresh HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html` in the `current-state` folder
 6. **Update the `Reference/` folder** — remove outdated materials and add any new ones (mockups, Asana exports, assets)
 
 For the full walkthrough — including how Claude documents what changed since the last version, folder locking, and why refreshing supporting files matters — see the "Returning to an Existing Project After a Gap" section in `02-VERSION_CONTROL_PROCESS.md` (or ask Claude to fetch it).
@@ -154,7 +154,7 @@ Before getting started, make sure you have:
 
 - **Visual Studio Code (VS Code)** — for opening code files and copying updated code into customers' KBs. Download at https://code.visualstudio.com
 - **Claude desktop app** — Claude Code runs inside the desktop app (the web version at claude.ai isn't optimal for this workflow). Download at https://claude.ai/download
-- **Claude Code** — Anthropic's CLI tool for writing and editing code. See your team lead for setup instructions.
+- **Claude Code** — Anthropic's coding agent for writing and editing code. See your team lead for setup instructions.
 - **Git** *(optional but recommended)* — for cloning and updating the project template repo. Not required — you can also download the template manually from GitHub (see "Getting the Project Template" below). Pre-installed on macOS (verify with `git --version` in Terminal). On Windows, download and install from https://git-scm.com/downloads/win — use the default settings during installation.
 
 ---

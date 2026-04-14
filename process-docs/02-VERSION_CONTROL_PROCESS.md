@@ -134,6 +134,7 @@ Project/
 │   ├── custom-html-1-body.html
 │   ├── ... (all 12 code files)
 │   ├── full-html-snapshot-homepage.html
+│   ├── full-html-snapshot-article.html
 │   ├── CHANGES_FROM_no-changes.md
 │   └── Screenshots/
 ├── 2026.01.21-v1/               # First iteration (copied from no-changes)

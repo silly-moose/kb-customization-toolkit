@@ -68,14 +68,17 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 
 Chrome saves a full-length PNG automatically. This is especially useful for long article and category pages where the below-the-fold layout matters.
 
-### Full HTML Snapshot (for Claude reference)
+### Full HTML Snapshots (for Claude reference)
+Capture snapshots for both the homepage and an article page — each gives Claude visibility into a different template structure.
+
 1. Open the customer's homepage in Google Chrome
 2. Right-click anywhere on the page and select **Inspect**
 3. In the Elements panel, right-click on the `<html>` tag at the top
 4. Select **Copy > Copy outerHTML**
 5. Open `full-html-snapshot-homepage.html` in the no-changes folder
 6. Replace the placeholder comment with the copied HTML
-7. Repeat for other key pages if needed (create new files like `category-page-full-html-snapshot.html`)
+7. Repeat steps 1-6 on any article page, pasting into `full-html-snapshot-article.html`
+8. Optional: repeat for other key pages if needed (create new files like `full-html-snapshot-category.html`)
 
 **Why:** Unlike View Page Source (which captures the raw server HTML before JavaScript runs), Copy outerHTML captures the page's *rendered* DOM — the HTML as it actually exists after the browser and JavaScript have fully processed the page. This gives Claude visibility into dynamically generated elements and template output that aren't visible in the Custom HTML fields alone.
 
@@ -154,6 +157,7 @@ Your project should look like this:
         ├── custom-html-9-restricted-access-page.html
         ├── custom-html-10-right-column.html
         ├── full-html-snapshot-homepage.html
+        ├── full-html-snapshot-article.html
         ├── CHANGES_FROM_no-changes.md
         └── Screenshots/
             └── (current state screenshots)
