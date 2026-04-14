@@ -158,12 +158,12 @@ KnowledgeOwl's Style Settings (Customize > Style > Style Settings > Colors) incl
 
 | Setting | What it affects |
 |---------|-----------------|
-| Header background | Top navigation bar background |
-| Header text | Top navigation text |
-| Header tags | H1s, H2s, H3s, etc. |
-| Column background | Sidebar/column background |
-| Column text | Sidebar/column text |
-| Highlights & accents | Buttons, active states, accent elements — this is usually the most impactful setting |
+| Top navigation bar | Top navigation bar background |
+| Top navigation text | Top navigation text |
+| H1s, H2s, H3s, etc. | Headings across the KB |
+| Table of contents | Table of contents background |
+| Table of contents text | Table of contents text |
+| Highlights & Accents | Buttons, active states, accent elements — this is usually the most impactful setting |
 | Icon color | Default category icon color |
 | Icon background | Default category icon background |
 
