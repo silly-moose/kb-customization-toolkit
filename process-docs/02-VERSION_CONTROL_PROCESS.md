@@ -174,14 +174,14 @@ When returning to a project after any gap — whether days, weeks, or months —
 
 **Always create a fresh snapshot of the live KB code if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
 
-A "snapshot" means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. Any `full-html-snapshot-*.html` files are also included, but captured differently — not pulled from KnowledgeOwl, but copied from the browser's rendered DOM via Chrome DevTools.
+A current-state capture means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. The HTML snapshot files (`full-html-snapshot-*.html`) and `style-settings-colors.md` are also refreshed, but captured differently — not pulled from KnowledgeOwl's Customize > Style (HTML & CSS) sections, but captured from the browser's rendered DOM (for HTML snapshots) or the Style Settings UI (for color values).
 
 ### Steps
 
 1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
-2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files found in the most recent version folder, and ask the user to paste fresh HTML into each one (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML).
+2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files and `style-settings-colors.md` found in the most recent version folder. Ask the user to paste fresh HTML into each snapshot placeholder (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML), and to update `style-settings-colors.md` only if the Style Settings colors may have changed (otherwise they can copy the values from the previous version's file).
 3. **Document what changed since the last version** — see "CHANGES File in Current-State Folders" below.
-4. **Lock the folder** — once all files are in place (code files, HTML snapshots, screenshots, and CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
+4. **Lock the folder** — once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, screenshots, and CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
 5. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
 6. **Refresh supporting files** — clean up outdated materials and add current ones (see details below)
 7. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
