@@ -134,8 +134,8 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 | `CLAUDE.md` | Auto-read by Claude Code at session start — bootstrap file that fetches the latest `CLAUDE-RULES.md` from GitHub |
 | `CLAUDE-RULES.md` | Process rules fetched fresh from GitHub each session (local copy serves as fallback if fetch fails) |
 | `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
-| `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (mockups, assets, etc.) |
-| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, screenshots folder, and CHANGES template |
+| `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (e.g., screenshots, mockups, emails, Asana tasks, assets) |
+| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, screenshots folder, and CHANGES template |
 
 **What's in `process-docs/`:**
 
@@ -152,10 +152,8 @@ The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is
 
 Before getting started, make sure you have:
 
-- **Visual Studio Code (VS Code)** — for opening code files and copying updated code into customers' KBs. Download at https://code.visualstudio.com
+- **Visual Studio Code (VS Code), or a comparable code editor** — for opening code files and copying updated code into customers' KBs. Download VS Code at https://code.visualstudio.com
 - **Claude desktop app** — Claude Code runs inside the desktop app (the web version at claude.ai isn't optimal for this workflow). Download at https://claude.ai/download
-- **Claude Code** — Anthropic's coding agent for writing and editing code. See your team lead for setup instructions.
-- **Git** *(optional but recommended)* — for cloning and updating the project template repo. Not required — you can also download the template manually from GitHub (see "Getting the Project Template" below). Pre-installed on macOS (verify with `git --version` in Terminal). On Windows, download and install from https://git-scm.com/downloads/win — use the default settings during installation.
 
 ---
 
@@ -163,9 +161,17 @@ Before getting started, make sure you have:
 
 The project template lives in a shared GitHub repo: https://github.com/spongetimblin/kb-customization-toolkit
 
-You need a copy of the `project-template/` folder so you can duplicate it for each new customer. There are two ways to get it: **Git** (recommended) or **manual download**. You don't need the `process-docs/` folder locally — Claude fetches those directly from GitHub whenever you ask about the process.
+You need a copy of the `project-template/` folder so you can duplicate it for each new customer. There are two ways to get it: **manual download** (simplest) or **Git** (faster for repeat updates, if you have it installed). You don't need the `process-docs/` folder locally — Claude fetches those directly from GitHub whenever you ask about the process.
 
-### Option A: Using Git (recommended)
+### Option A: Manual download from GitHub
+
+1. Go to https://github.com/spongetimblin/kb-customization-toolkit
+2. Click the green **Code** button → **Download ZIP**
+3. Unzip and use the `project-template/` folder inside
+
+**Before starting a new project**, re-download the ZIP to make sure you have the latest template.
+
+### Option B: Using Git (if you have it installed)
 
 Git makes it easy to pull the latest template updates before each new project.
 
@@ -194,16 +200,6 @@ Or run the command yourself:
 cd /path/to/kb-customization-toolkit
 git pull
 ```
-
-### Option B: Manual download from GitHub
-
-If you don't have Git installed, you can download the template directly:
-
-1. Go to https://github.com/spongetimblin/kb-customization-toolkit
-2. Click the green **Code** button → **Download ZIP**
-3. Unzip and use the `project-template/` folder inside
-
-**Before starting a new project**, re-download the ZIP to make sure you have the latest template.
 
 ---
 
