@@ -53,7 +53,7 @@ When a `current-state` folder is created, the user should also refresh supportin
 
 ## Localhost Preview (Optional)
 
-*Authoritative reference: `03-LOCALHOST_PREVIEW.md` in the process docs. Fetch it when the user accepts the trigger prompt below — it contains the full Step-by-Step Setup, troubleshooting, and limitations.*
+*Authoritative reference: `03-LOCALHOST_PREVIEW.md` in the process docs (`https://raw.githubusercontent.com/spongetimblin/kb-customization-toolkit/main/process-docs/03-LOCALHOST_PREVIEW.md`). Fetch it when the user accepts the trigger prompt below — it contains the full Step-by-Step Setup, troubleshooting, and limitations.*
 
 For sessions involving significant visual iteration (CSS changes, layout adjustments, or a mix of CSS and HTML work), offer localhost preview to skip the deploy-and-verify cycle. Trigger prompt:
 
