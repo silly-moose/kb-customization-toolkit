@@ -98,7 +98,7 @@ My previous Claude Code session was interrupted. Here's where I left off:
 Review the latest version folder and the CHANGES file, then let me know when you're ready to continue.
 ```
 
-Fill in the bracketed fields with your specific details. The more context you provide, the faster Claude can get back on track. If you were waiting on something specific (like providing an HTML snapshot), mention that too.
+Fill in the bracketed fields with your specific details. The more context you provide, the faster Claude can get back on track. If Claude had asked you for something specific (like an HTML snapshot), mention that too.
 
 ---
 
