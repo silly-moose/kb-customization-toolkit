@@ -172,7 +172,7 @@ KnowledgeOwl's Style Settings (Customize > Style > Style Settings > Colors) incl
 | File | KnowledgeOwl Location |
 |------|-----------------------|
 | `custom-css.css` | Customize > Style (HTML & CSS) > Custom CSS |
-| `custom-head.html` | Customize > Style (HTML & CSS) > Custom HEAD |
+| `custom-head.html` | Customize > Style (HTML & CSS) > Custom `<head>` |
 | `custom-html-1-body.html` | Customize > Style (HTML & CSS) > Custom HTML > Body |
 | `custom-html-2-top-navigation.html` | Customize > Style (HTML & CSS) > Custom HTML > Top Navigation |
 | `custom-html-3-article.html` | Customize > Style (HTML & CSS) > Custom HTML > Article |
