@@ -87,6 +87,8 @@ In the CHANGES file, always specify:
 - Expected results after deployment
 - Where to deploy (sandbox or live KB, based on the deployment target for this project)
 
+**Color-Change Checkpoint:** If this version changed any color in Custom CSS, reconcile it against the Style Settings and surface a `Setting | Current | New | Why` table **in the conversation** (not only in the CHANGES file), listing Style Settings changes before the code files. If colors changed but no Style Setting is affected, say so explicitly. The authoritative definition lives under "Style Settings Colors → Color-Change Checkpoint" in `CLAUDE-RULES.md`.
+
 **Example format:**
 ```markdown
 ## Manual Steps in KnowledgeOwl
