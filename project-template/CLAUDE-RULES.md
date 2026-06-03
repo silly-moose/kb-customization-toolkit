@@ -127,7 +127,17 @@ Every time you update code and ask the user to test or deploy, tell them in the 
 
 KnowledgeOwl's Style Settings (Customize > Style > Style Settings > Colors) include color pickers that generate dynamic theme CSS. This dynamic CSS loads *before* Custom CSS. When your changes introduce new brand colors or significantly alter the color scheme, the Style Settings colors should be updated to match — otherwise the theme-level CSS and your Custom CSS will have competing color values, which can cause visual inconsistencies and confuse anyone editing the KB later.
 
-**When to update Style Settings:** Any version that changes brand colors, accent colors, or the overall color scheme. Not every version needs this — only those that shift the palette.
+### Color-Change Checkpoint (mandatory, every version)
+
+Whenever a version adds or changes a **color value** in Custom CSS or any custom code — a hex, `rgb()`/`hsl()`, named color, or a `var()` whose value changed — you MUST reconcile it against the Style Settings before presenting deployment instructions, **without being asked**. The theme CSS these settings generate loads *before* Custom CSS, so leaving them unaligned causes competing color values.
+
+As part of writing each version's deployment instructions:
+1. **State it in the conversation** (not only in the CHANGES file) as a table covering every affected setting: `| Style Setting | Current value | New value | Why |` — use the "Available Style Settings colors" table below to decide which settings a given color change touches.
+2. **Record the same table** in the CHANGES "Manual Steps in KnowledgeOwl" section, and list the Style Settings changes **before** the code files in the deploy order.
+
+If a version changes colors but **no** Style Setting is affected, say so explicitly ("No Style Settings changes needed for this version") so the decision is visible rather than silently skipped.
+
+**When to update Style Settings:** Any version that changes brand colors, accent colors, or the overall color scheme. Not every version needs this — only those that shift the palette. (The checkpoint above still runs every time; it simply concludes with "no changes needed" when the palette is untouched.)
 
 **How to handle it:**
 1. Include the recommended Style Settings changes as a **manual step** in the CHANGES file (in the "Manual Steps in KnowledgeOwl" section), with a table showing each setting, its current value, and the recommended new value
