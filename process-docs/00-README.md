@@ -121,7 +121,7 @@ See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deploy
 
 ## Repo Structure
 
-The template repo (https://github.com/spongetimblin/kb-customization-toolkit) is organized into two folders:
+The template repo (https://github.com/silly-moose/kb-customization-toolkit) is organized into two folders:
 
 | Folder | Purpose |
 |--------|---------|
@@ -160,13 +160,13 @@ Before getting started, make sure you have:
 
 ## Getting the Project Template
 
-The project template lives in a shared GitHub repo: https://github.com/spongetimblin/kb-customization-toolkit
+The project template lives in a shared GitHub repo: https://github.com/silly-moose/kb-customization-toolkit
 
 You need a copy of the `project-template/` folder so you can duplicate it for each new customer. There are two ways to get it: **manual download** (simplest) or **Git** (faster for repeat updates, if you have it installed). You don't need the `process-docs/` folder locally — Claude fetches those directly from GitHub whenever you ask about the process.
 
 ### Option A: Manual download from GitHub
 
-1. Go to https://github.com/spongetimblin/kb-customization-toolkit
+1. Go to https://github.com/silly-moose/kb-customization-toolkit
 2. Click the green **Code** button → **Download ZIP**
 3. Unzip and use the `project-template/` folder inside
 
@@ -180,13 +180,13 @@ Git makes it easy to pull the latest template updates before each new project.
 
 You don't need to know git commands — just open Claude Code and paste this prompt:
 ```
-Check if git is installed on my machine. If it is, clone https://github.com/spongetimblin/kb-customization-toolkit.git into my current directory.
+Check if git is installed on my machine. If it is, clone https://github.com/silly-moose/kb-customization-toolkit.git into my current directory.
 ```
 Claude will check for git and download the repo for you.
 
 Or if you prefer to run the command yourself:
 ```
-git clone https://github.com/spongetimblin/kb-customization-toolkit.git
+git clone https://github.com/silly-moose/kb-customization-toolkit.git
 ```
 
 **Before starting a new project** *(assumes you've already cloned the repo in the one-time setup above)*:
