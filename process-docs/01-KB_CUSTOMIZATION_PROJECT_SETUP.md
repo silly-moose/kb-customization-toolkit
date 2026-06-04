@@ -41,8 +41,11 @@ If a customer has no existing custom code in a given field, leave the placeholde
 | `custom-html-8-404-page.html` | Customize > Style (HTML & CSS) > Custom HTML > 404 Page |
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
+| `homepage-custom-content.html` | Customize > Homepage > Custom content *(legacy — only some older KBs)* |
 
 *Authoritative version: the mapping table in `CLAUDE-RULES.md` (which Claude fetches from GitHub automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE-RULES.md` first.*
+
+**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
 
 ### Record Current Style Settings Colors
 
@@ -161,6 +164,7 @@ Your project should look like this:
         ├── custom-html-10-right-column.html
         ├── full-html-snapshot-homepage.html
         ├── full-html-snapshot-article.html
+        ├── homepage-custom-content.html    (legacy - only older KBs)
         ├── style-settings-colors.md
         ├── CHANGES_FROM_no-changes.md
         └── Screenshots/
@@ -206,3 +210,4 @@ When the project is complete, review the "Project Closeout" section in `02-VERSI
 - **Custom CSS:** Customize > Style (HTML & CSS) > Custom CSS
 - **Custom `<head>`:** Customize > Style (HTML & CSS) > Custom `<head>`
 - **Custom HTML sections:** Customize > Style (HTML & CSS) > Custom HTML > [Section Name]
+- **Homepage Custom content (legacy):** Customize > Homepage > Custom content
