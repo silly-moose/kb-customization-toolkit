@@ -84,6 +84,10 @@ Key source files for targeted lookup:
 
 **Do not read these files speculatively.** Only look up a specific file when the reference files and HTML snapshot don't answer your question. Use targeted reads (specific line ranges) rather than reading entire files.
 
+## Capturing Exact Brand Colors
+
+Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use Claude in Chrome to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
+
 ## CHANGES File
 
 *Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` — "Document Changes" and "Provide Deployment Instructions".*

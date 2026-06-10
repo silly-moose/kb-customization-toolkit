@@ -129,6 +129,19 @@ Reference/
 └── asana-task-export.pdf
 ```
 
+### If the download doesn't surface exact brand data
+
+A static capture isn't always enough. Modern marketing sites often ship **compiled/minified CSS** (e.g., Tailwind) where brand colors are buried in utility classes, define colors as **CSS variables** or apply them via **JavaScript** at runtime, or render logos/images **client-side or as data URIs**.
+
+When the downloaded files don't give you confident, exact values for the brand colors (or fonts, or the logo), capture them from the **live site with Claude in Chrome**:
+
+1. Point Claude at the customer's site and ask it to report the **computed styles** of the key brand elements — primary/CTA button background, headings, body text, links, top nav, footer — plus the heading and body `font-family`.
+2. `getComputedStyle()` returns the value the browser actually paints, regardless of how it was authored, so you get exact hex codes and real font stacks even from compiled CSS or JS-applied styles.
+
+Prefer the static download first (offline, archivable); use the live capture as the exactness fallback. Record the confirmed values somewhere durable in the project (e.g., a short `brand.md` in `Reference/`) so the build and any later session share one source of truth.
+
+**Tip:** the Claude-in-Chrome result filter can block large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
+
 ---
 
 ## 5. Verify Your Folder Structure
