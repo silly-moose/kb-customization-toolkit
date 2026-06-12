@@ -416,6 +416,25 @@ The theme builder UI controls these CSS properties. When a customer changes a th
 
 ---
 
+## Minimalist Theme — Style Settings Defaults
+
+Default hex values for a stock (uncustomized) **Minimalist** theme KB, from Customize > Style > Style Settings > Colors. Use these as the baseline for new projects and when reverting a KB to its original theme. KnowledgeOwl shows two labels per swatch depending on the KB ("common / variant"); both are listed.
+
+| Style Setting (common / variant) | Default |
+|----------------------------------|---------|
+| Top navigation bar / Header background | `#ffffff` |
+| Top navigation text / Header text | `#1d284f` |
+| H1s, H2s, H3s, etc. / Header tags | `#212121` |
+| Table of contents / Column background | `#f8f4f1` |
+| Table of contents text / Column text | `#1d284f` |
+| Highlights & Accents / Highlights & accents | `#f8b88b` |
+| Default category icon colors — Icon color | `#69b2f0` |
+| Default category icon colors — Icon background | `#ffffff` |
+
+*Verified against an uncustomized Minimalist trial KB (2026-06). Classic and Modern themes have different defaults. A per-project record of the customer's actual values lives in each project's `style-settings-colors.md`.*
+
+---
+
 ## Source File Map
 
 For reference, these are the source CSS files in the KnowledgeOwl codebase that generate the default styles described above:
