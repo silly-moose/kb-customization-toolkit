@@ -253,13 +253,19 @@ Project/
 
 ## Project Closeout
 
-Before closing out a project, review whether any process improvements were discovered during the work:
+Before closing out a project, run the improvement synthesis, then review whether any process improvements were discovered during the work.
+
+### Synthesize the improvement log (suggest only)
+
+Open the central `improvement-log.md` (at the toolkit root — path in `.claude/rules/project.md`) and read this project's session notes. Append a dated **CLOSEOUT SYNTHESIS** entry: a short, prioritized list of concrete proposed refinements, each tagged `STATUS: AWAITING REVIEW`. **Do not apply any of them** — this is suggest-only. Use the checklist below to decide which part of the toolkit each suggestion targets:
 
 - [ ] Any new steps or tips to add to `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`?
 - [ ] Any new sections to add to the `CHANGES_FROM_no-changes.md` template?
 - [ ] Any new template files needed in `TEMPLATE-no-changes`?
 - [ ] Any improvements to the version control process (`02-VERSION_CONTROL_PROCESS.md`)?
+- [ ] Any new KnowledgeOwl CSS quirks or defaults for `Reference/knowledgeowl-css-quirks.md` / `knowledgeowl-css-defaults.md`?
+- [ ] Any updates to the session rules in `CLAUDE-RULES.md`?
 
-**Chad (template maintainer):** Update the master template directly and push to the repo.
+**Chad (template maintainer):** Apply the accepted items to the master template — a session opened in the toolkit repo is the place to do this, and Claude can make the edits for your review. Push to the repo, then mark each item in `improvement-log.md` as `STATUS: ACCEPTED (commit <sha>)` or `DECLINED (<reason>)`. Because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub each session, accepted changes reach everyone on their next session automatically.
 
-**Everyone else:** Submit suggestions to Chad. Always pull the latest version from the repo before starting a new project.
+**Everyone else:** You won't have the central log — if anything caused friction, just share the idea with Chad in Slack. Always pull the latest version from the repo before starting a new project.
