@@ -279,6 +279,21 @@ Applied to `<body>` or high-level wrappers. Use these to scope CSS to specific c
 | `.article-link` | Article title link |
 | `.faq-nav-wrapper` | FAQ-style category layout |
 
+### Homepage Category Icons (`icon-cats` template)
+
+The homepage `[template("icon-cats…")]` renders category tiles that are distinct from the FAQ-style category layout above. Default selectors and values (from `ko-css.css`):
+
+| Selector | Default |
+|----------|---------|
+| `.cat-icon-panel` | The tile (a block link). `display: flex; flex-direction: column; align-items: center; padding: 16px; border: 1px solid #E6E6E6; border-radius: 5px` |
+| `.category-icon` | Icon wrapper. `height: 100px` |
+| `.category-icon i` | The icon glyph. `font-size: 75px; margin-top: 16px; padding: 5px` |
+| `.category-icon i.fa-fw` | `width: 1.5em` (fixed-width icons) |
+| `.cat-icon-img` | Uploaded image icon. `width: 100px; height: 100px` |
+| `.category-header` | The label. `font-size: 18px; color: #1D284F` |
+
+Notes: the per-category icon **color** is set in the Category editor (inline on the `<i>`), so recoloring all icons from Custom CSS needs `!important`. And `.category-icon i` carries `margin-top: 16px`, so the icon's vertical position is tied to its size — if you change the `font-size`, adjust the margin/centering to match.
+
 ---
 
 ## Embedded Widget

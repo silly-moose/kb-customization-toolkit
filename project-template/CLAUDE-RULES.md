@@ -137,6 +137,8 @@ End deployment instructions based on the deployment target established at the st
 
 Every time you update code and ask the user to test or deploy, tell them in the conversation exactly which file(s) to copy and where to paste them in KnowledgeOwl. Do this every single time — even if you're iterating on the same file. Never assume the user will check the CHANGES file or remember from a previous message.
 
+**Lead with the deploy list — keep it scannable.** The first thing the user should see when you hand off a change is a tight list (a short table or a few bullets) of exactly which file(s) to copy and where each one goes in KnowledgeOwl. Put that up front and keep the surrounding prose minimal — the user is usually mid-deploy and needs the "what + where," not a long explanation. Save rationale and detail for after the list (or the CHANGES file).
+
 ## Style Settings Colors
 
 KnowledgeOwl's Style Settings (Customize > Style > Style Settings > Colors) include color pickers that generate dynamic theme CSS. This dynamic CSS loads *before* Custom CSS. When your changes introduce new brand colors or significantly alter the color scheme, the Style Settings colors should be updated to match — otherwise the theme-level CSS and your Custom CSS will have competing color values, which can cause visual inconsistencies and confuse anyone editing the KB later.
