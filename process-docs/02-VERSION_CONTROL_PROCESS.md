@@ -266,6 +266,6 @@ Open the central `improvement-log.md` (at the toolkit root — path in `.claude/
 - [ ] Any new KnowledgeOwl CSS quirks or defaults for `Reference/knowledgeowl-css-quirks.md` / `knowledgeowl-css-defaults.md`?
 - [ ] Any updates to the session rules in `CLAUDE-RULES.md`?
 
-**Chad (template maintainer):** Apply the accepted items to the master template — a session opened in the toolkit repo is the place to do this, and Claude can make the edits for your review. Push to the repo, then mark each item in `improvement-log.md` as `STATUS: ACCEPTED (commit <sha>)` or `DECLINED (<reason>)`. Because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub each session, accepted changes reach everyone on their next session automatically.
+**Chad (template maintainer):** Apply the accepted items to the master template — a session opened in the toolkit repo is the place to do this, and Claude can make the edits for your review. Push to the repo, then set each item's `STATUS` per the workflow documented at the top of `improvement-log.md` (`APPLIED` / `DECLINED` / `DEFERRED`). Because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub each session, accepted changes reach everyone on their next session automatically.
 
 **Everyone else:** You won't have the central log — if anything caused friction, just share the idea with Chad in Slack. Always pull the latest version from the repo before starting a new project.

@@ -142,6 +142,8 @@ Prefer the static download first (offline, archivable); use the live capture as 
 
 **Tip:** the Claude-in-Chrome result filter can block large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
 
+**Tip — host images you put in the theme:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control. (Same reasoning as uploading the logo to the KB.)
+
 ---
 
 ## 5. Verify Your Folder Structure

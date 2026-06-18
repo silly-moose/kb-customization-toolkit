@@ -177,6 +177,8 @@ body.hg-home-page .some-element { ... }
 
 **Gotcha:** Category pages have *both* `.hg-article-page` and `.hg-category-page`. The source CSS uses `.hg-article-page:not(.hg-category-page)` to target articles only — if you use just `.hg-article-page`, your styles will also hit category pages.
 
+**Gotcha — the theme class and the page class are on the SAME element:** `.hg-minimalist-theme` (the theme class) and the page-type classes (`.hg-home-page`, `.hg-category-page`, etc.) are all applied to the same `<body>`. So a *descendant* selector with a space between them (`.hg-minimalist-theme .hg-home-page …`) does **not** match — there's no ancestor/descendant relationship. Use a **compound** selector with no space: `.hg-minimalist-theme.hg-home-page …`. This fails silently — the rule simply never applies, with no error — so homepage/category-scoped overrides written with a space appear to "do nothing."
+
 ## 16. Z-Index Layering Gaps
 
 The default CSS uses z-index values with large gaps between layers. If you create positioned elements (sticky headers, floating buttons, overlays), be aware of the existing layers:
@@ -207,3 +209,17 @@ Theme-specific styles often use deeply nested selectors (5–7 levels), for exam
 ```
 
 This creates high specificity that's difficult to override without equally deep selectors or `!important`. When your override isn't taking effect, check whether the default rule uses deep nesting — you may need to match or exceed its specificity.
+
+## 19. Full-Bleed Footer (and other edge-to-edge bands)
+
+The footer (`.ko-site-footer`) — and similar bands — are Bootstrap `.row` elements nested inside a padded, max-width content container. A plain `background` on one therefore stops short of the viewport edges (you get white gutters on the left and right). To stretch a band edge-to-edge regardless of how deeply it's nested, pull it out with symmetric negative side margins:
+
+```css
+.hg-minimalist-theme .ko-site-footer {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  /* width stays auto and fills out to the viewport edges */
+}
+```
+
+This works when the container is horizontally centered (the usual case). The `50vw` references the viewport *including* the scrollbar, so after applying it, verify there's no unwanted horizontal scrollbar (fine in practice on KO, but check).
