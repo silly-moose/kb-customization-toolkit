@@ -119,6 +119,16 @@ See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deploy
 
 ---
 
+## Continuous Improvement (Reflect & Improve)
+
+Every session, Claude jots a short, **suggest-only** friction note to the central `improvement-log.md` in the toolkit — things that errored, stale references, wasted steps, or missing CSS gotchas. Claude never edits the toolkit itself during a session.
+
+At **project closeout**, Claude reads those notes and appends a prioritized list of proposed improvements (tagged `AWAITING REVIEW`). Chad reviews the log, applies the good ones to the toolkit (Claude can make the edits in a toolkit-repo session), and pushes — and because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub every session, accepted changes reach the whole team automatically on their next session.
+
+Teammates other than Chad don't have the central log; if their Claude hits friction, it just flags it and suggests they share the idea with Chad in Slack.
+
+---
+
 ## Repo Structure
 
 The template repo (https://github.com/silly-moose/kb-customization-toolkit) is organized into two folders:

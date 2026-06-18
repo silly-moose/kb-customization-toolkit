@@ -18,6 +18,16 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 6. Ask what the user wants to work on before making changes
 7. **If the session involves significant visual iteration** (CSS changes, layout adjustments, or a mix of CSS and HTML work), mention that localhost preview is available: **"This involves visual changes. Want me to set up localhost preview so you can see changes without deploying each time?"** If accepted, follow the Localhost Preview section below. If declined, use the normal deploy-and-verify workflow.
 
+## At the End of Each Session — Reflect & Improve (suggest only)
+
+Help the toolkit get sharper over time by capturing friction from how the session actually went. This is **suggest-only**: during a customer session you NEVER edit the toolkit itself (this rules file, the `Reference/` CSS docs, the process docs, or the templates). You're working in the customer folder, and the CSS reference docs are overwritten from GitHub every session — a mid-session edit would be lost. You only append a note for Chad to review and apply later.
+
+1. **Append a friction note to the central improvement log.** Look up the toolkit's local path in `.claude/rules/project.md` ("Toolkit path"). Append a dated 1–3 line note to `improvement-log.md` at that toolkit root (newest entry on top, just under the header). Capture: tools/sources that errored, stale or missing reference data (e.g. a CSS quirk or default value that wasn't documented), steps that wasted effort, coverage gaps, or calibration/communication observations. **"No notable friction" is a valid note** — don't manufacture issues.
+   - **If the Toolkit path isn't set or the log isn't reachable** (the typical case for anyone other than Chad): do NOT create any file. Just mention the friction in the conversation and suggest the user share it with Chad in Slack if they think it's worth improving. There is deliberately no teammate logging process.
+2. **Route CSS gotchas to the log, not the docs.** If you discovered a new KnowledgeOwl CSS quirk or default value, do NOT edit `Reference/knowledgeowl-css-quirks.md` or `knowledgeowl-css-defaults.md` (they are re-fetched and overwritten from GitHub each session, so a local edit is lost and can't reach the team). Write it into the improvement-log note tagged `[quirks-doc]` or `[defaults-doc]` so Chad can fold it into the central file.
+3. **One-line heads-up.** Tell the user in one line that you logged it (e.g. "Logged a friction note to the toolkit's improvement-log.md, suggest-only, for review at closeout."). Keep it to one line.
+4. **Never apply during a session.** Don't edit or push the toolkit yourself. Applying accepted suggestions is Chad's separate step, done in a session opened in the toolkit repo. The periodic SYNTHESIS of the log happens at **project closeout** — see "Project Closeout" in `02-VERSION_CONTROL_PROCESS.md`.
+
 ## Version Folders
 
 *Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` in the process docs.*
