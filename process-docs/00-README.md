@@ -156,6 +156,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` | Detailed step-by-step setup with file mappings and folder structure |
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-LOCALHOST_PREVIEW.md` | Optional localhost preview for faster CSS iteration |
+| `04-MINIMALIST_THEME_DEFAULTS.md` | The Minimalist theme's stock default code (Custom CSS/HTML/`<head>`) + how to copy it into a project's `no-changes` folder as a baseline |
 
 ---
 
