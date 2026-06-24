@@ -257,7 +257,7 @@ Before closing out a project, run the improvement synthesis, then review whether
 
 ### Synthesize the improvement log (suggest only)
 
-Open the central `improvement-log.md` (at the toolkit root — path in `.claude/rules/project.md`) and read this project's session notes. Append a dated **CLOSEOUT SYNTHESIS** entry: a short, prioritized list of concrete proposed refinements, each tagged `STATUS: AWAITING REVIEW`. **Do not apply any of them** — this is suggest-only. Use the checklist below to decide which part of the toolkit each suggestion targets:
+Open the central `improvement-log.md` (at the toolkit root — path in `.claude/rules/project.md`) and read this project's entries in the `SESSION NOTES` section. Add each concrete proposed refinement as a one-line item to the **`AWAITING REVIEW`** section (newest on top), prefixed with a priority tag `[P1]`–`[P3]` and a target tag like `[quirks-doc]`, and ending with the project name + date. **Do not apply any of them, and do not move anything into another status section** — this is suggest-only; only a human triages. Use the checklist below to decide which part of the toolkit each suggestion targets:
 
 - [ ] Any new steps or tips to add to `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`?
 - [ ] Any new sections to add to the `CHANGES_FROM_no-changes.md` template?
@@ -266,6 +266,6 @@ Open the central `improvement-log.md` (at the toolkit root — path in `.claude/
 - [ ] Any new KnowledgeOwl CSS quirks or defaults for `Reference/knowledgeowl-css-quirks.md` / `knowledgeowl-css-defaults.md`?
 - [ ] Any updates to the session rules in `CLAUDE-RULES.md`?
 
-**Chad (template maintainer):** Apply the accepted items to the master template — a session opened in the toolkit repo is the place to do this, and Claude can make the edits for your review. Push to the repo, then set each item's `STATUS` per the workflow documented at the top of `improvement-log.md` (`APPLIED` / `DECLINED` / `DEFERRED`). Because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub each session, accepted changes reach everyone on their next session automatically.
+**Chad (template maintainer):** Apply the accepted items to the master template — a session opened in the toolkit repo is the place to do this, and Claude can make the edits for your review. Push to the repo, then MOVE each item out of `AWAITING REVIEW` into the matching status section (`APPLIED` / `DECLINED` / `DEFERRED`) in the same commit, stamping the date/commit, the decline reason, or the defer condition — per the workflow documented at the top of `improvement-log.md`. Because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub each session, accepted changes reach everyone on their next session automatically.
 
 **Everyone else:** You won't have the central log — if anything caused friction, just share the idea with Chad in Slack. Always pull the latest version from the repo before starting a new project.
