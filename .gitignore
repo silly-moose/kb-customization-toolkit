@@ -6,3 +6,6 @@ Thumbs.db
 
 # Localhost preview (ephemeral, generated per session)
 preview/
+
+# Private, local-only improvement log (never publish — contains internal/customer notes)
+improvement-log.md
