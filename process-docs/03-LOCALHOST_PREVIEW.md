@@ -42,6 +42,18 @@ Because both the embedded styles and the local file use `!important`, CSS cascad
 
 HTML changes can also be previewed locally by editing the snapshot file directly — the browser renders local HTML the same way it would from a remote server. However, there's no clean override mechanism like the CSS link tag approach. You'd need to find and modify the relevant sections of the snapshot, which is more manual and error-prone. This workflow is optimized for CSS because that's where the override mechanism provides the biggest speed advantage.
 
+### Reproducing a Deployed Page to Diagnose It
+
+The same snapshot mechanism doubles as a **diagnostic tool** when a deployed change looks wrong but you can't inspect the live page directly — e.g. the KB requires reader login, so a fresh browser tab hits the login wall instead of the page. Reproduce the deployed state locally and inspect it:
+
+1. Copy a **fresh** HTML snapshot (captured after the change) to `preview/`.
+2. Inject the *full* current code, not just a CSS `<link>`: insert the version folder's `custom-head.html` contents **and** the complete `custom-css.css` (wrapped in `<style>`) immediately before `</head>`, so the local copy matches what's actually deployed. For HTML/template changes, also swap the relevant DOM region of the snapshot for your resolved markup — resolve KO merge codes (e.g. `[template("large-search")]`, `[homepage("title")]`) to the HTML they render, which you can copy straight out of the snapshot itself.
+3. Serve it (`python3 -m http.server`) and open it with a browser automation tool (Claude in Chrome, or the built-in preview) to inspect **computed styles** — run `getComputedStyle` on the suspect elements. This is how you find the real cause fast: *which* wrapper is actually painting white, whether an element is `visibility:hidden`, what its real width/height is, etc.
+
+Because the snapshot loads KnowledgeOwl's real CDN CSS, the computed styles match production. This needs only the snapshot + a browser — **no KO codebase required, so it works for any teammate.**
+
+Caveats: (a) the snapshot's embedded Style-Settings `<style>` reflects the KB's colors *when it was captured* — if you changed Style Settings since, that block may be stale, though most layout/visibility bugs aren't Style-Settings-driven. (b) Inspect computed styles on a **freshly loaded** page; don't trust readings taken after you've injected many ad-hoc test styles into the same tab (accumulated overrides and JS/layout races make the numbers noisy). If computed-style inspection stays inconclusive, confirm against KO's source CSS where available (see `CLAUDE-RULES.md`, "KnowledgeOwl Source CSS Lookup").
+
 ---
 
 ## Step-by-Step Setup
