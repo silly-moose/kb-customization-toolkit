@@ -81,7 +81,7 @@ Two reference files in `Reference/` cover the most common CSS lookup needs:
 
 **Start with these files.** They cover the vast majority of what you need when writing CSS overrides.
 
-If you need exact property values or full selector chains not covered in the reference files, and the KO source codebase is available at `/Users/chadtimblin/My Drive*/Claude Code desktop/ko-codebase`, you can read specific source CSS files directly for targeted lookups. **This codebase is only available on Chad's machine** — other teammates should rely on the reference files and the customer's HTML snapshot.
+If you need exact property values or full selector chains not covered in the reference files, and the KO source codebase is available at `/Users/chadtimblin/My Drive*/Claude Code desktop/ko-codebase/knowledgeowl` (the git repo root — `public/`, `service/`, etc. live directly under it), you can read specific source CSS files directly for targeted lookups. **This codebase is only available on Chad's machine** — other teammates should rely on the reference files and the customer's HTML snapshot.
 
 Key source files for targeted lookup:
 - `public/css/public/ko-css.css` — CSS custom properties and KO-specific utilities (2,616 lines)
@@ -91,6 +91,8 @@ Key source files for targeted lookup:
 - `public/css/public/standard_modern.css` — Modern theme colors/typography (876 lines)
 - `service/views/scripts/themer-templates/custom-css.css` — default custom CSS template (alert styles, TOC anchors, image captions, list numbering, PDF rules, etc.)
 - `service/views/scripts/themer-templates/` — HTML templates defining page structure and class names
+
+**When to reach for the source (Chad only).** If a Custom CSS override "isn't taking," or an element renders unexpectedly (invisible, wrong size/color, clipped, mis-positioned), the fast path is to `grep` these files for the selector/element and read the *actual winning rule* — rather than deep-debugging computed styles in the browser, which is noisy and slow (accumulated injected styles, timing/JS races, cross-origin sheets you can't read). Confirm the real rule in the source, then write a scoped override that beats it. (Teammates without the codebase: rely on the customer's HTML snapshot + the reference files, and inspect computed styles in the browser.)
 
 **Do not read these files speculatively.** Only look up a specific file when the reference files and HTML snapshot don't answer your question. Use targeted reads (specific line ranges) rather than reading entire files.
 
