@@ -223,3 +223,53 @@ The footer (`.ko-site-footer`) — and similar bands — are Bootstrap `.row` el
 ```
 
 This works when the container is horizontally centered (the usual case). The `50vw` references the viewport *including* the scrollbar, so after applying it, verify there's no unwanted horizontal scrollbar (fine in practice on KO, but check).
+
+## 20. Article Panels Default to White (Dark-Theme Trap)
+
+When converting to a dark theme, it's easy to transparentize the obvious content wrappers (`.documentation-body`, `.ko-content-cntr`, `.ko-homepage-top`) and still be left with a **white content column** — because `ko-css.css` sets white on two *inner* article panels that are easy to miss:
+
+```css
+.documentation-article { background-color: #fff; box-shadow: 5px 0 5px -2px #888; }
+.hg-article            { background: #fff; }
+```
+
+Override **both** (transparent, or your dark fill), and kill the `.documentation-article` box-shadow:
+
+```css
+.hg-minimalist-theme .documentation-article,
+.hg-minimalist-theme .hg-article { background: transparent !important; }
+.hg-minimalist-theme .documentation-article { box-shadow: none !important; }
+```
+
+These are plain single-class rules (low specificity), so a scoped override wins easily — the trap is simply *forgetting* they exist, since the outer wrappers are the ones you think of first.
+
+## 21. Href-less `<a>` Are Hidden as Anchor Jump-Targets
+
+`ko-css.css` treats any anchor **without an `href`** as an in-page jump target and hides it:
+
+```css
+.hg-minimalist-theme a:not([href]):not(.ko-anchor-icon) {
+  display: block; height: 100px; margin-top: -100px; visibility: hidden;
+}
+```
+
+**Gotcha:** if you build clickable-looking cards/tiles as `<a>` with no `href` (e.g. placeholder links before real routes exist), KnowledgeOwl renders them **invisible** — they sit in the DOM at full size but are `visibility:hidden`, so they never paint. This is easy to misdiagnose as the markup being *stripped* (it isn't — inspect and you'll find the elements present with `visibility:hidden`).
+
+Fixes: use `<div>` for dormant/placeholder cards (switch to `<a href>` once wired to real routes), or give them a real `href`. Distinct from the `.toc-anchor` offset in §6, though it's the same underlying "href-less anchor = jump target" behavior.
+
+## 22. Homepage Article Panel Has a Fixed (Viewport-Derived) Height
+
+For the TOC slideout mechanism, KO pins a **fixed height** (roughly the viewport height — *not* `min-height`) on the homepage article container (`#ko-article-cntr` / `.ko-content-cntr` / `.hg-article`). Stock homepages are short enough to fit, but a **taller custom homepage overflows it**: the content spills out visually (overflow is visible, so you still see it) and the footer — positioned after the pinned-height panel — rides **up over** the content.
+
+Fix by letting the homepage containers grow to their content:
+
+```css
+.hg-minimalist-theme.hg-home-page #ko-article-cntr,
+.hg-minimalist-theme.hg-home-page .ko-content-cntr,
+.hg-minimalist-theme.hg-home-page .ko-content-cntr .hg-article,
+.hg-minimalist-theme.hg-home-page .ko-content-cntr .hg-article-body {
+  height: auto !important;
+}
+```
+
+Scope it to `.hg-home-page` so article/category pages (which rely on the slideout height) are untouched. Related to the slideout coupling in §5.

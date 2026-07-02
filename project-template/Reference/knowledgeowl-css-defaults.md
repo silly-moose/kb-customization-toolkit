@@ -142,6 +142,17 @@ Applied to `<body>` or high-level wrappers. Use these to scope CSS to specific c
 | `.hg-article-controls` | Article action buttons |
 | `.documentation-padding` | Content padding wrapper |
 
+### Background Defaults
+
+Both `.documentation-article` and `.hg-article` default to a **solid white background** in `ko-css.css`, separate from the outer wrappers (`.documentation-body`, `.ko-content-cntr`):
+
+```css
+.documentation-article { background-color: #fff; box-shadow: 5px 0 5px -2px #888; }
+.hg-article            { background: #fff; }
+```
+
+A dark (or otherwise non-white) theme must override **both** of these inner panels — not just the outer wrappers — or the content column stays white. `.documentation-article` also carries a right-edge `box-shadow` that should be removed on dark. See the quirks doc, "Article Panels Default to White (Dark-Theme Trap)."
+
 ### Typography Defaults
 
 | Element | Properties |
