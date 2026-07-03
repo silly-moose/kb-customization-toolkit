@@ -144,7 +144,9 @@ Prefer the static download first (offline, archivable); use the live capture as 
 
 **Tip:** the Claude-in-Chrome result filter can block large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
 
-**Tip — host images you put in the theme:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control. (Same reasoning as uploading the logo to the KB.)
+**Tip — the logo goes in Style Settings, not custom code:** Upload the KB's logo through KnowledgeOwl's native uploader at **Customize > Style > Style Settings > Logo** (upload the right variant per KB — e.g., a white version for a dark nav). Don't hardcode a logo URL in Custom CSS/HTML or recolor a logo with a CSS `filter`. It's more robust and keeps the theme portable as a template. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
+
+**Tip — host other theme images in the KB:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control.
 
 ---
 

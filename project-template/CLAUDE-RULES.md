@@ -100,6 +100,14 @@ Key source files for targeted lookup:
 
 Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use Claude in Chrome to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
 
+## Logo & Brand Assets
+
+**Upload the logo through KnowledgeOwl's native uploader, not custom code.** KO has a dedicated logo field at **Customize > Style > Style Settings > Logo** — that's where a KB's logo belongs. It lives where the customer expects to manage it, survives theme and version changes, and KO handles the markup and responsive sizing for you.
+
+- **Treat the logo as a manual step**, listed in the CHANGES file's "Manual Steps in KnowledgeOwl" section. Do **not** hardcode or reference a logo image URL in Custom CSS/HTML, and do **not** recolor a logo with a CSS `filter` (e.g., whitening a dark logo for a dark nav). If the design needs a different logo variant, **upload that variant** — customers usually have a light/white version for dark backgrounds — rather than transforming it in code. Uploading the right file is more robust and keeps the theme portable as a template (nothing brand-specific baked into the CSS).
+- **Other theme images** that genuinely must be referenced from CSS (e.g., a homepage hero background) go in the **KB's file library**, referenced by that KB-hosted URL — never hotlink the customer's marketing site. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4.
+- **Capturing vs. deploying:** pulling the customer's logo into `Reference/` (from their site or a brand kit) so you can see it while designing is fine and separate — that's reference material, not where the logo gets deployed.
+
 ## CHANGES File
 
 *Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` — "Document Changes" and "Provide Deployment Instructions".*
