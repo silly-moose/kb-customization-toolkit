@@ -11,7 +11,7 @@ I want to thoroughly polish a reusable KnowledgeOwl theme template — the **"mo
 Start by reading its `README.md` (what it is, the `--brand-*` / `--ui-*` swap point, the build rules, and a list of known polish opportunities), then skim `custom-css.css` (the theme layer is below the `MODERN-DOCS THEME` banner).
 
 **Reference + preview resources:**
-- **Localhost preview** — follow `../../03-LOCALHOST_PREVIEW.md`. It renders the CSS against a real KB HTML snapshot (homepage + article): grab a `full-html-snapshot-*.html` from any recent build in the customer-builds project (`custom-theme-builds-for-qualified-trials/theme-builds/*/`), or capture one from a stock KB via Chrome DevTools (Copy outerHTML).
+- **Localhost preview** — follow `../../03-LOCALHOST_PREVIEW.md`, rendering the CSS against the bundled reference snapshots in `../_reference-snapshots/` (a genericized homepage + article — no live build needed).
 - The KO CSS reference docs in `../../../project-template/Reference/` (`knowledgeowl-css-quirks.md`, `knowledgeowl-css-defaults.md`).
 
 **Goal:** genuinely excellent. Assess improvement opportunities broadly and implement the ones that raise quality. Draw ideas from anywhere — **Mintlify** (feel free to inspect mintlify.com or their docs with Claude-in-Chrome), and other best-in-class docs sites (GitBook, Stripe docs, Notion, Linear), plus your own judgment.

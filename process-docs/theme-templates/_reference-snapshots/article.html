@@ -1,0 +1,1535 @@
+<html lang="en"><head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Getting Started | Acme Knowledge Base</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+    
+		<link rel="stylesheet" href="https://d3s179bfexmwfe.cloudfront.net/min/css/koFontawesome-cbbff8bfba.css" type="text/css">
+            <link rel="stylesheet" href="https://d3s179bfexmwfe.cloudfront.net/min/css/ko-295b026a3e.css" type="text/css">
+		<link href="https://d1whm9yla4elqy.cloudfront.net/lato/lato.css" rel="stylesheet" type="text/css">
+		<style type="text/css">.hg-minimalist-theme.hg-2column-layout .slideout-menu{background-color:#F8F4F1}.hg-site .hg-header{background-color:#FFFFFF}.hg-widget-page .pager{background-color:#FFFFFF}.hg-minimalist-theme .level-0 > .category-link-container:hover, .hg-minimalist-theme .level-0 > .category-link-container.active, .hg-minimalist-theme .documentation-outter-list > .article-container:hover, .hg-minimalist-theme .documentation-outter-list > .article-container.active, .hg-minimalist-theme .documentation-outter-list > .article-container .article-link:hover, .hg-minimalist-theme .documentation-outter-list > .article-container .article-link.active, .hg-minimalist-theme .documentation-categories .level-0 > .category-link-container a:hover, .hg-minimalist-theme .documentation-categories li.active, .hg-minimalist-theme .category-link-container.active, .hg-minimalist-theme .documentation-categories .article-container:hover, .hg-minimalist-theme .documentation-categories li a:hover, .hg-minimalist-theme .category-link-container:hover{background-color: rgb(238,234,231)}.hg-site > .navbar{color:#1d284f}.navbar-default .navbar-nav > li > a.hg-header-link{color:#1d284f}.toc-toggle{color:#1d284f}.navbar-default .navbar-toggle:before{color:#1d284f}.cat-icon{color:#e18147}.home-icon{color:#e18147}.alt-icon{color:#e18147}.form-group.focus .form-control{color:#e18147}.form-group.focus .select2-search input[type=text]{color:#e18147}.hg-site:not(.hg-modern-theme) .documentation-categories li a{color:#1d284f}.documentation-article h1, .cke_editable h1{color:#212121}.documentation-article h2, .cke_editable h2{color:#212121}.documentation-article h3, .cke_editable h3{color:#212121}.documentation-article h4, .cke_editable h4{color:#212121}.documentation-article h5, .cke_editable h5{color:#212121}.documentation-article h6, .cke_editable h6{color:#212121}.documentation-article h7, .cke_editable h7{color:#212121}.navbar-default{border-bottom-color:#8a8ea0}.documentation-outter-list > .article-container{border-bottom-color:#8a8ea0}.level-0{border-bottom-color:#8a8ea0}.article-container:hover{background-color:rgb(216,216,216) }.category-link-container:hover{background-color:rgb(216,216,216) }.documentation-categories li a:hover{background-color:rgb(216,216,216) }.category-link-container.active{background-color:rgb(216,216,216) }.documentation-categories li.active{background-color:rgb(216,216,216) }.form-control:focus{border-color:#e18147 }.select2-search input[type=text]:focus{border-color:#e18147 }.btn-danger{background-color:#e18147 }.hg-ratings .hg-helpful{color:#e18147 }.hg-search-bar input:focus + .input-group-btn .btn{border-color:#e18147 }.hg-minimalist-theme a:not(.btn):hover, .hg-minimalist-theme a:not(.btn):hover, .hg-minimalist-theme a:not(.btn):focus{color:#e18147 }.faq-cat-container:hover a{color:#e18147 }.ko-article-actions a{color:#e18147 }.faq-cat-panel:hover{border-color:#e18147 }.btn-success{color:#1d284f }.btn-primary{color:#1d284f }.btn-danger{color:#1d284f }.btn-success:hover{color:#1d284f }.btn-primary:hover{color:#1d284f }.btn-danger:hover{color:#1d284f }.navbar-default .navbar-toggle:hover:before, .navbar-default .navbar-toggle:focus:before{color:#1d284f }.btn-success{background-color:rgb(225,129,71) }.btn-primary{background-color:rgb(225,129,71) }.hg-ratings .hg-unhelpful{color:rgb(225,129,71) }.hg-minimalist-theme a:not(.btn){color:rgb(185,89,31) }.btn-primary:hover{background-color:rgb(245,149,91) }.btn-primary:focus{background-color:rgb(245,149,91) }.btn-primary:active{background-color:rgb(245,149,91) }.btn-success:hover{background-color:rgb(245,149,91) }.btn-success:focus{background-color:rgb(245,149,91) }.btn-success:active{background-color:rgb(245,149,91) }.hg-ratings .hg-unhelpful:hover{color:rgb(245,149,91) }.ko-article-actions a:hover{color:rgb(245,149,91) }.pager li>a:hover, .pager li>span:hover, .pager li>a:focus, .pager li>span:focus{background-color:rgb(245,149,91) }.btn-danger:hover{background-color:rgb(245,149,91) }.btn-danger:focus{background-color:rgb(245,149,91) }.btn-danger:active{background-color:rgb(245,149,91) }.hg-ratings .hg-helpful:hover{color:rgb(245,149,91) }.documentation-article h1, .cke_editable h1{font-family:Lato;font-size:48px;font-weight:700;}.documentation-article h2, .cke_editable h2{font-family:Lato;font-size:42px;font-weight:700;}.documentation-article h3, .cke_editable h3{font-family:Lato;font-size:36px;font-weight:700;}.documentation-article h4, .cke_editable h4{font-family:Lato;font-size:30px;font-weight:700;}.documentation-article h5, .cke_editable h5{font-family:Lato;font-size:24px;font-weight:700;}.documentation-article h6, .cke_editable h6{font-family:Lato;font-size:18px;font-weight:700;}.documentation-article h7, .cke_editable h7{font-family:Lato;font-size:12px;font-weight:700;}.hg-article-body, .hg-article-body p, .cke_editable, .cke_editable p{font-family:Lato;font-size:16px;font-weight:400;}.hg-site .hg-project-name, body{font-family:Lato;}/******************************************************** General structure ****************************/
+/* define most colors */
+:root {
+  --primary-color: #1d284f;
+  --secondary-color: #f8b88b;
+  --text-links-color: #3C80BA;
+  --border-color: #dcdcdc;
+  --border-hover-color: #b3b3b3;
+  --box-shadow-color: #aeaeae;
+  --toc-border-color: #ddd;
+  --input-border-color: #E6E6E6;
+  --image-caption-link-color: #F6A267;
+  --input-focus-color: #378DFF;
+  --white: #ffffff;
+  /* the styles associated with these colors are commented out by default */
+  --toc-box-shadow-color: #F8F4F1;
+  --toc-category-hover-color: #f2e9e3;
+  --toc-article-hover-color: #e8e8e8;
+}
+/* smooth article resizing on TOC open/close */ 
+.hg-minimalist-theme #ko-article-cntr {
+  transition: all 300ms ease-in-out;
+  width: 100%;
+}
+/* hide right col when TOC open */
+.hg-minimalist-theme #ko-article-cntr.slideout-panel-left.open+.col-lg-3.visible-lg.right-column {
+  opacity: 0;
+  visibility: hidden;
+}
+/* size and position right column if in use */
+.hg-minimalist-theme.hg-3column-layout .right-column {
+  top: 65px;
+  padding-right: 35px;
+  z-index: 2;
+  max-width: calc((100vw - 920px) / 2);
+  transition: all 200ms ease-in-out;
+  opacity: 1;
+}
+/* make sure footer is full width */
+.hg-minimalist-theme.hg-3column-layout .ko-site-footer {
+  width: 100%;
+}
+/* self clear page contents */
+.documentation-body::after {
+  content: "";
+  display: table;
+}
+/* make site background white */
+.hg-minimalist-theme .documentation-body {
+  background: var(--white);
+}
+.hg-site {
+  background: var(--white);
+}
+
+/******************************************************** Font overrides *************************/
+/* color for <h1> */
+.hg-minimalist-theme .documentation-article h1 {
+  color: var(--primary-color);
+}
+/* article content h2 size */
+.documentation-article h2 {
+  font-size: 28px;
+}
+/* article content h3 size */
+.documentation-article h3 {
+  font-size: 24px;
+}
+/* article content h4 size */
+.documentation-article h4 {
+  font-size: 18px;
+}
+/* default color of <a> text (links) */
+.hg-minimalist-theme a:not(.btn),
+a:not(.btn) {
+  color: var(--text-links-color);
+}
+/* remove bottom margin from <p> in article content */
+.documentation-article p {
+  margin-bottom: 0;
+}
+/* force default font size for blockquote */
+blockquote {
+  font-size: inherit;
+}
+/* override default font size for homepage search bar */
+.hg-minimalist-theme .ko-large-search input.form-control {
+  font-size: 15px;
+}
+
+/******************************************************** Topic Category styles **********************/
+/* remove top border, bottom margin from title container */
+.hg-minimalist-theme .topics-top-wrapper {
+  border-bottom: none;
+  margin-bottom: 0px;
+}
+/* remove border, add padding for topic articles */
+.hg-minimalist-theme .topics-articles .hg-article-body,
+.hg-minimalist-theme .hg-category-page .hg-article-body {
+  border-bottom: none;
+  padding-bottom: 40px;
+}
+/* change quick links styles */
+.hg-minimalist-theme  .topic-toc-item {
+  margin-bottom: 10px;
+  display: list-item;
+  line-height: 1.2;
+}
+/* normalize header spacing */
+.hg-minimalist-theme .topics-articles .hg-article-header {
+  margin: 20px 0;
+}
+/* add more space between collapsed article headers */
+.hg-minimalist-theme .topics-articles .hg-article-header.ko-collapse-trigger {
+  margin: 0;
+}
+/* shrink expand / collapse icons */
+.hg-minimalist-theme .topics-articles .hg-article-title > i {
+  font-size: 20px;
+  line-height: 26px;
+  vertical-align: top;
+}
+/* indent and add spacing around collapsed article content */
+.hg-minimalist-theme .topics-articles .ko-collapse-article {
+  margin-left: 30px;
+  padding-bottom: 20px;
+}
+/* remove padding between topic articles */
+.hg-minimalist-theme .topics-articles .hg-article-body {
+  padding-bottom: 0px;
+}
+/* topic article <h2> size */
+.documentation-article .topics-articles h2.hg-article-title {
+  font-size: 24px;
+}
+/* topic article <h3> size */
+.documentation-article .topics-articles h3 {
+  font-size: 18px;
+}
+/* topic article <h4> size */
+.documentation-article .topics-articles h4 {
+  font-size: 16px;
+}
+
+/******************************************************** Default Category Styles *********************/
+/* add top and bottom margin to category panels */
+.hg-minimalist-theme .category-list {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+/* remove bottom border from title */
+.hg-minimalist-theme .faq-header {
+  border-bottom: none;
+}
+/* remove right margin from category description */
+.hg-minimalist-theme .faq-top-description {
+  margin-right: 0;
+}
+/* change category panels into 2x2 grid */
+.hg-minimalist-theme .faq-nav-content .category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  grid-auto-rows: 1fr;
+}
+/* get rid of psuedo html elements */
+.hg-minimalist-theme .faq-nav-content .category-list .clear-left,
+.hg-minimalist-theme .faq-nav-content .category-list .clear-both {
+  display: none !important;
+}
+/* style category panels */
+.hg-minimalist-theme .faq-nav-content .faq-cat-container,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: all .2s ease-in-out;
+  backface-visibility: hidden;
+}
+/* hover effect for category panels */
+.hg-minimalist-theme .faq-nav-content .faq-cat-container:hover,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container:hover {
+  background-color: var(--white);
+  box-shadow: 2px 4px 4px var(--box-shadow-color);
+  transform: scale(1.01) translateZ(0);
+}
+/* subcategory panel display tweaks */
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  padding: 0;
+}
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel {
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+}
+/* subcategory content-list display tweaks */
+.hg-minimalist-theme .category-list.faq-content-list {
+  margin-bottom: 0;
+}
+.hg-minimalist-theme .faq-content-list-container {
+  width: auto;
+  padding: 0;
+}
+.hg-minimalist-theme .faq-content-list-container .category-header {
+  border-bottom: none;
+  margin-bottom: 10px;
+}
+.hg-minimalist-theme .faq-nav-content .article-block div {
+  margin-left: 0;
+}
+/* add bottom margin to list of articles */
+.hg-minimalist-theme .faq-nav-content {
+  margin-bottom: 40px;
+}
+/* remove right margin from category title */
+.hg-minimalist-theme .faq-header {
+  margin-right: 0;
+}
+/* hide <h2>Articles</h2> from default categories */
+.hg-minimalist-theme .faq-nav-content h2 {
+  display: none;
+}
+/* Force main area to be full width */
+.hg-minimalist-theme .hg-category-page .category-list .col-md-6.col-lg-4 {
+  width: 100% !important;
+}
+/* adjust position of subscribe button */
+.hg-minimalist-theme .ko-cat-sub-cntr {
+  margin-top: 12px;
+  margin-right: 0;
+}
+/* apply hover effects to subscribe button */
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub {
+  border: 1px solid var(--border-hover-color);
+  transition: all .1s ease-in-out;
+  backface-visibility: hidden;
+}
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub:hover {
+  box-shadow: 1px 2px 2px var(--box-shadow-color);
+  transform: scale(1.01) translateZ(0);
+}
+
+/******************************************************** Table of Contents ***********/
+/* add border and box-shadow to TOC */
+.hg-minimalist-theme.hg-2column-layout .slideout-menu {
+  display: block;
+  padding: 0;
+  box-shadow: none;
+  border: 1px solid var(--toc-border-color);
+  border-radius: 0 4px 0 0;
+  /*background-color: var(--toc-box-shadow-color);*/
+  left: -360px;
+  transition: all 300ms ease-in-out;
+}
+/* remove TOC padding */
+.hg-minimalist-theme .hg-site-body .documentation-outter-list {
+  padding: 0;
+}
+/* style top level content */
+.hg-minimalist-theme .documentation-categories li.level-0,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  border-bottom: 0;
+  padding: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* style child content containers */
+.hg-minimalist-theme .documentation-categories li {
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.hg-minimalist-theme .documentation-categories li.level-0 > .category-link-container,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  padding: 5px 10px;
+}
+/* style top level articles */
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link {
+  padding: 0 5px;
+  line-height: 33px;
+}
+/* background color override for active and hovered child content */
+.hg-minimalist-theme .documentation-categories li.active,
+.hg-minimalist-theme .category-link-container.active,
+.hg-minimalist-theme .documentation-categories .article-container:hover,
+.hg-minimalist-theme .documentation-categories li a:hover,
+.hg-minimalist-theme .category-link-container:hover {
+  /*background-color: var(--toc-article-hover-color);*/
+}
+/* background color override for active and hovered top level content */
+.hg-minimalist-theme .level-0 > .category-link-container:hover,
+.hg-minimalist-theme .level-0 > .category-link-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link.active {
+  /*background-color: var(--toc-category-hover-color);*/
+  border-radius: 0;
+}
+.hg-minimalist-theme .documentation-categories .level-0 > .category-link-container a:hover {
+  /*background-color: var(--toc-category-hover-color);*/
+}
+/* override default toc slideout behavior */
+.hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+  transform: translateX(360px);
+  width: calc(100% - 360px);
+}
+/* Change TOC chevron-right to plus-square */
+.hg-minimalist-theme .documentation-categories .fa-chevron-right:before {
+  content: "\f0fe" !important;
+}
+/* Change TOC chevron-down to minus-square */
+.hg-minimalist-theme .documentation-categories .fa-chevron-down:before {
+  content: "\f146" !important;
+}
+/* make icons slightly larger */
+.hg-minimalist-theme .cat-icon, .hg-minimalist-theme .home-icon, .hg-minimalist-theme .alt-icon {
+  padding: 8px 0 0 6px;
+  font-size: 18px;
+}
+/* override default box shadow when side TOC is open */
+.hg-minimalist-theme .documentation-categories.slideout-menu.open {
+  box-shadow: 2px 4px 4px var(--box-shadow-color);
+  left: 0;
+}
+
+/********************************************************* Modals ********************/
+/* adjust input border width in modals */
+.hg-minimalist-theme .modal .form-control {
+  border-width: 1px;
+}
+
+/********************************************************* PDF Adjustments ***********/
+/* hide .pdf-header outside of actual PDFs */
+.hg-minimalist-theme .pdf-header {
+  display: none;
+}
+/* show .pdf-header in actual PDFs */
+.hg-minimalist-theme .hg-pdf .pdf-header {
+  display: block;
+}
+/* height of image in .pdf-header */
+.hg-minimalist-theme .hg-pdf .pdf-header img {
+  height: 80px;
+}
+
+/******************************************************** Homepage Top and General */
+/* get rid of background banner and add some padding to top of homepage */
+.hg-minimalist-theme .ko-homepage-top {
+  background: none;
+  padding-top: 2em;
+  padding-bottom: 0em;
+}
+/* make sure category title is clickable */
+.hg-minimalist-theme .hg-home-page .category-header {
+  z-index: 2;
+}
+/* change default color for homepage title */
+.hg-minimalist-theme .ko-homepage-top .hg-article-title {
+  color: var(--primary-color);
+}
+
+/******************************************************** Content Lists */
+/* tweak padding and line heights */
+.hg-minimalist-theme .stat-list {
+  line-height: 1.3;
+  font-size: 14px;
+  margin-left: 1px;
+}
+.hg-minimalist-theme .stat-list li {
+  padding: 4px 0;
+}
+/* remove bottom border from page title */
+.hg-minimalist-theme .page-header {
+  border-bottom: none;
+}
+/* remove border above "see more..." */
+.hg-minimalist-theme .list-action {
+  border-top: none;
+}
+/* correct margin and padding for content lists on homepage */
+.hg-minimalist-theme .homepage-widgets {
+  margin: 2em -15px;
+}
+.hg-minimalist-theme .homepage-widgets .col-md-4.col-sm-6 {
+  padding-left: 15px;
+}
+
+/******************************************************** Search Bar */
+/* remove border from individual search bar elements */
+.hg-minimalist-theme .hg-search-bar input.form-control,
+.hg-minimalist-theme .input-group-btn .btn,
+.hg-minimalist-theme .input-group-btn .btn:hover,
+.hg-minimalist-theme .hg-search-bar input.form-control:focus,
+.hg-minimalist-theme .input-group-btn .btn:focus,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:active,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:focus {
+  border: none;
+}
+/* add border to outer search bar */
+.hg-minimalist-theme .hg-search-bar .input-group {
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  transition: border .25s linear,color .25s linear,background-color .25s linear;
+}
+/* remove background color from search button */
+.hg-minimalist-theme .input-group-btn .btn {
+  background: none;
+}
+/* adjust color and sizing for the refine button */
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle {
+  color: var(--primary-color);
+  font-size: 16px;
+  border: none;
+}
+/* restyle the dropdown caret */
+.hg-search-bar .category-dropdown .dropdown-toggle .caret {
+  border: none;
+  display: inline;
+  font-family: 'Font Awesome 6 Pro';
+  font-weight: 300;
+  font-size: 14px;
+}
+.hg-search-bar .category-dropdown .dropdown-toggle .caret::before {
+  content: "\f0d7";
+}
+/* change font color and remove border for search button */
+.hg-minimalist-theme span.input-group-btn .btn-default,
+.hg-minimalist-theme span.input-group-btn .btn-default:hover {
+  color: var(--input-border-color);
+  border-left: none;
+}
+.hg-minimalist-theme .ko-large-search input.form-control,
+.hg-minimalist-theme .hg-search-bar input.form-control {
+  border-right: none;
+}
+/* add box-shadow to search bar */
+.hg-minimalist-theme .input-group {
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.05);
+}
+/* remove box shadow from type-ahead suggestion box */
+.hg-minimalist-theme .navbar-collapse.in .input-group,
+.hg-minimalist-theme .navbar-collapse.collapsing .input-group {
+  box-shadow: none;
+}
+/* handle styles for showing/hiding type-ahead suggestion box */
+.hg-minimalist-theme #navbar-collapse.in,
+.hg-minimalist-theme #navbar-collapse.collapsing {
+  margin-bottom: 0;
+  padding: 10px;
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: 0px 10px 20px -8px #ccc;
+}
+
+/******************************************************** Search Pages */
+/* adjust bottom spacing page titles and containers */
+.hg-minimalist-theme .recommended-container h2,
+.hg-minimalist-theme .hg-contact-form-container h2,
+.hg-minimalist-theme .hg-article-search {
+  margin-bottom: 40px;
+}
+/* add bottom margin to search controls */
+.hg-minimalist-theme .ko-srch-meta-cntr {
+  margin-bottom: 20px;
+}
+/* add more top margin to full search results */
+.hg-minimalist-theme #homepage-search-form .hg-article-search {
+  margin-top: 20px;
+}
+/* remove bottom spacing from recommended article titles */
+.hg-minimalist-theme .hg-article-search h4 {
+  margin-bottom: 0;
+}
+/* increase space between article results */
+.hg-minimalist-theme .hg-article-search li {
+  margin-bottom: 25px;
+}
+/* adjust size/spacing of article meta data */
+.hg-minimalist-theme .hg-article-info {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+/* add spacing after article blurbs */
+.hg-minimalist-theme .hg-article-blurb {
+  margin-bottom: 25px;
+}
+/* make last modified text for recommended articles smaller */
+.hg-minimalist-theme .hg-article-search .hg-date {
+  font-size: 14px;
+}
+/* adjust font size and line height for contact form labels */
+.hg-minimalist-theme .hg-contact-form-container label {
+  font-size: 18px;
+  line-height: 1.3;
+}
+/* decrease width of contact form field borders */
+.hg-minimalist-theme .hg-contact-form-container .form-control {
+  border: 1px solid #bdc3c7;
+}
+/* update colors for the results paging buttons */
+.hg-minimalist-theme .ko-search-pager li.current {
+  background: var(--primary-color);
+}
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn) {
+  color: var(--primary-color);
+}
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn):hover {
+  color: var(--secondary-color);
+}
+
+/******************************************************** Tables ***************************************/
+/* adjust table header cell styles */
+.table-bordered > thead > tr > th {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding-left: 1em;
+}
+/* give left aligned cells some left padding */
+.table-bordered>tbody>tr>td,
+.table-bordered>tfoot>tr>td,
+table.table-bordered tr td[style*="text-align: left"] {
+  padding-left: 1em;
+}
+
+/******************************************************** Article HTML ***************************************/
+/* add some padding to line items */
+.hg-article-body ol li {
+  padding: 10px 0;
+}
+/* first level - use regular numeric decimals  */
+.hg-article-body ol {
+  list-style-type: decimal;
+}
+/* second level - use lowercase alphabetic */
+.hg-article-body ol > li > ol {
+  list-style-type: lower-alpha;
+}
+/* third level - use lowercase Roman numerals */
+.hg-article-body ol > li > ol > li > ol {
+  list-style-type: lower-roman;
+}
+/* optional .article-block styles */
+.article-block div {
+  margin-left: 20px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+/* default margin for <p> in lists */
+.hg-article-body ul p,
+.hg-article-body ol p {
+  margin: 20px 0 0;
+}
+/* give more top space to article ratings */
+.hg-minimalist-theme .hg-ratings {
+  margin-top: 15px;
+}
+/* space out the article rating thumbs */
+.hg-minimalist-theme .hg-ratings .hg-helpful {
+  margin-right: 20px;
+}
+/* styles for check-list bullet points */
+ul.check-list {
+  list-style: none;
+  padding-left: 0;
+}
+ul.check-list li {
+  position: relative;
+  padding-left: 1.5em;
+}
+ul.check-list li:before {
+  font-family: 'FontAwesome';
+  content: "\f00c" !important;
+  padding-right: 0.5em;
+  font-size: smaller;
+  color: green;
+}
+/* remove top border from comment form */
+.hg-minimalist-theme #hg-comment-form {
+  border-top: none;
+}
+
+/******************************************************** List pages ************/
+/* remove top border from glossary page */
+.hg-minimalist-theme .glossary-letter ~ .glossary-letter {
+  border-top: none;
+}
+/* left align article lists */
+.hg-minimalist-theme .hg-widget-page .ko-content-cntr ol {
+  padding-inline-start: 20px;
+}
+
+/******************************************************** Alert boxes ***********/
+/* give alerts, wells, <pre> some top margin */
+.alert, .well, pre {
+  margin-top: 20px;
+}
+/* icon styling for all alerts */
+.alert::before {
+  display: block;
+  width: 65px;
+  height: 60px;
+  float: left;
+  margin-top: 0px;
+  font-size: 48px;
+  font-weight: 900;
+  font-family: 'Font Awesome 6 Pro';
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 60px;
+  text-rendering: auto;
+}
+/* danger alert styling */
+.alert.alert-danger {
+  background: #F4E2E2;
+  border: 1px solid #E6ADA9;
+}
+.alert.alert-danger:before {
+  content: "\f071";
+  color: #f8918b;
+}
+/* info alert styling */
+.alert.alert-info {
+  background: #F0F7FD;
+  border: 1px solid #69B2F0;
+}
+.alert.alert-info:before {
+  content: "\f05a";
+  color: #97c4ed;
+}
+/* success alert styling */
+.alert.alert-success {
+  background: #F8FBF9;
+  border: 1px solid #BDDCBC;
+}
+.alert.alert-success:before {
+  content: "\f058";
+  color: #9bdbae;
+}
+/* warning alert styling */
+.alert.alert-warning {
+  background: #FDF9E6;
+  border: 1px solid #FBD9A4;
+}
+.alert.alert-warning:before {
+  content: "\f8fa";
+  color: #ffcc7a;
+}
+/* remove top margin from <p> tags in alerts */
+.alert.alert-info p,
+.alert.alert-success p,
+.alert.alert-warning p,
+.well p {
+  margin-top: 0;
+}
+/* make sure there is vertical room icons in alerts */
+.alert.alert-info,
+.alert.alert-success,
+.alert.alert-danger,
+.alert.alert-warning {
+  min-height: 90px;
+}
+/* Offset lists that are within alert divs */
+.alert ul,
+.alert ol {
+  margin-left: 75px;
+}
+
+/******************************************************************************* Image Captions *****/
+/* Set dark background for captions */
+.hg-minimalist-theme .documentation-article .fr-img-caption .fr-img-wrap>span {
+  background: var(--primary-color);
+}
+/* Remove border for image captions */
+.hg-minimalist-theme .documentation-article span.fr-img-caption {
+  border: none;
+}
+/* Fix hyperlinks in image captions, now that we have the dark background */
+.hg-minimalist-theme span.fr-inner a {
+  color: var(--image-caption-link-color);
+  text-decoration: none;
+}
+/* Image caption hyperlinks should be a different color and underlined on-hover */
+.hg-minimalist-theme .fr-inner a:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/********************************************* Back to top snippet styling */
+/* basic styles */
+.back-to-top {
+  background-color: #fff;
+  margin: 0;
+  position: fixed;
+  bottom: 100px;
+  right: 45px;
+  width: 55px;
+  height: 45px;
+  z-index: 100;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #acacac;
+  box-shadow: 1px 3px 3px var(--box-shadow-color);
+  visibility: hidden;
+  opacity: 0;
+  transition: all .2s ease-in-out;
+}
+/* make visible when scrolled down on page */
+.back-to-top.visible {
+  visibility: visible;
+  opacity: 1;
+}
+/* icon styles */
+.back-to-top i {
+  font-size: 45px;
+  color: #3a3a3a;
+}
+/* mouse effect styles */
+.back-to-top:hover,
+.back-to-top:active,
+.back-to-top:focus {
+  color: var(--white);
+}
+
+/********************************************* Miscellaneous */
+/* optional .margin-top-20 class */
+.hg-minimalist-theme .margin-top-20 {
+  margin-top: 20px;
+}
+/* panels within the right column */
+.hg-minimalist-theme .right-col-panel {
+  border-radius: 4px;
+}
+.hg-minimalist-theme .right-col-panel .panel-heading {
+  color: var(--white);
+  background: var(--primary-color);
+  border-radius: 4px 4px 0 0;
+}
+/* Add styles for in article TOC snippet to work*/
+.hg-minimalist-theme .toc-top {
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+  margin-bottom: 20px;
+  min-height: 20px;
+  padding: 5px 30px;
+}
+/* In article TOC snippet style */
+.hg-minimalist-theme .toc-anchor {
+  display: block;
+  height: 140px;
+  margin-top: -140px;
+  visibility: hidden;
+}
+/* remove bottom border for articles */
+.hg-minimalist-theme .hg-article-body {
+  border-bottom: none;
+}
+.ko-content-cntr .pager {
+  margin-top: 40px;
+} 
+
+/* accessibility focus indicators */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible,
+input[type="file"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible,
+.form-control:focus-visible,
+.nav > li > a:focus-visible,
+.nav > li.disabled > a:focus-visible,
+.nav .open > a:focus-visible,
+.nav-tabs > li.active > a:focus-visible,
+.nav-tabs.nav-justified > .active > a:focus-visible,
+.nav-pills > li.active > a:focus-visible,
+.nav-tabs-justified > .active > a:focus-visible,
+.navbar-brand:focus-visible,
+.navbar-toggle:focus-visible,
+.navbar-default .navbar-brand:focus-visible,
+.navbar-default .navbar-nav > li > a:focus-visible,
+.navbar-default .navbar-nav > .active > a:focus-visible,
+.navbar-default .navbar-nav > .disabled > a:focus-visible,
+.navbar-default .navbar-toggle:focus-visible,
+.navbar-default .navbar-nav > .open > a:focus-visible,
+.navbar-default .btn-link:focus-visible,
+.navbar-default .btn-link[disabled]:focus-visible,
+fieldset[disabled] .navbar-default .btn-link:focus-visible,
+.navbar-inverse .navbar-brand:focus-visible,
+.navbar-inverse .navbar-nav > li > a:focus-visible,
+.navbar-inverse .navbar-nav > .active > a:focus-visible,
+.navbar-inverse .navbar-nav > .disabled > a:focus-visible,
+.navbar-inverse .navbar-toggle:focus-visible,
+.navbar-inverse .navbar-nav > .open > a:focus-visible,
+.navbar-inverse .btn-link:focus-visible,
+.navbar-inverse .btn-link[disabled]:focus-visible,
+fieldset[disabled] .navbar-inverse .btn-link:focus-visible,
+a.label:focus-visible,
+.label-default[href]:focus-visible,
+.label-primary[href]:focus-visible,
+.label-success[href]:focus-visible,
+.label-info[href]:focus-visible,
+.label-warning[href]:focus-visible,
+.label-danger[href]:focus-visible,
+.close:focus-visible,
+.back-to-top:focus-visible,
+html .author-bar .ko-editor-nav-right .dropdown > a:focus-visible,
+.hg-minimalist-theme .ko-slideout-left-toggle:focus-visible,
+.hg-minimalist-theme .ko-slideout-right-toggle:focus-visible,
+.hg-minimalist-theme .ko-large-search input.form-control:focus-visible
+button.btn.btn-success:focus-visible,
+button.btn.btn-primary:focus-visible,
+button.btn.btn-default:focus-visible,
+button.btn.btn-warning:focus-visible,
+button.btn.btn-danger:focus-visible,
+button.btn.btn-info:focus-visible,
+a.btn.btn-success:focus-visible,
+a.btn.btn-primary:focus-visible,
+a.btn.btn-default:focus-visible,
+a.btn.btn-warning:focus-visible,
+a.btn.btn-danger:focus-visible,
+a.btn.btn-info:focus-visible,
+.btn-success:focus-visible,
+.form-control.ui-autocomplete-input:focus-visible
+{
+  outline: 2px solid var(--input-focus-color);
+  outline-offset: 1px;
+}
+.hg-minimalist-theme .hg-search-bar .input-group:focus-within:not(:focus-visible)
+{
+  box-shadow: 0 0 0 2px var(--input-focus-color);
+}
+
+
+/********************************************************************* 404 page ***********************/
+/* remove top border */
+.hg-minimalist-theme .error-page-top {
+  border: none;
+}
+
+/********************************************************************* No access page *****************/
+/* vertically center h4 */
+.hg-site-login .alert h4 {
+  margin-top: 10px;
+}
+/* remove duplicate icon */
+.hg-site-login .alert h4 i {
+  display: none;
+}
+
+/********************************************************************* Screen size specific adjustments ***************/
+/* will apply to screen widths narrower than 1474px */
+@media (max-width: 1473px) {
+  /* shrink main content area */
+  .hg-minimalist-theme.hg-3column-layout:not(.hg-home-page) .ko-content-cntr {
+    max-width: 700px;
+  }
+  /* expand right col size */
+  .hg-minimalist-theme.hg-3column-layout .right-column {
+    max-width: calc((100vw - 720px) / 2);
+  }
+}
+/* will apply to screen widths narrower than 992px */
+@media (max-width: 991px) {
+  .hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+    width: 100%;
+  }
+}
+/* will apply to screen widths wider than 575px, not narrower */
+@media (min-width: 576px) {
+  .hg-minimalist-theme .hg-home-page .category-list>div {
+    width: 50%;
+    float: left;
+  }
+  .hg-minimalist-theme .category-img {
+    max-width: 50%;
+  }
+}
+/* will apply to screen widths wider than 767px */
+@media(min-width:768px) {
+  .hg-minimalist-theme .lead,
+  .hg-minimalist-theme .lead p {
+    font-size: 30.01px !important
+  }
+}
+/* will apply to screen widths wider than 991px */
+@media (min-width: 992px) {
+  .hg-minimalist-theme .hg-home-page .category-list>div {
+    width: 25%;
+  }
+  .hg-minimalist-theme .category-img {
+    max-width: 50%;
+  }
+}</style>
+		
+		
+		<link rel="canonical" href="https://sandbox-example.knowledgeowl.com/help/getting-started">
+		
+	<style>#ko-ai-chatbot-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: none;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 45.5px 0 #0000001a;
+  font-size: 16px;
+  padding-block: 12px;
+  padding-inline: 20px;
+  background-color: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 36px;
+  will-change: transform;
+  transition: 0.2s ease-in-out;
+  -webkit-font-smoothing: antialiased;
+}
+#ko-ai-chatbot-btn:hover {
+  transform: scale(1.05);
+}
+#ko-ai-chatbot {
+  display: block !important;
+  width: 450px;
+  border: 1px solid #d9d9e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 45.5px 0 #0000001a;
+  z-index: 9999999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+#ko-ai-chatbot.scale-in-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+#ko-ai-chatbot.scale-in-close {
+  opacity: 0;
+  pointer-events: none;
+}
+#ko-ai-chatbot iframe {
+  border-radius: 10px;
+}
+@media (max-width: 480px) {
+  #ko-ai-chatbot-btn {
+    padding-inline: 12px;
+  }
+  #ko-ai-chatbot-btn span {
+    display: none;
+  }
+  #ko-ai-chatbot {
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    border: none;
+    border-radius: 0;
+    width: 100%;
+  }
+}</style></head>
+	<body class="hg-site hg-minimalist-theme is-author hg-article-page hg-basic-child-article hg-2column-layout toc-always-open">
+		
+		<style>
+/* ==================================== ADMIN USER BAR ==================================== */
+body.is_author {
+  margin-top: 32px !important;
+}
+html .author-bar {
+  height: 32px !important;
+  top: 0 !important;
+  position: fixed !important;
+  width: 100% !important;
+  z-index: 1032 !important;
+  background-color: #1D2327 !important;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+  line-height: 1.2 !important;
+}
+html .author-bar .fal {
+  padding-right: 8px !important;
+}
+html .author-bar a.ko-linus {
+  height: 32px !important;
+  padding: 0 10px 0 20px !important;
+  display: table-cell !important;
+  vertical-align: middle !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown > a {
+  padding: 5px 0 !important;
+  line-height: 20px !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown-toggle > span {
+  padding: 3px 15px !important;
+  border-radius: 4px !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown-toggle > span:hover {
+  color: #fff !important;
+  background-color: #ffffff2e !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown-toggle > span.icon {
+  padding: 5px !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown-toggle .profile-icon {
+  padding-right: 8px !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown-toggle .profile-name {
+  max-width: 150px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: inline-block !important;
+  vertical-align: bottom !important;
+}
+html .author-bar .dropdown-menu {
+  display: none !important;
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+  float: left !important;
+  margin: 2px 0 0 !important;
+  min-width: 160px !important;
+  max-height: 430px !important;
+  overflow: auto !important;
+  border: 1px solid rgba(0,0,0,.15) !important;
+  box-shadow: 0 6px 12px rgba(0,0,0,.175) !important;
+  background: #f5f5f5 !important;
+}
+html .author-bar .open > .dropdown-menu {
+  display: block !important;
+  border-radius: 8px !important;
+  padding: 5px !important;
+}
+html .author-bar .dropdown-menu li:hover {
+  background: #fff !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: #333 !important;
+}
+html .author-bar .dropdown-menu > li > a {
+  padding: 5px 20px 5px 9px !important;
+  text-decoration: none !important;
+  color: #575757 !important;
+  display: block !important;
+}
+html .author-bar .dropdown-menu > li > a:hover {
+  background: none !important;
+}
+html .author-bar .dropdown-menu > li a i {
+  padding: 0 5px 0 0 !important;
+  min-width: 32px !important;
+  text-align: center !important;
+}
+html .author-bar > ul > li > a {
+  color: #e4e4e4 !important;
+  position: relative !important;
+  display: block !important;
+  padding: 0 15px !important;
+  line-height: 32px;
+}
+html .author-bar > ul > li > a:hover,
+html .author-bar > ul > li > a:active,
+html .author-bar > ul > li > a:focus {
+  color: #fff !important;
+}
+html .author-bar a {
+  font-size: 14px !important;
+  text-decoration: none !important;
+}
+html .author-bar .ko-editor-nav-right .dropdown:last-child {
+  margin-right: 20px !important;
+}
+html .author-bar .ko-editor-nav {
+  float: left !important;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  list-style: none !important;
+}
+html .author-bar .ko-editor-nav:before,
+html .author-bar .ko-editor-nav:after {
+  display: table !important;
+  content: " " !important;
+}
+html .author-bar .ko-editor-nav.ko-editor-nav-right {
+  float: right !important;
+}
+html .author-bar .ko-editor-nav > li {
+  float: left !important;
+  position: relative !important;
+  display: block !important;
+}
+#ko-rgroup-assume *:not(i) {
+  font-size: 14px !important;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+  line-height: 1.2 !important;
+}
+#ko-rgroup-assume *:not(.link) {
+  color: #333 !important;
+}
+#ko-rgroup-assume .mt-0 {
+  margin-top: 0 !important;
+}
+#ko-rgroup-assume .mt-20 {
+  margin-top: 20px;
+}
+#ko-rgroup-assume .mb-0 {
+  margin-bottom: 0 !important;
+}
+#ko-rgroup-assume .mb-20 {
+  margin-bottom: 20px;;
+}
+#ko-rgroup-assume .ko-reader-group-list label {
+  line-height: 1.6 !important;
+}
+#ko-rgroup-assume .modal-header {
+  margin: 0 !important;
+}
+#ko-rgroup-assume .block-callout-info {
+  background-color: #f0f6ff !important;
+  padding: 15px !important;
+  border-bottom: 1px solid #b9c9f1 !important;
+}
+#ko-rgroup-assume .block-callout-info i {
+  color: #3b99fc !important;
+  display: inline-block !important;
+  height: 100% !important;
+  vertical-align: top !important;
+  padding-top: 2px !important;
+  min-width: 25px !important;
+}
+#ko-rgroup-assume .block-callout-info span {
+  display: inline-block !important;
+  max-width: 94% !important;
+}
+#ko-rgroup-assume .close {
+  font-size: 25px !important;
+  line-height: 1 !important;
+}
+#ko-rgroup-assume .modal-header h4 {
+  font-size: 18px !important;
+  margin: 0 !important;
+}
+#ko-rgroup-assume i {
+  padding-right: 8px;
+}
+#ko-rgroup-assume .modal-header p {
+  margin-bottom: 0 !important;
+  font-size: 18px !important;
+}
+#ko-rgroup-assume .ko-reader-group-list {
+  margin-bottom: 0 !important;
+}
+#ko-rgroup-assume .select-all {
+  margin: 0 !important;
+}
+#ko-rgroup-assume .col-sm-6 .checkbox-indent:last-child {
+  margin-bottom: 0 !important;
+}
+#ko-rgroup-assume .btn {
+  padding: 5px 15px !important;
+  background: #fff !important;
+  border: 1px solid #7d7d7d !important;
+}
+#ko-rgroup-assume .btn:hover,
+#ko-rgroup-assume .btn:focus {
+  background: #f0f0f0 !important;
+  border-color: #333 !important;
+}
+#ko-rgroup-assume .readergroups-ctas {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.ko-editor-nav .hide.ko-app-edit  {
+  display: none !important;
+}
+</style>
+	
+<div class="author-bar visible-lg visible-md">
+  <div class="navbar-header">
+    <a href="/help/user-login?r=https%3A%2F%2Fapp.knowledgeowl.com%2Fkb%2Farticles%2Fid%2F111111111111111111111111" target="_blank" title="KnowledgeOwl App" class="ko-linus"><img height="20" src="https://dyzz9obi78pm5.cloudfront.net/app/image/id/5a91f7ca8e121ce6359b20d5/n/ko-linus-white-border.png"></a>
+  </div>
+  <ul class="ko-editor-nav">
+    <li class="ko-add-content"><a href="/help/user-login?r=https%3A%2F%2Fapp.knowledgeowl.com%2Fkb%2Farticles%2Fid%2F111111111111111111111111%2Fcid%2F222222222222222222222222" target="_blank"><i class="fal fa-plus"></i>Add content</a></li>
+    <li class="ko-app-edit "><a href="/help/user-login?r=https%3A%2F%2Fapp.knowledgeowl.com%2Fkb%2Farticle%2Fid%2F111111111111111111111111%2Faid%2F222222222222222222222222" target="_blank"><i class="fal fa-pencil"></i>Edit article</a></li>
+    <li class="ko-assume-reader"><a href="#" data-toggle="modal" data-target="#ko-rgroup-assume"><i class="fal fa-eye"></i>View as</a></li>
+  </ul>
+  <ul class="ko-editor-nav ko-editor-nav-right">
+    <li id="help-dropdown" class="dropdown nav-short">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <span class=""><i class="fal fa-life-ring fa-fw"></i> Help</span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a id="goto-support-kb" href="https://support.knowledgeowl.com/help" target="_blank"><i class="fal fa-browser"></i>Support KB</a></li>
+        <li><a id="goto-status-page" href="https://knowledgeowl.statuspage.io/" target="_blank"><i class="fal fa-temperature-half"></i>Status page</a></li>
+        <li><a href="https://support.knowledgeowl.com/help/contact-feedback" target="_blank" class="ko-contact-us"><i class="fal fa-life-ring"></i>Contact support</a></li> 
+      </ul>
+    </li>
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class=""><span class="profile-icon"><i class="fas fa-user"></i></span><span class="profile-name">IT Admin</span></span></a>
+      <ul class="dropdown-menu">
+        <li><a href="/help/user-login?r=https%3A%2F%2Fapp.knowledgeowl.com%2Fkb%2Farticles%2Fid%2F111111111111111111111111" target="_blank"><i class="fal fa-gear-complex"></i>Open the app</a></li>
+        <li class="ko-logout"><a href="/help/readerlogout"><i class="fal fa-sign-out-alt"></i>Log out</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div class="modal fade" id="ko-rgroup-assume" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/help/assume-reader-group" method="POST">
+        <input type="hidden" name="r" value="%2Fhelp%2Fgetting-started">
+        <input type="hidden" name="id" value="111111111111111111111111">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4><i class="fal fa-eye"></i>View as a reader</h4>
+        </div>
+        <div class="block-callout block-callout-info" style="display: none;">
+          <i class="fal fa-circle-info"></i><span>Choose reader groups to view your knowledge base from their perspective. Ensure the right content is visible to the right readers.</span>
+        </div>
+        <div class="modal-body">
+          <div class="form-group ko-reader-group-list ">
+            <div class="checkbox select-all" style="display: none;">
+              <label>
+                <input type="checkbox" id="ko-toggle-all-groups"> Select all/none:
+              </label>
+            </div>
+                          <div class="">
+                <h4 class="mt-0"><i class="fal fa-people-group"></i>You don’t have any reader groups yet.</h4>
+                <p class="mb-20">Create reader groups to restrict access to specific articles or sections.</p>
+                <div>
+                  
+                  
+                  <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
+                    <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+                      <div class="wistia_embed wistia_async_xq0hhv1d1t seo=true videoFoam=true wistia_embed_initialized" style="height:100%;position:relative;width:100%;" id="wistia-xq0hhv1d1t-1"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/xq0hhv1d1t/swatch" style="filter: blur(5px); height: 100%; object-fit: contain; width: 100%;" alt="" aria-hidden="true" class="fr-fic fr-dii">
+                        </div><div id="wistia_chrome_23" class="w-chrome notranslate" tabindex="-1" style="display: inline-block; height: 100%; line-height: normal; margin: 0px; padding: 0px; position: relative; vertical-align: top; width: 100%; outline: none; overflow: hidden; box-sizing: content-box;"><div id="wistia_grid_43_wrapper" style="display: block;"><div id="wistia_grid_43_above"></div><div id="wistia_grid_43_main"><div id="wistia_grid_43_behind"></div><div id="wistia_grid_43_center"><div class="w-video-wrapper w-css-reset" style="width: 100%; height: 100%; opacity: 1; background-color: rgb(0, 0, 0);"></div><div class="w-ui-container" style="height: 100%; left: 0px; position: absolute; top: 0px; width: 100%; opacity: 1;"></div></div><div id="wistia_grid_43_front"></div><div id="wistia_grid_43_top_inside"><div id="wistia_grid_43_top"></div></div><div id="wistia_grid_43_bottom_inside"><div id="wistia_grid_43_bottom"></div></div><div id="wistia_grid_43_left_inside"><div id="wistia_grid_43_left"></div></div><div id="wistia_grid_43_right_inside"><div id="wistia_grid_43_right"></div></div></div><div id="wistia_grid_43_below"></div><style id="wistia_44_style" type="text/css" class="wistia_injected_style">#wistia_grid_43_wrapper{-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;font-family:Arial,sans-serif;font-size:14px;height:100%;position:relative;text-align:left;width:100%;}
+#wistia_grid_43_wrapper *{-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;}
+#wistia_grid_43_above{position:relative;}
+#wistia_grid_43_main{display:block;height:100%;position:relative;}
+#wistia_grid_43_behind{height:100%;left:0;position:absolute;top:0;width:100%;}
+#wistia_grid_43_center{height:100%;overflow:hidden;position:relative;width:100%;}
+#wistia_grid_43_front{display:none;height:100%;left:0;position:absolute;top:0;width:100%;}
+#wistia_grid_43_top_inside{position:absolute;left:0;top:0;width:100%;}
+#wistia_grid_43_top{width:100%;position:absolute;bottom:0;left:0;}
+#wistia_grid_43_bottom_inside{position:absolute;left:0;bottom:0;width:100%;}
+#wistia_grid_43_bottom{width:100%;position:absolute;top:0;left:0;}
+#wistia_grid_43_left_inside{height:100%;position:absolute;left:0;top:0;}
+#wistia_grid_43_left{height:100%;position:absolute;right:0;top:0;}
+#wistia_grid_43_right_inside{height:100%;right:0;position:absolute;top:0;}
+#wistia_grid_43_right{height:100%;left:0;position:absolute;top:0;}
+#wistia_grid_43_below{position:relative;}</style></div></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                                  </div>
+        </div>
+        <div class="modal-footer">
+                      <div class="readergroups-ctas">
+              <div><a class="link" href="https://support.knowledgeowl.com/help/reader-groups-mgt#display-content-only-to-specific-readers" target="_blank">Learn more about reader groups</a></div>
+              <div><a href="/help/user-login?r=https%3A%2F%2Fapp.knowledgeowl.com%2Fapp%2Freaders%23groups" target="_blank" class="btn btn-primary">Create a reader group</a></div>
+            </div>
+                  </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+		
+		<nav class="hg-header navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="ko-nav-wrapper">
+		<div class="navbar-header">
+	<button type="button" class="ko-slideout-left-toggle" aria-label="Open table of contents menu"><i class="fa fa-bars fa-2x"></i></button>
+	<a class="navbar-brand" href="/help" title="Acme Knowledge Base"><img class="documentation-logo-image" alt="Knowledge Base Logo" src="//dyzz9obi78pm5.cloudfront.net/app/image/id/5a91f7ca8e121ce6359b20d5/n/ko-linus-white-border.png"></a>
+	<div class="hg-project-name">Acme Knowledge Base</div>
+	<div class="nav-left-searchbar hidden-xs">
+		<form action="/help/search" method="GET" class="hg-search-bar hg-search-bar-1">
+	<div class="input-group">
+				<input type="search" role="search" title="Search" aria-label="Search for articles" class="form-control ui-autocomplete-input" placeholder="Search for articles..." name="phrase" autocomplete="off">
+		<span class="input-group-btn"><button class="btn btn-default" title="Search" name="Search" aria-label="Search" type="submit"><i class="fa fa-search"></i></button></span>
+	</div>
+<input type="hidden" name="js_check" value="1"><ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-1" tabindex="0" style="display: none;"></ul></form>
+	</div>
+	<button type="button" class="navbar-toggle toc-toggle pull-left clear-left" data-toggle="collapse" data-target=".documentation-categories">
+		<span class="sr-only">Table of Contents</span>
+		<span class="browse">Table of Contents</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	</button>
+	
+	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	</button>
+</div>
+<div class="navbar-collapse collapse" id="navbar-collapse">
+	
+	<ul class="nav navbar-nav navbar-right">
+		<li><form action="/help/search" method="GET" class="hg-search-bar hg-search-bar-2">
+	<div class="input-group">
+				<input type="search" role="search" title="Search" aria-label="Search for articles" class="form-control ui-autocomplete-input" placeholder="Search for articles..." name="phrase" autocomplete="off">
+		<span class="input-group-btn"><button class="btn btn-default" title="Search" name="Search" aria-label="Search" type="submit"><i class="fa fa-search"></i></button></span>
+	</div>
+<input type="hidden" name="js_check" value="1"><ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-2" tabindex="0" style="display: none;"></ul></form></li>
+		<li><a class="hg-header-link" href="/help/contact-us">Contact Us</a></li>
+		<li><a class="hg-header-link reader-logout" href="/help/readerlogout">Logout</a></li>
+	</ul>
+</div>
+	</div>
+</nav>
+		<div class="documentation-body">
+	<div>
+		<div class="row hg-site-body slideout-new">
+	<div id="ko-documentation-categories" class="documentation-categories sidebar-nav nav-collapse col-md-4 col-lg-3 slideout-menu slideout-menu-left">
+	<ul class="list-unstyled top-outter-list">
+		<li class="category-container search-header nav-header nav-header-sub level-0 hide">
+			<form action="/help/search" method="GET" class="hg-search-bar hg-search-bar-3">
+	<div class="input-group">
+				<input type="search" role="search" title="Search" aria-label="Search for articles" class="form-control ui-autocomplete-input" placeholder="Search for articles..." name="phrase" autocomplete="off">
+		<span class="input-group-btn"><button class="btn btn-default" title="Search" name="Search" aria-label="Search" type="submit"><i class="fa fa-search"></i></button></span>
+	</div>
+<input type="hidden" name="js_check" value="1"><ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-3" tabindex="0" style="display: none;"></ul></form>
+		</li>
+	</ul>
+	<ul class="list-unstyled documentation-outter-list" data-level="0">
+		<li data-type="category" class="category-container nav-header nav-header-sub level-0 ">
+			<div class="category-link-container ">
+				<i class="home-icon fa fa-home"></i><a class="documentation-category" href="/help">Home</a>
+			</div>
+		</li>
+		<li data-type="category" class="category-container nav-header nav-header-sub level-0 ">
+			<div class="category-link-container ">
+				<i class="home-icon fa fa-book"></i><a class="documentation-category" href="/help/glossary">Glossary</a>
+			</div>
+		</li>
+		<li data-type="category" class="category-container nav-header nav-header-sub level-0">
+						<div class="category-link-container" data-id="222222222222222222222222"><i class="cat-icon fa fa-chevron-down"></i><a class="documentation-category" href="javascript:void(0);">Company<span class="badge badge-new pull-right"></span><span class="badge badge-updated pull-right"></span></a>
+						</div>
+						<ul class="list-unstyled documentation-articles level-1" style=""><li data-type="article" data-id="222222222222222222222222" class="article-container active"><a href="/help/getting-started" class="article-link">Getting Started</a></li><li data-type="article" data-id="222222222222222222222222" class="article-container"><a href="/help/business-overview-questions-in-order" class="article-link">Company Overview</a></li><li data-type="article" data-id="222222222222222222222222" class="article-container"><a href="/help/1-leadership-decision-making" class="article-link">Roles &amp; Responsabilities</a></li></ul>
+							</li><li data-type="category" class="category-container nav-header nav-header-sub level-0">
+						<div class="category-link-container" data-id="222222222222222222222222"><i class="cat-icon fa fa-chevron-right"></i><a class="documentation-category" href="javascript:void(0);">Guides<span class="badge badge-new pull-right"></span><span class="badge badge-updated pull-right"></span></a>
+						</div>
+						<ul class="list-unstyled documentation-articles level-1" style="display:none;"></ul>
+							</li><li data-type="category" class="category-container nav-header nav-header-sub level-0">
+						<div class="category-link-container" data-id="222222222222222222222222"><i class="cat-icon fa fa-chevron-right"></i><a class="documentation-category" href="javascript:void(0);">Reference<span class="badge badge-new pull-right"></span><span class="badge badge-updated pull-right"></span></a>
+						</div>
+						<ul class="list-unstyled documentation-articles level-1" style="display:none;"></ul>
+							</li>	</ul>
+	<ul class="list-unstyled bottom-outter-list">
+			</ul>
+	<div class="clear-both"></div>
+</div>
+
+<div id="ko-article-cntr" data-vis="public" data-groups="" class="hg-2-col documentation-article slideout-panel slideout-panel-left">
+	<div class="ko-content-cntr">
+					<ul class="hg-breadcrumbs">
+				<li><a href="/help">Home</a></li>
+										<li><i class="fa fa-angle-double-right"></i></li>
+						<li title="Company"><a href="/help/company">Company</a>				
+							    </li></ul>
+			<input id="object-id" type="hidden" value="222222222222222222222222">
+<div class="hg-article">
+	<div class="hg-article-header">
+		<h1 class="hg-article-title">Getting Started<span class="ko-article-actions"><span class="pdf"><a href="/help/pdfexport/id/222222222222222222222222" class="hg-article-pdf pdf" name="Download PDF" title="Download PDF"><i class="fa fa-file-pdf-o fa-fw"></i></a></span><span class="print-article"><a href="#" class="ko-js-print" name="Print Article" title="Print Article"><i class="fa fa-print fa-fw"></i></a></span><span class="email-article"><a href="#" onclick="javascript:window.location='mailto:?subject=Getting Started&amp;body=' + window.location;" name="Email Article" title="Email Article"><i class="fa fa-envelope-o fa-fw"></i></a></span></span></h1>
+		<div class="metadata">
+			
+			Last Modified on 
+			06/26/2026 5:13 pm EDT
+		</div>
+	</div>
+	<div class="hg-article-body">
+<p class="intro">Placeholder documentation content &mdash; here only so the template's article typography can be previewed against a realistic page. Replace it with real content when you apply the template to a knowledge base.</p>
+<h2 id="overview" class="ko-header-anchor"><strong>Overview</strong><a class="ko-anchor-icon" name="#overview" title="Copy link to this section" aria-label="Link to this section">#</a></h2>
+<p>This paragraph shows body copy with an <a href="#overview">inline link</a>, some <strong>bold</strong> and <em>italic</em> emphasis, and <code>inline code</code>. The sections below exercise the elements a documentation theme has to style well.</p>
+<ul>
+<li>An unordered list item.</li>
+<li>A slightly longer item, to show line-height and how running text wraps across more than one line inside the reading column.</li>
+<li>An item with a nested list:
+<ul><li>Nested item one</li><li>Nested item two</li></ul></li>
+</ul>
+<h3 id="steps" class="ko-header-anchor"><strong>A short procedure</strong><a class="ko-anchor-icon" name="#steps" title="Copy link to this section" aria-label="Link to this section">#</a></h3>
+<ol>
+<li>Do the first thing.</li>
+<li>Then do the second thing.</li>
+<li>Finally, do the third thing.</li>
+</ol>
+<blockquote><p><strong>Note:</strong> a blockquote / callout, handy for tips and warnings inside an article.</p></blockquote>
+<pre><code>// a fenced code block
+function greet(name) {
+  return "Hello, " + name + "!";
+}</code></pre>
+<h3 id="reference-table" class="ko-header-anchor"><strong>A table</strong><a class="ko-anchor-icon" name="#reference-table" title="Copy link to this section" aria-label="Link to this section">#</a></h3>
+<table>
+<thead><tr><th>Column A</th><th>Column B</th><th>Column C</th></tr></thead>
+<tbody>
+<tr><td>Row one</td><td>Value</td><td>Value</td></tr>
+<tr><td>Row two</td><td>Value</td><td>Value</td></tr>
+<tr><td>Row three</td><td>Value</td><td>Value</td></tr>
+</tbody>
+</table>
+<p>A closing paragraph, so the article ends naturally.</p>
+
+	</div>
+	<div class="hg-article-footer clear-both">
+		<div class="ko-related-articles text-center">
+			<h3>Related Articles</h3>
+			<ul class="list-unstyled stat-list">
+					<li>
+					<i>None</i>
+				</li>
+			</ul>
+		</div>
+			<div class="hg-rating-container text-center">
+	<input type="hidden" class="ko-rating-rootpath" value="help">
+	<input type="hidden" class="ko-rating-pid" value="111111111111111111111111">
+	<input type="hidden" class="ko-rating-acntID" value="000000000000000000000000">
+	<input type="hidden" class="ko-rating-aid" value="222222222222222222222222">
+	<div class="hg-rating-label">
+		Was this article helpful?	</div>
+	<div class="hg-ratings ">
+					<a href="#" class="hg-helpful" data-rating="helpful" name="Helpful" title="Helpful">
+				<i class="fa fa-thumbs-o-up fa-2x fa-fw"></i>
+			</a>
+			<a href="javascript:void(0);" class="hg-unhelpful" data-rating="unhelpful" name="Unhelpful" title="Unhelpful">
+				<i class="fa fa-thumbs-o-down fa-2x fa-fw"></i>
+			</a>
+			</div>
+</div>
+<div class="hg-rating-success text-center hide">
+	Thank you for your feedback!
+</div>
+		<div id="hg-comment-form">
+	<input type="hidden" name="aid" value="222222222222222222222222">
+	<input type="hidden" class="ko-comment-rootpath" value="help">
+	<input type="hidden" class="ko-comment-loggedin" value="true">
+			<input type="hidden" name="u" value="true">
+		<div class="form-group not-here">
+            <label class="col-lg-3 col-sm-4 control-label not-here" for="knowledge">Knowledge 1</label>
+        <input type="text" value="" name="knowledge" class="not-here" aria-hidden="true" autocomplete="nothanks" tabindex="-1">
+            <label class="col-lg-3 col-sm-4 control-label not-here" for="knowledge_1783101439">Knowledge 2</label>
+        <input type="text" value="" name="knowledge_1783101439" class="not-here" aria-hidden="true" autocomplete="nothanks" tabindex="-1">
+            <label class="col-lg-3 col-sm-4 control-label not-here" for="knowledge_from">Knowledge From</label>
+        <input type="text" value="" name="knowledge_from" class="not-here" aria-hidden="true" autocomplete="nothanks" tabindex="-1">
+         
+</div>
+<style>
+    .not-here {
+        display:none;
+    }
+</style>	<div class="hg-comment-post">
+		<div class="post-row">
+			<div class="poster-image">
+												<img src="//www.gravatar.com/avatar/00000000000000000000000000000000?s=50&amp;d=https%3A%2F%2Fdyzz9obi78pm5.cloudfront.net%2Fapp%2Fimage%2Fid%2F54f117d07cb82991627b23e5%2Fn%2Fdoug.png" alt="User Icon" width="50">
+										</div>
+			<div class="post-box">
+				<textarea aria-label="Comment body" name="content" onkeyup="AutoGrowTextArea(this);" placeholder="Leave a comment..." class="form-control comment-input"></textarea>
+			</div>
+			<div class="clear-both"></div>
+		</div>
+		<div class="poster-info-container" style="display:none;">
+							<div class="pull-left change-icon">
+					<a href="#" tabindex="-1" data-action="attach" class="icon-upload-trigger" title="Change User Icon"><span>Change User Icon</span></a>
+					<input type="file" data-role="media-upload" name="0" tabindex="-1" class="icon-upload hide" accept="image/*">
+				</div>
+				<div class="pull-right">
+					<a href="#" title="Submit comment" class="btn btn-primary comment-submit">Submit</a>
+				</div>
+					</div>
+		<div class="clear-both"></div>
+	</div>
+	<div class="hg-comment-feedback hide">
+		<div class="text-center">
+			<p>Thank you! Your comment has been submitted for approval.</p>
+		</div>
+	</div>
+	<div class="hg-overlay hide"></div>
+	<div class="hg-spinner hide"><i class="fa fa-spinner fa-3x fa-spin"></i></div>
+</div>
+<div class="hg-comment-list clear-both">
+	<ul class="list-unstyled">
+			</ul>
+</div>
+
+	</div>
+</div> 
+	</div>
+</div>
+  
+</div>
+<div class="row ko-site-footer text-center xsize">
+	<div>Copyright © 2025 Your Company, LLC. All rights reserved.
+		<br>Made with <a href="https://www.knowledgeowl.com" target="_blank">KnowledgeOwl</a> <img class="ko-logo" src="https://dyzz9obi78pm5.cloudfront.net/app/image/id/5a91f7ca8e121ce6359b20d5/n/ko-linus-white-border.png">
+	</div>
+</div>
+	</div>
+</div>
+
+		
+		
+		
+		<style id="wistia_22_style" type="text/css" class="wistia_injected_style">
+@font-face {
+font-family: 'WistiaPlayerInterNumbersSemiBold';
+font-feature-settings: 'tnum' 1;
+src: url(data:application/x-font-woff;charset=utf-8;base64,d09GMk9UVE8AAAaMAAwAAAAACgAAAAZBAAMD1wAAAAAAAAAAAAAAAAAAAAAAAAAADYpwGhQbIBwqBmAAgTIBNgIkAzAEBgWDGgcgGykJEZWkARP8KHCbm2tEznyIN98tPTUk9Ig3oiVV3pbDIzXa+f/fZgXpALFTZhBoMVFC9cp036dXvRKVmVnsxe+D+1NDQI5lG7ikZWEINIElTeBIdnxlhauQ5GQtoLHA/wN0riVdSx5xgbxF3KTbgnjVQ4B9P7YqCx7FpEZK+6ilx0AoopUh4aExJEKmkU+0ncdr4iFfKhdSFD9y91LCRaxNbVqvi0dND3rxI7ndUDR7EiwT3bhiua9krFA0oepCy2hCjwmjnjDjKjNTDz2ZuHtN8820Wfw/l8u4w4yV/f8/6uscs5rmiN00LcP4hAofyZUSyS3WinX0RGFFtnGrjj36x6dlNa57+PLTlrUisH2n9orfgd+R34XfDd0NsWDXwfwhvKHpbs3UBni37dBlPvO4KYn/PgylilcgSdw6sjsSSxsRGfIJgqhi14bKZCHcQvjUh/+3HMotTYrGLVYCxyMFjEnYC98yTAp6atAKVxaZ9eu2NMji8WTj4w/Y34elD60PPwb5bEywLqAX/amwmUo6TBCy14N/TL44jb3sE5JdUIPXXI0RBSoGt3BUObn4agKGIxxQhlyQacbstK4fS2mZoBtFNQ1bd+4zND2vQu6anl7gWFOj8MV2DVMtU44xMhpwElrrjA7zO5IqWojd/v1Vso6cqp91zC2YrGhDOy07Iqyza2q9smDIwUYek0AWbCt/8x78QmrzayQ6xtpmqfCYsLfgU9HdeP3UqutZTTNd/9Q8k08XzXzIxSdvLPda8YaeeZnkxUwql0nDKyUYdaWZjGAy7UDLHpVqBVHTxSV0wBy21El9u/491ik2J3YkdiP2LPZL41RBeeNUWtp97Bbn0Ee1g9wr9qqV/X+4R9nlPX03743dylnaXZyNp8v58yLOsFYCbUnCVQzjN+5QhlmKccO7aMkueWJggROd4qnw2x5LydUcg/NRamE3XMlkGovpRWPKWEavP74P2O1RANM/3gIIPJj7TX+lqU2geQuaBx4B/7cWAOx0ucTiEHYJU9y5DBuUMYNIHeHZz9tn+Fw2G5EBTqUlHRfRi4eB5wNlJsRsv5k4b6HyFkhIC6BO4LzPbWhW7rbCcxubeKHOc6UaBKZBMMd4j8XuRUynOCCa4EMfF9grkI1NcTaSAVtk1nrIOwFfeEBlQw4f4phb6zHzBOm0ZZ0dBcaZRVdYIo5xYiyOMEWONwQHmjKGE//VuRBgul1QrpyxmMvF4vGj0xfuuQrNt4tVTsRhEnjY9AuKa1FVLSEneQWzFd5WbO7hasX08ONUOVQgwQuVqACFXkSoIoUgK1hJEkAgbkG5CjqBS5wrRFuY2IfVwhRnLsVyZTZpatveGR4yEbYqbE6J80nM4aa+LD7Oqmr8PdSJFUQVynmgN4lerGQV1+uLdYzdOFWHPW/iK2gIQayhizQ0NMwyvBEBlrDczRfmU40CTtAHqLQGnjQG8MYkxm1MwJuTqjHwVCu9iRJ1C8ojWGHxUYowH0c5X57zpXquvlw0wzHHGMTfufxiJ1psFJTzq6nGeDvHF4LgmHHWCUViZBaInRn+cswnBi460RBPRYg9TRUQ0CZUC5LAT0qLLu50FpdTeBhjGf7/h4dg9hE0uqsBx/saOcYRDIfnOhfzGFBHyizcJK3p2edUjWrC0rn1aGjXtfVUCHMAKKhlxV8eTEIcV2jCOdKiqahv/MisrfRQVnxPJoOU62mR6pu2ZllIzo8zOZqQB7kWJXW2/c0aihata5PcIVJKfFRgHAETmEQVTCELptGMGcyigTnMJ1voUVN6uCZS9pV2hrwl7FYMvBwtUSd7L7E5qP9t7BIPRF7EcmA9ct2nIPHrxgWajtDltbXuBLuaY6qRZGa5ZlX5anfR0lYXaHUzVSFjZa8rfdhZ8rKXFZg21LVL5LFjI5TlDIbwnFGHE2dypHs6Q50N015dpOgLONEUlOqoiQgIaeCsjMq9gITDKwRMieQgKUy9UQY1BTFYZU2KpE2SkILMIjW8IdFwIKmMaK8oClJVssAEtFnz5dQ1s+w6EZoNGtPGQfzx+aoE8ikiP8GCYOWtgB+HBdWDaxACAZInVq14dZI85RRDvZGIghyONw59KV/BBEQ02P1ER8hmNGiURT2hQP8WfAY=);
+}
+</style>
+    
+    <button id="ko-ai-chatbot-btn" aria-expanded="false" style="display: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.804 21.644C5.1987 21.715 5.59897 21.7505 6 21.75C7.26747 21.7517 8.50959 21.395 9.583 20.721C10.357 20.903 11.167 21 12 21C17.322 21 21.75 17.03 21.75 12C21.75 6.97 17.322 3 12 3C6.678 3 2.25 6.97 2.25 12C2.25 14.409 3.275 16.587 4.924 18.192C5.156 18.418 5.201 18.62 5.178 18.735C5.05442 19.3571 4.77426 19.9373 4.364 20.421C4.27883 20.5215 4.22165 20.6428 4.19823 20.7724C4.17481 20.9021 4.18596 21.0357 4.23057 21.1597C4.27518 21.2836 4.35167 21.3937 4.45233 21.4787C4.553 21.5638 4.67429 21.6208 4.804 21.644ZM8.25 10.875C7.95163 10.875 7.66548 10.9935 7.4545 11.2045C7.24353 11.4155 7.125 11.7016 7.125 12C7.125 12.2984 7.24353 12.5845 7.4545 12.7955C7.66548 13.0065 7.95163 13.125 8.25 13.125C8.54837 13.125 8.83452 13.0065 9.0455 12.7955C9.25647 12.5845 9.375 12.2984 9.375 12C9.375 11.7016 9.25647 11.4155 9.0455 11.2045C8.83452 10.9935 8.54837 10.875 8.25 10.875ZM10.875 12C10.875 11.7016 10.9935 11.4155 11.2045 11.2045C11.4155 10.9935 11.7016 10.875 12 10.875C12.2984 10.875 12.5845 10.9935 12.7955 11.2045C13.0065 11.4155 13.125 11.7016 13.125 12C13.125 12.2984 13.0065 12.5845 12.7955 12.7955C12.5845 13.0065 12.2984 13.125 12 13.125C11.7016 13.125 11.4155 13.0065 11.2045 12.7955C10.9935 12.5845 10.875 12.2984 10.875 12ZM15.75 10.875C15.4516 10.875 15.1655 10.9935 14.9545 11.2045C14.7435 11.4155 14.625 11.7016 14.625 12C14.625 12.2984 14.7435 12.5845 14.9545 12.7955C15.1655 13.0065 15.4516 13.125 15.75 13.125C16.0484 13.125 16.3345 13.0065 16.5455 12.7955C16.7565 12.5845 16.875 12.2984 16.875 12C16.875 11.7016 16.7565 11.4155 16.5455 11.2045C16.3345 10.9935 16.0484 10.875 15.75 10.875Z" fill="black"></path></svg><span>Ask a question...</span></button><div id="ko-ai-chatbot" style="position: fixed; bottom: 20px; right: 20px; top: 10%; display: none;"><div id="ko-ai-chatbot-inner" style="position: relative; width: 100%; height: 100%;"><iframe src="https://sandbox-example.knowledgeowl.com/chatbot-app/main?host=sandbox-example.knowledgeowl.com" height="100%" width="100%" role="dialog" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial;"></iframe></div></div>
+		
+		
+	
+<span role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></span><span role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></span><span role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></span></body></html>
