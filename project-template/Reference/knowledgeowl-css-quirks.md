@@ -309,3 +309,31 @@ flat-ui backs both with **light `!important` fills**, so a non-`!important` them
 ```
 
 **Finding the flash markup:** these states only appear after a form POST, so they're not in a static login-page snapshot. The login page is **public**, so the fastest way to capture the real DOM is to drive it in a browser (submit the form to trigger the message) and inspect — that's how the `.bs-callout` login-error mechanism surfaced after an `.alert`-only fix had missed it. Same dark-theme-trap family as §20 (white article panels) and §22 (fixed panel height).
+
+## 24. TOC Hover/Active Highlight Lives on the LINK, Not the `<li>`
+
+The Minimalist theme's default TOC hover/active background (a warm peach, ~`#EEEAE7`) is painted on **different elements for categories vs. articles** in the left nav:
+
+- **Categories:** on the link — `a.documentation-category:hover` / `.active` — *not* the `.category-container` `<li>` or the `.category-link-container` wrapper.
+- **Articles:** on the list item — `.article-container:hover` / `.article-container.active` — *not* the inner `.article-link`.
+
+So a TOC restyle must override the **right element per type**. A single `<li>`-level override kills the beige for articles but leaves it on categories — a "looks fixed until you hover a category" bug. To find where a hover paints, hover the element and read the `:hover` chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])` (see `03-LOCALHOST_PREVIEW.md`). For a clean full-row highlight, kill the default on the painting element and apply one tint to the row (the `<li>` for articles, the `.category-link-container` for categories), leaving the link plain.
+
+## 25. Flexbox on `.ko-homepage-top` Collapses the Homepage Search
+
+Making the homepage hero (`.ko-homepage-top`) a `display: flex; flex-direction: column` container — a tempting way to vertically center the title + large search — **shrinks the `[template("large-search")]` input to its content width** (the search becomes a flex item and stops filling the row). Space/center the hero with vertical **padding** instead; or, if you need flex, give the search wrapper an explicit width. (`.ko-homepage-top` is also full-bleed — it carries negative side margins — so it already spans edge-to-edge without flex.)
+
+## 26. Homepage `icon-cats` Tiles Left-Align With Fewer Categories Than Columns
+
+The homepage category tiles (`[template("icon-cats,col=N")]`, see `knowledgeowl-css-defaults.md`) render in an **N-wide grid** — the default CSS forces `width: 25%` on the tiles at ≥992px. When the KB has **fewer categories than N** (e.g. 3 categories in a `col=4` grid), they left-align and leave an empty trailing slot instead of centering. Center them with flex on the row:
+
+```css
+.hg-minimalist-theme.hg-home-page .category-list {
+  display: flex !important; flex-wrap: wrap; justify-content: center; gap: 22px;
+}
+.hg-minimalist-theme.hg-home-page .category-list > .cat-icon-panel {
+  flex: 0 0 240px !important; max-width: 240px; float: none !important; margin: 0 !important;
+}
+```
+
+The tiles are direct `<a class="cat-icon-panel">` children of `.category-list` (no wrapping `<div>`), so target `.category-list > .cat-icon-panel` — `> div` won't match.

@@ -200,6 +200,25 @@ A dark (or otherwise non-white) theme must override **both** of these inner pane
 }
 ```
 
+### TOC Nav Tree (left sidebar / `toc-always-open`)
+
+The always-open TOC is a category/article navigation tree. Structure (outermost → innermost):
+
+```
+#ko-documentation-categories.slideout-menu-left
+  ul.documentation-outter-list
+    li.category-container.level-0          ← a top-level category (or a leaf link like Home)
+      div.category-link-container          ← the category ROW (hover target)
+        i.cat-icon / i.home-icon           ← expand/collapse chevron, or leaf icon
+        a.documentation-category           ← the category label link (KO paints its hover
+                                             beige HERE — see quirks doc #24)
+      ul.documentation-articles.level-1    ← the category's articles (when expanded)
+        li.article-container               ← an article row; gets .active on the CURRENT article
+          a.article-link                   ← the article label link
+```
+
+Key hooks for a docs-style TOC: **`.article-container.active`** is the "you-are-here" current article (set by JS from the page's object id); `.category-link-container` is the category-row hover target; `a.documentation-category` / `a.article-link` are the label links. The hover/active *background* is applied per-type (category link vs. article `<li>`) — see quirks doc #24.
+
 ---
 
 ## Search
@@ -304,6 +323,8 @@ The homepage `[template("icon-cats…")]` renders category tiles that are distin
 | `.category-header` | The label. `font-size: 18px; color: #1D284F` |
 
 Notes: the per-category icon **color** is set in the Category editor (inline on the `<i>`), so recoloring all icons from Custom CSS needs `!important`. And `.category-icon i` carries `margin-top: 16px`, so the icon's vertical position is tied to its size — if you change the `font-size`, adjust the margin/centering to match.
+
+**Tile structure:** each `.cat-icon-panel` is an `<a>` that is a **direct child of `.category-list`** (no wrapping `<div>`), so `.category-list > div` won't match — target `.category-list > .cat-icon-panel`. The tiles sit in a `col=N` grid (the baseline forces `width: 25%` at ≥992px); when a KB has fewer categories than columns they left-align rather than center — see quirks doc #26 for the flex fix.
 
 ---
 

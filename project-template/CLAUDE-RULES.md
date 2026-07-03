@@ -100,6 +100,21 @@ Key source files for targeted lookup:
 
 Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use Claude in Chrome to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
 
+## Brand Color Tokens
+
+Define the brand palette as CSS custom properties at the top of Custom CSS (a `:root` block) and reference them everywhere — one place to swap when the theme is reused for another brand. For any brand color used in **translucent effects** (glows, tints, gradient washes, an animated ambient), also define its **`-rgb` components** and compose the alpha with `rgba(var(--…-rgb), α)`:
+
+```css
+:root {
+  --brand-primary: #133253;
+  --brand-primary-rgb: 19, 50, 83;   /* same color, as R,G,B */
+}
+/* solids use the hex; effects use the rgb components, so BOTH re-skin from one token */
+.some-glow { box-shadow: 0 24px 60px -20px rgba(var(--brand-primary-rgb), .34); }
+```
+
+Without the `-rgb` pair, `rgba()` effects keep hardcoded color literals and *don't* follow a token change — so the theme only half-re-skins. This is what makes a build cleanly reusable as a template (see the `theme-templates/` templates and their extraction process).
+
 ## Logo & Brand Assets
 
 **Upload the logo through KnowledgeOwl's native uploader, not custom code.** KO has a dedicated logo field at **Customize > Style > Style Settings > Logo** — that's where a KB's logo belongs. It lives where the customer expects to manage it, survives theme and version changes, and KO handles the markup and responsive sizing for you.

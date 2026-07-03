@@ -117,6 +117,12 @@ Then either:
 
 Claude should mention when the preview has been synced, and still provide deployment instructions for the final deploy to KnowledgeOwl.
 
+### Verify layout with measurements, not screenshots
+
+For **geometry** — widths, positions, overlaps, whether something is centered — trust the DOM over the screenshot. `preview_screenshot` doesn't always render at the same viewport that `preview_resize` / `window.innerWidth` report, so a screenshot can look "off-center" or "too narrow" when the real layout is fine (and send you chasing non-bugs). Read element rects and computed styles via `preview_eval` instead — e.g. `document.querySelector(sel).getBoundingClientRect()` and `getComputedStyle(el)`. Use the screenshot for **look** (color, spacing, polish), not precise dimensions.
+
+To find which element paints a hover/active style, hover it and inspect the hover chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])`. That's how you pin down, e.g., whether a TOC highlight lives on the link or the `<li>` (see `knowledgeowl-css-quirks.md` #24).
+
 ---
 
 ## Teardown
