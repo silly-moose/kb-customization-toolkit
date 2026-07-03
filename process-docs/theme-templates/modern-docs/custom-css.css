@@ -1,0 +1,1314 @@
+/******************************************************** General structure ****************************/
+/* define most colors */
+:root {
+  --primary-color: #1d284f;
+  --secondary-color: #f8b88b;
+  --text-links-color: #3C80BA;
+  --border-color: #dcdcdc;
+  --border-hover-color: #b3b3b3;
+  --box-shadow-color: #aeaeae;
+  --toc-border-color: #ddd;
+  --input-border-color: #E6E6E6;
+  --image-caption-link-color: #F6A267;
+  --input-focus-color: #378DFF;
+  --white: #ffffff;
+  /* the styles associated with these colors are commented out by default */
+  --toc-box-shadow-color: #F8F4F1;
+  --toc-category-hover-color: #f2e9e3;
+  --toc-article-hover-color: #e8e8e8;
+}
+/* smooth article resizing on TOC open/close */ 
+.hg-minimalist-theme #ko-article-cntr {
+  transition: all 300ms ease-in-out;
+  width: 100%;
+}
+/* hide right col when TOC open */
+.hg-minimalist-theme #ko-article-cntr.slideout-panel-left.open+.col-lg-3.visible-lg.right-column {
+  opacity: 0;
+  visibility: hidden;
+}
+/* size and position right column if in use */
+.hg-minimalist-theme.hg-3column-layout .right-column {
+  top: 65px;
+  padding-right: 35px;
+  z-index: 2;
+  max-width: calc((100vw - 920px) / 2);
+  transition: all 200ms ease-in-out;
+  opacity: 1;
+}
+/* make sure footer is full width */
+.hg-minimalist-theme.hg-3column-layout .ko-site-footer {
+  width: 100%;
+}
+/* self clear page contents */
+.documentation-body::after {
+  content: "";
+  display: table;
+}
+/* make site background white */
+.hg-minimalist-theme .documentation-body {
+  background: var(--white);
+}
+.hg-site {
+  background: var(--white);
+}
+
+/******************************************************** Font overrides *************************/
+/* color for <h1> */
+.hg-minimalist-theme .documentation-article h1 {
+  color: var(--primary-color);
+}
+/* article content h2 size */
+.documentation-article h2 {
+  font-size: 28px;
+}
+/* article content h3 size */
+.documentation-article h3 {
+  font-size: 24px;
+}
+/* article content h4 size */
+.documentation-article h4 {
+  font-size: 18px;
+}
+/* default color of <a> text (links) */
+.hg-minimalist-theme a:not(.btn),
+a:not(.btn) {
+  color: var(--text-links-color);
+}
+/* remove bottom margin from <p> in article content */
+.documentation-article p {
+  margin-bottom: 0;
+}
+/* force default font size for blockquote */
+blockquote {
+  font-size: inherit;
+}
+/* override default font size for homepage search bar */
+.hg-minimalist-theme .ko-large-search input.form-control {
+  font-size: 15px;
+}
+
+/******************************************************** Topic Category styles **********************/
+/* remove top border, bottom margin from title container */
+.hg-minimalist-theme .topics-top-wrapper {
+  border-bottom: none;
+  margin-bottom: 0px;
+}
+/* remove border, add padding for topic articles */
+.hg-minimalist-theme .topics-articles .hg-article-body,
+.hg-minimalist-theme .hg-category-page .hg-article-body {
+  border-bottom: none;
+  padding-bottom: 40px;
+}
+/* change quick links styles */
+.hg-minimalist-theme  .topic-toc-item {
+  margin-bottom: 10px;
+  display: list-item;
+  line-height: 1.2;
+}
+/* normalize header spacing */
+.hg-minimalist-theme .topics-articles .hg-article-header {
+  margin: 20px 0;
+}
+/* add more space between collapsed article headers */
+.hg-minimalist-theme .topics-articles .hg-article-header.ko-collapse-trigger {
+  margin: 0;
+}
+/* shrink expand / collapse icons */
+.hg-minimalist-theme .topics-articles .hg-article-title > i {
+  font-size: 20px;
+  line-height: 26px;
+  vertical-align: top;
+}
+/* indent and add spacing around collapsed article content */
+.hg-minimalist-theme .topics-articles .ko-collapse-article {
+  margin-left: 30px;
+  padding-bottom: 20px;
+}
+/* remove padding between topic articles */
+.hg-minimalist-theme .topics-articles .hg-article-body {
+  padding-bottom: 0px;
+}
+/* topic article <h2> size */
+.documentation-article .topics-articles h2.hg-article-title {
+  font-size: 24px;
+}
+/* topic article <h3> size */
+.documentation-article .topics-articles h3 {
+  font-size: 18px;
+}
+/* topic article <h4> size */
+.documentation-article .topics-articles h4 {
+  font-size: 16px;
+}
+
+/******************************************************** Default Category Styles *********************/
+/* add top and bottom margin to category panels */
+.hg-minimalist-theme .category-list {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+/* remove bottom border from title */
+.hg-minimalist-theme .faq-header {
+  border-bottom: none;
+}
+/* remove right margin from category description */
+.hg-minimalist-theme .faq-top-description {
+  margin-right: 0;
+}
+/* change category panels into 2x2 grid */
+.hg-minimalist-theme .faq-nav-content .category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  grid-auto-rows: 1fr;
+}
+/* get rid of psuedo html elements */
+.hg-minimalist-theme .faq-nav-content .category-list .clear-left,
+.hg-minimalist-theme .faq-nav-content .category-list .clear-both {
+  display: none !important;
+}
+/* style category panels */
+.hg-minimalist-theme .faq-nav-content .faq-cat-container,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: all .2s ease-in-out;
+  backface-visibility: hidden;
+}
+/* hover effect for category panels */
+.hg-minimalist-theme .faq-nav-content .faq-cat-container:hover,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container:hover {
+  background-color: var(--white);
+  box-shadow: 2px 4px 4px var(--box-shadow-color);
+  transform: scale(1.01) translateZ(0);
+}
+/* subcategory panel display tweaks */
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  padding: 0;
+}
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel {
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+}
+/* subcategory content-list display tweaks */
+.hg-minimalist-theme .category-list.faq-content-list {
+  margin-bottom: 0;
+}
+.hg-minimalist-theme .faq-content-list-container {
+  width: auto;
+  padding: 0;
+}
+.hg-minimalist-theme .faq-content-list-container .category-header {
+  border-bottom: none;
+  margin-bottom: 10px;
+}
+.hg-minimalist-theme .faq-nav-content .article-block div {
+  margin-left: 0;
+}
+/* add bottom margin to list of articles */
+.hg-minimalist-theme .faq-nav-content {
+  margin-bottom: 40px;
+}
+/* remove right margin from category title */
+.hg-minimalist-theme .faq-header {
+  margin-right: 0;
+}
+/* hide <h2>Articles</h2> from default categories */
+.hg-minimalist-theme .faq-nav-content h2 {
+  display: none;
+}
+/* Force main area to be full width */
+.hg-minimalist-theme .hg-category-page .category-list .col-md-6.col-lg-4 {
+  width: 100% !important;
+}
+/* adjust position of subscribe button */
+.hg-minimalist-theme .ko-cat-sub-cntr {
+  margin-top: 12px;
+  margin-right: 0;
+}
+/* apply hover effects to subscribe button */
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub {
+  border: 1px solid var(--border-hover-color);
+  transition: all .1s ease-in-out;
+  backface-visibility: hidden;
+}
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub:hover {
+  box-shadow: 1px 2px 2px var(--box-shadow-color);
+  transform: scale(1.01) translateZ(0);
+}
+
+/******************************************************** Table of Contents ***********/
+/* add border and box-shadow to TOC */
+.hg-minimalist-theme.hg-2column-layout .slideout-menu {
+  display: block;
+  padding: 0;
+  box-shadow: none;
+  border: 1px solid var(--toc-border-color);
+  border-radius: 0 4px 0 0;
+  /*background-color: var(--toc-box-shadow-color);*/
+  left: -360px;
+  transition: all 300ms ease-in-out;
+}
+/* remove TOC padding */
+.hg-minimalist-theme .hg-site-body .documentation-outter-list {
+  padding: 0;
+}
+/* style top level content */
+.hg-minimalist-theme .documentation-categories li.level-0,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  border-bottom: 0;
+  padding: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* style child content containers */
+.hg-minimalist-theme .documentation-categories li {
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.hg-minimalist-theme .documentation-categories li.level-0 > .category-link-container,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  padding: 5px 10px;
+}
+/* style top level articles */
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link {
+  padding: 0 5px;
+  line-height: 33px;
+}
+/* background color override for active and hovered child content */
+.hg-minimalist-theme .documentation-categories li.active,
+.hg-minimalist-theme .category-link-container.active,
+.hg-minimalist-theme .documentation-categories .article-container:hover,
+.hg-minimalist-theme .documentation-categories li a:hover,
+.hg-minimalist-theme .category-link-container:hover {
+  /*background-color: var(--toc-article-hover-color);*/
+}
+/* background color override for active and hovered top level content */
+.hg-minimalist-theme .level-0 > .category-link-container:hover,
+.hg-minimalist-theme .level-0 > .category-link-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link.active {
+  /*background-color: var(--toc-category-hover-color);*/
+  border-radius: 0;
+}
+.hg-minimalist-theme .documentation-categories .level-0 > .category-link-container a:hover {
+  /*background-color: var(--toc-category-hover-color);*/
+}
+/* override default toc slideout behavior */
+.hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+  transform: translateX(360px);
+  width: calc(100% - 360px);
+}
+/* Change TOC chevron-right to plus-square */
+.hg-minimalist-theme .documentation-categories .fa-chevron-right:before {
+  content: "\f0fe" !important;
+}
+/* Change TOC chevron-down to minus-square */
+.hg-minimalist-theme .documentation-categories .fa-chevron-down:before {
+  content: "\f146" !important;
+}
+/* make icons slightly larger */
+.hg-minimalist-theme .cat-icon, .hg-minimalist-theme .home-icon, .hg-minimalist-theme .alt-icon {
+  padding: 8px 0 0 6px;
+  font-size: 18px;
+}
+/* override default box shadow when side TOC is open */
+.hg-minimalist-theme .documentation-categories.slideout-menu.open {
+  box-shadow: 2px 4px 4px var(--box-shadow-color);
+  left: 0;
+}
+
+/********************************************************* Modals ********************/
+/* adjust input border width in modals */
+.hg-minimalist-theme .modal .form-control {
+  border-width: 1px;
+}
+
+/********************************************************* PDF Adjustments ***********/
+/* hide .pdf-header outside of actual PDFs */
+.hg-minimalist-theme .pdf-header {
+  display: none;
+}
+/* show .pdf-header in actual PDFs */
+.hg-minimalist-theme .hg-pdf .pdf-header {
+  display: block;
+}
+/* height of image in .pdf-header */
+.hg-minimalist-theme .hg-pdf .pdf-header img {
+  height: 80px;
+}
+
+/******************************************************** Homepage Top and General */
+/* get rid of background banner and add some padding to top of homepage */
+.hg-minimalist-theme .ko-homepage-top {
+  background: none;
+  padding-top: 2em;
+  padding-bottom: 0em;
+}
+/* make sure category title is clickable */
+.hg-minimalist-theme .hg-home-page .category-header {
+  z-index: 2;
+}
+/* change default color for homepage title */
+.hg-minimalist-theme .ko-homepage-top .hg-article-title {
+  color: var(--primary-color);
+}
+
+/******************************************************** Content Lists */
+/* tweak padding and line heights */
+.hg-minimalist-theme .stat-list {
+  line-height: 1.3;
+  font-size: 14px;
+  margin-left: 1px;
+}
+.hg-minimalist-theme .stat-list li {
+  padding: 4px 0;
+}
+/* remove bottom border from page title */
+.hg-minimalist-theme .page-header {
+  border-bottom: none;
+}
+/* remove border above "see more..." */
+.hg-minimalist-theme .list-action {
+  border-top: none;
+}
+/* correct margin and padding for content lists on homepage */
+.hg-minimalist-theme .homepage-widgets {
+  margin: 2em -15px;
+}
+.hg-minimalist-theme .homepage-widgets .col-md-4.col-sm-6 {
+  padding-left: 15px;
+}
+
+/******************************************************** Search Bar */
+/* remove border from individual search bar elements */
+.hg-minimalist-theme .hg-search-bar input.form-control,
+.hg-minimalist-theme .input-group-btn .btn,
+.hg-minimalist-theme .input-group-btn .btn:hover,
+.hg-minimalist-theme .hg-search-bar input.form-control:focus,
+.hg-minimalist-theme .input-group-btn .btn:focus,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:active,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:focus {
+  border: none;
+}
+/* add border to outer search bar */
+.hg-minimalist-theme .hg-search-bar .input-group {
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  transition: border .25s linear,color .25s linear,background-color .25s linear;
+}
+/* remove background color from search button */
+.hg-minimalist-theme .input-group-btn .btn {
+  background: none;
+}
+/* adjust color and sizing for the refine button */
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle {
+  color: var(--primary-color);
+  font-size: 16px;
+  border: none;
+}
+/* restyle the dropdown caret */
+.hg-search-bar .category-dropdown .dropdown-toggle .caret {
+  border: none;
+  display: inline;
+  font-family: 'Font Awesome 6 Pro';
+  font-weight: 300;
+  font-size: 14px;
+}
+.hg-search-bar .category-dropdown .dropdown-toggle .caret::before {
+  content: "\f0d7";
+}
+/* change font color and remove border for search button */
+.hg-minimalist-theme span.input-group-btn .btn-default,
+.hg-minimalist-theme span.input-group-btn .btn-default:hover {
+  color: var(--input-border-color);
+  border-left: none;
+}
+.hg-minimalist-theme .ko-large-search input.form-control,
+.hg-minimalist-theme .hg-search-bar input.form-control {
+  border-right: none;
+}
+/* add box-shadow to search bar */
+.hg-minimalist-theme .input-group {
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.05);
+}
+/* remove box shadow from type-ahead suggestion box */
+.hg-minimalist-theme .navbar-collapse.in .input-group,
+.hg-minimalist-theme .navbar-collapse.collapsing .input-group {
+  box-shadow: none;
+}
+/* handle styles for showing/hiding type-ahead suggestion box */
+.hg-minimalist-theme #navbar-collapse.in,
+.hg-minimalist-theme #navbar-collapse.collapsing {
+  margin-bottom: 0;
+  padding: 10px;
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: 0px 10px 20px -8px #ccc;
+}
+
+/******************************************************** Search Pages */
+/* adjust bottom spacing page titles and containers */
+.hg-minimalist-theme .recommended-container h2,
+.hg-minimalist-theme .hg-contact-form-container h2,
+.hg-minimalist-theme .hg-article-search {
+  margin-bottom: 40px;
+}
+/* add bottom margin to search controls */
+.hg-minimalist-theme .ko-srch-meta-cntr {
+  margin-bottom: 20px;
+}
+/* add more top margin to full search results */
+.hg-minimalist-theme #homepage-search-form .hg-article-search {
+  margin-top: 20px;
+}
+/* remove bottom spacing from recommended article titles */
+.hg-minimalist-theme .hg-article-search h4 {
+  margin-bottom: 0;
+}
+/* increase space between article results */
+.hg-minimalist-theme .hg-article-search li {
+  margin-bottom: 25px;
+}
+/* adjust size/spacing of article meta data */
+.hg-minimalist-theme .hg-article-info {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+/* add spacing after article blurbs */
+.hg-minimalist-theme .hg-article-blurb {
+  margin-bottom: 25px;
+}
+/* make last modified text for recommended articles smaller */
+.hg-minimalist-theme .hg-article-search .hg-date {
+  font-size: 14px;
+}
+/* adjust font size and line height for contact form labels */
+.hg-minimalist-theme .hg-contact-form-container label {
+  font-size: 18px;
+  line-height: 1.3;
+}
+/* decrease width of contact form field borders */
+.hg-minimalist-theme .hg-contact-form-container .form-control {
+  border: 1px solid #bdc3c7;
+}
+/* update colors for the results paging buttons */
+.hg-minimalist-theme .ko-search-pager li.current {
+  background: var(--primary-color);
+}
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn) {
+  color: var(--primary-color);
+}
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn):hover {
+  color: var(--secondary-color);
+}
+
+/******************************************************** Tables ***************************************/
+/* adjust table header cell styles */
+.table-bordered > thead > tr > th {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding-left: 1em;
+}
+/* give left aligned cells some left padding */
+.table-bordered>tbody>tr>td,
+.table-bordered>tfoot>tr>td,
+table.table-bordered tr td[style*="text-align: left"] {
+  padding-left: 1em;
+}
+
+/******************************************************** Article HTML ***************************************/
+/* add some padding to line items */
+.hg-article-body ol li {
+  padding: 10px 0;
+}
+/* first level - use regular numeric decimals  */
+.hg-article-body ol {
+  list-style-type: decimal;
+}
+/* second level - use lowercase alphabetic */
+.hg-article-body ol > li > ol {
+  list-style-type: lower-alpha;
+}
+/* third level - use lowercase Roman numerals */
+.hg-article-body ol > li > ol > li > ol {
+  list-style-type: lower-roman;
+}
+/* optional .article-block styles */
+.article-block div {
+  margin-left: 20px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+/* default margin for <p> in lists */
+.hg-article-body ul p,
+.hg-article-body ol p {
+  margin: 20px 0 0;
+}
+/* give more top space to article ratings */
+.hg-minimalist-theme .hg-ratings {
+  margin-top: 15px;
+}
+/* space out the article rating thumbs */
+.hg-minimalist-theme .hg-ratings .hg-helpful {
+  margin-right: 20px;
+}
+/* styles for check-list bullet points */
+ul.check-list {
+  list-style: none;
+  padding-left: 0;
+}
+ul.check-list li {
+  position: relative;
+  padding-left: 1.5em;
+}
+ul.check-list li:before {
+  font-family: 'FontAwesome';
+  content: "\f00c" !important;
+  padding-right: 0.5em;
+  font-size: smaller;
+  color: green;
+}
+/* remove top border from comment form */
+.hg-minimalist-theme #hg-comment-form {
+  border-top: none;
+}
+
+/******************************************************** List pages ************/
+/* remove top border from glossary page */
+.hg-minimalist-theme .glossary-letter ~ .glossary-letter {
+  border-top: none;
+}
+/* left align article lists */
+.hg-minimalist-theme .hg-widget-page .ko-content-cntr ol {
+  padding-inline-start: 20px;
+}
+
+/******************************************************** Alert boxes ***********/
+/* give alerts, wells, <pre> some top margin */
+.alert, .well, pre {
+  margin-top: 20px;
+}
+/* icon styling for all alerts */
+.alert::before {
+  display: block;
+  width: 65px;
+  height: 60px;
+  float: left;
+  margin-top: 0px;
+  font-size: 48px;
+  font-weight: 900;
+  font-family: 'Font Awesome 6 Pro';
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 60px;
+  text-rendering: auto;
+}
+/* danger alert styling */
+.alert.alert-danger {
+  background: #F4E2E2;
+  border: 1px solid #E6ADA9;
+}
+.alert.alert-danger:before {
+  content: "\f071";
+  color: #f8918b;
+}
+/* info alert styling */
+.alert.alert-info {
+  background: #F0F7FD;
+  border: 1px solid #69B2F0;
+}
+.alert.alert-info:before {
+  content: "\f05a";
+  color: #97c4ed;
+}
+/* success alert styling */
+.alert.alert-success {
+  background: #F8FBF9;
+  border: 1px solid #BDDCBC;
+}
+.alert.alert-success:before {
+  content: "\f058";
+  color: #9bdbae;
+}
+/* warning alert styling */
+.alert.alert-warning {
+  background: #FDF9E6;
+  border: 1px solid #FBD9A4;
+}
+.alert.alert-warning:before {
+  content: "\f8fa";
+  color: #ffcc7a;
+}
+/* remove top margin from <p> tags in alerts */
+.alert.alert-info p,
+.alert.alert-success p,
+.alert.alert-warning p,
+.well p {
+  margin-top: 0;
+}
+/* make sure there is vertical room icons in alerts */
+.alert.alert-info,
+.alert.alert-success,
+.alert.alert-danger,
+.alert.alert-warning {
+  min-height: 90px;
+}
+/* Offset lists that are within alert divs */
+.alert ul,
+.alert ol {
+  margin-left: 75px;
+}
+
+/******************************************************************************* Image Captions *****/
+/* Set dark background for captions */
+.hg-minimalist-theme .documentation-article .fr-img-caption .fr-img-wrap>span {
+  background: var(--primary-color);
+}
+/* Remove border for image captions */
+.hg-minimalist-theme .documentation-article span.fr-img-caption {
+  border: none;
+}
+/* Fix hyperlinks in image captions, now that we have the dark background */
+.hg-minimalist-theme span.fr-inner a {
+  color: var(--image-caption-link-color);
+  text-decoration: none;
+}
+/* Image caption hyperlinks should be a different color and underlined on-hover */
+.hg-minimalist-theme .fr-inner a:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/********************************************* Back to top snippet styling */
+/* basic styles */
+.back-to-top {
+  background-color: #fff;
+  margin: 0;
+  position: fixed;
+  bottom: 100px;
+  right: 45px;
+  width: 55px;
+  height: 45px;
+  z-index: 100;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #acacac;
+  box-shadow: 1px 3px 3px var(--box-shadow-color);
+  visibility: hidden;
+  opacity: 0;
+  transition: all .2s ease-in-out;
+}
+/* make visible when scrolled down on page */
+.back-to-top.visible {
+  visibility: visible;
+  opacity: 1;
+}
+/* icon styles */
+.back-to-top i {
+  font-size: 45px;
+  color: #3a3a3a;
+}
+/* mouse effect styles */
+.back-to-top:hover,
+.back-to-top:active,
+.back-to-top:focus {
+  color: var(--white);
+}
+
+/********************************************* Miscellaneous */
+/* optional .margin-top-20 class */
+.hg-minimalist-theme .margin-top-20 {
+  margin-top: 20px;
+}
+/* panels within the right column */
+.hg-minimalist-theme .right-col-panel {
+  border-radius: 4px;
+}
+.hg-minimalist-theme .right-col-panel .panel-heading {
+  color: var(--white);
+  background: var(--primary-color);
+  border-radius: 4px 4px 0 0;
+}
+/* Add styles for in article TOC snippet to work*/
+.hg-minimalist-theme .toc-top {
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+  margin-bottom: 20px;
+  min-height: 20px;
+  padding: 5px 30px;
+}
+/* In article TOC snippet style */
+.hg-minimalist-theme .toc-anchor {
+  display: block;
+  height: 140px;
+  margin-top: -140px;
+  visibility: hidden;
+}
+/* remove bottom border for articles */
+.hg-minimalist-theme .hg-article-body {
+  border-bottom: none;
+}
+.ko-content-cntr .pager {
+  margin-top: 40px;
+} 
+
+/* accessibility focus indicators */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible,
+input[type="file"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible,
+.form-control:focus-visible,
+.nav > li > a:focus-visible,
+.nav > li.disabled > a:focus-visible,
+.nav .open > a:focus-visible,
+.nav-tabs > li.active > a:focus-visible,
+.nav-tabs.nav-justified > .active > a:focus-visible,
+.nav-pills > li.active > a:focus-visible,
+.nav-tabs-justified > .active > a:focus-visible,
+.navbar-brand:focus-visible,
+.navbar-toggle:focus-visible,
+.navbar-default .navbar-brand:focus-visible,
+.navbar-default .navbar-nav > li > a:focus-visible,
+.navbar-default .navbar-nav > .active > a:focus-visible,
+.navbar-default .navbar-nav > .disabled > a:focus-visible,
+.navbar-default .navbar-toggle:focus-visible,
+.navbar-default .navbar-nav > .open > a:focus-visible,
+.navbar-default .btn-link:focus-visible,
+.navbar-default .btn-link[disabled]:focus-visible,
+fieldset[disabled] .navbar-default .btn-link:focus-visible,
+.navbar-inverse .navbar-brand:focus-visible,
+.navbar-inverse .navbar-nav > li > a:focus-visible,
+.navbar-inverse .navbar-nav > .active > a:focus-visible,
+.navbar-inverse .navbar-nav > .disabled > a:focus-visible,
+.navbar-inverse .navbar-toggle:focus-visible,
+.navbar-inverse .navbar-nav > .open > a:focus-visible,
+.navbar-inverse .btn-link:focus-visible,
+.navbar-inverse .btn-link[disabled]:focus-visible,
+fieldset[disabled] .navbar-inverse .btn-link:focus-visible,
+a.label:focus-visible,
+.label-default[href]:focus-visible,
+.label-primary[href]:focus-visible,
+.label-success[href]:focus-visible,
+.label-info[href]:focus-visible,
+.label-warning[href]:focus-visible,
+.label-danger[href]:focus-visible,
+.close:focus-visible,
+.back-to-top:focus-visible,
+html .author-bar .ko-editor-nav-right .dropdown > a:focus-visible,
+.hg-minimalist-theme .ko-slideout-left-toggle:focus-visible,
+.hg-minimalist-theme .ko-slideout-right-toggle:focus-visible,
+.hg-minimalist-theme .ko-large-search input.form-control:focus-visible
+button.btn.btn-success:focus-visible,
+button.btn.btn-primary:focus-visible,
+button.btn.btn-default:focus-visible,
+button.btn.btn-warning:focus-visible,
+button.btn.btn-danger:focus-visible,
+button.btn.btn-info:focus-visible,
+a.btn.btn-success:focus-visible,
+a.btn.btn-primary:focus-visible,
+a.btn.btn-default:focus-visible,
+a.btn.btn-warning:focus-visible,
+a.btn.btn-danger:focus-visible,
+a.btn.btn-info:focus-visible,
+.btn-success:focus-visible,
+.form-control.ui-autocomplete-input:focus-visible
+{
+  outline: 2px solid var(--input-focus-color);
+  outline-offset: 1px;
+}
+.hg-minimalist-theme .hg-search-bar .input-group:focus-within:not(:focus-visible)
+{
+  box-shadow: 0 0 0 2px var(--input-focus-color);
+}
+
+
+/********************************************************************* 404 page ***********************/
+/* remove top border */
+.hg-minimalist-theme .error-page-top {
+  border: none;
+}
+
+/********************************************************************* No access page *****************/
+/* vertically center h4 */
+.hg-site-login .alert h4 {
+  margin-top: 10px;
+}
+/* remove duplicate icon */
+.hg-site-login .alert h4 i {
+  display: none;
+}
+
+/********************************************************************* Screen size specific adjustments ***************/
+/* will apply to screen widths narrower than 1474px */
+@media (max-width: 1473px) {
+  /* shrink main content area */
+  .hg-minimalist-theme.hg-3column-layout:not(.hg-home-page) .ko-content-cntr {
+    max-width: 700px;
+  }
+  /* expand right col size */
+  .hg-minimalist-theme.hg-3column-layout .right-column {
+    max-width: calc((100vw - 720px) / 2);
+  }
+}
+/* will apply to screen widths narrower than 992px */
+@media (max-width: 991px) {
+  .hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+    width: 100%;
+  }
+}
+/* will apply to screen widths wider than 575px, not narrower */
+@media (min-width: 576px) {
+  .hg-minimalist-theme .hg-home-page .category-list>div {
+    width: 50%;
+    float: left;
+  }
+  .hg-minimalist-theme .category-img {
+    max-width: 50%;
+  }
+}
+/* will apply to screen widths wider than 767px */
+@media(min-width:768px) {
+  .hg-minimalist-theme .lead,
+  .hg-minimalist-theme .lead p {
+    font-size: 30.01px !important
+  }
+}
+/* will apply to screen widths wider than 991px */
+@media (min-width: 992px) {
+  .hg-minimalist-theme .hg-home-page .category-list>div {
+    width: 25%;
+  }
+  .hg-minimalist-theme .category-img {
+    max-width: 50%;
+  }
+}
+
+/* ============================================================================
+   MODERN-DOCS THEME  —  reusable KnowledgeOwl template
+   A custom layer over the KO Minimalist baseline. Everything ABOVE this banner is
+   stock KO Minimalist default CSS; everything BELOW is the theme.
+
+   ▸ TO RE-SKIN FOR A PROSPECT: change ONLY the --brand-* tokens in the :root block
+     below (colors, the two "-rgb" pairs, and the hero image URL). The --ui-* tokens,
+     the layout, and the structure are brand-agnostic and stay put.
+   ▸ For each brand color used in glows/tints, set BOTH the hex and its "-rgb"
+     components (e.g. --brand-primary AND --brand-primary-rgb). The -rgb value feeds
+     the rgba() alpha effects, so the whole theme re-skins from these tokens.
+   ▸ FONT SIZES stay at the KO Minimalist baseline. Do NOT change font-size here —
+     spacing, weight, color, radius, and width only.
+   ▸ Also required per prospect (outside this file): Style Settings colors, the logo
+     (Style Settings > Logo), and the hero image (KB file library). See the README.
+   ============================================================================ */
+
+:root {
+  /* ========================================================================
+     SWAP THESE per prospect  —  brand values; the whole theme derives from them
+     ======================================================================== */
+  --brand-primary:      #133253;      /* primary brand: nav, headings, primary actions */
+  --brand-primary-rgb:  19, 50, 83;   /*   ^ same color as R,G,B (feeds glows/tints)   */
+  --brand-primary-hi:   #1c4a76;      /* lighter primary: gradients / hovers           */
+  --brand-primary-lo:   #0e2740;      /* deeper primary: borders/depth on the nav      */
+  --brand-accent:       #0170b9;      /* accent: links, icons, focus, highlights       */
+  --brand-accent-rgb:   1, 112, 185;  /*   ^ same color as R,G,B (feeds glows/tints)   */
+  --brand-accent-hi:    #0a86d6;      /* accent hover (lighter)                        */
+  --brand-accent-lo:    #015a94;      /* accent active (darker)                        */
+  --brand-heading:      #1f2a3a;      /* heading text                                  */
+  --brand-body:         #3f4a59;      /* body text                                     */
+  --brand-muted:        #6b7684;      /* muted / secondary text                        */
+  --brand-bg:           #ffffff;      /* page background                               */
+  --brand-bg-soft:      #f5f8fc;      /* soft section / sidebar background             */
+  --brand-border:       #e3e8ef;      /* hairlines / card borders                      */
+  --brand-border-hi:    #cdd7e5;      /* border hover                                  */
+  --brand-nav-text:     #ffffff;      /* text / logo / icons on the primary nav        */
+  /* Homepage hero image — upload the prospect's hero to the KB file library and paste
+     its KB-hosted URL here (never a marketing-site hotlink). Until set, the hero falls
+     back to a solid primary-color wash. */
+  --brand-hero-image:   url('REPLACE-WITH-KB-FILE-LIBRARY-URL');
+
+  /* ========================================================================
+     DERIVED — usually leave (these compose the brand tokens above)
+     ======================================================================== */
+  --ui-radius:     10px;
+  --ui-shadow:     0 2px 8px rgba(var(--brand-primary-rgb),.06), 0 1px 3px rgba(var(--brand-primary-rgb),.08);
+  --ui-shadow-hi:  0 8px 24px rgba(var(--brand-primary-rgb),.12);
+  --ui-elev-1:     0 12px 34px -18px rgba(var(--brand-primary-rgb),.30);  /* resting card / search float */
+  --ui-elev-2:     0 24px 60px -28px rgba(var(--brand-primary-rgb),.45);  /* raised card / panel float    */
+  --ui-glow:       0 24px 60px -20px rgba(var(--brand-primary-rgb),.34);  /* primary hover bloom (tiles)  */
+  --ui-glow-focus: 0 0 0 3px rgba(var(--brand-accent-rgb),.22), 0 20px 50px -18px rgba(var(--brand-accent-rgb),.42); /* search ring + bloom */
+
+  /* Remap KO's own theme variables to the brand palette */
+  --primary-color:    var(--brand-primary);
+  --secondary-color:  var(--brand-accent);
+  --text-links-color: var(--brand-accent);
+  --border-color:     var(--brand-border);
+}
+
+/* ==========================================================================
+   1) TOP NAVIGATION — primary brand bar
+   ========================================================================== */
+.hg-minimalist-theme .navbar-default {
+  background: var(--brand-primary) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--brand-primary-lo) !important;
+  box-shadow: 0 2px 10px rgba(var(--brand-primary-rgb),.16);
+}
+/* Logo: upload the WHITE logo natively via Style Settings > Logo (manual step).
+   No CSS filter to recolor it — per the toolkit "Logo & Brand Assets" principle. */
+/* Nav text, project name, links, icons → white */
+.hg-minimalist-theme .navbar-default .navbar-brand,
+.hg-minimalist-theme .navbar-default .hg-project-name,
+.hg-minimalist-theme .navbar-default .navbar-nav > li > a,
+.hg-minimalist-theme .navbar-default .navbar-text,
+.hg-minimalist-theme .navbar-default a,
+.hg-minimalist-theme .navbar-default .fa,
+.hg-minimalist-theme .navbar-default .fas,
+.hg-minimalist-theme .navbar-default .fal,
+.hg-minimalist-theme .navbar-default .far,
+.hg-minimalist-theme .navbar-default i[class*="fa-"] {
+  color: var(--brand-nav-text) !important;
+}
+/* Hamburger toggle → white */
+.hg-minimalist-theme .navbar-default .navbar-toggle .icon-bar {
+  background-color: var(--brand-nav-text) !important;
+}
+.hg-minimalist-theme .navbar-default .navbar-toggle {
+  border-color: rgba(255,255,255,.35) !important;
+}
+/* Nav link hover / focus / open */
+.hg-minimalist-theme .navbar-default .navbar-nav > li > a:hover,
+.hg-minimalist-theme .navbar-default .navbar-nav > li > a:focus,
+.hg-minimalist-theme .navbar-default .navbar-nav > .open > a {
+  color: #fff !important;
+  background: rgba(255,255,255,.10) !important;
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   2) HOMEPAGE — clean docs hero, search, category tiles, widgets
+   ========================================================================== */
+/* Let homepage grow to content height (quirk #22 — fixed-height panel trap) */
+.hg-minimalist-theme.hg-home-page #ko-article-cntr,
+.hg-minimalist-theme.hg-home-page .ko-content-cntr,
+.hg-minimalist-theme.hg-home-page .ko-content-cntr .hg-article,
+.hg-minimalist-theme.hg-home-page .ko-content-cntr .hg-article-body {
+  height: auto !important;
+}
+/* Hero band — hero photo behind a primary-color gradient wash (strong at top for the
+   white title, easing lower so the hero image shows through) */
+.hg-minimalist-theme.hg-home-page .ko-homepage-top {
+  background-image:
+    linear-gradient(180deg, rgba(var(--brand-primary-rgb),.88) 0%, rgba(var(--brand-primary-rgb),.62) 52%, rgba(var(--brand-primary-rgb),.86) 100%),
+    var(--brand-hero-image);
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
+  padding: 80px 20px 88px;
+}
+/* Hero title — white on the photo */
+.hg-minimalist-theme.hg-home-page .ko-homepage-top h1.hg-article-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 14px rgba(0,0,0,.35);
+}
+/* Search bar — wrapper carries the border (quirk #13); make it a clean pill */
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .input-group {
+  border: 1px solid rgba(255,255,255,.55) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.28);
+  background: #fff;
+  overflow: hidden;
+  transition: border-color .18s, box-shadow .25s, transform .25s cubic-bezier(.2,.8,.2,1);
+}
+/* dual-layer focus: crisp accent ring + soft accent bloom + a gentle lift */
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .input-group:focus-within {
+  border-color: var(--brand-accent) !important;
+  box-shadow: var(--ui-glow-focus) !important;
+  transform: translateY(-1px);
+}
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .form-control {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .input-group-btn .btn,
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .input-group-btn .fa {
+  color: var(--brand-accent) !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+/* Category tiles — clean cards with a corner glow orb + lift-and-bloom on hover */
+.hg-minimalist-theme.hg-home-page .cat-icon-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--brand-border) !important;
+  border-radius: var(--ui-radius) !important;
+  background: #fff !important;
+  box-shadow: var(--ui-elev-1);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .25s;
+}
+/* corner accent orb — a soft accent-color light bleeding from the top-right corner */
+.hg-minimalist-theme.hg-home-page .cat-icon-panel::before {
+  content: "";
+  position: absolute;
+  width: 190px; height: 190px;
+  right: -66px; top: -66px;
+  background: radial-gradient(circle, var(--brand-accent), transparent 65%);
+  opacity: .10;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity .35s, transform .5s;
+}
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover::before {
+  opacity: .17;
+  transform: scale(1.18);
+}
+/* keep icon + label above the orb */
+.hg-minimalist-theme.hg-home-page .cat-icon-panel > * { position: relative; z-index: 1; }
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover {
+  transform: translateY(-6px) scale(1.012);
+  box-shadow: var(--ui-glow);
+  border-color: var(--brand-accent) !important;
+}
+/* Recolor category icons to the primary color (inline color on the <i> → needs !important) */
+.hg-minimalist-theme.hg-home-page .cat-icon-panel .category-icon i,
+.hg-minimalist-theme.hg-home-page .cat-icon-panel .category-icon i::before {
+  color: var(--brand-primary) !important;
+}
+.hg-minimalist-theme.hg-home-page .cat-icon-panel .category-header {
+  color: var(--brand-heading) !important;
+  font-weight: 600 !important;
+}
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover .category-header {
+  color: var(--brand-accent) !important;
+}
+/* Center the tile row (icon-cats uses a 4-col grid; fewer categories than columns → center them) */
+.hg-minimalist-theme.hg-home-page .category-list {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+}
+.hg-minimalist-theme.hg-home-page .category-list > div,
+.hg-minimalist-theme.hg-home-page .category-list > .cat-icon-panel {
+  flex: 0 0 240px !important;
+  width: 240px !important;
+  max-width: 240px;
+  float: none !important;
+  margin: 0 !important;
+}
+/* Homepage widgets (Popular / New / Updated) — h3 headers + links */
+.hg-minimalist-theme.hg-home-page .hg-article-body h3 {
+  color: var(--brand-heading) !important;
+  font-weight: 700 !important;
+}
+.hg-minimalist-theme.hg-home-page .hg-article-body a {
+  color: var(--brand-accent) !important;
+}
+.hg-minimalist-theme.hg-home-page .hg-article-body a:hover {
+  color: var(--brand-accent-lo) !important;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   3) FANCY DETAILS — glow/depth polish (adapted from the an internal theme
+      theme, toned to the brand palette, dialed down for a clean, professional feel)
+   ========================================================================== */
+
+/* Hero: fine SVG-noise grain to soften gradient banding + add a subtle 'printed'
+   richness. Scoped to the dark hero only; content sits above it (z-index 1). */
+.hg-minimalist-theme.hg-home-page .ko-homepage-top { position: relative; }
+.hg-minimalist-theme.hg-home-page .ko-homepage-top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hg-minimalist-theme.hg-home-page .ko-homepage-top > * { position: relative; z-index: 1; }
+
+/* Micro-interaction: the search icon gives a tiny tactile bump when the field lights up */
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .input-group-btn .fa {
+  transition: transform .18s cubic-bezier(.2,.8,.2,1);
+}
+.hg-minimalist-theme.hg-home-page .ko-homepage-top .input-group:focus-within .input-group-btn .fa {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   4) AMBIENT BACKGROUND — a whisper-subtle "living" gradient: a pure-CSS take on
+      Mintlify's animated canvas background. Primary/accent soft glows, very low
+      opacity, slow drift, sitting behind all content. Tune intensity via the
+      rgba alphas below; tune motion via the animation duration.
+   ========================================================================== */
+@keyframes md-ambient-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-1.5%, 2%, 0) scale(1.14); }
+}
+body.hg-minimalist-theme::before {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  z-index: -1;                 /* behind content, above the page's base background */
+  pointer-events: none;
+  background-image:
+    radial-gradient(42% 46% at 15% 42%, rgba(var(--brand-accent-rgb),.22), transparent 62%),
+    radial-gradient(46% 48% at 88% 36%, rgba(var(--brand-primary-rgb),.18),  transparent 64%),
+    radial-gradient(50% 50% at 56% 82%, rgba(var(--brand-accent-rgb),.17), transparent 62%);
+  filter: blur(16px);
+  animation: md-ambient-drift 40s ease-in-out infinite alternate;
+}
+/* Let the ambient show through the homepage content (KO's article panels default
+   to opaque white — quirk #20 in reverse). The white category tiles still pop. */
+.hg-minimalist-theme.hg-home-page .documentation-body,
+.hg-minimalist-theme.hg-home-page .documentation-article,
+.hg-minimalist-theme.hg-home-page .hg-article {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ==========================================================================
+   5) ARTICLE PAGE + TOC — modern-docs reading experience.
+      (Colors/spacing/weights only — TOC width & translateX coupling untouched.)
+   ========================================================================== */
+
+/* ---------- Left TOC sidebar: docs-style navigation ---------- */
+.hg-minimalist-theme #ko-documentation-categories.slideout-menu-left {
+  background: var(--brand-bg-soft) !important;
+  border-right: 1px solid var(--brand-border);
+}
+.hg-minimalist-theme .documentation-categories .documentation-category {
+  color: var(--brand-heading) !important;
+  font-weight: 600 !important;
+}
+.hg-minimalist-theme .documentation-categories .cat-icon,
+.hg-minimalist-theme .documentation-categories .home-icon {
+  color: var(--brand-muted) !important;
+}
+/* Category hover — KO paints its beige on the category LINK (a.documentation-category),
+   not the <li>. Kill it on every part of the row, then put ONE clean tint on the
+   wrapping container so the whole row (icon + label) highlights uniformly. */
+.hg-minimalist-theme .documentation-categories .category-container:hover,
+.hg-minimalist-theme .documentation-categories .nav-header:hover,
+.hg-minimalist-theme .documentation-categories .documentation-category:hover,
+.hg-minimalist-theme .documentation-categories .documentation-category:focus,
+.hg-minimalist-theme .documentation-categories .category-link-container:hover .documentation-category {
+  background-color: transparent !important;
+}
+.hg-minimalist-theme .documentation-categories .category-link-container {
+  border-radius: 6px;
+  transition: background .15s;
+}
+.hg-minimalist-theme .documentation-categories .category-link-container:hover {
+  background-color: rgba(var(--brand-primary-rgb),.06) !important;
+}
+/* Article rows — the highlight lives on the <li> (full-width). The inline link stays plain,
+   so there's no beige gap and no pill/left-bar overlapping the text. */
+.hg-minimalist-theme .documentation-articles .article-container {
+  border-radius: 6px;
+  transition: background .15s;
+}
+.hg-minimalist-theme .documentation-articles .article-container .article-link {
+  color: var(--brand-body) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  transition: color .15s;
+}
+.hg-minimalist-theme .documentation-articles .article-container:hover {
+  background: rgba(var(--brand-primary-rgb),.06) !important;
+}
+.hg-minimalist-theme .documentation-articles .article-container:hover .article-link {
+  color: var(--brand-primary) !important;
+}
+/* active article — accent-tint full-width row + a clean left accent bar (the <li>'s 7px
+   left padding keeps the bar clear of the text). */
+.hg-minimalist-theme .documentation-articles .article-container.active {
+  background: rgba(var(--brand-accent-rgb),.10) !important;
+  box-shadow: inset 3px 0 0 var(--brand-accent);
+}
+.hg-minimalist-theme .documentation-articles .article-container.active .article-link {
+  color: var(--brand-accent) !important;
+  font-weight: 600 !important;
+}
+
+/* ---------- Reading panel — clean flat white surface ---------- */
+.hg-minimalist-theme.hg-article-page #ko-article-cntr.documentation-article {
+  background: #ffffff !important;
+  box-shadow: none !important;   /* remove KO's default right-edge shadow (quirk #20) */
+}
+
+/* ---------- Breadcrumbs ---------- */
+.hg-minimalist-theme .hg-breadcrumbs a { color: var(--brand-accent) !important; }
+.hg-minimalist-theme .hg-breadcrumbs li i.fa { color: var(--brand-border-hi) !important; }
+
+/* ---------- Article header ---------- */
+.hg-minimalist-theme.hg-article-page .hg-article-header {
+  border-bottom: 1px solid var(--brand-border);
+  padding-bottom: 14px;
+}
+.hg-minimalist-theme.hg-article-page .hg-article-title {
+  color: var(--brand-heading) !important;
+  font-weight: 700 !important;
+}
+.hg-minimalist-theme .hg-article-header .metadata { color: var(--brand-muted) !important; }
+.hg-minimalist-theme .ko-article-actions a i { color: var(--brand-muted) !important; transition: color .15s; }
+.hg-minimalist-theme .ko-article-actions a:hover i { color: var(--brand-accent) !important; }
+
+/* ---------- Article body ---------- */
+.hg-minimalist-theme.hg-article-page .hg-article-body { color: var(--brand-body) !important; line-height: 1.7; }
+.hg-minimalist-theme.hg-article-page .hg-article-body h2,
+.hg-minimalist-theme.hg-article-page .hg-article-body h3,
+.hg-minimalist-theme.hg-article-page .hg-article-body h4 { color: var(--brand-heading) !important; }
+.hg-minimalist-theme.hg-article-page .hg-article-body a:not(.btn) { color: var(--brand-accent) !important; }
+.hg-minimalist-theme.hg-article-page .hg-article-body a:not(.btn):hover { color: var(--brand-accent-lo) !important; }
+/* section '#' anchor — reveal on heading hover (a Mintlify-style docs touch) */
+.hg-minimalist-theme .ko-header-anchor .ko-anchor-icon {
+  color: var(--brand-accent) !important;
+  opacity: 0;
+  transition: opacity .15s;
+  text-decoration: none !important;
+}
+.hg-minimalist-theme .ko-header-anchor:hover .ko-anchor-icon { opacity: 1; }
+/* offset anchor jumps so headings clear the fixed nav (quirk #6 family) */
+.hg-minimalist-theme .ko-header-anchor { scroll-margin-top: 90px; }
+
+/* ---------- Footer / ratings ---------- */
+.hg-minimalist-theme .hg-article-footer { border-top: 1px solid var(--brand-border); }
+.hg-minimalist-theme .hg-ratings a.hg-helpful:hover  { color: #2e7d46 !important; transform: translateY(-1px); }
+.hg-minimalist-theme .hg-ratings a.hg-unhelpful:hover { color: #c0392b !important; transform: translateY(-1px); }
+
+/* ---------- Right column ("About this Article") ---------- */
+.hg-minimalist-theme .right-column { color: var(--brand-muted) !important; }
+.hg-minimalist-theme .right-column a { color: var(--brand-accent) !important; }
+
+/* Accessibility: honor prefers-reduced-motion — neutralize transforms/animation */
+@media (prefers-reduced-motion: reduce) {
+  .hg-minimalist-theme *,
+  .hg-minimalist-theme *::before,
+  .hg-minimalist-theme *::after {
+    transition-duration: .001ms !important;
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  body.hg-minimalist-theme::before { animation: none !important; }
+}

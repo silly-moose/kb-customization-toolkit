@@ -100,6 +100,11 @@ Key source files for targeted lookup:
 
 Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use Claude in Chrome to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
 
+## Using a Pre-Built Template
+
+A build can start from a pre-built, brand-swappable theme template instead of a bespoke design. To apply one, follow the toolkit's `process-docs/theme-templates/README.md`: fetch the template's raw files into the current version folder, then swap the `--brand-*` tokens to the prospect's brand, reconcile the Style Settings, and set the logo + hero. The available templates and each one's token-by-token swap map live under `process-docs/theme-templates/`. Fetch the how-to on demand:
+`https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/theme-templates/README.md`
+
 ## Brand Color Tokens
 
 Define the brand palette as CSS custom properties at the top of Custom CSS (a `:root` block) and reference them everywhere — one place to swap when the theme is reused for another brand. For any brand color used in **translucent effects** (glows, tints, gradient washes, an animated ambient), also define its **`-rgb` components** and compose the alpha with `rgba(var(--…-rgb), α)`:
