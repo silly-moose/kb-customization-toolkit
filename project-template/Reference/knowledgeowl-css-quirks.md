@@ -273,3 +273,39 @@ Fix by letting the homepage containers grow to their content:
 ```
 
 Scope it to `.hg-home-page` so article/category pages (which rely on the slideout height) are untouched. Related to the slideout coupling in §5.
+
+## 23. Reader-Login Page: Light Panels + TWO Flash Mechanisms (Dark-Theme Trap)
+
+The reader-login page (`/help/readerlogin`, body class `hg-login-page`) is **not** dark "for free" — it renders in flat-ui/Bootstrap **light** panels. Under a dark theme its light label/link text lands on white → invisible ("Username", "Password", "Don't have a login?"). Darken everything, scoped to the space-less compound `.hg-minimalist-theme.hg-login-page` (see §15):
+
+- the login `.panel.panel-default` (+ `.panel-heading` / `.panel-title`)
+- `.form-control` inputs + `.control-label` labels
+- the "Don't have a login?" `.alert.alert-default`
+- the signup / reset modals (`#hg-reader-signup` / `#hg-password-reset`): `.modal-content`, `-header` / `-footer` / `-title`, labels, `.btn-danger` (Cancel), and the close `×`
+
+**The bigger trap: the login page shows flash messages via TWO *different* class families** — fixing only one silently misses the other:
+
+- **`.alert.*`** (`alert-warning` / `-info` / `-success` / `-danger` / `-default`) → signup errors + password-reset confirmations.
+- **`.bs-callout.*`** (`bs-callout-warning` / `-danger` / `-info` / `-success`) → **login errors**, e.g. `<div class="bs-callout bs-callout-warning">Incorrect Username or Password.</div>`. This is a `bs-callout`, **not** an `.alert`, so an `.alert`-only fix leaves login errors light-on-light.
+
+flat-ui backs both with **light `!important` fills**, so a non-`!important` theme alert rule (§7) loses here — the override needs higher specificity **plus** `!important`, and must target **both** families:
+
+```css
+/* dark fill + light text for panels AND both flash mechanisms (example colours) */
+.hg-minimalist-theme.hg-login-page .panel.panel-default,
+.hg-minimalist-theme.hg-login-page .alert,
+.hg-minimalist-theme.hg-login-page .bs-callout,
+.hg-minimalist-theme.hg-login-page .modal-content {
+  background: #180048 !important;                 /* your dark panel colour */
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #F0FFFF !important;                       /* your light text colour */
+}
+/* accent left-border per flash type — cover BOTH families */
+.hg-minimalist-theme.hg-login-page .alert.alert-warning,
+.hg-minimalist-theme.hg-login-page .bs-callout-warning { border-left: 3px solid #FFD84F !important; }
+.hg-minimalist-theme.hg-login-page .alert.alert-danger,
+.hg-minimalist-theme.hg-login-page .bs-callout-danger  { border-left: 3px solid #ff8b8b !important; }
+/* …repeat for -info (cyan) and -success (green) */
+```
+
+**Finding the flash markup:** these states only appear after a form POST, so they're not in a static login-page snapshot. The login page is **public**, so the fastest way to capture the real DOM is to drive it in a browser (submit the form to trigger the message) and inspect — that's how the `.bs-callout` login-error mechanism surfaced after an `.alert`-only fix had missed it. Same dark-theme-trap family as §20 (white article panels) and §22 (fixed panel height).
