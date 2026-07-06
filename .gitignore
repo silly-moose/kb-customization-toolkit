@@ -9,3 +9,6 @@ preview/
 
 # Private, local-only improvement log (never publish — contains internal/customer notes)
 improvement-log.md
+
+# Per-user Claude Code local settings (never ship — teammates have their own)
+**/.claude/settings.local.json

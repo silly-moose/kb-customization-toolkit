@@ -24,6 +24,7 @@ Available docs (fetch from GitHub when needed):
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
 - `03-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
 - `04-MINIMALIST_THEME_DEFAULTS.md` — Minimalist theme default code + how to copy it into a project's `no-changes` folder as a baseline
+- `theme-templates/README.md` — Reusable, brand-swappable theme templates + how to apply one to a build (templates live in `process-docs/theme-templates/`)
 
 If the user asks a question about the process, setup, or version control, fetch the relevant doc from:
 `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/[filename]`

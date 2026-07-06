@@ -10,7 +10,7 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 
 2. Rename the duplicated folder to the customer's name:
    ```
-   Example: Acme, Acme Corp
+   Example: Acme Corp, Globex
    ```
 
 3. Inside the customer folder, rename `TEMPLATE-no-changes` to the current date:
@@ -43,11 +43,11 @@ If a customer has no existing custom code in a given field, leave the placeholde
 | `custom-html-8-404-page.html` | Customize > Style (HTML & CSS) > Custom HTML > 404 Page |
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
-| `homepage-custom-content.html` | Customize > Homepage > Custom content *(legacy — only some older KBs)* |
+| `homepage-custom-content.html` | Customize > Homepage > Homepage content > Custom content *(legacy — only some older KBs)* |
 
 *Authoritative version: the mapping table in `CLAUDE-RULES.md` (which Claude fetches from GitHub automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE-RULES.md` first.*
 
-**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
+**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box (in the **Homepage content** card) on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
 
 ### Record Current Style Settings Colors
 
@@ -159,6 +159,7 @@ Your project should look like this:
     ├── CLAUDE.md                       (auto-read by Claude Code — bootstrap that fetches latest rules from GitHub)
     ├── CLAUDE-RULES.md                 (process rules — fetched fresh from GitHub each session, local copy is fallback)
     ├── .claude/
+    │   ├── launch.json                 (localhost preview server config — see 03-LOCALHOST_PREVIEW.md)
     │   └── rules/
     │       └── project.md              (auto-read by Claude Code — customer-specific settings)
     ├── Reference/
@@ -198,12 +199,11 @@ Your project should look like this:
 
 ## 6. Ready to Start
 
-Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md` (customer-specific settings). Paste this prompt to kick off the first session:
+Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md` (customer-specific settings).
 
-> **Note: `.claude/` is a hidden folder.** Files and folders starting with a dot (`.`) are hidden by default in macOS Finder and Windows File Explorer. To make it visible:
-> - **Mac:** Press **Command + Shift + .** (period) in Finder to toggle hidden files on/off
-> - **Windows:** In File Explorer, go to **View > Show > Hidden items**
-> - **Easiest option:** Open the project folder in **VS Code** — it shows dotfiles by default, no toggle needed
+> **Note: `.claude/` is a hidden folder.** Dot-files are hidden by default (Mac: press **Command + Shift + .** in Finder to toggle them; Windows: **View > Show > Hidden items** in File Explorer). Easiest option: open the project folder in **VS Code**, which shows dotfiles without any toggling.
+
+Paste this prompt to kick off the first session:
 
 ```
 Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
@@ -229,4 +229,4 @@ When the project is complete, review the "Project Closeout" section in `02-VERSI
 - **Custom CSS:** Customize > Style (HTML & CSS) > Custom CSS
 - **Custom `<head>`:** Customize > Style (HTML & CSS) > Custom `<head>`
 - **Custom HTML sections:** Customize > Style (HTML & CSS) > Custom HTML > [Section Name]
-- **Homepage Custom content (legacy):** Customize > Homepage > Custom content
+- **Homepage Custom content (legacy):** Customize > Homepage > Homepage content > Custom content

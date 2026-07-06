@@ -488,14 +488,14 @@ For reference, these are the source CSS files in the KnowledgeOwl codebase that 
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `public/css/public/ko-css.css` | 2,616 | CSS custom properties, KO-specific overrides, utility classes |
+| `public/css/public/ko-css.css` | ~2,700 | CSS custom properties, KO-specific overrides, utility classes |
 | `public/css/public/publicview.css` | 7,468 | Classic theme layout and grid |
 | `public/css/public/publicview_modern.css` | 7,416 | Modern theme layout and grid |
 | `public/css/public/standard.css` | 906 | Classic theme colors and typography |
 | `public/css/public/standard_modern.css` | 876 | Modern theme colors and typography |
 | `public/css/public/article.css` | 104 | Article-specific styles |
 | `public/css/public/contact-us.css` | 14 | Contact form styles |
-| `public/css/public/reset.css` | 675 | CSS reset |
+| `public/css/reset.css` | 8 | CSS reset (minified) |
 | `public/css/public/widgetiframe.css` | 107 | Embedded widget styles |
 
 HTML template files that define the page structure and class names:

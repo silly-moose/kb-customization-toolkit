@@ -65,7 +65,7 @@ The **design lives entirely in `custom-css.css`**; the Custom `<head>` and the 1
 
 ## Building a new template
 
-Templates are built **directly here in the toolkit** now (no more migrating from customer builds). To carve a new reusable template out of a finished prospect build, follow [`template-extraction-process.md`](template-extraction-process.md). Each template ships with its own `README.md` (swap point + Style Settings map) and a `polish-prompt.md` for a focused later polish pass. Preview a template under development with localhost preview against the bundled [`_reference-snapshots/`](_reference-snapshots/) (a genericized homepage + article — no live build needed; see [`../03-LOCALHOST_PREVIEW.md`](../03-LOCALHOST_PREVIEW.md)).
+New templates are normally built **directly here in the toolkit**. The exception: when a finished bespoke prospect build turns out to be template-worthy, carve it into a reusable template by following [`template-extraction-process.md`](template-extraction-process.md). Either way, each template ships with its own `README.md` (swap point + Style Settings map) and a `polish-prompt.md` for a focused later polish pass. Preview a template under development with localhost preview against the bundled [`_reference-snapshots/`](_reference-snapshots/) (a genericized homepage + article — no live build needed; see [`../03-LOCALHOST_PREVIEW.md`](../03-LOCALHOST_PREVIEW.md)).
 
 ---
 

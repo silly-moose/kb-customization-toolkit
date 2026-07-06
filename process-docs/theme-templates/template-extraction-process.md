@@ -1,6 +1,6 @@
 # How to extract a reusable template from a prospect build
 
-The process for turning a finished, polished custom theme (built for one prospect) into a **reusable, brand-swappable template** — i.e. how `modern-docs/` was created from the [prospect] build (`theme-builds/2026.07.03 [prospect]/2026.07.03-v4`, in the separate customer-builds project).
+The process for turning a finished, polished custom theme (built for one prospect) into a **reusable, brand-swappable template** — i.e. how `modern-docs/` was created from a finished prospect build (in the separate customer-builds project).
 
 Do this **after** a build is finished and deployed, when the design has settled.
 
@@ -28,7 +28,7 @@ Do this **after** a build is finished and deployed, when the design has settled.
 
 6. **Clean the comments + names.** Strip the prospect's name and color-specific words (e.g. `navy → primary`, `blue → accent`, `"NYC skyline photo" → "hero photo"`), and rename any prospect-named keyframes/classes (e.g. `acme-ambient-drift → md-ambient-drift`). Update the banner to describe the template.
 
-7. **Verify it still renders.** Point localhost preview at the template's `custom-css.css` against a real KB snapshot; confirm brace balance, that tokens resolve (`getComputedStyle`), that effects render, and that there are **no console errors**. It should look identical to the source build (minus the placeholdered hero).
+7. **Verify it still renders.** Point localhost preview at the template's `custom-css.css` against the bundled reference snapshots in [`_reference-snapshots/`](_reference-snapshots/README.md) (a genericized homepage + article — no customer material needed); confirm brace balance, that tokens resolve (`getComputedStyle`), that effects render, and that there are **no console errors**. It should look identical to the source build (minus the placeholdered hero).
 
 8. **Write the template `README.md`** — what it is, the swap point + a "prospect's brand → token values" guide, the Style Settings mapping, the build rules (font sizes stay, only colors/fonts/imagery change), and known polish opportunities.
 
@@ -47,4 +47,4 @@ Do this **after** a build is finished and deployed, when the design has settled.
 
 ## Where templates live / how they're applied
 
-Templates live here in the toolkit, under `process-docs/theme-templates/` (alongside `process-docs/minimalist-theme-defaults/`) — build new ones directly here. A customer build **applies** a template by name via this folder's [`README.md`](README.md), which fetches the template's raw files from GitHub and swaps in the prospect's brand — the same mechanism the toolkit already uses for the Minimalist defaults.
+Templates live here in the toolkit, under `process-docs/theme-templates/` (alongside `process-docs/minimalist-theme-defaults/`). New templates are normally built directly here; extraction from a prospect build (this doc) is the exception, for when a bespoke design turns out to be template-worthy. A customer build **applies** a template by name via this folder's [`README.md`](README.md), which fetches the template's raw files from GitHub and swaps in the prospect's brand — the same mechanism the toolkit already uses for the Minimalist defaults.

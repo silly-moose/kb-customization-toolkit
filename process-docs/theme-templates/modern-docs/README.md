@@ -2,7 +2,7 @@
 
 A clean, professional "modern documentation" theme for KnowledgeOwl (Mintlify/Notion-adjacent): a branded top nav, a hero homepage with a photo + gradient wash, glow/depth polish, a whisper-subtle animated ambient background, and a docs-style article page with a left TOC. Built as a layer on top of KO's stock **Minimalist** theme, with **every brand value tokenized** so it re-skins from a handful of variables.
 
-> **Provenance:** carved out of the [prospect] build (`theme-builds/2026.07.03 [prospect]/2026.07.03-v4`). Glow/depth effects adapted from the an internal theme theme; the animated ambient is a pure-CSS take on Mintlify's animated background.
+> **Provenance:** carved out of a finished prospect build (in the separate customer-builds project). Glow/depth effects adapted from an earlier internal theme; the animated ambient is a pure-CSS take on Mintlify's animated background.
 
 ---
 
@@ -13,6 +13,7 @@ A clean, professional "modern documentation" theme for KnowledgeOwl (Mintlify/No
 | `custom-css.css` | **The template.** Stock KO Minimalist default CSS + the modern-docs theme layer (below the `MODERN-DOCS THEME` banner). This is the only file that carries the design. |
 | `custom-head.html`, `custom-html-1…10-*.html` | Stock KO **Minimalist defaults**, unchanged. Included so the template is self-contained; the theme styles this default markup via CSS. |
 | `README.md` | This file. |
+| `polish-prompt.md` | Handoff prompt for taking the template to high quality in a focused later session. |
 
 ---
 
@@ -34,9 +35,9 @@ Everything derives from the **`--brand-*` tokens** in the `:root` block at the t
 | Token | Role |
 |-------|------|
 | `--brand-primary` **+** `--brand-primary-rgb` | Primary brand color — nav, headings, primary actions, and (via the `-rgb`) all primary-colored glows/tints/ambient. **Set both.** |
-| `--brand-primary-hi` / `--brand-primary-lo` | Lighter / deeper primary (gradients, nav depth). |
+| `--brand-primary-hi` / `--brand-primary-lo` | Lighter / deeper primary. `-lo` drives nav depth/borders; `-hi` is reserved (unused by the theme so far). |
 | `--brand-accent` **+** `--brand-accent-rgb` | Accent — links, icons, focus, highlights, active TOC item, and (via `-rgb`) the accent glows. **Set both.** |
-| `--brand-accent-hi` / `--brand-accent-lo` | Accent hover / active. |
+| `--brand-accent-hi` / `--brand-accent-lo` | Lighter / darker accent. `-lo` drives hover/active states; `-hi` is reserved (unused by the theme so far). |
 | `--brand-heading` / `--brand-body` / `--brand-muted` | Text colors. |
 | `--brand-bg` / `--brand-bg-soft` | Page bg / soft section + sidebar bg. |
 | `--brand-border` / `--brand-border-hi` | Hairlines / hover borders. |

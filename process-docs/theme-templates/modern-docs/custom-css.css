@@ -923,16 +923,16 @@ a.btn.btn-info:focus-visible,
      ======================================================================== */
   --brand-primary:      #133253;      /* primary brand: nav, headings, primary actions */
   --brand-primary-rgb:  19, 50, 83;   /*   ^ same color as R,G,B (feeds glows/tints)   */
-  --brand-primary-hi:   #1c4a76;      /* lighter primary: gradients / hovers           */
+  --brand-primary-hi:   #1c4a76;      /* lighter primary (reserved — unused so far)    */
   --brand-primary-lo:   #0e2740;      /* deeper primary: borders/depth on the nav      */
   --brand-accent:       #0170b9;      /* accent: links, icons, focus, highlights       */
   --brand-accent-rgb:   1, 112, 185;  /*   ^ same color as R,G,B (feeds glows/tints)   */
-  --brand-accent-hi:    #0a86d6;      /* accent hover (lighter)                        */
+  --brand-accent-hi:    #0a86d6;      /* lighter accent (reserved — unused so far)     */
   --brand-accent-lo:    #015a94;      /* accent active (darker)                        */
   --brand-heading:      #1f2a3a;      /* heading text                                  */
   --brand-body:         #3f4a59;      /* body text                                     */
   --brand-muted:        #6b7684;      /* muted / secondary text                        */
-  --brand-bg:           #ffffff;      /* page background                               */
+  --brand-bg:           #ffffff;      /* page background (reserved — unused so far)    */
   --brand-bg-soft:      #f5f8fc;      /* soft section / sidebar background             */
   --brand-border:       #e3e8ef;      /* hairlines / card borders                      */
   --brand-border-hi:    #cdd7e5;      /* border hover                                  */
@@ -946,10 +946,10 @@ a.btn.btn-info:focus-visible,
      DERIVED — usually leave (these compose the brand tokens above)
      ======================================================================== */
   --ui-radius:     10px;
-  --ui-shadow:     0 2px 8px rgba(var(--brand-primary-rgb),.06), 0 1px 3px rgba(var(--brand-primary-rgb),.08);
-  --ui-shadow-hi:  0 8px 24px rgba(var(--brand-primary-rgb),.12);
+  --ui-shadow:     0 2px 8px rgba(var(--brand-primary-rgb),.06), 0 1px 3px rgba(var(--brand-primary-rgb),.08);  /* (reserved — unused so far) */
+  --ui-shadow-hi:  0 8px 24px rgba(var(--brand-primary-rgb),.12);  /* (reserved — unused so far) */
   --ui-elev-1:     0 12px 34px -18px rgba(var(--brand-primary-rgb),.30);  /* resting card / search float */
-  --ui-elev-2:     0 24px 60px -28px rgba(var(--brand-primary-rgb),.45);  /* raised card / panel float    */
+  --ui-elev-2:     0 24px 60px -28px rgba(var(--brand-primary-rgb),.45);  /* raised card / panel float (reserved — unused so far) */
   --ui-glow:       0 24px 60px -20px rgba(var(--brand-primary-rgb),.34);  /* primary hover bloom (tiles)  */
   --ui-glow-focus: 0 0 0 3px rgba(var(--brand-accent-rgb),.22), 0 20px 50px -18px rgba(var(--brand-accent-rgb),.42); /* search ring + bloom */
 
@@ -1128,8 +1128,8 @@ a.btn.btn-info:focus-visible,
 }
 
 /* ==========================================================================
-   3) FANCY DETAILS — glow/depth polish (adapted from the an internal theme
-      theme, toned to the brand palette, dialed down for a clean, professional feel)
+   3) FANCY DETAILS — glow/depth polish (adapted from an earlier internal theme,
+      toned to the brand palette, dialed down for a clean, professional feel)
    ========================================================================== */
 
 /* Hero: fine SVG-noise grain to soften gradient banding + add a subtle 'printed'

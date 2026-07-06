@@ -18,7 +18,7 @@ Use this when you're starting work on a customer's knowledge base for the first 
 2. **Rename** the copy to the customer's name (e.g., `Acme`)
 3. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
-5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section — plus the legacy `homepage-custom-content.html` if the KB has anything in Customize > Homepage > Custom content)
+5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section — plus the legacy `homepage-custom-content.html` if the KB has anything in Customize > Homepage > Homepage content > Custom content)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
 7. **Capture HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html`
 8. **Record the current Style Settings colors** (Customize > Style > Style Settings > Colors) — either screenshot each color swatch or paste the hex codes into `style-settings-colors.md` in the no-changes folder
@@ -145,8 +145,9 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `CLAUDE.md` | Auto-read by Claude Code at session start — bootstrap file that fetches the latest `CLAUDE-RULES.md` from GitHub |
 | `CLAUDE-RULES.md` | Process rules fetched fresh from GitHub each session (local copy serves as fallback if fetch fails) |
 | `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
+| `.claude/launch.json` | Dev-server config for the optional localhost preview (see `03-LOCALHOST_PREVIEW.md`) |
 | `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (e.g., screenshots, mockups, emails, Asana tasks, assets) |
-| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, screenshots folder, and CHANGES template |
+| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, screenshots folder, `style-settings-colors.md`, and CHANGES template |
 
 **What's in `process-docs/`:**
 
@@ -220,7 +221,7 @@ git pull
 
 ### Foundational
 
-- **Use the most powerful Claude model available.** Coding tasks benefit from the strongest model — as of March 2026, that's **Opus 4.6**.
+- **Use the most powerful Claude model available.** Coding tasks benefit from the strongest model — pick the most capable option in Claude Code's model picker (model names change; "most capable" doesn't).
 - **The `no-changes` folder is your safety net.** If anything goes wrong, you can always roll back to the customer's original code.
 
 ### Giving Claude context

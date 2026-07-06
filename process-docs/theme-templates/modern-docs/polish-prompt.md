@@ -6,8 +6,8 @@ Paste this into a fresh Claude Code session to deeply polish the template. **Bes
 
 I want to thoroughly polish a reusable KnowledgeOwl theme template — the **"modern-docs" template** — to make it as high-quality as possible.
 
-**The template lives here:**
-`/Users/chadtimblin/My Drive*/Claude Code desktop/Customers/*kb-customization-toolkit/process-docs/theme-templates/modern-docs/`
+**The template lives here (relative to the toolkit repo root):**
+`process-docs/theme-templates/modern-docs/`
 Start by reading its `README.md` (what it is, the `--brand-*` / `--ui-*` swap point, the build rules, and a list of known polish opportunities), then skim `custom-css.css` (the theme layer is below the `MODERN-DOCS THEME` banner).
 
 **Reference + preview resources:**

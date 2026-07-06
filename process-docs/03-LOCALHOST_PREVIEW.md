@@ -36,7 +36,7 @@ The snapshot's `<style>` block contains the custom CSS embedded inline. To overr
 1. Copy the snapshot to a `preview/` folder
 2. Insert `<link rel="stylesheet" href="custom-css.css">` immediately before `</head>`
 
-Because both the embedded styles and the local file use `!important`, CSS cascade rules apply: **same specificity + later source order = local file wins**. The local `custom-css.css` overrides the embedded version without modifying the snapshot.
+Because the local file repeats the same selectors at the same specificity, CSS cascade rules apply: **same specificity + later source order = local file wins**. The local `custom-css.css` overrides the embedded version without modifying the snapshot.
 
 ### What About HTML Changes?
 

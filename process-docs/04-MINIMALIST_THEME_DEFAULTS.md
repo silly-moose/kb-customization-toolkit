@@ -71,6 +71,11 @@ done
 
 **What this does and doesn't touch:** it populates the 12 code files only. The HTML snapshots (`full-html-snapshot-*.html`), screenshots, and `CHANGES_FROM_no-changes.md` are still captured the normal way during setup. The legacy `homepage-custom-content.html` field is empty on stock Minimalist KBs, so leave its placeholder as-is.
 
+**Fidelity notes** — these files reproduce KO's stock code exactly, including KO's own oddities:
+
+- `custom-css.css` line ~817 is missing a trailing comma in the long `:focus-visible` selector list (verified present in KO's source too), which silently merges two selectors. **Leave it as-is** — "fixing" it would break the byte-for-byte match with a stock KB.
+- The footer in `custom-html-1-body.html` reads `Copyright © 2025 Your Company, LLC` — that year is hardcoded in KO's own template, so KBs created after KO bumps it may show a different year. If the live KB's footer differs, reconcile that one line against the live KB rather than deploying the baseline's year.
+
 ---
 
 ## Style Settings colors
