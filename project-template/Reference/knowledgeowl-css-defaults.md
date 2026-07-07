@@ -101,6 +101,8 @@ Applied to `<body>` or high-level wrappers. Use these to scope CSS to specific c
 | `.hg-project-name` | Project name text in header |
 | `.nav.navbar-right` | Right-aligned nav items (search, login) |
 | `.hg-search-bar` | Search bar component |
+| `.ko-slideout-left-toggle` | Left TOC slideout button (the "bars"/"X" toggle) |
+| `.ko-slideout-right-toggle` | Right-column slideout button |
 
 ### Default Values
 
@@ -124,7 +126,23 @@ Applied to `<body>` or high-level wrappers. Use these to scope CSS to specific c
   font-weight: 700;
   line-height: 20px;
 }
+
+/* Slideout toggles (Minimalist) — left = TOC "bars/X" button, right = right-column */
+.hg-minimalist-theme .ko-slideout-left-toggle,
+.hg-minimalist-theme .ko-slideout-right-toggle {
+  float: left;
+  background: none;
+  border: none;
+  padding-right: 15px;
+  padding-top: 11px;   /* NO height and NO bottom padding → a short box pinned to the top of the bar */
+  width: 50px;
+}
+.hg-minimalist-theme .ko-slideout-right-toggle {
+  position: absolute; right: 25px; top: 12px;
+}
 ```
+
+Because these have no `height` and only a top offset, their icon sits high in a taller nav bar — to vertically center it, flex-center the button (see quirks doc §27, "Centering an Icon in a Nav Toggle Button").
 
 ---
 
@@ -173,6 +191,8 @@ A dark (or otherwise non-white) theme must override **both** of these inner pane
 | Headings (top) | `margin-top: 30px` |
 | Headings (bottom) | `margin-bottom: 10px` |
 | Article top/bottom padding | `40px` (classic theme) |
+
+> **The default *Custom CSS* overrides these in article context.** KO's default Custom CSS template zeroes article paragraph bottom-margin (`.documentation-article p { margin-bottom: 0 }`) and colors `p` / `li` **directly** (not via a container). It loads *after* the base `ko-css.css` values in the tables above, so in an article: a container-level rule — e.g. `color` on `.hg-article-body` — **loses** to the more specific default. To change body-text color you need a `p` / `li`-level override; to restore paragraph spacing you need a `p`-level `margin-bottom`.
 
 ---
 

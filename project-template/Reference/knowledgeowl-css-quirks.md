@@ -150,6 +150,27 @@ To apply styles only in PDFs, begin your selector with `.hg-pdf`:
 
 See: https://support.knowledgeowl.com/help/pdfs#styling-pdfs
 
+**PDF DOM is minimal — and `.hg-pdf` is NOT under the theme class.** The exported PDF's DOM is just `.hg-pdf > .documentation-article > [your article body HTML]` (`PdfGenerator.php`):
+
+```html
+<body class="hg-site hg-minimalist-theme">
+  <div class="hg-pdf">
+    <div class="documentation-article">…article body…</div>
+  </div>
+</body>
+```
+
+Two traps follow:
+
+1. **`hg-minimalist-theme` sits on `<body>` — an ANCESTOR of `.hg-pdf`, not a descendant** — so a `.hg-pdf .hg-minimalist-theme …` fence never matches in a PDF (this silently killed an alert-icon hide for a whole version). The correct PDF prefix is **`.hg-pdf .documentation-article …`**.
+2. **The page-type class (`.hg-article-page`, etc., see §15) and all page chrome are absent** — no breadcrumbs, related, ratings, comments, or reading-panel wrappers exist in the PDF. Don't rely on them in PDF selectors.
+
+The PDF **does** load Custom CSS + Custom `<head>`, so `:root` tokens are defined. Common gotcha: Font Awesome alert icons (`.alert.alert-{type}::before { content:"\fXXX" }`, from KO's default template) render as tofu (□) because the PDF engine has no FA webfont — hide them with:
+
+```css
+.hg-pdf .documentation-article .alert::before { content: none !important; display: none !important; }
+```
+
 ## 15. Page-Type Body Classes
 
 Different page types get different high-level classes applied to the `body` element. These selectors are important for writing page-specific custom styles:
@@ -272,7 +293,24 @@ Fix by letting the homepage containers grow to their content:
 }
 ```
 
-Scope it to `.hg-home-page` so article/category pages (which rely on the slideout height) are untouched. Related to the slideout coupling in §5.
+Scope the homepage fix to `.hg-home-page` so it stays independent of other pages. Related to the slideout coupling in §5.
+
+**Article pages carry the same pin.** The article slideout panel gets the same viewport-derived fixed height, so a long article — or one with a reading panel — can clip its body and let the footer ride up over the content, exactly as on the homepage. Release it the same way, scoped to the article context:
+
+```css
+.hg-minimalist-theme #ko-article-cntr,
+.hg-minimalist-theme .ko-content-cntr,
+.hg-minimalist-theme .ko-content-cntr .hg-article,
+.hg-minimalist-theme .ko-content-cntr .hg-article-body {
+  height: auto !important;
+}
+```
+
+Also give the article wrapper `display: flow-root` so it contains KO's floated comment form — otherwise the float escapes the panel and overlaps the footer:
+
+```css
+.hg-minimalist-theme .hg-article { display: flow-root; }
+```
 
 ## 23. Reader-Login Page: Light Panels + TWO Flash Mechanisms (Dark-Theme Trap)
 
@@ -337,3 +375,35 @@ The homepage category tiles (`[template("icon-cats,col=N")]`, see `knowledgeowl-
 ```
 
 The tiles are direct `<a class="cat-icon-panel">` children of `.category-list` (no wrapping `<div>`), so target `.category-list > .cat-icon-panel` — `> div` won't match.
+
+## 27. Centering an Icon in a Nav Toggle Button — Use Flex, Not `line-height`
+
+KO's slideout toggles are `<button>`s holding a single Font Awesome glyph — e.g. the left TOC toggle `.ko-slideout-left-toggle` wraps `<i class="fa fa-bars fa-2x">`. To vertically center that icon in a taller nav bar, set the button to **`display: flex; align-items: center;` with a fixed `height`** — the same technique `.navbar-brand` uses. Do **not** reach for `line-height`: on an inline icon it only aligns the glyph to the text **baseline** (which sits below the visual center), so the icon rides high with a gap beneath it.
+
+```css
+.hg-minimalist-theme .ko-slideout-left-toggle {
+  display: flex;
+  align-items: center;
+  height: var(--nav-height);   /* match the logo / .navbar-brand box height */
+  padding-top: 0;              /* KO's default is padding-top: 11px with no bottom — that top-offsets the icon */
+  padding-bottom: 0;
+}
+```
+
+Leave KO's `float`, `width`, and `padding-right` in place so only the vertical alignment changes (the toggle's default box is documented in `knowledgeowl-css-defaults.md` → Navigation & Header).
+
+## 28. Froala Article Editor Is an IFRAME (Editor-Only Overrides Behave Differently)
+
+The article editor renders inside an **iframe**, which changes how "editor-only" CSS must be written:
+
+- **`.fr-box` lives in the PARENT document**, not the iframe — so `.fr-box .fr-element h1` (a common "style headings only in the editor" override) **never matches** the headings inside the editor.
+- The iframe `<body>` carries `documentation-article hg-article-body fr-editor-svelte` (+ Froala's own `fr-view`) — **crucially NOT `hg-minimalist-theme`** — so theme-scoped rules don't apply inside the editor either.
+- The per-KB **Style-Settings color block is NOT injected into the editor iframe.** Only Custom CSS, the static `koFroalaEditor` bundle, and fonts load there — so `:root` tokens defined via Style Settings are **absent**, and editor overrides must use **literal hex**, not `var(--…)`.
+
+To force heading readability inside the editor, target `.fr-view` / `.fr-editor-svelte` with literal hex + `!important`:
+
+```css
+.fr-view h1, .fr-editor-svelte h1 { color: #1a1a1a !important; }
+```
+
+(Source: `FroalaEditor.svelte`, `froala/config.ts`, `KbRenderer.php` — the on-page heading rule `.documentation-article h1, .cke_editable h1 { color:… }` has **no** `!important`, so a themed heading color loses to editor defaults unless you force it.)
