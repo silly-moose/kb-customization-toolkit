@@ -82,7 +82,7 @@ Then contrast-check the result (heading/body on white, nav-text on primary, acce
 | Table of contents text | `--brand-primary` | `#133253` |
 | Highlights & Accents | `--brand-accent` | `#0170b9` |
 | Icon color | `--brand-primary` | `#133253` |
-| Icon background | `#ffffff` | `#ffffff` |
+| Icon background | — (not tokenized — stays white) | `#ffffff` |
 
 ---
 

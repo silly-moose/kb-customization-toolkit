@@ -20,7 +20,7 @@ The 12 editable code sections of a stock Minimalist KB. Each row maps the raw fi
 
 | File | KnowledgeOwl section | Default content | Lines |
 |------|----------------------|-----------------|-------|
-| `custom-css.css` | Custom CSS | The full Minimalist theme stylesheet — `:root` color variables plus layout, typography, TOC, search, homepage, and component styles. Pasteable into Custom CSS as-is. | ~900 |
+| `custom-css.css` | Custom CSS | KO's **default Custom CSS** — the template KO seeds into every new Minimalist KB's Custom CSS field: `:root` color variables plus layout, typography, TOC, search, homepage, and component tweaks. Pasteable into Custom CSS as-is. (The bulk of the theme's styling lives in KO's compiled platform bundle, not here — see "CSS Architecture" in `project-template/Reference/knowledgeowl-css-defaults.md`.) | ~900 |
 | `custom-head.html` | Custom `<head>` | **Empty by default** — a fresh Minimalist KB ships with no Custom `<head>` code. The file is just the placeholder comment, matching how empty fields are represented everywhere in the toolkit. | 1 |
 | `custom-html-1-body.html` | Custom HTML > Body | Site body wrapper (`[template("layout")]`) + back-to-top + the default copyright / "Made with KnowledgeOwl" footer | 8 |
 | `custom-html-2-top-navigation.html` | Custom HTML > Top Navigation | Navbar: logo/brand, project name, search bar, TOC + nav toggles, and the right-side search / contact / login items | 29 |

@@ -16,7 +16,7 @@ Do this **after** a build is finished and deployed, when the design has settled.
 
 1. **Copy the code files** from the latest version folder into a new `process-docs/theme-templates/<template-name>/` folder (e.g. `modern-docs/`) — `custom-css.css` plus the Custom HTML sections + `custom-head.html` (stock Minimalist defaults, included so the template is self-contained).
 
-2. **Inventory the prospect-specific bits.** Grep `custom-css.css` for the brand token prefix (e.g. `--acme-`) and for raw color literals (`rgb(`/`rgba(`) — you need to know every place a brand value appears, including inside glows/shadows/gradients.
+2. **Inventory the prospect-specific bits.** Grep `custom-css.css` for the brand token prefix (`--acme-` is just an example — grep for whatever prefix that build actually used) and for raw color literals (`rgb(`/`rgba(`) — you need to know every place a brand value appears, including inside glows/shadows/gradients.
 
 3. **Rename tokens to generic, semantic names:**
    - `--brand-*` for the **swap values** (primary, accent, heading, body, muted, bg, border, nav-text, hero-image).

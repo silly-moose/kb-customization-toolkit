@@ -7,4 +7,8 @@
 
 # Project Notes
 
-<!-- Add any project-specific context here as it comes up: brand colors, design preferences, areas to avoid, special constraints, etc. -->
+<!-- Add any project-specific context here as it comes up: brand colors, design preferences,
+     areas to avoid, special constraints, etc. For example:
+     - Primary brand color #2563eb; prefer subtle shadows over hard borders
+     - Customer wants the login page left untouched
+     - Deadline: sandbox review with stakeholders on YYYY.MM.DD -->

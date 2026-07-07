@@ -19,6 +19,7 @@ Use this when you're starting work on a customer's knowledge base for the first 
 3. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
 5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section — plus the legacy `homepage-custom-content.html` if the KB has anything in Customize > Homepage > Homepage content > Custom content)
+   - **Stock Minimalist KB?** If the KB is uncustomized (still on the default Minimalist theme), skip the hand-copying — ask Claude to drop in the documented Minimalist defaults as the baseline instead (see `04-MINIMALIST_THEME_DEFAULTS.md`)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
 7. **Capture HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html`
 8. **Record the current Style Settings colors** (Customize > Style > Style Settings > Colors) — either screenshot each color swatch or paste the hex codes into `style-settings-colors.md` in the no-changes folder
