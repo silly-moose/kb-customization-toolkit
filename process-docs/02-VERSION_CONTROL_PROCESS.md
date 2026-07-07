@@ -256,9 +256,9 @@ Project/
 
 Before closing out a project, run the improvement synthesis, then review whether any process improvements were discovered during the work.
 
-### Synthesize the improvement log (suggest only)
+### Review the improvement log (suggest only)
 
-Open the central `improvement-log.md` (at the toolkit root — path in `.claude/rules/project.md`) and read this project's entries in the `SESSION NOTES` section. Add each concrete proposed refinement as a one-line item to the **`AWAITING REVIEW`** section (newest on top), prefixed with a priority tag `[P1]`–`[P3]` and a target tag like `[quirks-doc]`, and ending with the project name + date. **Do not apply any of them, and do not move anything into another status section** — this is suggest-only; only a human triages. Use the checklist below to decide which part of the toolkit each suggestion targets:
+Improvement ideas are added to `improvement-log.md`'s **`AWAITING REVIEW`** section directly at the end of each working session (see "Reflect & Improve" in `CLAUDE-RULES.md`), so closeout is a **review/dedupe pass, not a synthesis-from-scratch step**. Open the central `improvement-log.md` (at the toolkit root — path in `.claude/rules/project.md`) and read this project's entries in `AWAITING REVIEW`: merge duplicates or near-duplicates into a single clear item, tighten anything vague, and confirm each carries a priority tag `[P1]`–`[P3]`, a target tag like `[quirks-doc]`, and the project name + date. If a coverage gap surfaces something that was never logged, add it now as a new `AWAITING REVIEW` item. **Do not apply any of them, and do not move anything into another status section** — this is suggest-only; only a human triages. Use the checklist below to sanity-check which part of the toolkit each suggestion targets:
 
 - [ ] Any new steps or tips to add to `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`?
 - [ ] Any new sections to add to the `CHANGES_FROM_no-changes.md` template?
