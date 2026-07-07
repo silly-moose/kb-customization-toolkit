@@ -10,7 +10,7 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-KnowledgeOwl's default styles use `!important` extensively — there are 300+ instances across the public CSS files, primarily on display/visibility utilities (`display: block !important`, `display: none !important`), float utilities, responsive table rules, and print styles. Custom CSS overrides often need `!important` too, or very high specificity selectors, to take effect.
+KnowledgeOwl's default styles use `!important` regularly. On a current Minimalist KB the loaded CSS carries ~150 instances (Bootstrap 3.0.0 ≈63, Flat UI ≈63, `ko-css.css` 20, seeded Custom CSS 6) — primarily on display/visibility utilities (`display: block !important`, `display: none !important`), float utilities, responsive table rules, and print styles. (The legacy `publicview*.css` bundles add ~153 each, but those don't load on Minimalist KBs.) Custom CSS overrides often need `!important` too, or very high specificity selectors, to take effect.
 
 ## 2. Theme-Namespaced Selectors
 
@@ -22,38 +22,51 @@ Most default selectors are scoped under a theme class like `.hg-minimalist-theme
 .hg-minimalist-theme .some-element { color: red; }
 ```
 
-**Note:** `.hg-minimalist-theme` is the selector for the Minimalist theme, which most new customers are locked into. Older customers may use different themes with different selectors, so the CSS you need can vary significantly between KBs. Always check the existing selector specificity before writing overrides.
+**Note:** `.hg-minimalist-theme` is the selector for the Minimalist theme, which most new customers are locked into. Older customers may be on other themes — the body class is `hg-{theme_name}-theme` with `theme_name` one of `classic` (also the fallback), `modern`, `minimalist`, or `clayton` — so the CSS you need can vary significantly between KBs. Always check the existing selector specificity before writing overrides.
 
 ## 3. Competing Link Selectors
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Rules like `a:not(.btn)` appear multiple times for different contexts (article body, TOC, navigation, search pager). The default link color uses the `--text-links-color` CSS variable, but specific contexts override it with `--primary-color` or `--secondary-color`. Link styling can be tricky — make sure your selector targets the right context and that you're overriding the correct CSS variable or specificity level.
+Rules like `a:not(.btn)` appear multiple times, from **two different sources** that split base vs. hover:
+
+- **Base link color** comes from the seeded Custom CSS: `.hg-minimalist-theme a:not(.btn), a:not(.btn) { color: var(--text-links-color) }` (default `#3C80BA`). A *generated* Style-Settings rule also sets a base `a:not(.btn)` color (a dark accent shade), but the Custom CSS rule wins the cascade.
+- **Hover/focus color** comes from a *generated* rule (`.hg-minimalist-theme a:not(.btn):hover … { color: <accent shade> }`) — changing `--text-links-color` does **not** change hover; that follows the "Highlights & accents" Style Setting.
+- Specific contexts override again in the seeded Custom CSS with `--primary-color` / `--secondary-color` (e.g. the search results pager).
+
+Link styling can be tricky — make sure your selector targets the right context, and remember base and hover are controlled by different mechanisms.
 
 ## 4. Froala Image Classes and `.no-border`
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Images inserted via the Froala editor can have classes applied: `.fr-shadow` (adds `box-shadow`), `.fr-bordered` (adds `border: solid 5px #CCC`), and `.fr-rounded` (adds `border-radius: 10px`). These are opt-in per image, not blanket defaults — but they appear frequently because the editor applies them. The `.no-border` utility class (documented by KnowledgeOwl) removes visual borders from specific images. When writing image-related CSS, be aware of these Froala classes and their specificity.
+Images inserted via the Froala editor can have classes applied (all in `ko-css.css`): `.fr-shadow` (adds `box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 1px 1px rgba(0,0,0,.16)`), `.fr-bordered` (adds `border: solid 5px #CCC`), and `.fr-rounded` (adds `border-radius: 10px`). These are opt-in per image, not blanket defaults — but they appear frequently because the editor applies them. The `.no-border` class KnowledgeOwl's docs reference is **not** in the platform CSS or the seeded Custom CSS template — if a KB relies on it, the rule was added to that KB's own Custom CSS (define it yourself if you want it). When writing image-related CSS, be aware of these Froala classes and their specificity.
 
 ## 5. TOC Slideout Layout Coupling
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-The table of contents uses two tightly coupled values:
+The table of contents couples one width across three rules in two files:
 
 ```css
-transform: translateX(360px);
-width: calc(100% - 360px);
+/* ko-css.css — the TOC panel itself */
+.slideout-menu { width: 360px; }
+
+/* seeded Custom CSS — closed position + the article panel's open-state shift */
+.hg-minimalist-theme.hg-2column-layout .slideout-menu { left: -360px; }
+.hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+  transform: translateX(360px);
+  width: calc(100% - 360px);
+}
 ```
 
-Changing one without the other breaks the layout. If you modify the TOC width, update both values.
+Changing one without the others breaks the layout. If you modify the TOC width, update all of them. (At ≤991px the seeded Custom CSS resets the open panel to `width: 100%`.)
 
 ## 6. Anchor Link Offset for Fixed Navigation
 
 Source: https://support.knowledgeowl.com/help/fix-anchor-links-hidden-by-top-navigation
 
-Anchor links scroll behind the fixed top navigation bar. KnowledgeOwl compensates with invisible `.toc-anchor` elements:
+Anchor links scroll behind the fixed top navigation bar. KnowledgeOwl compensates with invisible `.toc-anchor` elements (rule lives in the seeded Custom CSS, scoped `.hg-minimalist-theme .toc-anchor`):
 
 ```css
 .toc-anchor {
@@ -70,29 +83,34 @@ Any custom anchor approach needs to account for the fixed nav height.
 
 Source: https://support.knowledgeowl.com/help/change-alert-div-icon
 
-Alert/callout boxes use `::before` pseudo-elements with a 65px width for icons. Paragraphs inside alerts use `margin-left: 75px` to clear the icon. Lists and other elements within alerts may need separate margin adjustments to avoid overlapping the icon.
+Alert/callout boxes use `::before` pseudo-elements for icons — a `65px × 60px` **floated** block holding a 48px Font Awesome 6 Pro glyph (weight 900), from the seeded Custom CSS. Because the icon is a float:
+
+- **Paragraphs** get no margin — the text simply wraps around the float (alerts also get `min-height: 90px` so short ones don't collapse below the icon, and `p` inside alerts get `margin-top: 0`).
+- **Lists** don't wrap cleanly, so the seeded CSS offsets them explicitly: `.alert ul, .alert ol { margin-left: 75px }`.
+
+Other block elements you place inside alerts may need the same `margin-left` treatment to avoid overlapping the icon. Per-type icons/colors: `.alert.alert-danger/-info/-success/-warning` each set a background, border, and a `content: "\fXXX"` glyph.
 
 ## 8. Theme Builder Can Overwrite Custom CSS
 
 Source: https://support.knowledgeowl.com/help/theme-colors
 
-Theme color settings (set via the KnowledgeOwl theme builder UI) are applied directly to the CSS output. Making changes in the theme builder after writing custom CSS can silently overwrite your custom work.
+Theme color settings are rendered as generated CSS rules injected into the page just *before* the Custom CSS (see the defaults doc's "Theme Builder Color Mapping"). They don't rewrite your Custom CSS text, but changing them after a customization can silently fight it: a new generated color re-paints any element your CSS didn't explicitly pin, and computed derivatives (TOC hover, borders, button hovers) shift with them. After theme-builder changes, re-verify the customized pages.
 
 ## 9. Responsive Breakpoints
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-KnowledgeOwl uses Bootstrap 3 breakpoints plus custom ones. The most important breakpoints for custom CSS:
+KnowledgeOwl uses Bootstrap 3 breakpoints plus custom ones (the custom ones live in the seeded Custom CSS). The most important breakpoints for custom CSS:
 
-| Breakpoint | Typical Use |
-|------------|-------------|
-| 576px      | Small mobile |
-| 768px      | Tablet (Bootstrap `sm`) |
-| 991px / 992px | Small desktop / landscape tablet (Bootstrap `md`) |
-| 1200px     | Large desktop (Bootstrap `lg`) |
-| 1473px     | Extra large / three-column layout (KO-specific) |
+| Breakpoint | Direction | Typical Use |
+|------------|-----------|-------------|
+| 576px      | `min-width` | Homepage category list goes 2-up |
+| 768px      | `min-width` | Tablet (Bootstrap `sm`) |
+| 991px / 992px | `max` / `min` | Small desktop / landscape tablet (Bootstrap `md`); ≤991px also disables the TOC-open article squeeze |
+| 1200px     | `min-width` | Large desktop (Bootstrap `lg`) |
+| 1473px     | **`max-width`** | Three-column squeeze: below this, content narrows to 700px and the right column widens (KO-specific) |
 
-**Note:** The codebase contains many additional breakpoints (e.g., 1400px, 1540px, 1600px) for fine-tuned responsive rules. The five listed above are the primary ones to align with.
+**Note:** watch the directions — 1473px is a `max-width` query (it applies to screens *narrower* than 1474px), not a `min-width` one. `ko-css.css` also has a `min-width: 1400px` rule for wide screens. The five listed above are the primary ones to align with.
 
 ## 10. Custom Utility Classes to Know
 
@@ -100,21 +118,21 @@ Source: https://support.knowledgeowl.com/help/default-custom-css
 
 | Class | Purpose |
 |-------|---------|
-| `.no-border` | Removes visual borders/shadows from images (see quirk #4) |
-| `.check-list` | Styled bullet list with FontAwesome checkmarks (**Note:** This is a Support KB-specific artifact that was never supposed to be in the default custom CSS. It's flagged for removal, but documenting here since it currently exists in the default theme and can cause unexpected styling.) |
-| `.toc-anchor` | Invisible anchor offset for fixed nav |
-| `.margin-top-20` | Spacing utility |
+| `.no-border` | Referenced in KO docs for removing image borders/shadows, but **not defined** in the platform CSS or the seeded template — add your own rule (see quirk #4) |
+| `.check-list` | Styled bullet list with FontAwesome checkmarks (`ul.check-list`, seeded Custom CSS lines ~565–579). (**Note:** This is a Support KB-specific artifact that was never supposed to be in the default custom CSS. It's flagged for removal, but documenting here since it currently exists in the seeded template and can cause unexpected styling.) |
+| `.toc-anchor` | Invisible anchor offset for fixed nav (seeded Custom CSS; see quirk #6) |
+| `.margin-top-20` | Spacing utility (seeded Custom CSS, scoped `.hg-minimalist-theme .margin-top-20` — no sibling sizes exist) |
 | `.hg-minimalist-theme` | Primary theme wrapper (used for selector scoping) |
 | `.hg-2column-layout` | Two-column layout variant |
 | `.hg-3column-layout` | Three-column layout variant |
-| `.slideout-menu` | TOC sidebar container |
-| `.slideout-new` | Updated TOC sidebar container used in the current default theme's HTML. Less buggy sliding in/out behavior than `.slideout-menu` alone. Note: this class appears in HTML markup but has no dedicated CSS definition — its behavior is controlled by JavaScript and inherited styles. |
+| `.slideout-menu` | TOC sidebar container — the class that carries the panel CSS (`width: 360px`, fixed position) |
+| `.slideout-new` | Marker class on `.hg-site-body` for the newer slideout system. It appears in HTML markup but has **no CSS definition** — it's a JavaScript hook; the panel styling is all on `.slideout-menu` / `.slideout-panel`. |
 
 ## 11. Image Caption Selectors (`fr-img-caption`)
 
 Source: https://support.knowledgeowl.com/help/style-image-captions
 
-Captioned and non-captioned images use different selectors. Captioned images are wrapped in `span.fr-img-caption`, which gets its own border and layout styles. Caption backgrounds use `var(--primary-color)` (defaults to `#1d284f`) and caption link colors use `var(--image-caption-link-color)` (defaults to `#F6A267`). Since these are CSS variables, the actual values vary per KB based on theme settings. Be aware of this split when writing image-related CSS — you may need separate rules for captioned vs. non-captioned images.
+Captioned and non-captioned images use different selectors. Captioned images are wrapped in `span.fr-img-caption`, which gets its own border and layout styles. The styling is layered: `ko-css.css` sets a hardcoded base (caption background `#656565`, wrapper border `2px solid #bdc3c7`, Minimalist override to `#1d284f`), then the **seeded Custom CSS** re-styles it with variables — background `var(--primary-color)` (default `#1d284f`), border removed, caption links `var(--image-caption-link-color)` (default `#F6A267`, hover `var(--secondary-color)`). Since the final layer uses the KB's Custom CSS variables, actual values vary per KB. Be aware of this split when writing image-related CSS — you may need separate rules for captioned vs. non-captioned images.
 
 ## 12. Nested Ordered List Numbering
 
@@ -126,7 +144,7 @@ The default CSS enforces a three-tier numbering hierarchy for ordered lists insi
 - Level 2: `lower-alpha` (a, b, c)
 - Level 3: `lower-roman` (i, ii, iii)
 
-These are set on `.hg-article-body ol` with child combinators. Custom list styling needs to match or override these specific selectors.
+These are set on `.hg-article-body ol` with child combinators, in the seeded Custom CSS (which also adds `.hg-article-body ol li { padding: 10px 0 }`). Custom list styling needs to match or override these specific selectors.
 
 **Note:** This numbering hierarchy was originally Support KB-specific and shouldn't have been hard-coded into the default theme, but it was. It's flagged for removal from the default theme.
 
@@ -134,7 +152,7 @@ These are set on `.hg-article-body ol` with child combinators. Custom list styli
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Individual search input elements have their borders removed. The visible border is on the outer `.input-group` wrapper instead. Focus state is handled via `.input-group:focus-within`, which changes the border color. Styling the search bar requires targeting the wrapper, not the input.
+Individual search input elements have their borders removed (`.hg-search-bar input.form-control`, `.input-group-btn .btn` → `border: none`). The visible border is on the outer `.input-group` wrapper instead (`1px solid var(--input-border-color)` + a soft box-shadow). Focus state is handled via `.hg-search-bar .input-group:focus-within:not(:focus-visible)`, which adds a `box-shadow: 0 0 0 2px var(--input-focus-color)` ring. All of this lives in the seeded Custom CSS. Styling the search bar requires targeting the wrapper, not the input.
 
 ## 14. PDF-Specific CSS Rules
 
@@ -165,7 +183,7 @@ Two traps follow:
 1. **`hg-minimalist-theme` sits on `<body>` — an ANCESTOR of `.hg-pdf`, not a descendant** — so a `.hg-pdf .hg-minimalist-theme …` fence never matches in a PDF (this silently killed an alert-icon hide for a whole version). The correct PDF prefix is **`.hg-pdf .documentation-article …`**.
 2. **The page-type class (`.hg-article-page`, etc., see §15) and all page chrome are absent** — no breadcrumbs, related, ratings, comments, or reading-panel wrappers exist in the PDF. Don't rely on them in PDF selectors.
 
-The PDF **does** load Custom CSS + Custom `<head>`, so `:root` tokens are defined. Common gotcha: Font Awesome alert icons (`.alert.alert-{type}::before { content:"\fXXX" }`, from KO's default template) render as tofu (□) because the PDF engine has no FA webfont — hide them with:
+The PDF **does** load Custom CSS + Custom `<head>`, so `:root` tokens are defined. (Full PDF CSS stack: Bootstrap + Flat UI + `ko-css.css` — or a legacy `publicview` bundle for older themes — plus `public/css/pdf.css` and the KB's Custom CSS; see `ResourceLoader::loadRawPdfCss()`.) Common gotcha: Font Awesome alert icons (`.alert.alert-{type}::before { content:"\fXXX" }`, from KO's default template) render as tofu (□) because the PDF engine has no FA webfont — hide them with:
 
 ```css
 .hg-pdf .documentation-article .alert::before { content: none !important; display: none !important; }
@@ -202,24 +220,28 @@ body.hg-home-page .some-element { ... }
 
 ## 16. Z-Index Layering Gaps
 
-The default CSS uses z-index values with large gaps between layers. If you create positioned elements (sticky headers, floating buttons, overlays), be aware of the existing layers:
+The default CSS uses z-index values with large gaps between layers. If you create positioned elements (sticky headers, floating buttons, overlays), be aware of the existing layers (from `ko-css.css` unless noted):
 
-| Z-Index Range | Used By |
-|---------------|---------|
-| 0–5 | Slideout menu, basic positioned elements |
-| 20 | Various mid-level components |
-| 1031 | Minimalist theme TOC sidebar |
-| 1050 | Bootstrap modal dialogs |
+| Z-Index | Used By |
+|---------|---------|
+| 0 / 1 | `.slideout-menu` (TOC panel) / `.slideout-panel` (article panel) |
+| 2 | Slideout toggles, right column |
+| 3 / 5 | Loading spinner / article preview bar |
+| 20 | Autocomplete/type-ahead menu (`.ui-menu`) |
+| 100 | `.back-to-top` snippet (seeded Custom CSS) |
+| 1030 | Fixed navbar (Bootstrap `.navbar-fixed-top`) |
+| 1031 | Minimalist `toc-always-open` TOC sidebar (sits just above the navbar) |
+| 1040 / 1050 | Bootstrap modal backdrop / modal dialogs |
 
-Custom positioned elements should avoid 1031+ unless you intend to overlay the TOC or modals.
+Custom positioned elements should avoid 1030+ unless you intend to overlay the header, TOC, or modals.
 
 ## 17. Colors Are CSS Variables (Theme-Dependent)
 
-Many colors in the default CSS use CSS custom properties (`var(--primary-color)`, `var(--text-links-color)`, etc.) rather than hardcoded hex values. The theme builder overrides these variables dynamically. This means:
+Many colors in the *seeded Custom CSS* use CSS custom properties (`var(--primary-color)`, `var(--text-links-color)`, etc.) rather than hardcoded hex values. The variables are defined in the KB's own Custom CSS — the theme builder does **not** set or override them (it generates separate selector-level rules; see quirk #8). This means:
 
-- The default hex values in the source (e.g., `--primary-color: #1d284f`) may not match what a specific customer's KB uses
+- The template defaults (e.g., `--primary-color: #1d284f`) may not match what a specific customer's KB uses — anyone can have edited the KB's Custom CSS
 - Always check the customer's HTML snapshot or live KB to see the actual computed values
-- When overriding colors, you can either set a new value on the variable (`--primary-color: #ff0000`) to change it everywhere, or override the specific property on the specific selector
+- When overriding colors, you can either set a new value on the variable (`--primary-color: #ff0000`) to change everything that *references the variable*, or override the specific property on the specific selector — but remember theme-builder-generated colors (heading colors, TOC hover, button colors) don't go through these variables at all
 
 ## 18. Deep Selector Nesting for Theme Overrides
 
@@ -280,7 +302,7 @@ Fixes: use `<div>` for dormant/placeholder cards (switch to `<a href>` once wire
 
 ## 22. Homepage Article Panel Has a Fixed (Viewport-Derived) Height
 
-For the TOC slideout mechanism, KO pins a **fixed height** (roughly the viewport height — *not* `min-height`) on the homepage article container (`#ko-article-cntr` / `.ko-content-cntr` / `.hg-article`). Stock homepages are short enough to fit, but a **taller custom homepage overflows it**: the content spills out visually (overflow is visible, so you still see it) and the footer — positioned after the pinned-height panel — rides **up over** the content.
+For the TOC slideout mechanism, KO pins the homepage article container's height to its ancestors — `ko-css.css` sets `.hg-article { height: 100% }` (and `.hg-site-body .documentation-article { min-height: calc(100vh - 60px) }`), so the panel chain (`#ko-article-cntr` / `.ko-content-cntr` / `.hg-article`) resolves to roughly the viewport height, *not* to the content. Stock homepages are short enough to fit, but a **taller custom homepage overflows it**: the content spills out visually (overflow is visible, so you still see it) and the footer — positioned after the pinned-height panel — rides **up over** the content.
 
 Fix by letting the homepage containers grow to their content:
 
@@ -326,7 +348,7 @@ The reader-login page (`/help/readerlogin`, body class `hg-login-page`) is **not
 - **`.alert.*`** (`alert-warning` / `-info` / `-success` / `-danger` / `-default`) → signup errors + password-reset confirmations.
 - **`.bs-callout.*`** (`bs-callout-warning` / `-danger` / `-info` / `-success`) → **login errors**, e.g. `<div class="bs-callout bs-callout-warning">Incorrect Username or Password.</div>`. This is a `bs-callout`, **not** an `.alert`, so an `.alert`-only fix leaves login errors light-on-light.
 
-flat-ui backs both with **light `!important` fills**, so a non-`!important` theme alert rule (§7) loses here — the override needs higher specificity **plus** `!important`, and must target **both** families:
+Both families carry light default fills — the `.alert.*` backgrounds come from the seeded Custom CSS (`#F4E2E2`, `#F0F7FD`, …) and the `.bs-callout-*` fills from `ko-css.css` (`#fcf2f2`, `#fefbed`, …). None of them are `!important` in the source, but they sit at various cascade positions relative to where your override lands, so the safe pattern is higher specificity **plus** `!important`, targeting **both** families:
 
 ```css
 /* dark fill + light text for panels AND both flash mechanisms (example colours) */
@@ -348,14 +370,22 @@ flat-ui backs both with **light `!important` fills**, so a non-`!important` them
 
 **Finding the flash markup:** these states only appear after a form POST, so they're not in a static login-page snapshot. The login page is **public**, so the fastest way to capture the real DOM is to drive it in a browser (submit the form to trigger the message) and inspect — that's how the `.bs-callout` login-error mechanism surfaced after an `.alert`-only fix had missed it. Same dark-theme-trap family as §20 (white article panels) and §22 (fixed panel height).
 
-## 24. TOC Hover/Active Highlight Lives on the LINK, Not the `<li>`
+## 24. TOC Hover/Active Highlight Is GENERATED, and Paints on Multiple Elements
 
-The Minimalist theme's default TOC hover/active background (a warm peach, ~`#EEEAE7`) is painted on **different elements for categories vs. articles** in the left nav:
+The Minimalist theme's TOC hover/active background is a **generated Style-Settings rule**, not static CSS. `KbRenderer` computes it from the "Table of contents / Column background" color — **darkened by 10/255 per RGB channel** (stock `#F8F4F1` → `rgb(238,234,231)` = `#EEEAE7`, the familiar warm peach) — and paints it across a dozen selectors at once (`$minimalistTocClasses`): container-level (`.category-link-container:hover/.active`, `.article-container:hover/.active`, `li.active`) *and* link-level (`.documentation-categories li a:hover`, `.article-link:hover/.active`).
 
-- **Categories:** on the link — `a.documentation-category:hover` / `.active` — *not* the `.category-container` `<li>` or the `.category-link-container` wrapper.
-- **Articles:** on the list item — `.article-container:hover` / `.article-container.active` — *not* the inner `.article-link`.
+What you *see* is whichever painted element is innermost, and that differs per type:
 
-So a TOC restyle must override the **right element per type**. A single `<li>`-level override kills the beige for articles but leaves it on categories — a "looks fixed until you hover a category" bug. To find where a hover paints, hover the element and read the `:hover` chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])` (see `03-LOCALHOST_PREVIEW.md`). For a clean full-row highlight, kill the default on the painting element and apply one tint to the row (the `<li>` for articles, the `.category-link-container` for categories), leaving the link plain.
+- **Categories:** the link — `a.documentation-category` (matched by `li a:hover`) paints over its `.category-link-container` wrapper.
+- **Articles:** the list item — `.article-container:hover` / `.article-container.active`.
+
+Consequences for a restyle:
+
+1. A single `<li>`-level override kills the beige for articles but leaves it on categories — a "looks fixed until you hover a category" bug. You must override **both container-level and link-level** selectors.
+2. The color isn't in any stylesheet — changing the TOC background Style Setting silently changes the hover color too.
+3. `ko-css.css` also has static `#ddd` fallbacks on the same elements (`.article-container:hover`, `.category-link-container:hover`, `li a:hover`), so killing only the generated rule can reveal gray.
+
+To find where a hover paints, hover the element and read the `:hover` chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])` (see `03-LOCALHOST_PREVIEW.md`). For a clean full-row highlight, kill the default on the painting elements and apply one tint to the row (the `<li>` for articles, the `.category-link-container` for categories), leaving the link plain. (The seeded Custom CSS also ships commented-out hover overrides wired to `--toc-category-hover-color` / `--toc-article-hover-color` — a customer may have uncommented those.)
 
 ## 25. Flexbox on `.ko-homepage-top` Collapses the Homepage Search
 
@@ -363,7 +393,7 @@ Making the homepage hero (`.ko-homepage-top`) a `display: flex; flex-direction: 
 
 ## 26. Homepage `icon-cats` Tiles Left-Align With Fewer Categories Than Columns
 
-The homepage category tiles (`[template("icon-cats,col=N")]`, see `knowledgeowl-css-defaults.md`) render in an **N-wide grid** — the default CSS forces `width: 25%` on the tiles at ≥992px. When the KB has **fewer categories than N** (e.g. 3 categories in a `col=4` grid), they left-align and leave an empty trailing slot instead of centering. Center them with flex on the row:
+The homepage category tiles (`[template("icon-cats,col=N")]`, see `knowledgeowl-css-defaults.md`) render in an **N-track CSS grid** — `ko-css.css` sets `.cat-icons-cntr .category-list.colN { display: grid; grid-template-columns: repeat(N, 1fr) }`. The grid always reserves N tracks, so when the KB has **fewer categories than N** (e.g. 3 categories in a `col=4` grid), the tiles left-align and leave an empty trailing track instead of centering. Center them by switching the row to flex:
 
 ```css
 .hg-minimalist-theme.hg-home-page .category-list {
