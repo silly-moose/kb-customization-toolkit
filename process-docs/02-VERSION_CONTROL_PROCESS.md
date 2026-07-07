@@ -254,7 +254,7 @@ Project/
 
 ## Project Closeout
 
-Before closing out a project, run the improvement synthesis, then review whether any process improvements were discovered during the work.
+Before closing out a project, review the improvement log, then check whether any process improvements were discovered during the work.
 
 ### Review the improvement log (suggest only)
 

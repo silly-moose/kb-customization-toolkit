@@ -121,9 +121,9 @@ See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deploy
 
 ## Continuous Improvement (Reflect & Improve)
 
-Every session, Claude jots a short, **suggest-only** friction note to the central `improvement-log.md` in the toolkit — things that errored, stale references, wasted steps, or missing CSS gotchas. Claude never edits the toolkit itself during a session.
+Every session, Claude adds any **suggest-only** improvement ideas — things that errored, stale references, wasted steps, or missing CSS gotchas — directly to the `AWAITING REVIEW` section of the central `improvement-log.md` in the toolkit, one tagged entry per idea. Claude never applies changes to the toolkit itself during a session.
 
-At **project closeout**, Claude reads those notes and adds a prioritized list of proposed improvements to the log's `AWAITING REVIEW` section. Chad reviews them, applies the good ones to the toolkit (Claude can make the edits in a toolkit-repo session), moves each into `APPLIED` / `DECLINED` / `DEFERRED`, and pushes — and because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub every session, accepted changes reach the whole team automatically on their next session.
+At **project closeout**, Claude reviews and de-dupes `AWAITING REVIEW`. Chad reviews the items, applies the good ones to the toolkit (Claude can make the edits in a toolkit-repo session), moves each into `APPLIED` / `DECLINED` / `DEFERRED`, and pushes — and because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub every session, accepted changes reach the whole team automatically on their next session.
 
 Teammates other than Chad don't have the central log; if their Claude hits friction, it just flags it and suggests they share the idea with Chad in Slack.
 
