@@ -54,6 +54,14 @@ Because the snapshot loads KnowledgeOwl's real CDN CSS, the computed styles matc
 
 Caveats: (a) the snapshot's embedded Style-Settings `<style>` reflects the KB's colors *when it was captured* — if you changed Style Settings since, that block may be stale, though most layout/visibility bugs aren't Style-Settings-driven. (b) Inspect computed styles on a **freshly loaded** page; don't trust readings taken after you've injected many ad-hoc test styles into the same tab (accumulated overrides and JS/layout races make the numbers noisy). If computed-style inspection stays inconclusive, confirm against KO's source CSS where available (see `CLAUDE-RULES.md`, "KnowledgeOwl Source CSS Lookup").
 
+**Reach for a measurement early on size/computed-value questions.** When a mismatch comes down to a computed value — a font-size, a resolved `em`, which rule actually wins — don't try to hand-compute the cascade across Bootstrap + Flat UI + `ko-css` + generated Style-Settings + Custom CSS. It's error-prone, and the generated per-KB rules aren't in the source codebase at all, so source-reading won't give you the number. Serve the snapshot and run `getComputedStyle` on the two elements (the one that's wrong and the one it should match) — a single reading usually settles it. **If you can't reproduce locally and must read the live KB but it's behind SSO** (Okta, etc.), browser automation lands on the login wall — so ask the user to paste the output of a one-liner run in their already-authed tab, e.g.:
+
+```js
+['.target','.reference'].map(s=>{const c=getComputedStyle(document.querySelector(s));return `${s}: ${c.fontSize} / ${c.lineHeight} / ${c.fontFamily.split(',')[0]} / ${c.color}`}).join('\n')
+```
+
+(Real example: an "Effective date" body line looked "slightly too small" vs the header metadata; hand-analysis said they should match, but one `getComputedStyle` reading showed 12px vs 13.5px — the header/body base difference in `knowledgeowl-css-quirks.md` §30 — and resolved it immediately after two guessed rounds.)
+
 ---
 
 ## Step-by-Step Setup
@@ -85,6 +93,8 @@ cp [version-folder]/custom-css.css preview/custom-css.css
 **Option A — Claude Preview MCP tools (preferred when available):**
 
 The project template includes `.claude/launch.json` with a preview server configuration. Claude runs `preview_start` with name `"preview"` to start the server. This also enables Claude to use `preview_screenshot` and `preview_inspect` for automated visual verification.
+
+> **Re-point the served directory first.** `.claude/launch.json`'s preview config points at a **specific directory** (often a per-session scratchpad path), which goes stale between sessions — if it's left pointing at a previous session's now-empty or old folder, `preview_start` silently serves the wrong thing. Before `preview_start`, update the config's directory arg to **this** session's `preview/` folder (use an absolute path), then start the server.
 
 **Option B — Manual:**
 

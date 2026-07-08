@@ -195,6 +195,8 @@ Article typography is a three-layer cascade — Flat UI base → generated Style
 
 So net stock article headings are **H1 48px, H2 28px, H3 24px, H4 18px** — and note the oddity that H5 (24px, generated) renders *larger* than H4 (18px, seeded override).
 
+> **`em` / specificity traps on body text:** the generated `.hg-article-body, .hg-article-body p` rule is specificity **(0,1,1)** — a bare custom class **(0,1,0)** loses to it, so scope custom body-paragraph styling as `.hg-article-body p.my-class` **(0,2,1)** (or higher). And because the body is pinned to **16px** while the article **header** (`.hg-article-header`, *not* covered by that rule) sits on the **18px** page base, the same `em` renders at different sizes in each — `0.75em` = **12px** in the body but **13.5px** in the header. A custom body line can't match a header metadata row by copying its `em` value; measure and set the px. See `knowledgeowl-css-quirks.md` §30.
+
 ### Spacing Defaults
 
 | Element | Properties |

@@ -148,6 +148,8 @@ These are set on `.hg-article-body ol` with child combinators, in the seeded Cus
 
 **Note:** This numbering hierarchy was originally Support KB-specific and shouldn't have been hard-coded into the default theme, but it was. It's flagged for removal from the default theme.
 
+**Custom `<ol>` shrink-wrap gotcha:** if a *custom* ordered-list component renders shrink-wrapped to ~content width instead of filling its column, check the KB's **own** Custom CSS for an inherited `li { display: table }` (or `ol li { display: table }`). This is **not** a KO default — no current or legacy KO bundle sets it (the platform's `display: table` rules are all Bootstrap clearfixes like `.documentation-body::after`) — but individual KBs sometimes carry it, and `display: table` on a list item shrinks it to its content. Override on the component with `display: block !important; width: auto`. (This one hides from computed-style spot-checks — colors/fonts all pass; it only shows up as a width problem in a visual preview.)
+
 ## 13. Search Bar Border Pattern
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
@@ -188,6 +190,22 @@ The PDF **does** load Custom CSS + Custom `<head>`, so `:root` tokens are define
 ```css
 .hg-pdf .documentation-article .alert::before { content: none !important; display: none !important; }
 ```
+
+**Two PDF engines, both weak — never depend on JS or advanced layout.** KO renders PDFs with *two* different engines depending on the export type, so behavior isn't uniform:
+
+- **Single-article download → wkhtmltopdf** (`PdfGenerator.php`, via Knp\Snappy — JS is *enabled*; the `disable-javascript` option is commented out). It's an old WebKit build, so JS *runs* but **unreliably**: on large or Word-pasted articles it frequently doesn't finish before the page is captured, so a script that works on the live page silently no-ops in the PDF.
+- **Full-KB / multi-article / version PDFs → mpdf** (`FullPdf.php`, `ArticleVersionPdf.php`). mpdf is a pure-PHP engine that runs **no JavaScript at all**, has **weak flex/grid support** (grids collapse to one column), and **mis-positions** absolutely-positioned / flex `::before` counters (numbered-step digits float outside their circles, etc.).
+
+Practical rule: anything that must render in a PDF should be **CSS-only and simple-layout** (block/table, not flex/grid) and must not rely on JS. Give decorative `::before` counters a plain inline fallback for the PDF context. (This is why the Approved-By / metadata patterns moved to CSS-only — see the customer project notes.)
+
+**Dark component panels vs. the white-page text fence.** If a component keeps a dark background in the PDF, the usual "make PDF text dark on white paper" fence — e.g. `.hg-pdf .documentation-article p, .hg-pdf .documentation-article li { color: #212121 }` (whether from KO's `pdf.css` or one you added) — turns the text *inside* the dark panel unreadable (dark-on-dark). Re-lighten per panel with a **more specific** selector — an `#id` in the chain outranks the class-only fence:
+
+```css
+.hg-pdf .documentation-article #my-dark-panel p,
+.hg-pdf .documentation-article #my-dark-panel li { color: #fff; }
+```
+
+Specificity trap: a `.hg-pdf …` override that merely **ties** the screen rule's specificity **loses**, because the screen rule usually sits later in the file. Add an extra wrapper class (or an `#id`) to the PDF override so it actually wins.
 
 ## 15. Page-Type Body Classes
 
@@ -436,4 +454,83 @@ To force heading readability inside the editor, target `.fr-view` / `.fr-editor-
 .fr-view h1, .fr-editor-svelte h1 { color: #1a1a1a !important; }
 ```
 
+**Same trap for link color.** The editor iframe loads *exactly* `ko.css` + your compiled Custom CSS + fonts (`wysiwyg.js:46-50`, applied via `:901`/`:1086`), so the seeded base-link rule (§3) — `.hg-minimalist-theme a:not(.btn), a:not(.btn) { color: var(--text-links-color) }` — takes effect in the editor via its **second, unscoped** `a:not(.btn)` selector. A re-tokened light link color (e.g. cyan for a dark theme) then renders links **inside the white article editor** unreadable. Fix the same way — literal hex (the token isn't defined in the iframe) on the editor bodies:
+
+```css
+.fr-view a:not(.btn), .fr-editor-svelte a:not(.btn), .cke_editable a:not(.btn) { color: #3C80BA !important; }
+```
+
 (Source: `FroalaEditor.svelte`, `froala/config.ts`, `KbRenderer.php` — the on-page heading rule `.documentation-article h1, .cke_editable h1 { color:… }` has **no** `!important`, so a themed heading color loses to editor defaults unless you force it.)
+
+## 29. Distinguishing Live vs PDF vs Editor When Scoping `.hg-article-body`
+
+`.hg-article-body` is the article-body wrapper in **three** contexts, and a rule scoped to it applies in all three — which bites when the rule is only meant for the rendered article:
+
+- **Live article:** `<div class="hg-article-body">` inside `.hg-article`, with a real `.hg-article-header` sibling above it.
+- **PDF export:** `.hg-pdf > .documentation-article > … > .hg-article-body` — here `documentation-article` is an **ancestor** (see §14).
+- **WYSIWYG editor:** the editable body *itself* is `class="documentation-article hg-article-body"` — both classes on the **same element** (`wysiwyg.js:906` `editorBodyClass`; `:1089` `CKEDITOR.config.bodyClass`).
+
+So a hack that assumes the live layout — e.g. a negative `margin-top` that pulls a body line up under the article header — **misfires in the editor**, where there's no header above it: the line gets dragged off the top of the editable area and vanishes (looks like the class "broke" the editor).
+
+The disambiguator: the editor is the only context where `documentation-article` and `hg-article-body` sit on the **same element**, so `:not(.documentation-article)` excludes the editor while keeping live + PDF (where the body element itself isn't `.documentation-article`):
+
+```css
+/* size/look everywhere, incl. the editor preview */
+.hg-article-body p.my-meta { font-size: 13.5px; }
+/* header-relative pull-up ONLY where a header exists (live + PDF), NOT the editor */
+.hg-article-body:not(.documentation-article) p.my-meta { margin-top: -28px; }
+/* PDF-specific tweak (documentation-article is an ancestor here, so this still matches) */
+.hg-pdf .hg-article-body p.my-meta { margin-top: -20px; }
+```
+
+Rule of thumb: put font/color/size on the plain `.hg-article-body …` selector (so the editor previews it correctly), and put any header-relative spacing behind `:not(.documentation-article)`.
+
+## 30. Article Header and Body Sit on Different Font-Size Bases (`em` Doesn't Transfer)
+
+The article **header** and **body** compute `em` against different base font-sizes, so the *same* `em` value renders at different pixel sizes in each:
+
+- **`.hg-article-body`** is pinned to **16px** by the generated **Body font** Style-Settings rule (`.hg-article-body, .hg-article-body p { font-size: 16px }` — see `knowledgeowl-css-defaults.md` → Typography Defaults).
+- **`.hg-article-header`** is *not* covered by that rule, so it inherits the page base — Flat UI's `body { font-size: 18px }`.
+
+Consequence: a header metadata element at `font-size: 0.75em` computes to **13.5px** (0.75 × 18), while the *same* `0.75em` on a body element computes to **12px** (0.75 × 16). So a custom body line meant to match a header metadata row (e.g. an "Effective date" line matching "Last Approved Date") comes out visibly **smaller** — matching by copying the header's `em` value silently fails.
+
+Two more wrinkles:
+
+1. **PDF differs again.** The PDF stylesheet (`ResourceLoader::loadRawPdfCss`, see §14) may not carry the generated 16px body pin, so the same `em` rule can look correct in the PDF yet wrong in the live KB (or vice-versa) — verify both contexts.
+2. **Don't hand-compute the cascade** across Bootstrap + Flat UI + `ko-css` + generated + Custom CSS to guess the px — it's error-prone. Measure the target's computed `font-size` (reproduce the snapshot locally + `getComputedStyle`, or have the user paste one from the live page — see `03-LOCALHOST_PREVIEW.md`), then set that px explicitly for the context that's wrong.
+
+Related specificity note (also in `knowledgeowl-css-defaults.md`): the generated `.hg-article-body p` rule is specificity **(0,1,1)**, so a bare custom class **(0,1,0)** loses to it — scope custom body-paragraph styling as `.hg-article-body p.my-class` **(0,2,1)**.
+
+## 31. Hiding Article Chrome on Full-Bleed Custom Pages — Use Descendant Selectors
+
+When a custom, full-bleed article page needs KO's stock article chrome (related articles, ratings, comments) hidden, note those blocks are **not direct children of `.ko-content-cntr`** — they live inside `.hg-article-footer`, which is inside `.hg-article`:
+
+```
+.ko-content-cntr > .hg-article > .hg-article-footer > { .ko-related-articles, .hg-ratings, comment blocks }
+```
+
+So a `:has()`/child-combinator fence written with `>` (e.g. `.ko-content-cntr:has(.my-wrapper) > .ko-related-articles`) silently **misses** them, and the footer chrome still shows under your custom page. Use **descendant** selectors and include `.hg-article-footer` itself:
+
+```css
+.ko-content-cntr:has(.my-wrapper) .hg-article-footer,
+.ko-content-cntr:has(.my-wrapper) .ko-related-articles,
+.ko-content-cntr:has(.my-wrapper) .hg-ratings { display: none; }
+```
+
+Related: KO's front-end JS **appends** `#`-anchor icons (`.ko-anchor-icon`) to article-body headings at runtime (h2 and h3+), so a custom landing-page component built from headings needs a scoped `.ko-anchor-icon { display: none }` too — the icons aren't in the static snapshot; they appear after load. (Same "href-less anchor" family as §21.)
+
+## 32. Detecting a Logged-In Author Client-Side (`.ko-app-edit`)
+
+For UI that should show only to logged-in authors (e.g. an author-only validation banner readers must never see), the reliable client-side signal is the admin toolbar's **Edit** link: `<li class="ko-app-edit">…Edit…</li>` (`editor-bar.phtml:315`). It renders into the editor bar for authenticated authors and carries a `hide` class when the viewer lacks edit access — so `.ko-app-edit:not(.hide)` present in the DOM ≈ "the viewer is a logged-in author who can edit this article." Readers get no editor bar at all.
+
+```css
+/* author-only element, hidden for everyone by default */
+.my-author-note { display: none; }
+body:has(.ko-app-edit:not(.hide)) .my-author-note { display: block; }
+```
+
+## 33. KB Search Never Indexes `<script>` Content
+
+KnowledgeOwl strips `<script>` blocks out of the article body *before* indexing it (`Indexer.php:265`: `preg_replace('/<script.*?<\/script>/is', ' ', $cleanBody)`). So any article whose content is **rendered by JavaScript** (a config-object-plus-engine pattern, a script that builds the DOM on load, etc.) is **invisible to KB search** — the words never enter the index.
+
+The same JS-rendered content also (a) does **not** appear in PDF exports on the mpdf path and is unreliable on wkhtmltopdf (§14), and (b) shows as **raw code** in the WYSIWYG editor. So for interactive article content, prefer **plain markup in the article body** enhanced by a theme-level (Custom `<head>`) progressive-enhancement script, rather than generating the body from JS inside the article itself.
