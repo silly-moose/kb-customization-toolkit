@@ -448,19 +448,32 @@ The article editor renders inside an **iframe**, which changes how "editor-only"
 - The iframe `<body>` carries `documentation-article hg-article-body fr-editor-svelte` (+ Froala's own `fr-view`) — **crucially NOT `hg-minimalist-theme`** — so theme-scoped rules don't apply inside the editor either.
 - The per-KB **Style-Settings color block is NOT injected into the editor iframe.** Only Custom CSS, the static `koFroalaEditor` bundle, and fonts load there — so `:root` tokens defined via Style Settings are **absent**, and editor overrides must use **literal hex**, not `var(--…)`.
 
-To force heading readability inside the editor, target `.fr-view` / `.fr-editor-svelte` with literal hex + `!important`:
+This bites **two** text elements in practice: **headings** (a theme's `.documentation-article h1{…}`-style rule matches the editor body) and **links** (KO's seeded base-link rule from §3 — `.hg-minimalist-theme a:not(.btn), a:not(.btn){color:var(--text-links-color)}` — reaches the editor through its **second, unscoped** `a:not(.btn)` selector, so a re-tokened light link color renders unreadable on the white canvas).
+
+### Editor Readability Guard (the canonical fix — paste whole into every build's Custom CSS)
+
+This is **mandatory in every build** (see `CLAUDE-RULES.md` → "Editor Readability Guard"). It's editor-only and provably safe — `fr-view` / `fr-editor-svelte` / `cke_editable` exist **only** inside the editor iframe, never on public pages or in PDF — so it cannot touch the live site. Literal hex on purpose (the `:root` tokens are absent in the iframe). Only change the hexes if a KB's editor canvas is intentionally not the default white.
 
 ```css
-.fr-view h1, .fr-editor-svelte h1 { color: #1a1a1a !important; }
+/* ── EDITOR READABILITY GUARD — keep readable text on the white Froala canvas ──
+   The editor iframe loads ko.css + compiled Custom CSS but NOT the Style-Settings
+   block or Custom <head>, so unscoped / .documentation-article-scoped theme text
+   colors leak in. These editor-only selectors restore KO's stock readable colors. */
+.fr-view, .fr-editor-svelte, .cke_editable { --text-links-color: #3C80BA; }
+.fr-view h1, .fr-view h2, .fr-view h3, .fr-view h4, .fr-view h5, .fr-view h6,
+.fr-editor-svelte h1, .fr-editor-svelte h2, .fr-editor-svelte h3, .fr-editor-svelte h4, .fr-editor-svelte h5, .fr-editor-svelte h6,
+.cke_editable h1, .cke_editable h2, .cke_editable h3, .cke_editable h4, .cke_editable h5, .cke_editable h6 {
+  color: #212121 !important;
+}
+.fr-view a:not(.btn), .fr-editor-svelte a:not(.btn), .cke_editable a:not(.btn) {
+  color: #3C80BA !important;
+}
 ```
 
-**Same trap for link color.** The editor iframe loads *exactly* `ko.css` + your compiled Custom CSS + fonts (`wysiwyg.js:46-50`, applied via `:901`/`:1086`), so the seeded base-link rule (§3) — `.hg-minimalist-theme a:not(.btn), a:not(.btn) { color: var(--text-links-color) }` — takes effect in the editor via its **second, unscoped** `a:not(.btn)` selector. A re-tokened light link color (e.g. cyan for a dark theme) then renders links **inside the white article editor** unreadable. Fix the same way — literal hex (the token isn't defined in the iframe) on the editor bodies:
-
-```css
-.fr-view a:not(.btn), .fr-editor-svelte a:not(.btn), .cke_editable a:not(.btn) { color: #3C80BA !important; }
-```
-
-(Source: `FroalaEditor.svelte`, `froala/config.ts`, `KbRenderer.php` — the on-page heading rule `.documentation-article h1, .cke_editable h1 { color:… }` has **no** `!important`, so a themed heading color loses to editor defaults unless you force it.)
+Notes:
+- The first line **re-points `--text-links-color`** inside the editor, which generically neutralizes *any* unscoped ko.css rule that consumes that token (belt-and-suspenders beyond the explicit link rule below it).
+- Guard **headings and links only** — do **not** blanket-reset body `p`/`li` text: a blanket `!important` there would also override an author's own toolbar text colors (they'd look default-black while editing, then publish colored). If a specific build's authors color headings and you want those preserved in the editor, exclude them with `:not([style*="color"])` on the heading selector.
+- (Source: `wysiwyg.js:46-50` loads `[koCssPath, customCSS, …fonts]`, applied at `:901`/`:1086`; `editorBodyClass` at `:906`/`:1089`. The on-page heading rule `.documentation-article h1, .cke_editable h1{color:…}` from `KbRenderer.php` has **no** `!important`, so the guard wins.)
 
 ## 29. Distinguishing Live vs PDF vs Editor When Scoping `.hg-article-body`
 

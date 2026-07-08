@@ -198,6 +198,36 @@ If a version changes colors but **no** Style Setting is affected, say so explici
 | Icon color | Default category icon color |
 | Icon background | Default category icon background |
 
+## Editor Readability Guard (mandatory — every build)
+
+The Froala **article editor** renders in a **white iframe** that loads `ko.css` + your
+compiled **Custom CSS** — but **NOT** the Style-Settings color block or the Custom `<head>`
+(quirk #28). So any text color the theme applies through an **unscoped** stock rule (KO's own
+`a:not(.btn){color:var(--text-links-color)}`) or a **`.documentation-article`-scoped** rule
+paints inside the editor too, where a light or brand color is **unreadable on the white
+canvas**. This is a recurring dark-/custom-theme trap (it bit headings and links on real
+builds).
+
+**The rule:** **every build's Custom CSS must contain the Editor Readability Guard block** —
+the canonical, copy-whole block in `Reference/knowledgeowl-css-quirks.md` §28. It is
+**editor-only and provably safe** (`fr-view` / `fr-editor-svelte` / `cke_editable` exist only
+inside the editor iframe — never on public pages or in PDF), so it never affects the live
+site. Keep it even when in doubt; the cost of having it is zero.
+
+**Why a rule and not just the baseline:** the guard ships inside the Minimalist default
+(`minimalist-theme-defaults/custom-css.css`) and each theme template, so clean-start builds
+have it automatically. But a build that starts from the **customer's existing Custom CSS**
+(pasted into the `no-changes` baseline) inherits neither — this rule is what guarantees those
+builds get it too.
+
+**Folded into the Color-Change Checkpoint:** whenever a version adds or changes a **text**
+color (heading, link, body, or a `--text-*` token), as part of that checkpoint **confirm the
+guard is present in Custom CSS and that any newly-recolored text element is covered by it** —
+and say so in the conversation (e.g. "Editor Readability Guard present; covers the new link
+color"). If a build's editor canvas is intentionally not white, adjust the guard's hexes
+rather than removing it. (Verify against the real editor after deploy — the iframe can't be
+fully reproduced locally; see quirk #28.)
+
 ## KnowledgeOwl File-to-Section Mapping
 
 | File | KnowledgeOwl Location |

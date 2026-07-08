@@ -1312,3 +1312,26 @@ body.hg-minimalist-theme::before {
   }
   body.hg-minimalist-theme::before { animation: none !important; }
 }
+/* ============================================================================
+   EDITOR READABILITY GUARD  (mandatory — keep in every build; see CLAUDE-RULES)
+   The Froala article editor is a WHITE iframe that loads ko.css + this compiled
+   Custom CSS, but NOT the Style-Settings color block or Custom <head> (quirk #28).
+   So any text color applied via an UNSCOPED stock rule (KO's own
+   a:not(.btn){color:var(--text-links-color)}) or a .documentation-article-scoped
+   rule paints inside the editor too — where a light/brand color is unreadable on
+   the white canvas. These editor-only selectors restore KO's stock readable text.
+   fr-view / fr-editor-svelte / cke_editable exist ONLY in the editor iframe (never
+   on public pages or in PDF), so this cannot affect the live site. Literal hex on
+   purpose: :root tokens are absent in the iframe. Edit the hexes only if a KB's
+   editor canvas is intentionally not the default white. Guard headings + links only
+   (never blanket-reset body text — it would override authors' own toolbar colors).
+   ============================================================================ */
+.fr-view, .fr-editor-svelte, .cke_editable { --text-links-color: #3C80BA; }
+.fr-view h1, .fr-view h2, .fr-view h3, .fr-view h4, .fr-view h5, .fr-view h6,
+.fr-editor-svelte h1, .fr-editor-svelte h2, .fr-editor-svelte h3, .fr-editor-svelte h4, .fr-editor-svelte h5, .fr-editor-svelte h6,
+.cke_editable h1, .cke_editable h2, .cke_editable h3, .cke_editable h4, .cke_editable h5, .cke_editable h6 {
+  color: #212121 !important;
+}
+.fr-view a:not(.btn), .fr-editor-svelte a:not(.btn), .cke_editable a:not(.btn) {
+  color: #3C80BA !important;
+}
