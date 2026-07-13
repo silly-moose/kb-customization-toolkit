@@ -1,0 +1,30 @@
+<div class="navbar-header">
+	[template("slideout-left-toggle")]
+	<a class="navbar-brand" href="/[template("rootpath")]" title="[template("project-name")]">[template("project-logo")]</a>
+	<div class="hg-project-name">[template("project-name")]</div>
+	<div class="nav-left-searchbar hidden-xs">
+		[template("searchbar")]
+	</div>
+	<button type="button" class="navbar-toggle toc-toggle pull-left clear-left" data-toggle="collapse" data-target=".documentation-categories">
+		<span class="sr-only">[translation("top-navigation:table-of-contents")]</span>
+		<span class="browse">[translation("top-navigation:table-of-contents")]</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	</button>
+	[template("slideout-right-toggle")]
+	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">[translation("top-navigation:toggle-navigation")]</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	</button>
+</div>
+<div class="navbar-collapse collapse" id="navbar-collapse">
+	[template("slideout-right-toggle")]
+	<ul class="nav navbar-nav navbar-right">
+		<li>[template("searchbar")]</li>
+		<li>[template("contact")]</li>
+		<li>[template("login")]</li>
+	</ul>
+</div>

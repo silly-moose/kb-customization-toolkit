@@ -1,0 +1,28 @@
+<div class="ko-homepage-top">
+	<h1 class="hg-article-title xcolor">[homepage("title")]</h1>
+	[template("large-search")]
+</div>
+<div class="hg-article">
+	<div class="hg-article-body">
+		<!-- Getting Started banner (spectrum-docs).
+		     REPLACE the href with the URL of your getting-started article/category.
+		     The icon below is a Font Awesome default (no asset needed) — to use a custom
+		     image instead, swap the <i> for: <img src="YOUR_ICON_URL" alt="Getting started">.
+		     Edit the banner text to match your voice. -->
+		<div class="getting-started-banner">
+			<a href="PLACEHOLDER_GETTING_STARTED_URL" class="getting-started-link">
+				<span class="getting-started-icon">
+					<i class="fa-duotone fa-rocket-launch"></i>
+				</span>
+				<span class="getting-started-text">New here? Start with our Getting Started guide</span>
+			</a>
+		</div>
+		<div>[template("icon-cats,max=8,col=4,desc=0")]</div>
+		<div>[homepage("body")]</div>
+		<div class="homepage-widgets row">
+			<div class="col-md-4 col-sm-6"><h3>[translation("article-lists:popular-articles")]</h3>[template("pop-articles")]</div>
+			<div class="col-md-4 col-sm-6"><h3>[translation("article-lists:new-articles")]</h3>[template("new-articles")]</div>
+			<div class="col-md-4 col-sm-6"><h3>[translation("article-lists:updated-articles")]</h3>[template("up-articles")]</div>
+		</div>
+	</div>
+</div>
