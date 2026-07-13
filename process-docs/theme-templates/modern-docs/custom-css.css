@@ -923,12 +923,23 @@ a.btn.btn-info:focus-visible,
      ======================================================================== */
   --brand-primary:      #133253;      /* primary brand: nav, headings, primary actions */
   --brand-primary-rgb:  19, 50, 83;   /*   ^ same color as R,G,B (feeds glows/tints)   */
-  --brand-primary-hi:   #1c4a76;      /* lighter primary (reserved — unused so far)    */
-  --brand-primary-lo:   #0e2740;      /* deeper primary: borders/depth on the nav      */
   --brand-accent:       #0170b9;      /* accent: links, icons, focus, highlights       */
   --brand-accent-rgb:   1, 112, 185;  /*   ^ same color as R,G,B (feeds glows/tints)   */
-  --brand-accent-hi:    #0a86d6;      /* lighter accent (reserved — unused so far)     */
-  --brand-accent-lo:    #015a94;      /* accent active (darker)                        */
+  /* The four -hi / -lo shades below AUTO-DERIVE from the two base colors via
+     color-mix(), so a re-skin only needs the base --brand-primary / --brand-accent
+     (and their -rgb pairs) above — you normally don't touch these. The literal hex on
+     each is a fallback for engines without color-mix(); on any modern browser the
+     color-mix() line wins and tracks the new base color. Override a hex only if a
+     brand needs a hand-tuned shade. (All four are used as SOLID colors — nav border,
+     link hover — never in rgba() effects, so deriving them is safe.) */
+  --brand-primary-hi:   #1c4a76;                                     /* lighter primary (reserved — unused so far) */
+  --brand-primary-hi:   color-mix(in srgb, var(--brand-primary) 82%, #ffffff);
+  --brand-primary-lo:   #0e2740;                                     /* deeper primary: borders/depth on the nav   */
+  --brand-primary-lo:   color-mix(in srgb, var(--brand-primary) 78%, #000000);
+  --brand-accent-hi:    #0a86d6;                                     /* lighter accent (reserved — unused so far)  */
+  --brand-accent-hi:    color-mix(in srgb, var(--brand-accent) 86%, #ffffff);
+  --brand-accent-lo:    #015a94;                                     /* accent active (darker)                     */
+  --brand-accent-lo:    color-mix(in srgb, var(--brand-accent) 80%, #000000);
   --brand-heading:      #1f2a3a;      /* heading text                                  */
   --brand-body:         #3f4a59;      /* body text                                     */
   --brand-muted:        #6b7684;      /* muted / secondary text                        */
@@ -946,6 +957,7 @@ a.btn.btn-info:focus-visible,
      DERIVED — usually leave (these compose the brand tokens above)
      ======================================================================== */
   --ui-radius:     10px;
+  --ui-read-max:   860px;  /* comfortable reading measure for the article column (line length) */
   --ui-shadow:     0 2px 8px rgba(var(--brand-primary-rgb),.06), 0 1px 3px rgba(var(--brand-primary-rgb),.08);  /* (reserved — unused so far) */
   --ui-shadow-hi:  0 8px 24px rgba(var(--brand-primary-rgb),.12);  /* (reserved — unused so far) */
   --ui-elev-1:     0 12px 34px -18px rgba(var(--brand-primary-rgb),.30);  /* resting card / search float */
@@ -1126,6 +1138,48 @@ a.btn.btn-info:focus-visible,
   color: var(--brand-accent-lo) !important;
   text-decoration: underline;
 }
+/* Ground the bare Popular/New/Updated lists so they read as intentional sections
+   next to the tiles above: a hairline divider + short accent tick under each
+   heading, and tidy link rows with a chevron marker that slides on hover.
+   Colors/spacing/weight only — font sizes stay at the KO baseline. */
+.hg-minimalist-theme.hg-home-page .homepage-widgets { margin-top: 2.5em; }
+.hg-minimalist-theme.hg-home-page .homepage-widgets h3 {
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--brand-border);
+}
+.hg-minimalist-theme.hg-home-page .homepage-widgets h3::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -1px;
+  width: 34px; height: 2px;
+  background: var(--brand-accent);
+  border-radius: 2px;
+}
+.hg-minimalist-theme.hg-home-page .homepage-widgets .stat-list li { padding: 4px 0; }
+.hg-minimalist-theme.hg-home-page .homepage-widgets .stat-list a {
+  position: relative;
+  display: inline-block;
+  padding-left: 18px;
+  text-decoration: none;
+  transition: color .15s;
+}
+.hg-minimalist-theme.hg-home-page .homepage-widgets .stat-list a::before {
+  content: "\f105";                 /* fa angle-right — a light list marker */
+  font-family: 'Font Awesome 6 Pro';
+  font-weight: 300;
+  position: absolute; left: 2px; top: 0;
+  color: var(--brand-accent);
+  transition: transform .15s;
+}
+.hg-minimalist-theme.hg-home-page .homepage-widgets .stat-list a:hover {
+  color: var(--brand-accent-lo) !important;
+  text-decoration: underline;
+}
+.hg-minimalist-theme.hg-home-page .homepage-widgets .stat-list a:hover::before {
+  transform: translateX(3px);
+}
 
 /* ==========================================================================
    3) FANCY DETAILS — glow/depth polish (adapted from an earlier internal theme,
@@ -1291,6 +1345,85 @@ body.hg-minimalist-theme::before {
 .hg-minimalist-theme .ko-header-anchor:hover .ko-anchor-icon { opacity: 1; }
 /* offset anchor jumps so headings clear the fixed nav (quirk #6 family) */
 .hg-minimalist-theme .ko-header-anchor { scroll-margin-top: 90px; }
+
+/* ---------- Reading measure — cap line length on the article column ----------
+   Header + body share --ui-read-max so the title, meta, and copy stay left-aligned
+   to the same edge. Purely a readability cap (line length); the layout, TOC coupling,
+   and font sizes are untouched. Raise/lower the token to taste. */
+.hg-minimalist-theme.hg-article-page .hg-article-header,
+.hg-minimalist-theme.hg-article-page .hg-article-body {
+  max-width: var(--ui-read-max);
+}
+
+/* ---------- Content tables — give a plain <table> a clean docs grid ----------
+   KO only styles .table-bordered (a dark-header variant, left intact above). A plain
+   author <table> otherwise renders with zero cell padding and no borders, so columns
+   collide. Style every NON-bordered article table into a light, readable grid; the
+   :not(.table-bordered) scope keeps the stock bordered look untouched. */
+.hg-minimalist-theme.hg-article-page .hg-article-body table:not(.table-bordered) {
+  width: 100%;
+  margin: 24px 0;
+  border: 1px solid var(--brand-border);
+  border-radius: var(--ui-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;                 /* clip the cell grid to the rounded corners */
+}
+.hg-minimalist-theme.hg-article-page .hg-article-body table:not(.table-bordered) th,
+.hg-minimalist-theme.hg-article-page .hg-article-body table:not(.table-bordered) td {
+  padding: 10px 16px;
+  text-align: left;                 /* no !important — author inline align still wins */
+  vertical-align: top;
+  border-bottom: 1px solid var(--brand-border);
+}
+.hg-minimalist-theme.hg-article-page .hg-article-body table:not(.table-bordered) thead th {
+  background: var(--brand-bg-soft);
+  color: var(--brand-heading) !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid var(--brand-border-hi);
+}
+.hg-minimalist-theme.hg-article-page .hg-article-body table:not(.table-bordered) tbody tr:nth-child(even) td {
+  background: rgba(var(--brand-primary-rgb),.025);   /* whisper zebra */
+}
+.hg-minimalist-theme.hg-article-page .hg-article-body table:not(.table-bordered) tbody tr:last-child td {
+  border-bottom: 0;                 /* the wrapper border closes the last row */
+}
+
+/* ---------- Code — refined block + inline chip (font-sizes stay at KO baseline) ---------- */
+.hg-minimalist-theme.hg-article-page .hg-article-body pre {
+  background: var(--brand-bg-soft);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--ui-radius);
+  padding: 14px 18px;
+  margin: 22px 0;
+  overflow: auto;                   /* long lines scroll instead of blowing out the column */
+}
+/* inline <code> (not inside a pre) — a subtle brand-tinted chip */
+.hg-minimalist-theme.hg-article-page .hg-article-body :not(pre) > code {
+  background: rgba(var(--brand-accent-rgb),.07);
+  border: 1px solid rgba(var(--brand-accent-rgb),.14);
+  color: var(--brand-primary);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+/* code inside a pre inherits the block — no chip of its own */
+.hg-minimalist-theme.hg-article-page .hg-article-body pre code {
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 0;
+}
+
+/* ---------- Blockquote → soft callout (accent bar + tint) ---------- */
+.hg-minimalist-theme.hg-article-page .hg-article-body blockquote {
+  border-left: 4px solid var(--brand-accent);
+  background: rgba(var(--brand-accent-rgb),.06);
+  border-radius: 0 var(--ui-radius) var(--ui-radius) 0;
+  padding: 14px 18px;
+  margin: 22px 0;
+  color: var(--brand-body);
+}
+.hg-minimalist-theme.hg-article-page .hg-article-body blockquote > :last-child { margin-bottom: 0; }
 
 /* ---------- Footer / ratings ---------- */
 .hg-minimalist-theme .hg-article-footer { border-top: 1px solid var(--brand-border); }

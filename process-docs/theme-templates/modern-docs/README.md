@@ -35,16 +35,16 @@ Everything derives from the **`--brand-*` tokens** in the `:root` block at the t
 | Token | Role |
 |-------|------|
 | `--brand-primary` **+** `--brand-primary-rgb` | Primary brand color — nav, headings, primary actions, and (via the `-rgb`) all primary-colored glows/tints/ambient. **Set both.** |
-| `--brand-primary-hi` / `--brand-primary-lo` | Lighter / deeper primary. `-lo` drives nav depth/borders; `-hi` is reserved (unused by the theme so far). |
+| `--brand-primary-hi` / `--brand-primary-lo` | Lighter / deeper primary. **Auto-derive** from `--brand-primary` via `color-mix()` — you normally don't touch these (the hex on each is just a fallback for old engines). `-lo` drives nav depth/borders; `-hi` is reserved. Override a hex only for a hand-tuned shade. |
 | `--brand-accent` **+** `--brand-accent-rgb` | Accent — links, icons, focus, highlights, active TOC item, and (via `-rgb`) the accent glows. **Set both.** |
-| `--brand-accent-hi` / `--brand-accent-lo` | Lighter / darker accent. `-lo` drives hover/active states; `-hi` is reserved (unused by the theme so far). |
+| `--brand-accent-hi` / `--brand-accent-lo` | Lighter / darker accent. **Auto-derive** from `--brand-accent` via `color-mix()` (same as the primary shades — leave them). `-lo` drives hover/active states; `-hi` is reserved. |
 | `--brand-heading` / `--brand-body` / `--brand-muted` | Text colors. |
 | `--brand-bg` / `--brand-bg-soft` | Page bg / soft section + sidebar bg. |
 | `--brand-border` / `--brand-border-hi` | Hairlines / hover borders. |
 | `--brand-nav-text` | Text/logo/icons on the primary nav (usually `#ffffff`). |
 | `--brand-hero-image` | Homepage hero photo — a **KB file-library URL** (never a marketing-site hotlink). |
 
-The `--ui-*` tokens (radius, shadows, glows) and the entire layout/structure are **brand-agnostic — leave them.** Font sizes stay at the Minimalist baseline.
+The `--ui-*` tokens (radius, shadows, glows, and `--ui-read-max` — the article reading-column measure) and the entire layout/structure are **brand-agnostic — leave them** (tune `--ui-read-max` only if a KB wants a wider/narrower article column). Font sizes stay at the Minimalist baseline.
 
 > **Why the `-rgb` pairs?** The glows, tints, and ambient use `rgba(var(--brand-primary-rgb), α)` so the same color drives both solid fills and translucent effects. If you change a hex, change its `-rgb` too, or the effects won't follow.
 
@@ -56,8 +56,8 @@ A repeatable way to fill in the `--brand-*` tokens for a new prospect:
 
 1. **Capture their exact colors** — prefer their downloaded marketing site; if that doesn't give confident values, read *computed* styles off their live site with Claude-in-Chrome (see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`). Record them in the project (e.g. a `brand.md`).
 2. **Map the two key colors:**
-   - `--brand-primary` = their **dominant brand color** (anchors nav / headings / primary actions). Set `--brand-primary-rgb` to that color's R,G,B, and `--brand-primary-hi` / `-lo` to a slightly lighter / darker shade.
-   - `--brand-accent` = their **link / CTA / highlight color** (often a brighter secondary). Set `--brand-accent-rgb`, plus `-hi` / `-lo` for hover / active.
+   - `--brand-primary` = their **dominant brand color** (anchors nav / headings / primary actions). Set `--brand-primary-rgb` to that color's R,G,B. The `-hi` / `-lo` shades **auto-derive** — leave them.
+   - `--brand-accent` = their **link / CTA / highlight color** (often a brighter secondary). Set `--brand-accent-rgb`. The `-hi` / `-lo` shades **auto-derive** — leave them.
    - If a brand really has just one color, use it for both (or a tint for the accent).
 3. **Text + surfaces:** `--brand-heading` (near-black, lightly tinted toward the primary), `--brand-body` / `--brand-muted` (grays) — the defaults usually work; nudge toward their brand if their site does. Keep `--brand-bg` white and `--brand-bg-soft` / `--brand-border` light unless the brand is distinctly dark.
 4. **Nav text:** `--brand-nav-text` is `#ffffff` for a dark nav; use a dark value only if the primary is very light.
@@ -94,14 +94,20 @@ Then contrast-check the result (heading/body on white, nav-text on primary, acce
 
 ---
 
-## Known polish opportunities (for a future polish pass)
+## Polish status
 
-The theme was built and verified primarily on the **homepage** and an **article page**. Candidate improvements:
+**Done (2026-07, verified in localhost preview against the reference snapshots):**
 
-- **Derive `--brand-primary-hi/-lo` and `--brand-accent-hi/-lo`** from the base colors (e.g. `color-mix()`) so one swap updates them, instead of separate hex values.
-- **Other page types** — give category pages, search results, login/reader-subscriptions, 404, and restricted-access a dedicated pass (built on defaults today).
-- **Article page depth** — optional reading-column max-width (~760px); extend the ambient tastefully to article pages; code-block, table, and callout/alert styling.
+- **`-hi/-lo` shades auto-derive** from the base colors via `color-mix()` (hex fallbacks kept) — one swap now updates them.
+- **Article content elements** — plain `<table>`s get a clean docs grid (header fill, hairlines, rounded corners, whisper zebra; scoped `:not(.table-bordered)` so the stock bordered variant is untouched); `pre`/inline `code` refined to the brand palette; blockquotes become accent callouts; a `--ui-read-max` token caps the reading column's line length (header + body aligned).
+- **Homepage widgets** — the Popular/New/Updated lists get a divider + accent tick under each heading and a chevron-marker link treatment, so they read as intentional sections beside the tiles.
+- **Accessibility** — palette contrast-checked (`--brand-muted` ≈ 4.6:1 on white, passes AA); `prefers-reduced-motion` guard already covers the new transitions.
+
+**Still open (need their own snapshots / bigger scope — a future pass):**
+
+- **Other page types** — category pages, search results, login/reader-subscriptions, 404, and restricted-access are still on stock defaults + the token remap. Give them a dedicated pass **with their own reference snapshots** (they can't be verified against the current homepage/article fixtures).
+- **Alerts** — the four `.alert-*` boxes still use hardcoded pastels; tokenize/modernize them (defer until previewable).
+- **PDF parity** — the new article-content styling is scoped to `.hg-article-page`, so PDF exports (`.hg-pdf`) still render stock tables/code. Extend to `.hg-pdf` once PDF rendering can be verified.
 - **Category icons** — the KO default icons aren't ideal for every brand; add guidance or a cleaner default set.
 - **Typography** — an optional webfont token; verify the type scale/rhythm.
-- **Accessibility** — contrast-check the palette; the `prefers-reduced-motion` guard is already in place.
-- **Mintlify-inspired refinements** — spacing rhythm, a possible dark-mode variant, more refined TOC/nav interactions.
+- **Ambient on article pages + dark-mode variant** — Mintlify-inspired refinements (spacing rhythm, a possible dark-mode variant, more refined TOC/nav interactions).
