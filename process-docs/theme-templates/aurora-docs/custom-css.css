@@ -1,0 +1,1995 @@
+/******************************************************** General structure ****************************/
+/* define most colors */
+:root {
+  --primary-color: #1d284f;
+  --secondary-color: #f8b88b;
+  --text-links-color: #3C80BA;
+  --border-color: #dcdcdc;
+  --border-hover-color: #b3b3b3;
+  --box-shadow-color: #aeaeae;
+  --toc-border-color: #ddd;
+  --input-border-color: #E6E6E6;
+  --image-caption-link-color: #F6A267;
+  --input-focus-color: #378DFF;
+  --white: #ffffff;
+  /* the styles associated with these colors are commented out by default */
+  --toc-box-shadow-color: #F8F4F1;
+  --toc-category-hover-color: #f2e9e3;
+  --toc-article-hover-color: #e8e8e8;
+}
+/* smooth article resizing on TOC open/close */ 
+.hg-minimalist-theme #ko-article-cntr {
+  transition: all 300ms ease-in-out;
+  width: 100%;
+}
+/* hide right col when TOC open */
+.hg-minimalist-theme #ko-article-cntr.slideout-panel-left.open+.col-lg-3.visible-lg.right-column {
+  opacity: 0;
+  visibility: hidden;
+}
+/* size and position right column if in use */
+.hg-minimalist-theme.hg-3column-layout .right-column {
+  top: 65px;
+  padding-right: 35px;
+  z-index: 2;
+  max-width: calc((100vw - 920px) / 2);
+  transition: all 200ms ease-in-out;
+  opacity: 1;
+}
+/* make sure footer is full width */
+.hg-minimalist-theme.hg-3column-layout .ko-site-footer {
+  width: 100%;
+}
+/* self clear page contents */
+.documentation-body::after {
+  content: "";
+  display: table;
+}
+/* make site background white */
+.hg-minimalist-theme .documentation-body {
+  background: var(--white);
+}
+.hg-site {
+  background: var(--white);
+}
+
+/******************************************************** Font overrides *************************/
+/* color for <h1> */
+.hg-minimalist-theme .documentation-article h1 {
+  color: var(--primary-color);
+}
+/* article content h2 size */
+.documentation-article h2 {
+  font-size: 28px;
+}
+/* article content h3 size */
+.documentation-article h3 {
+  font-size: 24px;
+}
+/* article content h4 size */
+.documentation-article h4 {
+  font-size: 18px;
+}
+/* default color of <a> text (links) */
+.hg-minimalist-theme a:not(.btn),
+a:not(.btn) {
+  color: var(--text-links-color);
+}
+/* remove bottom margin from <p> in article content */
+.documentation-article p {
+  margin-bottom: 0;
+}
+/* force default font size for blockquote */
+blockquote {
+  font-size: inherit;
+}
+/* override default font size for homepage search bar */
+.hg-minimalist-theme .ko-large-search input.form-control {
+  font-size: 15px;
+}
+
+/******************************************************** Topic Category styles **********************/
+/* remove top border, bottom margin from title container */
+.hg-minimalist-theme .topics-top-wrapper {
+  border-bottom: none;
+  margin-bottom: 0px;
+}
+/* remove border, add padding for topic articles */
+.hg-minimalist-theme .topics-articles .hg-article-body,
+.hg-minimalist-theme .hg-category-page .hg-article-body {
+  border-bottom: none;
+  padding-bottom: 40px;
+}
+/* change quick links styles */
+.hg-minimalist-theme  .topic-toc-item {
+  margin-bottom: 10px;
+  display: list-item;
+  line-height: 1.2;
+}
+/* normalize header spacing */
+.hg-minimalist-theme .topics-articles .hg-article-header {
+  margin: 20px 0;
+}
+/* add more space between collapsed article headers */
+.hg-minimalist-theme .topics-articles .hg-article-header.ko-collapse-trigger {
+  margin: 0;
+}
+/* shrink expand / collapse icons */
+.hg-minimalist-theme .topics-articles .hg-article-title > i {
+  font-size: 20px;
+  line-height: 26px;
+  vertical-align: top;
+}
+/* indent and add spacing around collapsed article content */
+.hg-minimalist-theme .topics-articles .ko-collapse-article {
+  margin-left: 30px;
+  padding-bottom: 20px;
+}
+/* remove padding between topic articles */
+.hg-minimalist-theme .topics-articles .hg-article-body {
+  padding-bottom: 0px;
+}
+/* topic article <h2> size */
+.documentation-article .topics-articles h2.hg-article-title {
+  font-size: 24px;
+}
+/* topic article <h3> size */
+.documentation-article .topics-articles h3 {
+  font-size: 18px;
+}
+/* topic article <h4> size */
+.documentation-article .topics-articles h4 {
+  font-size: 16px;
+}
+
+/******************************************************** Default Category Styles *********************/
+/* add top and bottom margin to category panels */
+.hg-minimalist-theme .category-list {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+/* remove bottom border from title */
+.hg-minimalist-theme .faq-header {
+  border-bottom: none;
+}
+/* remove right margin from category description */
+.hg-minimalist-theme .faq-top-description {
+  margin-right: 0;
+}
+/* change category panels into 2x2 grid */
+.hg-minimalist-theme .faq-nav-content .category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  grid-auto-rows: 1fr;
+}
+/* get rid of psuedo html elements */
+.hg-minimalist-theme .faq-nav-content .category-list .clear-left,
+.hg-minimalist-theme .faq-nav-content .category-list .clear-both {
+  display: none !important;
+}
+/* style category panels */
+.hg-minimalist-theme .faq-nav-content .faq-cat-container,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: all .2s ease-in-out;
+  backface-visibility: hidden;
+}
+/* hover effect for category panels */
+.hg-minimalist-theme .faq-nav-content .faq-cat-container:hover,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container:hover {
+  background-color: var(--white);
+  box-shadow: 2px 4px 4px var(--box-shadow-color);
+  transform: scale(1.01) translateZ(0);
+}
+/* subcategory panel display tweaks */
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  padding: 0;
+}
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel {
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+}
+/* subcategory content-list display tweaks */
+.hg-minimalist-theme .category-list.faq-content-list {
+  margin-bottom: 0;
+}
+.hg-minimalist-theme .faq-content-list-container {
+  width: auto;
+  padding: 0;
+}
+.hg-minimalist-theme .faq-content-list-container .category-header {
+  border-bottom: none;
+  margin-bottom: 10px;
+}
+.hg-minimalist-theme .faq-nav-content .article-block div {
+  margin-left: 0;
+}
+/* add bottom margin to list of articles */
+.hg-minimalist-theme .faq-nav-content {
+  margin-bottom: 40px;
+}
+/* remove right margin from category title */
+.hg-minimalist-theme .faq-header {
+  margin-right: 0;
+}
+/* hide <h2>Articles</h2> from default categories */
+.hg-minimalist-theme .faq-nav-content h2 {
+  display: none;
+}
+/* Force main area to be full width */
+.hg-minimalist-theme .hg-category-page .category-list .col-md-6.col-lg-4 {
+  width: 100% !important;
+}
+/* adjust position of subscribe button */
+.hg-minimalist-theme .ko-cat-sub-cntr {
+  margin-top: 12px;
+  margin-right: 0;
+}
+/* apply hover effects to subscribe button */
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub {
+  border: 1px solid var(--border-hover-color);
+  transition: all .1s ease-in-out;
+  backface-visibility: hidden;
+}
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub:hover {
+  box-shadow: 1px 2px 2px var(--box-shadow-color);
+  transform: scale(1.01) translateZ(0);
+}
+
+/******************************************************** Table of Contents ***********/
+/* add border and box-shadow to TOC */
+.hg-minimalist-theme.hg-2column-layout .slideout-menu {
+  display: block;
+  padding: 0;
+  box-shadow: none;
+  border: 1px solid var(--toc-border-color);
+  border-radius: 0 4px 0 0;
+  /*background-color: var(--toc-box-shadow-color);*/
+  left: -360px;
+  transition: all 300ms ease-in-out;
+}
+/* remove TOC padding */
+.hg-minimalist-theme .hg-site-body .documentation-outter-list {
+  padding: 0;
+}
+/* style top level content */
+.hg-minimalist-theme .documentation-categories li.level-0,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  border-bottom: 0;
+  padding: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* style child content containers */
+.hg-minimalist-theme .documentation-categories li {
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.hg-minimalist-theme .documentation-categories li.level-0 > .category-link-container,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  padding: 5px 10px;
+}
+/* style top level articles */
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link {
+  padding: 0 5px;
+  line-height: 33px;
+}
+/* background color override for active and hovered child content */
+.hg-minimalist-theme .documentation-categories li.active,
+.hg-minimalist-theme .category-link-container.active,
+.hg-minimalist-theme .documentation-categories .article-container:hover,
+.hg-minimalist-theme .documentation-categories li a:hover,
+.hg-minimalist-theme .category-link-container:hover {
+  /*background-color: var(--toc-article-hover-color);*/
+}
+/* background color override for active and hovered top level content */
+.hg-minimalist-theme .level-0 > .category-link-container:hover,
+.hg-minimalist-theme .level-0 > .category-link-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link.active {
+  /*background-color: var(--toc-category-hover-color);*/
+  border-radius: 0;
+}
+.hg-minimalist-theme .documentation-categories .level-0 > .category-link-container a:hover {
+  /*background-color: var(--toc-category-hover-color);*/
+}
+/* override default toc slideout behavior */
+.hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+  transform: translateX(360px);
+  width: calc(100% - 360px);
+}
+/* Change TOC chevron-right to plus-square */
+.hg-minimalist-theme .documentation-categories .fa-chevron-right:before {
+  content: "\f0fe" !important;
+}
+/* Change TOC chevron-down to minus-square */
+.hg-minimalist-theme .documentation-categories .fa-chevron-down:before {
+  content: "\f146" !important;
+}
+/* make icons slightly larger */
+.hg-minimalist-theme .cat-icon, .hg-minimalist-theme .home-icon, .hg-minimalist-theme .alt-icon {
+  padding: 8px 0 0 6px;
+  font-size: 18px;
+}
+/* override default box shadow when side TOC is open */
+.hg-minimalist-theme .documentation-categories.slideout-menu.open {
+  box-shadow: 2px 4px 4px var(--box-shadow-color);
+  left: 0;
+}
+
+/********************************************************* Modals ********************/
+/* adjust input border width in modals */
+.hg-minimalist-theme .modal .form-control {
+  border-width: 1px;
+}
+
+/********************************************************* PDF Adjustments ***********/
+/* hide .pdf-header outside of actual PDFs */
+.hg-minimalist-theme .pdf-header {
+  display: none;
+}
+/* show .pdf-header in actual PDFs */
+.hg-minimalist-theme .hg-pdf .pdf-header {
+  display: block;
+}
+/* height of image in .pdf-header */
+.hg-minimalist-theme .hg-pdf .pdf-header img {
+  height: 80px;
+}
+
+/******************************************************** Homepage Top and General */
+/* get rid of background banner and add some padding to top of homepage */
+.hg-minimalist-theme .ko-homepage-top {
+  background: none;
+  padding-top: 2em;
+  padding-bottom: 0em;
+}
+/* make sure category title is clickable */
+.hg-minimalist-theme .hg-home-page .category-header {
+  z-index: 2;
+}
+/* change default color for homepage title */
+.hg-minimalist-theme .ko-homepage-top .hg-article-title {
+  color: var(--primary-color);
+}
+
+/******************************************************** Content Lists */
+/* tweak padding and line heights */
+.hg-minimalist-theme .stat-list {
+  line-height: 1.3;
+  font-size: 14px;
+  margin-left: 1px;
+}
+.hg-minimalist-theme .stat-list li {
+  padding: 4px 0;
+}
+/* remove bottom border from page title */
+.hg-minimalist-theme .page-header {
+  border-bottom: none;
+}
+/* remove border above "see more..." */
+.hg-minimalist-theme .list-action {
+  border-top: none;
+}
+/* correct margin and padding for content lists on homepage */
+.hg-minimalist-theme .homepage-widgets {
+  margin: 2em -15px;
+}
+.hg-minimalist-theme .homepage-widgets .col-md-4.col-sm-6 {
+  padding-left: 15px;
+}
+
+/******************************************************** Search Bar */
+/* remove border from individual search bar elements */
+.hg-minimalist-theme .hg-search-bar input.form-control,
+.hg-minimalist-theme .input-group-btn .btn,
+.hg-minimalist-theme .input-group-btn .btn:hover,
+.hg-minimalist-theme .hg-search-bar input.form-control:focus,
+.hg-minimalist-theme .input-group-btn .btn:focus,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:active,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:focus {
+  border: none;
+}
+/* add border to outer search bar */
+.hg-minimalist-theme .hg-search-bar .input-group {
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  transition: border .25s linear,color .25s linear,background-color .25s linear;
+}
+/* remove background color from search button */
+.hg-minimalist-theme .input-group-btn .btn {
+  background: none;
+}
+/* adjust color and sizing for the refine button */
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle {
+  color: var(--primary-color);
+  font-size: 16px;
+  border: none;
+}
+/* restyle the dropdown caret */
+.hg-search-bar .category-dropdown .dropdown-toggle .caret {
+  border: none;
+  display: inline;
+  font-family: 'Font Awesome 6 Pro';
+  font-weight: 300;
+  font-size: 14px;
+}
+.hg-search-bar .category-dropdown .dropdown-toggle .caret::before {
+  content: "\f0d7";
+}
+/* change font color and remove border for search button */
+.hg-minimalist-theme span.input-group-btn .btn-default,
+.hg-minimalist-theme span.input-group-btn .btn-default:hover {
+  color: var(--input-border-color);
+  border-left: none;
+}
+.hg-minimalist-theme .ko-large-search input.form-control,
+.hg-minimalist-theme .hg-search-bar input.form-control {
+  border-right: none;
+}
+/* add box-shadow to search bar */
+.hg-minimalist-theme .input-group {
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.05);
+}
+/* remove box shadow from type-ahead suggestion box */
+.hg-minimalist-theme .navbar-collapse.in .input-group,
+.hg-minimalist-theme .navbar-collapse.collapsing .input-group {
+  box-shadow: none;
+}
+/* handle styles for showing/hiding type-ahead suggestion box */
+.hg-minimalist-theme #navbar-collapse.in,
+.hg-minimalist-theme #navbar-collapse.collapsing {
+  margin-bottom: 0;
+  padding: 10px;
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: 0px 10px 20px -8px #ccc;
+}
+
+/******************************************************** Search Pages */
+/* adjust bottom spacing page titles and containers */
+.hg-minimalist-theme .recommended-container h2,
+.hg-minimalist-theme .hg-contact-form-container h2,
+.hg-minimalist-theme .hg-article-search {
+  margin-bottom: 40px;
+}
+/* add bottom margin to search controls */
+.hg-minimalist-theme .ko-srch-meta-cntr {
+  margin-bottom: 20px;
+}
+/* add more top margin to full search results */
+.hg-minimalist-theme #homepage-search-form .hg-article-search {
+  margin-top: 20px;
+}
+/* remove bottom spacing from recommended article titles */
+.hg-minimalist-theme .hg-article-search h4 {
+  margin-bottom: 0;
+}
+/* increase space between article results */
+.hg-minimalist-theme .hg-article-search li {
+  margin-bottom: 25px;
+}
+/* adjust size/spacing of article meta data */
+.hg-minimalist-theme .hg-article-info {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+/* add spacing after article blurbs */
+.hg-minimalist-theme .hg-article-blurb {
+  margin-bottom: 25px;
+}
+/* make last modified text for recommended articles smaller */
+.hg-minimalist-theme .hg-article-search .hg-date {
+  font-size: 14px;
+}
+/* adjust font size and line height for contact form labels */
+.hg-minimalist-theme .hg-contact-form-container label {
+  font-size: 18px;
+  line-height: 1.3;
+}
+/* decrease width of contact form field borders */
+.hg-minimalist-theme .hg-contact-form-container .form-control {
+  border: 1px solid #bdc3c7;
+}
+/* update colors for the results paging buttons */
+.hg-minimalist-theme .ko-search-pager li.current {
+  background: var(--primary-color);
+}
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn) {
+  color: var(--primary-color);
+}
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn):hover {
+  color: var(--secondary-color);
+}
+
+/******************************************************** Tables ***************************************/
+/* adjust table header cell styles */
+.table-bordered > thead > tr > th {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding-left: 1em;
+}
+/* give left aligned cells some left padding */
+.table-bordered>tbody>tr>td,
+.table-bordered>tfoot>tr>td,
+table.table-bordered tr td[style*="text-align: left"] {
+  padding-left: 1em;
+}
+
+/******************************************************** Article HTML ***************************************/
+/* add some padding to line items */
+.hg-article-body ol li {
+  padding: 10px 0;
+}
+/* first level - use regular numeric decimals  */
+.hg-article-body ol {
+  list-style-type: decimal;
+}
+/* second level - use lowercase alphabetic */
+.hg-article-body ol > li > ol {
+  list-style-type: lower-alpha;
+}
+/* third level - use lowercase Roman numerals */
+.hg-article-body ol > li > ol > li > ol {
+  list-style-type: lower-roman;
+}
+/* optional .article-block styles */
+.article-block div {
+  margin-left: 20px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+/* default margin for <p> in lists */
+.hg-article-body ul p,
+.hg-article-body ol p {
+  margin: 20px 0 0;
+}
+/* give more top space to article ratings */
+.hg-minimalist-theme .hg-ratings {
+  margin-top: 15px;
+}
+/* space out the article rating thumbs */
+.hg-minimalist-theme .hg-ratings .hg-helpful {
+  margin-right: 20px;
+}
+/* styles for check-list bullet points */
+ul.check-list {
+  list-style: none;
+  padding-left: 0;
+}
+ul.check-list li {
+  position: relative;
+  padding-left: 1.5em;
+}
+ul.check-list li:before {
+  font-family: 'FontAwesome';
+  content: "\f00c" !important;
+  padding-right: 0.5em;
+  font-size: smaller;
+  color: green;
+}
+/* remove top border from comment form */
+.hg-minimalist-theme #hg-comment-form {
+  border-top: none;
+}
+
+/******************************************************** List pages ************/
+/* remove top border from glossary page */
+.hg-minimalist-theme .glossary-letter ~ .glossary-letter {
+  border-top: none;
+}
+/* left align article lists */
+.hg-minimalist-theme .hg-widget-page .ko-content-cntr ol {
+  padding-inline-start: 20px;
+}
+
+/******************************************************** Alert boxes ***********/
+/* give alerts, wells, <pre> some top margin */
+.alert, .well, pre {
+  margin-top: 20px;
+}
+/* icon styling for all alerts */
+.alert::before {
+  display: block;
+  width: 65px;
+  height: 60px;
+  float: left;
+  margin-top: 0px;
+  font-size: 48px;
+  font-weight: 900;
+  font-family: 'Font Awesome 6 Pro';
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 60px;
+  text-rendering: auto;
+}
+/* danger alert styling */
+.alert.alert-danger {
+  background: #F4E2E2;
+  border: 1px solid #E6ADA9;
+}
+.alert.alert-danger:before {
+  content: "\f071";
+  color: #f8918b;
+}
+/* info alert styling */
+.alert.alert-info {
+  background: #F0F7FD;
+  border: 1px solid #69B2F0;
+}
+.alert.alert-info:before {
+  content: "\f05a";
+  color: #97c4ed;
+}
+/* success alert styling */
+.alert.alert-success {
+  background: #F8FBF9;
+  border: 1px solid #BDDCBC;
+}
+.alert.alert-success:before {
+  content: "\f058";
+  color: #9bdbae;
+}
+/* warning alert styling */
+.alert.alert-warning {
+  background: #FDF9E6;
+  border: 1px solid #FBD9A4;
+}
+.alert.alert-warning:before {
+  content: "\f8fa";
+  color: #ffcc7a;
+}
+/* remove top margin from <p> tags in alerts */
+.alert.alert-info p,
+.alert.alert-success p,
+.alert.alert-warning p,
+.well p {
+  margin-top: 0;
+}
+/* make sure there is vertical room icons in alerts */
+.alert.alert-info,
+.alert.alert-success,
+.alert.alert-danger,
+.alert.alert-warning {
+  min-height: 90px;
+}
+/* Offset lists that are within alert divs */
+.alert ul,
+.alert ol {
+  margin-left: 75px;
+}
+
+/******************************************************************************* Image Captions *****/
+/* Set dark background for captions */
+.hg-minimalist-theme .documentation-article .fr-img-caption .fr-img-wrap>span {
+  background: var(--primary-color);
+}
+/* Remove border for image captions */
+.hg-minimalist-theme .documentation-article span.fr-img-caption {
+  border: none;
+}
+/* Fix hyperlinks in image captions, now that we have the dark background */
+.hg-minimalist-theme span.fr-inner a {
+  color: var(--image-caption-link-color);
+  text-decoration: none;
+}
+/* Image caption hyperlinks should be a different color and underlined on-hover */
+.hg-minimalist-theme .fr-inner a:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/********************************************* Back to top snippet styling */
+/* basic styles */
+.back-to-top {
+  background-color: #fff;
+  margin: 0;
+  position: fixed;
+  bottom: 100px;
+  right: 45px;
+  width: 55px;
+  height: 45px;
+  z-index: 100;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #acacac;
+  box-shadow: 1px 3px 3px var(--box-shadow-color);
+  visibility: hidden;
+  opacity: 0;
+  transition: all .2s ease-in-out;
+}
+/* make visible when scrolled down on page */
+.back-to-top.visible {
+  visibility: visible;
+  opacity: 1;
+}
+/* icon styles */
+.back-to-top i {
+  font-size: 45px;
+  color: #3a3a3a;
+}
+/* mouse effect styles */
+.back-to-top:hover,
+.back-to-top:active,
+.back-to-top:focus {
+  color: var(--white);
+}
+
+/********************************************* Miscellaneous */
+/* optional .margin-top-20 class */
+.hg-minimalist-theme .margin-top-20 {
+  margin-top: 20px;
+}
+/* panels within the right column */
+.hg-minimalist-theme .right-col-panel {
+  border-radius: 4px;
+}
+.hg-minimalist-theme .right-col-panel .panel-heading {
+  color: var(--white);
+  background: var(--primary-color);
+  border-radius: 4px 4px 0 0;
+}
+/* Add styles for in article TOC snippet to work*/
+.hg-minimalist-theme .toc-top {
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+  margin-bottom: 20px;
+  min-height: 20px;
+  padding: 5px 30px;
+}
+/* In article TOC snippet style */
+.hg-minimalist-theme .toc-anchor {
+  display: block;
+  height: 140px;
+  margin-top: -140px;
+  visibility: hidden;
+}
+/* remove bottom border for articles */
+.hg-minimalist-theme .hg-article-body {
+  border-bottom: none;
+}
+.ko-content-cntr .pager {
+  margin-top: 40px;
+} 
+
+/* accessibility focus indicators */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible,
+input[type="file"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible,
+.form-control:focus-visible,
+.nav > li > a:focus-visible,
+.nav > li.disabled > a:focus-visible,
+.nav .open > a:focus-visible,
+.nav-tabs > li.active > a:focus-visible,
+.nav-tabs.nav-justified > .active > a:focus-visible,
+.nav-pills > li.active > a:focus-visible,
+.nav-tabs-justified > .active > a:focus-visible,
+.navbar-brand:focus-visible,
+.navbar-toggle:focus-visible,
+.navbar-default .navbar-brand:focus-visible,
+.navbar-default .navbar-nav > li > a:focus-visible,
+.navbar-default .navbar-nav > .active > a:focus-visible,
+.navbar-default .navbar-nav > .disabled > a:focus-visible,
+.navbar-default .navbar-toggle:focus-visible,
+.navbar-default .navbar-nav > .open > a:focus-visible,
+.navbar-default .btn-link:focus-visible,
+.navbar-default .btn-link[disabled]:focus-visible,
+fieldset[disabled] .navbar-default .btn-link:focus-visible,
+.navbar-inverse .navbar-brand:focus-visible,
+.navbar-inverse .navbar-nav > li > a:focus-visible,
+.navbar-inverse .navbar-nav > .active > a:focus-visible,
+.navbar-inverse .navbar-nav > .disabled > a:focus-visible,
+.navbar-inverse .navbar-toggle:focus-visible,
+.navbar-inverse .navbar-nav > .open > a:focus-visible,
+.navbar-inverse .btn-link:focus-visible,
+.navbar-inverse .btn-link[disabled]:focus-visible,
+fieldset[disabled] .navbar-inverse .btn-link:focus-visible,
+a.label:focus-visible,
+.label-default[href]:focus-visible,
+.label-primary[href]:focus-visible,
+.label-success[href]:focus-visible,
+.label-info[href]:focus-visible,
+.label-warning[href]:focus-visible,
+.label-danger[href]:focus-visible,
+.close:focus-visible,
+.back-to-top:focus-visible,
+html .author-bar .ko-editor-nav-right .dropdown > a:focus-visible,
+.hg-minimalist-theme .ko-slideout-left-toggle:focus-visible,
+.hg-minimalist-theme .ko-slideout-right-toggle:focus-visible,
+.hg-minimalist-theme .ko-large-search input.form-control:focus-visible
+button.btn.btn-success:focus-visible,
+button.btn.btn-primary:focus-visible,
+button.btn.btn-default:focus-visible,
+button.btn.btn-warning:focus-visible,
+button.btn.btn-danger:focus-visible,
+button.btn.btn-info:focus-visible,
+a.btn.btn-success:focus-visible,
+a.btn.btn-primary:focus-visible,
+a.btn.btn-default:focus-visible,
+a.btn.btn-warning:focus-visible,
+a.btn.btn-danger:focus-visible,
+a.btn.btn-info:focus-visible,
+.btn-success:focus-visible,
+.form-control.ui-autocomplete-input:focus-visible
+{
+  outline: 2px solid var(--input-focus-color);
+  outline-offset: 1px;
+}
+.hg-minimalist-theme .hg-search-bar .input-group:focus-within:not(:focus-visible)
+{
+  box-shadow: 0 0 0 2px var(--input-focus-color);
+}
+
+
+/********************************************************************* 404 page ***********************/
+/* remove top border */
+.hg-minimalist-theme .error-page-top {
+  border: none;
+}
+
+/********************************************************************* No access page *****************/
+/* vertically center h4 */
+.hg-site-login .alert h4 {
+  margin-top: 10px;
+}
+/* remove duplicate icon */
+.hg-site-login .alert h4 i {
+  display: none;
+}
+
+/********************************************************************* Screen size specific adjustments ***************/
+/* will apply to screen widths narrower than 1474px */
+@media (max-width: 1473px) {
+  /* shrink main content area */
+  .hg-minimalist-theme.hg-3column-layout:not(.hg-home-page) .ko-content-cntr {
+    max-width: 700px;
+  }
+  /* expand right col size */
+  .hg-minimalist-theme.hg-3column-layout .right-column {
+    max-width: calc((100vw - 720px) / 2);
+  }
+}
+/* will apply to screen widths narrower than 992px */
+@media (max-width: 991px) {
+  .hg-minimalist-theme #ko-article-cntr.slideout-panel.open {
+    width: 100%;
+  }
+}
+/* will apply to screen widths wider than 575px, not narrower */
+@media (min-width: 576px) {
+  .hg-minimalist-theme .hg-home-page .category-list>div {
+    width: 50%;
+    float: left;
+  }
+  .hg-minimalist-theme .category-img {
+    max-width: 50%;
+  }
+}
+/* will apply to screen widths wider than 767px */
+@media(min-width:768px) {
+  .hg-minimalist-theme .lead,
+  .hg-minimalist-theme .lead p {
+    font-size: 30.01px !important
+  }
+}
+/* will apply to screen widths wider than 991px */
+@media (min-width: 992px) {
+  .hg-minimalist-theme .hg-home-page .category-list>div {
+    width: 25%;
+  }
+  .hg-minimalist-theme .category-img {
+    max-width: 50%;
+  }
+}
+
+/* ============================================================================
+   AURORA-DOCS THEME  —  reusable KnowledgeOwl template
+   A custom layer over the KO Minimalist baseline. Everything ABOVE this banner is
+   stock KO Minimalist default CSS; everything BELOW is the theme.
+
+   Design: a light, airy nav; a vibrant multi-color gradient hero; rounded card
+   categories; a colored footer; a soft-tinted, fully-colored TOC; dark code blocks.
+
+   ▸ TO RE-SKIN FOR A PROSPECT: change ONLY the --brand-* tokens in the :root block
+     below (colors, the three "-rgb" pairs, the font, and the hero image URL). The
+     --ui-* tokens (radius, spacing, shadow, motion) and the layout/structure are
+     brand-agnostic and stay put.
+   ▸ For each brand color used in glows/tints/gradients, set BOTH the hex and its
+     "-rgb" components (e.g. --brand-primary AND --brand-primary-rgb). The -rgb value
+     feeds the rgba() alpha effects, so the whole theme re-skins from these tokens.
+   ▸ FONT SIZES stay at the KO Minimalist baseline (they come from the stock CSS
+     above). Do NOT add font-size here — weight, color, spacing, radius, line-height,
+     width, and font-FAMILY only.
+   ▸ This template ships with a webfont (Outfit). Swap it in ONE place: --brand-font
+     below, plus the matching Google Fonts <link> in custom-head.html.
+   ▸ Also required per prospect (outside this file): Style Settings colors, the logo
+     (Style Settings > Logo — a DARK logo; the nav is light), and the hero image
+     (KB file library). See the README.
+   ============================================================================ */
+
+:root {
+  /* ========================================================================
+     SWAP THESE per prospect  —  brand values; the whole theme derives from them
+     ======================================================================== */
+  --brand-primary:      #0a0063;      /* dark primary: headings, footer, table head, code bg, TOC text */
+  --brand-primary-rgb:  10, 0, 99;    /*   ^ same color as R,G,B (feeds shadows/tints)                 */
+  --brand-primary-dark: #06003d;                                     /* deeper primary (fallback) */
+  --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 72%, #000000);
+
+  --brand-action:       #1f5fd6;      /* interactive blue: links, buttons, focus, active states       */
+  --brand-action-rgb:   31, 95, 214;  /*   ^ same color as R,G,B (feeds focus rings/gradient/glow)     */
+  --brand-action-dark:  #16489f;                                     /* link/button hover (fallback) */
+  --brand-action-dark:  color-mix(in srgb, var(--brand-action) 76%, #000000);
+
+  --brand-accent:       #2fd285;      /* accent green: checklist, blockquote bar, caption links, hero  */
+  --brand-accent-rgb:   47, 210, 133; /*   ^ same color as R,G,B (feeds gradient/glow)                 */
+  --brand-accent-dark:  #1fad68;                                     /* accent hover (fallback) */
+  --brand-accent-dark:  color-mix(in srgb, var(--brand-accent) 82%, #000000);
+
+  --brand-tint:         #deecf7;      /* pale surface tint: bg washes, TOC highlight, top-search field */
+  --brand-heading:      #111111;      /* heading text */
+  --brand-body:         #3a3a3a;      /* body / nav text */
+  --brand-muted:        #6b7280;      /* muted / secondary text */
+  --brand-bg:           #f7fafd;      /* page background */
+  --brand-surface:      #ffffff;      /* cards / panels / nav */
+  --brand-border:       #e5e7eb;      /* hairlines / card borders */
+  --brand-border-strong:#dadce0;      /* stronger borders / hover */
+  --brand-nav-text:     #3a3a3a;      /* text/icons on the (light) nav */
+
+  /* Webfont — set here AND in custom-head.html's Google Fonts <link>. */
+  --brand-font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* Homepage hero image — upload the prospect's hero to the KB file library and paste
+     its KB-hosted URL here (never a marketing-site hotlink). Until set, the hero falls
+     back to the brand gradient alone. */
+  --brand-hero-image:   url('REPLACE-WITH-KB-FILE-LIBRARY-URL');
+
+  /* ========================================================================
+     DERIVED — usually leave (structural; brand-agnostic)
+     ======================================================================== */
+  /* Radii */
+  --ui-radius-sm:  6px;
+  --ui-radius-md:  10px;
+  --ui-radius-lg:  16px;
+  --ui-radius-xl:  24px;
+  --ui-radius-pill: 999px;
+
+  /* Spacing (8pt scale) */
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 24px;
+  --ui-space-6: 32px;
+  --ui-space-7: 48px;
+  --ui-space-8: 64px;
+  --ui-space-9: 96px;
+
+  /* Shadows — tinted with the primary brand color via its -rgb */
+  --ui-shadow-xs:  0 1px 2px  rgba(var(--brand-primary-rgb), .04);
+  --ui-shadow-sm:  0 2px 6px  rgba(var(--brand-primary-rgb), .06);
+  --ui-shadow-md:  0 8px 24px rgba(var(--brand-primary-rgb), .08);
+  --ui-shadow-lg:  0 20px 50px rgba(var(--brand-primary-rgb), .18);
+  --ui-shadow-focus: 0 0 0 3px rgba(var(--brand-action-rgb), .30);
+
+  /* Motion */
+  --ui-ease:          cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ui-duration-fast: 150ms;
+  --ui-duration-base: 250ms;
+  --ui-duration-slow: 400ms;
+
+  /* Monospace (code) */
+  --ui-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Functional colors — fixed semantic states (not brand-swapped) */
+  --ui-success:    #059669;  --ui-success-bg: #d1fae5;
+  --ui-warning:    #ea580c;  --ui-warning-bg: #fed7aa;
+  --ui-danger:     #dc2626;
+  --ui-info:       #2563eb;  --ui-info-bg:    #dbeafe;
+
+  /* Remap KO's own theme variables to the brand palette (the stock CSS above uses these) */
+  --primary-color:     var(--brand-primary);
+  --secondary-color:   var(--brand-accent);
+  --text-links-color:  var(--brand-action);
+  --border-color:      var(--brand-border);
+  --border-hover-color: var(--brand-border-strong);
+  --toc-border-color:  var(--brand-border);
+  --input-border-color: var(--brand-border);
+  --image-caption-link-color: var(--brand-accent);
+  --input-focus-color: var(--brand-action);
+  --white:             var(--brand-surface);
+}
+
+/* ==========================================================================
+   1) BASE TYPOGRAPHY  —  family / weight / color / rhythm only (NO font-size)
+   ========================================================================== */
+.hg-minimalist-theme,
+.hg-minimalist-theme body,
+body {
+  font-family: var(--brand-font) !important;
+  color: var(--brand-body);
+  background: var(--brand-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+.hg-minimalist-theme h1,
+.hg-minimalist-theme h2,
+.hg-minimalist-theme h3,
+.hg-minimalist-theme h4,
+.hg-minimalist-theme h5,
+.hg-minimalist-theme h6,
+.hg-minimalist-theme .hg-article-title,
+.hg-minimalist-theme .faq-header h2,
+.hg-minimalist-theme .category-header,
+.hg-minimalist-theme .page-header h1 {
+  font-family: var(--brand-font) !important;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--brand-heading);
+  line-height: 1.15;
+}
+.hg-minimalist-theme h1,
+.hg-minimalist-theme .documentation-article h1 {
+  margin-bottom: var(--ui-space-5);
+  color: var(--brand-primary);
+}
+.hg-minimalist-theme .documentation-article h2 { margin-top: var(--ui-space-7); margin-bottom: var(--ui-space-4); }
+.hg-minimalist-theme .documentation-article h3 { margin-top: var(--ui-space-6); margin-bottom: var(--ui-space-3); }
+.hg-minimalist-theme .documentation-article h4 { margin-top: var(--ui-space-5); margin-bottom: var(--ui-space-2); font-weight: 600; }
+
+.hg-minimalist-theme p,
+.documentation-article p {
+  line-height: 1.7;
+  color: var(--brand-body);
+  margin-bottom: var(--ui-space-4);
+}
+
+.hg-minimalist-theme a:not(.btn),
+a:not(.btn) {
+  color: var(--brand-action);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--ui-duration-fast) var(--ui-ease), border-color var(--ui-duration-fast) var(--ui-ease);
+  border-bottom: 1px solid transparent;
+}
+.hg-minimalist-theme a:not(.btn):hover,
+a:not(.btn):hover {
+  color: var(--brand-action-dark);
+  border-bottom-color: var(--brand-action-dark);
+}
+
+::selection { background: var(--brand-tint); color: var(--brand-primary); }
+
+/* ==========================================================================
+   2) PAGE STRUCTURE
+   ========================================================================== */
+.hg-minimalist-theme .documentation-body,
+.hg-site { background: var(--brand-bg); }
+
+.hg-minimalist-theme #ko-article-cntr {
+  transition: all var(--ui-duration-base) var(--ui-ease);
+  width: 100%;
+}
+.hg-minimalist-theme.hg-3column-layout .right-column {
+  top: 80px;
+  padding-right: var(--ui-space-7);
+  z-index: 2;
+  max-width: calc((100vw - 920px) / 2);
+  transition: all var(--ui-duration-base) var(--ui-ease);
+  opacity: 1;
+}
+.hg-minimalist-theme #ko-article-cntr.slideout-panel-left.open + .col-lg-3.visible-lg.right-column {
+  opacity: 0;
+  visibility: hidden;
+}
+.hg-minimalist-theme.hg-3column-layout .ko-site-footer { width: 100%; }
+.documentation-body::after { content: ""; display: table; }
+
+/* ==========================================================================
+   3) TOP NAVIGATION  —  light bar
+   ========================================================================== */
+.hg-minimalist-theme .navbar {
+  background: var(--brand-surface) !important;
+  border-bottom: 1px solid var(--brand-border);
+  box-shadow: var(--ui-shadow-xs);
+  min-height: 72px;
+  padding: 0 var(--ui-space-5);
+}
+.hg-minimalist-theme .navbar-brand {
+  display: flex;
+  align-items: center;
+  height: 72px;
+  padding: 0 var(--ui-space-3) 0 0;
+}
+.hg-minimalist-theme .hg-project-name {
+  font-family: var(--brand-font) !important;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--brand-primary);
+  margin-left: var(--ui-space-3);
+}
+/* Top-nav links */
+body.hg-site.hg-minimalist-theme .navbar-default .navbar-nav > li > a,
+body.hg-site.hg-minimalist-theme .navbar-nav > li > a,
+body.hg-site.hg-minimalist-theme .navbar-nav > li > a.hg-header-link,
+body.hg-site.hg-minimalist-theme .navbar .navbar-nav > li > a {
+  color: var(--brand-nav-text) !important;
+  font-family: var(--brand-font) !important;
+  font-weight: 500 !important;
+  padding: 12px 16px !important;
+  border-radius: var(--ui-radius-sm);
+  transition: all var(--ui-duration-fast) var(--ui-ease);
+}
+body.hg-site.hg-minimalist-theme .navbar-nav > li > a:hover,
+body.hg-site.hg-minimalist-theme .navbar-default .navbar-nav > li > a:hover {
+  color: var(--brand-primary) !important;
+  background: var(--brand-tint) !important;
+}
+.hg-minimalist-theme .toc-toggle,
+.hg-minimalist-theme .ko-slideout-left-toggle {
+  border-radius: var(--ui-radius-sm);
+  transition: background var(--ui-duration-fast) var(--ui-ease);
+}
+.hg-minimalist-theme .toc-toggle:hover,
+.hg-minimalist-theme .ko-slideout-left-toggle:hover { background: var(--brand-tint); }
+
+/* ==========================================================================
+   4) HOMEPAGE HERO  —  brand gradient + optional photo
+   ========================================================================== */
+.hg-minimalist-theme .ko-homepage-top {
+  background-image:
+    linear-gradient(135deg,
+      rgba(var(--brand-primary-rgb), .85) 0%,
+      rgba(var(--brand-action-rgb),  .60) 50%,
+      rgba(var(--brand-accent-rgb),  .35) 100%),
+    var(--brand-hero-image);
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+  padding: clamp(var(--ui-space-8), 10vw, 160px) var(--ui-space-5);
+  margin: 0 -15px var(--ui-space-7);
+  position: relative;
+  overflow: hidden;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hg-minimalist-theme .ko-homepage-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(var(--brand-primary-rgb), .10) 0%, transparent 30%, transparent 70%, rgba(var(--brand-primary-rgb), .15) 100%);
+  pointer-events: none;
+}
+.hg-minimalist-theme .ko-homepage-top .hg-article-title {
+  color: var(--brand-surface);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-align: center;
+  margin: 0 auto var(--ui-space-4);
+  max-width: 18ch;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 24px rgba(var(--brand-primary-rgb), .45);
+}
+.hg-minimalist-theme .ko-homepage-top .ko-hero-tagline {
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--brand-font);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0 auto var(--ui-space-6);
+  max-width: 48ch;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 12px rgba(var(--brand-primary-rgb), .50);
+}
+.hg-minimalist-theme .ko-homepage-top .ko-large-search {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hg-minimalist-theme .ko-homepage-top .input-group {
+  background: var(--brand-surface);
+  border-radius: var(--ui-radius-pill);
+  border: none;
+  box-shadow: var(--ui-shadow-lg);
+  padding: var(--ui-space-2);
+  transition: box-shadow var(--ui-duration-base) var(--ui-ease), transform var(--ui-duration-base) var(--ui-ease);
+}
+.hg-minimalist-theme .ko-homepage-top .input-group:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 24px 60px rgba(var(--brand-primary-rgb), .30);
+}
+.hg-minimalist-theme .ko-homepage-top .input-group:focus-within {
+  transform: translateY(-1px);
+  box-shadow: 0 24px 60px rgba(var(--brand-primary-rgb), .30), 0 0 0 4px rgba(var(--brand-action-rgb), .40);
+}
+.hg-minimalist-theme .ko-homepage-top .ko-large-search input.form-control {
+  border: none !important;
+  background: transparent;
+  padding: var(--ui-space-3) var(--ui-space-5);
+  box-shadow: none;
+  color: var(--brand-heading);
+}
+.hg-minimalist-theme .ko-homepage-top .ko-large-search input.form-control::placeholder { color: var(--brand-muted); }
+.hg-minimalist-theme .ko-homepage-top .input-group-btn .btn {
+  background: var(--brand-action) !important;
+  color: var(--brand-surface) !important;
+  border: none;
+  border-radius: var(--ui-radius-pill);
+  padding: var(--ui-space-3) var(--ui-space-5);
+  transition: background var(--ui-duration-fast) var(--ui-ease);
+}
+.hg-minimalist-theme .ko-homepage-top .input-group-btn .btn:hover { background: var(--brand-action-dark) !important; }
+.hg-minimalist-theme.hg-home-page .category-header { z-index: 2; }
+
+/* ==========================================================================
+   5) HOMEPAGE CATEGORY CARDS  (icon-cats grid → .cat-icon-panel)
+   NOTE: hg-home-page sits on the BODY, so it must be COMPOUNDED with
+   hg-minimalist-theme (.hg-minimalist-theme.hg-home-page — no space, or it matches
+   nothing). The homepage icon-cats render as .cat-icon-panel (NOT .faq-cat-container,
+   which is the category-PAGE card — styled in section 6).
+   ========================================================================== */
+.hg-minimalist-theme.hg-home-page .category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--ui-space-5);
+  margin: var(--ui-space-7) 0;
+}
+.hg-minimalist-theme.hg-home-page .category-list > div { width: auto !important; float: none !important; }
+.hg-minimalist-theme.hg-home-page .category-img,
+.hg-minimalist-theme.hg-home-page .cat-icon-panel .category-icon i {
+  transition: transform var(--ui-duration-base) var(--ui-ease);
+}
+.hg-minimalist-theme.hg-home-page .category-img { max-width: 64px !important; margin: 0 auto var(--ui-space-4); }
+.hg-minimalist-theme.hg-home-page .cat-icon-panel {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--ui-radius-lg);
+  padding: var(--ui-space-6) var(--ui-space-5);
+  text-align: center;
+  transition: all var(--ui-duration-base) var(--ui-ease);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+/* recolor the default category icons to the brand primary */
+.hg-minimalist-theme.hg-home-page .cat-icon-panel .category-icon i,
+.hg-minimalist-theme.hg-home-page .cat-icon-panel .category-icon i::before {
+  color: var(--brand-primary) !important;
+}
+/* animated brand top-bar that slides in on hover */
+.hg-minimalist-theme.hg-home-page .cat-icon-panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-action) 100%);
+  transform: translateY(3px);
+  transition: transform var(--ui-duration-base) var(--ui-ease);
+}
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover {
+  border-color: transparent;
+  box-shadow: var(--ui-shadow-md);
+  transform: translateY(-3px);
+}
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover::after { transform: translateY(0); }
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover .category-img,
+.hg-minimalist-theme.hg-home-page .cat-icon-panel:hover .category-icon i { transform: scale(1.08); }
+.hg-minimalist-theme.hg-home-page .category-header {
+  font-family: var(--brand-font) !important;
+  font-weight: 600;
+  color: var(--brand-primary) !important;
+  margin-top: var(--ui-space-3) !important;
+  letter-spacing: -0.01em;
+}
+.hg-minimalist-theme.hg-home-page .category-header a { color: var(--brand-primary) !important; border-bottom: none !important; }
+
+/* ==========================================================================
+   6) DEFAULT CATEGORY PAGES
+   ========================================================================== */
+.hg-minimalist-theme .topics-top-wrapper,
+.hg-minimalist-theme .faq-header { border-bottom: none; margin-bottom: var(--ui-space-5); }
+.hg-minimalist-theme .faq-top-description { margin-right: 0; color: var(--brand-body); line-height: 1.6; }
+.hg-minimalist-theme .faq-nav-content .category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: var(--ui-space-5);
+  grid-auto-rows: 1fr;
+  margin-top: var(--ui-space-5);
+  margin-bottom: var(--ui-space-7);
+}
+.hg-minimalist-theme .faq-nav-content .category-list .clear-left,
+.hg-minimalist-theme .faq-nav-content .category-list .clear-both { display: none !important; }
+.hg-minimalist-theme .faq-nav-content .faq-cat-container,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--ui-radius-lg);
+  padding: var(--ui-space-5);
+  transition: all var(--ui-duration-base) var(--ui-ease);
+  backface-visibility: hidden;
+  box-shadow: var(--ui-shadow-xs);
+}
+.hg-minimalist-theme .faq-nav-content .faq-cat-container:hover,
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel-container:hover {
+  border-color: var(--brand-action);
+  box-shadow: var(--ui-shadow-md);
+  transform: translateY(-2px);
+}
+.hg-minimalist-theme .faq-nav-content .faq-cat-panel { border: none; box-shadow: none; border-radius: var(--ui-radius-md); background: transparent; }
+.hg-minimalist-theme .category-list.faq-content-list { margin-bottom: 0; }
+.hg-minimalist-theme .faq-content-list-container { width: auto; padding: 0; }
+.hg-minimalist-theme .faq-content-list-container .category-header { border-bottom: none; margin-bottom: var(--ui-space-3); }
+.hg-minimalist-theme .faq-nav-content .article-block div { margin-left: 0; }
+.hg-minimalist-theme .faq-nav-content { margin-bottom: var(--ui-space-7); }
+.hg-minimalist-theme .faq-nav-content h2 { display: none; }
+.hg-minimalist-theme .hg-category-page .category-list .col-md-6.col-lg-4 { width: 100% !important; }
+.hg-minimalist-theme .faq-nav-content .article-block div,
+.hg-minimalist-theme .faq-content-list-container .article-block div,
+.hg-minimalist-theme .faq-nav-content .hg-article-blurb,
+.hg-minimalist-theme .faq-content-list-container .hg-article-blurb,
+.hg-minimalist-theme .hg-article-blurb { line-height: 1.6; color: var(--brand-body); }
+.hg-minimalist-theme .ko-cat-sub-cntr { margin-top: var(--ui-space-3); margin-right: 0; }
+
+/* ==========================================================================
+   7) BUTTONS
+   ========================================================================== */
+.hg-minimalist-theme .btn,
+.btn {
+  font-family: var(--brand-font);
+  font-weight: 500;
+  padding: var(--ui-space-3) var(--ui-space-5);
+  border-radius: var(--ui-radius-pill);
+  border: 1px solid transparent;
+  transition: all var(--ui-duration-fast) var(--ui-ease);
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+.hg-minimalist-theme .btn.btn-primary,
+.btn.btn-primary { background: var(--brand-action); color: var(--brand-surface); border-color: var(--brand-action); }
+.hg-minimalist-theme .btn.btn-primary:hover,
+.btn.btn-primary:hover { background: var(--brand-action-dark); border-color: var(--brand-action-dark); transform: translateY(-1px); box-shadow: var(--ui-shadow-sm); }
+.hg-minimalist-theme .btn.btn-default,
+.btn.btn-default { background: var(--brand-surface); color: var(--brand-primary); border-color: var(--brand-border-strong); }
+.hg-minimalist-theme .btn.btn-default:hover,
+.btn.btn-default:hover { background: var(--brand-tint); border-color: var(--brand-action); color: var(--brand-primary); }
+.hg-minimalist-theme .btn.btn-success { background: var(--ui-success); border-color: var(--ui-success); color: #fff; }
+.hg-minimalist-theme .btn.btn-warning { background: var(--ui-warning); border-color: var(--ui-warning); color: #fff; }
+.hg-minimalist-theme .btn.btn-danger  { background: var(--ui-danger);  border-color: var(--ui-danger);  color: #fff; }
+.hg-minimalist-theme .btn.btn-info    { background: var(--ui-info);    border-color: var(--ui-info);    color: #fff; }
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub { border: 1px solid var(--brand-border-strong); }
+.hg-minimalist-theme .btn.btn-default.ko-cat-sub:hover { background: var(--brand-tint); border-color: var(--brand-action); color: var(--brand-primary); }
+
+/* ==========================================================================
+   8) SEARCH BAR (top nav)
+   ========================================================================== */
+.hg-minimalist-theme .hg-search-bar input.form-control,
+.hg-minimalist-theme .input-group-btn .btn,
+.hg-minimalist-theme .input-group-btn .btn:hover,
+.hg-minimalist-theme .hg-search-bar input.form-control:focus,
+.hg-minimalist-theme .input-group-btn .btn:focus,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:active,
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle:focus { border: none; }
+.hg-minimalist-theme .hg-search-bar .input-group {
+  background: var(--brand-tint);
+  border: 1px solid transparent;
+  border-radius: var(--ui-radius-pill);
+  transition: all var(--ui-duration-fast) var(--ui-ease);
+  box-shadow: none;
+  overflow: hidden;
+}
+.hg-minimalist-theme .hg-search-bar .input-group:hover { background: var(--brand-surface); border-color: var(--brand-border); }
+.hg-minimalist-theme .hg-search-bar .input-group:focus-within {
+  background: var(--brand-surface);
+  border-color: var(--brand-action);
+  box-shadow: 0 0 0 3px rgba(var(--brand-action-rgb), .25);
+}
+.hg-minimalist-theme .hg-search-bar input.form-control { background: transparent; padding: var(--ui-space-2) var(--ui-space-4); }
+.hg-minimalist-theme .ko-large-search input.form-control,
+.hg-minimalist-theme .hg-search-bar input.form-control { border-right: none; }
+.hg-minimalist-theme .input-group-btn .btn { background: none; color: var(--brand-body); }
+.hg-minimalist-theme .input-group-btn .btn-default.dropdown-toggle { color: var(--brand-primary); border: none; padding: var(--ui-space-2) var(--ui-space-4); }
+.hg-search-bar .category-dropdown .dropdown-toggle .caret {
+  border: none;
+  display: inline;
+  font-family: 'Font Awesome 6 Pro';
+  font-weight: 300;
+  margin-left: 4px;
+}
+.hg-search-bar .category-dropdown .dropdown-toggle .caret::before { content: "\f0d7"; }
+.hg-minimalist-theme span.input-group-btn .btn-default,
+.hg-minimalist-theme span.input-group-btn .btn-default:hover { color: var(--brand-muted); border-left: none; }
+.hg-minimalist-theme .navbar-collapse.in .input-group,
+.hg-minimalist-theme .navbar-collapse.collapsing .input-group { box-shadow: none; }
+.hg-minimalist-theme #navbar-collapse.in,
+.hg-minimalist-theme #navbar-collapse.collapsing {
+  margin-bottom: 0;
+  padding: var(--ui-space-3);
+  border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
+  box-shadow: var(--ui-shadow-md);
+  background: var(--brand-surface);
+}
+
+/* ==========================================================================
+   9) HOMEPAGE CONTENT LISTS / WIDGETS
+   ========================================================================== */
+.hg-minimalist-theme .homepage-widgets {
+  margin: var(--ui-space-7) -15px var(--ui-space-5);
+  padding: var(--ui-space-6) var(--ui-space-5);
+  background: var(--brand-tint);
+  border-radius: var(--ui-radius-lg);
+}
+.hg-minimalist-theme .homepage-widgets .col-md-4.col-sm-6 { padding-left: var(--ui-space-5); }
+.hg-minimalist-theme .homepage-widgets h3 {
+  font-family: var(--brand-font);
+  color: var(--brand-primary);
+  margin-bottom: var(--ui-space-4);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.hg-minimalist-theme .stat-list { line-height: 1.5; margin-left: 0; padding-left: 0; list-style: none; }
+.hg-minimalist-theme .stat-list li { padding: var(--ui-space-2) 0; border-bottom: 1px solid rgba(var(--brand-primary-rgb), .08); }
+.hg-minimalist-theme .stat-list li:last-child { border-bottom: none; }
+.hg-minimalist-theme .stat-list li a { color: var(--brand-body) !important; font-weight: 400; }
+.hg-minimalist-theme .stat-list li a:hover { color: var(--brand-action-dark) !important; }
+.hg-minimalist-theme .list-action { border-top: none; margin-top: var(--ui-space-3); }
+.hg-minimalist-theme .list-action a {
+  font-weight: 600;
+  color: var(--brand-action) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.hg-minimalist-theme .page-header { border-bottom: none; }
+
+/* ==========================================================================
+   10) TABLE OF CONTENTS (slideout)  —  fully colored to the brand
+   ========================================================================== */
+.hg-minimalist-theme.hg-2column-layout .slideout-menu,
+.hg-minimalist-theme .documentation-categories.slideout-menu {
+  display: block;
+  padding: var(--ui-space-4) var(--ui-space-3);
+  box-shadow: none;
+  border: none;
+  border-right: 1px solid var(--brand-border);
+  background: var(--brand-bg);
+  left: -360px;
+  transition: all var(--ui-duration-base) var(--ui-ease);
+}
+.hg-minimalist-theme .documentation-categories.slideout-menu.open { box-shadow: var(--ui-shadow-md); left: 0; }
+.hg-minimalist-theme #ko-article-cntr.slideout-panel.open { transform: translateX(360px); width: calc(100% - 360px); }
+.hg-minimalist-theme .hg-site-body .documentation-outter-list { padding: 0; }
+.hg-minimalist-theme .documentation-categories li.level-0,
+.hg-minimalist-theme .documentation-outter-list > .article-container { border-bottom: 0; padding: 0; margin: 2px 0; }
+.hg-minimalist-theme .documentation-categories li { margin: 2px 0; }
+.hg-minimalist-theme .documentation-categories li.level-0 > .category-link-container,
+.hg-minimalist-theme .documentation-outter-list > .article-container {
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-radius: var(--ui-radius-sm);
+  transition: background var(--ui-duration-fast) var(--ui-ease);
+}
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link {
+  padding: 0 var(--ui-space-2);
+  line-height: 1.5;
+}
+/* TOC text: all levels always --brand-primary (KO's defaults can render links white on dark) */
+.hg-minimalist-theme .documentation-categories a,
+.hg-minimalist-theme .documentation-categories .article-link,
+.hg-minimalist-theme .documentation-categories .category-link,
+.hg-minimalist-theme .documentation-categories li a,
+.hg-minimalist-theme .documentation-outter-list a,
+.hg-minimalist-theme .documentation-outter-list .article-link {
+  color: var(--brand-primary) !important;
+  background: transparent !important;
+}
+/* TOC hover + active: pale brand tint */
+.hg-minimalist-theme .documentation-categories .article-container:hover,
+.hg-minimalist-theme .documentation-categories li:hover > .category-link-container,
+.hg-minimalist-theme .documentation-categories .category-link-container:hover,
+.hg-minimalist-theme .documentation-outter-list > .article-container:hover,
+.hg-minimalist-theme .documentation-categories li.active,
+.hg-minimalist-theme .documentation-categories li.active > .category-link-container,
+.hg-minimalist-theme .documentation-categories .category-link-container.active,
+.hg-minimalist-theme .documentation-categories .article-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container.active,
+.hg-minimalist-theme .documentation-outter-list > .article-container .article-link.active,
+.hg-minimalist-theme .level-0 > .category-link-container.active {
+  background: var(--brand-tint) !important;
+  border-radius: var(--ui-radius-sm);
+}
+.hg-minimalist-theme .documentation-categories li.active a,
+.hg-minimalist-theme .documentation-categories .active .article-link,
+.hg-minimalist-theme .documentation-categories .active a,
+.hg-minimalist-theme .documentation-outter-list .active a,
+.hg-minimalist-theme .documentation-outter-list .active .article-link {
+  color: var(--brand-primary) !important;
+  background: transparent !important;
+}
+.hg-minimalist-theme .documentation-categories .level-0 > .category-link-container a { font-weight: 600; color: var(--brand-primary) !important; }
+.hg-minimalist-theme .documentation-categories .fa-chevron-right:before { content: "\f067" !important; font-weight: 300; }
+.hg-minimalist-theme .documentation-categories .fa-chevron-down:before  { content: "\f068" !important; font-weight: 300; }
+.hg-minimalist-theme .cat-icon,
+.hg-minimalist-theme .home-icon,
+.hg-minimalist-theme .alt-icon { padding: var(--ui-space-2) 0 0 var(--ui-space-2); color: var(--brand-muted); }
+
+/* ==========================================================================
+   11) ARTICLE PAGE  —  reading card
+   Scoped :not(.hg-home-page): the homepage HTML also wraps its content in
+   .hg-article, and we don't want the whole homepage boxed in a white card
+   (its category cards would sit white-on-white). The reading card is for
+   article/content pages only; homepage content sits on the page background.
+   ========================================================================== */
+.hg-minimalist-theme:not(.hg-home-page) .hg-article {
+  background: var(--brand-surface);
+  border-radius: var(--ui-radius-lg);
+  padding: var(--ui-space-7);
+  box-shadow: var(--ui-shadow-xs);
+  margin-top: var(--ui-space-5);
+}
+.hg-minimalist-theme .hg-article-header {
+  border-bottom: 1px solid var(--brand-border);
+  padding-bottom: var(--ui-space-5);
+  margin-bottom: var(--ui-space-6);
+}
+.hg-minimalist-theme .hg-article-header .hg-article-title { margin-bottom: var(--ui-space-3); color: var(--brand-heading); letter-spacing: -0.02em; }
+.hg-minimalist-theme .hg-article-header .metadata,
+.hg-minimalist-theme .version-metadata { color: var(--brand-muted); font-family: var(--brand-font); }
+/* article body colour/rhythm (NO font-size — sizes come from the stock baseline) */
+body.hg-site.hg-minimalist-theme .hg-article-body,
+body.hg-site.hg-minimalist-theme .hg-article-body p,
+body.hg-site.hg-minimalist-theme .hg-article-body li,
+body.hg-site.hg-minimalist-theme .documentation-article .hg-article-body,
+body.hg-site.hg-minimalist-theme .documentation-article .hg-article-body p,
+body.hg-site.hg-minimalist-theme .documentation-article .hg-article-body li {
+  line-height: 1.75;
+  font-family: var(--brand-font) !important;
+  color: var(--brand-body);
+}
+.hg-minimalist-theme .hg-article-body { border-bottom: none; }
+.hg-minimalist-theme .hg-article-body p { margin-bottom: var(--ui-space-5); }
+.hg-minimalist-theme .hg-article-body li { margin-bottom: var(--ui-space-2); }
+.hg-minimalist-theme .documentation-article a:not(.btn) {
+  color: var(--brand-action);
+  border-bottom: 1px solid rgba(var(--brand-action-rgb), .40);
+  padding-bottom: 1px;
+  font-weight: 500;
+}
+.hg-minimalist-theme .documentation-article a:not(.btn):hover { color: var(--brand-action-dark); border-bottom-color: var(--brand-action-dark); }
+.documentation-article p { margin-bottom: var(--ui-space-4); }
+blockquote {
+  font-size: inherit;
+  border-left: 4px solid var(--brand-accent);
+  background: var(--brand-tint);
+  padding: var(--ui-space-4) var(--ui-space-5);
+  margin: var(--ui-space-5) 0;
+  border-radius: 0 var(--ui-radius-md) var(--ui-radius-md) 0;
+  color: var(--brand-body);
+  font-style: italic;
+}
+.hg-minimalist-theme code,
+.hg-minimalist-theme pre { font-family: var(--ui-font-mono); }
+.hg-minimalist-theme code { background: var(--brand-tint); padding: 2px 6px; border-radius: 4px; color: var(--brand-primary); }
+.hg-minimalist-theme pre {
+  background: var(--brand-primary);
+  color: var(--brand-tint);
+  padding: var(--ui-space-5);
+  border-radius: var(--ui-radius-md);
+  border: none;
+  margin-top: var(--ui-space-4);
+  overflow-x: auto;
+}
+.hg-minimalist-theme pre code { background: transparent; color: inherit; padding: 0; }
+.hg-article-body ol li { padding: var(--ui-space-2) 0; }
+.hg-article-body ol { list-style-type: decimal; }
+.hg-article-body ol > li > ol { list-style-type: lower-alpha; }
+.hg-article-body ol > li > ol > li > ol { list-style-type: lower-roman; }
+.hg-article-body ul p,
+.hg-article-body ol p { margin: var(--ui-space-3) 0 0; }
+.hg-minimalist-theme .hg-article-footer { margin-top: var(--ui-space-7); padding-top: var(--ui-space-6); border-top: 1px solid var(--brand-border); }
+.hg-minimalist-theme .ko-related-articles {
+  background: var(--brand-tint);
+  padding: var(--ui-space-5);
+  border-radius: var(--ui-radius-md);
+  margin-bottom: var(--ui-space-5);
+}
+.hg-minimalist-theme .ko-related-articles h3 { margin-top: 0; margin-bottom: var(--ui-space-3); color: var(--brand-primary); }
+.hg-minimalist-theme .hg-ratings {
+  margin-top: var(--ui-space-5);
+  padding: var(--ui-space-4) var(--ui-space-5);
+  background: var(--brand-tint);
+  border-radius: var(--ui-radius-md);
+  text-align: center;
+}
+.hg-minimalist-theme .hg-ratings .hg-helpful { margin-right: var(--ui-space-5); }
+.article-block div { margin-left: var(--ui-space-5); line-height: 1.5; }
+.hg-minimalist-theme #hg-comment-form { border-top: none; }
+
+/* ==========================================================================
+   12) TOPIC CATEGORY (accordion) styles
+   ========================================================================== */
+.hg-minimalist-theme .topics-articles .hg-article-body,
+.hg-minimalist-theme .hg-category-page .hg-article-body { border-bottom: none; padding-bottom: var(--ui-space-6); }
+.hg-minimalist-theme .topic-toc-item { margin-bottom: var(--ui-space-2); display: list-item; line-height: 1.3; }
+.hg-minimalist-theme .topics-articles .hg-article-header { margin: var(--ui-space-5) 0; }
+.hg-minimalist-theme .topics-articles .hg-article-header.ko-collapse-trigger { margin: 0; }
+.hg-minimalist-theme .topics-articles .hg-article-title > i { line-height: 1.5; vertical-align: top; color: var(--brand-action); }
+.hg-minimalist-theme .topics-articles .ko-collapse-article { margin-left: var(--ui-space-6); padding-bottom: var(--ui-space-4); }
+.hg-minimalist-theme .topics-articles .hg-article-body { padding-bottom: 0; }
+
+/* ==========================================================================
+   13) ALERTS
+   ========================================================================== */
+.alert, .well {
+  margin-top: var(--ui-space-5);
+  padding: var(--ui-space-5) var(--ui-space-5) var(--ui-space-5) calc(65px + var(--ui-space-5));
+  border-radius: var(--ui-radius-md);
+  border-width: 0;
+  border-left-width: 4px;
+  border-style: solid;
+  min-height: 90px;
+  line-height: 1.6;
+  position: relative;
+}
+.alert::before {
+  display: block;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  left: var(--ui-space-4);
+  top: var(--ui-space-5);
+  margin: 0;
+  font-weight: 900;
+  font-family: 'Font Awesome 6 Pro';
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto;
+}
+.alert.alert-danger  { background: #fef2f2; border-color: var(--ui-danger);  color: #7f1d1d; }
+.alert.alert-danger::before  { content: "\f071"; color: var(--ui-danger); }
+.alert.alert-info    { background: var(--ui-info-bg);    border-color: var(--ui-info);    color: #1e3a8a; }
+.alert.alert-info::before    { content: "\f05a"; color: var(--ui-info); }
+.alert.alert-success { background: var(--ui-success-bg); border-color: var(--ui-success); color: #064e3b; }
+.alert.alert-success::before { content: "\f058"; color: var(--ui-success); }
+.alert.alert-warning { background: var(--ui-warning-bg); border-color: var(--ui-warning); color: #7c2d12; }
+.alert.alert-warning::before { content: "\f8fa"; color: var(--ui-warning); }
+.alert p:last-child, .well p:last-child { margin-bottom: 0; }
+.alert.alert-info p:first-child,
+.alert.alert-success p:first-child,
+.alert.alert-warning p:first-child,
+.alert.alert-danger p:first-child,
+.well p:first-child { margin-top: 0; }
+.alert ul, .alert ol { margin-left: 0; padding-left: var(--ui-space-5); }
+.well { background: var(--brand-tint); border-left-color: var(--brand-action); padding-left: var(--ui-space-5); }
+
+/* ==========================================================================
+   14) TABLES  —  rounded, brand header
+   ========================================================================== */
+.table-bordered,
+.documentation-article table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--ui-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--brand-border);
+  width: 100%;
+  margin: var(--ui-space-5) 0;
+}
+.table-bordered > thead > tr > th,
+.documentation-article table > thead > tr > th {
+  background: var(--brand-primary);
+  color: var(--brand-surface);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: left;
+  border: none;
+}
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td,
+.documentation-article table > tbody > tr > td,
+table.table-bordered tr td[style*="text-align: left"] {
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-top: 1px solid var(--brand-border);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  vertical-align: top;
+}
+.table-bordered > tbody > tr:nth-child(even) > td { background: var(--brand-tint); }
+
+/* ==========================================================================
+   15) CHECKLIST bullets
+   ========================================================================== */
+ul.check-list { list-style: none; padding-left: 0; }
+ul.check-list li { position: relative; padding-left: 2em; padding-top: 4px; padding-bottom: 4px; }
+ul.check-list li::before {
+  font-family: 'FontAwesome';
+  content: "\f00c" !important;
+  position: absolute;
+  left: 0;
+  top: 6px;
+  color: var(--brand-accent);
+  font-size: 0.9em;
+}
+
+/* ==========================================================================
+   16) IMAGE CAPTIONS
+   ========================================================================== */
+.hg-minimalist-theme .documentation-article .fr-img-caption .fr-img-wrap > span {
+  background: var(--brand-primary);
+  font-family: var(--brand-font);
+  padding: var(--ui-space-3) var(--ui-space-4);
+}
+.hg-minimalist-theme .documentation-article span.fr-img-caption { border: none; border-radius: var(--ui-radius-md); overflow: hidden; }
+.hg-minimalist-theme span.fr-inner a { color: var(--brand-accent); text-decoration: none; }
+.hg-minimalist-theme .fr-inner a:hover { color: var(--brand-accent-dark); text-decoration: underline; }
+
+/* ==========================================================================
+   17) SEARCH RESULTS
+   ========================================================================== */
+.hg-minimalist-theme .recommended-container h2,
+.hg-minimalist-theme .hg-contact-form-container h2,
+.hg-minimalist-theme .hg-article-search { margin-bottom: var(--ui-space-6); }
+.hg-minimalist-theme .ko-srch-meta-cntr { margin-bottom: var(--ui-space-4); color: var(--brand-body); }
+.hg-minimalist-theme #homepage-search-form .hg-article-search { margin-top: var(--ui-space-4); }
+.hg-minimalist-theme .hg-article-search h4 { margin-bottom: var(--ui-space-1); }
+.hg-minimalist-theme .hg-article-search li {
+  margin-bottom: var(--ui-space-5);
+  padding-bottom: var(--ui-space-5);
+  border-bottom: 1px solid var(--brand-border);
+  list-style: none;
+}
+.hg-minimalist-theme .hg-article-search li:last-child { border-bottom: none; }
+.hg-minimalist-theme .hg-article-info { color: var(--brand-muted); margin-bottom: var(--ui-space-2); }
+.hg-minimalist-theme .hg-article-blurb { margin-bottom: var(--ui-space-3); color: var(--brand-body); }
+.hg-minimalist-theme .hg-article-search .hg-date { color: var(--brand-muted); }
+.hg-minimalist-theme .hg-contact-form-container label { font-weight: 600; color: var(--brand-heading); margin-bottom: var(--ui-space-2); line-height: 1.4; }
+.hg-minimalist-theme .hg-contact-form-container .form-control {
+  border: 1px solid var(--brand-border-strong);
+  border-radius: var(--ui-radius-md);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  transition: all var(--ui-duration-fast) var(--ui-ease);
+  background: var(--brand-surface);
+}
+.hg-minimalist-theme .hg-contact-form-container .form-control:focus {
+  outline: none;
+  border-color: var(--brand-action);
+  box-shadow: 0 0 0 3px rgba(var(--brand-action-rgb), .25);
+}
+.hg-minimalist-theme .ko-search-pager li.current,
+.hg-minimalist-theme .ko-search-pager li.current a { background: var(--brand-action); color: var(--brand-surface) !important; border-radius: var(--ui-radius-sm); }
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn) { color: var(--brand-action); }
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn):hover { color: var(--brand-action-dark); }
+
+/* ==========================================================================
+   18) RIGHT COLUMN PANELS
+   ========================================================================== */
+.hg-minimalist-theme .right-col-panel {
+  border-radius: var(--ui-radius-md);
+  border: 1px solid var(--brand-border);
+  background: var(--brand-surface);
+  box-shadow: var(--ui-shadow-xs);
+  overflow: hidden;
+}
+.hg-minimalist-theme .right-col-panel .panel-heading {
+  color: var(--brand-surface);
+  background: var(--brand-primary);
+  border-radius: 0;
+  font-family: var(--brand-font);
+  font-weight: 600;
+  padding: var(--ui-space-3) var(--ui-space-4);
+}
+.hg-minimalist-theme .toc-top {
+  background: var(--brand-tint);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--ui-radius-md);
+  box-shadow: none;
+  margin-bottom: var(--ui-space-5);
+  padding: var(--ui-space-4) var(--ui-space-5);
+}
+.hg-minimalist-theme .toc-anchor { display: block; height: 140px; margin-top: -140px; visibility: hidden; }
+
+/* ==========================================================================
+   19) GLOSSARY / LIST PAGES
+   ========================================================================== */
+.hg-minimalist-theme .glossary-letter ~ .glossary-letter { border-top: none; }
+.hg-minimalist-theme .hg-widget-page .ko-content-cntr ol { padding-inline-start: var(--ui-space-5); }
+.ko-content-cntr .pager { margin-top: var(--ui-space-7); }
+
+/* ==========================================================================
+   20) BACK-TO-TOP button
+   ========================================================================== */
+.back-to-top {
+  background: var(--brand-surface);
+  margin: 0;
+  position: fixed;
+  bottom: var(--ui-space-7);
+  right: var(--ui-space-7);
+  width: 48px;
+  height: 48px;
+  z-index: 100;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid var(--brand-border);
+  box-shadow: var(--ui-shadow-md);
+  visibility: hidden;
+  opacity: 0;
+  transition: all var(--ui-duration-base) var(--ui-ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-to-top.visible { visibility: visible; opacity: 1; }
+.back-to-top:hover { background: var(--brand-action); border-color: var(--brand-action); transform: translateY(-2px); box-shadow: var(--ui-shadow-lg); }
+.back-to-top:hover i { color: var(--brand-surface); }
+.back-to-top i { color: var(--brand-action); transition: color var(--ui-duration-fast) var(--ui-ease); line-height: 1; }
+
+/* ==========================================================================
+   21) FOOTER  —  colored brand bar
+   ========================================================================== */
+.ko-site-footer {
+  background: var(--brand-primary);
+  color: var(--brand-surface);
+  padding: var(--ui-space-7) var(--ui-space-5);
+  margin-top: var(--ui-space-9);
+  text-align: center;
+}
+.ko-site-footer a { color: var(--brand-tint) !important; font-weight: 500; }
+.ko-site-footer a:hover { color: #ffffff !important; }
+.ko-site-footer .ko-logo { vertical-align: middle; margin-left: 4px; }
+
+/* ==========================================================================
+   22) 404 PAGE
+   ========================================================================== */
+.hg-minimalist-theme .error-page-top { border: none; text-align: center; padding: var(--ui-space-7) var(--ui-space-5); }
+.hg-minimalist-theme .error-page-top h1 { color: var(--brand-primary); margin-bottom: var(--ui-space-4); }
+.hg-minimalist-theme .error-page-top h2 { font-family: var(--brand-font) !important; color: var(--brand-body); font-weight: 400; margin-bottom: var(--ui-space-4); }
+.hg-minimalist-theme .error-page-top h3 { font-family: var(--brand-font) !important; color: var(--brand-body); font-weight: 400; margin-bottom: var(--ui-space-6); }
+
+/* ==========================================================================
+   23) LOGIN / RESTRICTED ACCESS
+   ========================================================================== */
+.hg-site-login { max-width: 480px; margin: var(--ui-space-9) auto; }
+.hg-site-login .alert h4 { margin-top: var(--ui-space-2); font-family: var(--brand-font) !important; font-weight: 600; }
+.hg-site-login .alert h4 i { display: none; }
+
+/* ==========================================================================
+   24) PDF ADJUSTMENTS
+   ========================================================================== */
+.hg-minimalist-theme .pdf-header { display: none; }
+.hg-minimalist-theme .hg-pdf .pdf-header { display: block; }
+.hg-minimalist-theme .hg-pdf .pdf-header img { height: 80px; }
+
+/* ==========================================================================
+   25) MODALS
+   ========================================================================== */
+.hg-minimalist-theme .modal-content { border-radius: var(--ui-radius-lg); border: none; box-shadow: var(--ui-shadow-lg); }
+.hg-minimalist-theme .modal-header { border-bottom: 1px solid var(--brand-border); padding: var(--ui-space-5); }
+.hg-minimalist-theme .modal-body { padding: var(--ui-space-5); }
+.hg-minimalist-theme .modal-footer { border-top: 1px solid var(--brand-border); padding: var(--ui-space-4) var(--ui-space-5); }
+.hg-minimalist-theme .modal .form-control { border-width: 1px; border-radius: var(--ui-radius-md); padding: var(--ui-space-3); }
+
+/* ==========================================================================
+   26) UTILITIES
+   ========================================================================== */
+.hg-minimalist-theme .margin-top-20 { margin-top: var(--ui-space-5); }
+.documentation-article p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   27) ACCESSIBILITY — focus indicators
+   ========================================================================== */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible,
+input[type="file"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible,
+.form-control:focus-visible,
+.nav > li > a:focus-visible,
+.btn:focus-visible,
+.back-to-top:focus-visible {
+  outline: 2px solid var(--brand-action);
+  outline-offset: 2px;
+  border-radius: var(--ui-radius-sm);
+}
+.hg-minimalist-theme .hg-search-bar .input-group:focus-within:not(:focus-visible) { outline: none; }
+
+/* ==========================================================================
+   28) RESPONSIVE  —  layout only (font sizes stay at the stock baseline)
+   ========================================================================== */
+@media (max-width: 1473px) {
+  .hg-minimalist-theme.hg-3column-layout:not(.hg-home-page) .ko-content-cntr { max-width: 760px; }
+  .hg-minimalist-theme.hg-3column-layout .right-column { max-width: calc((100vw - 780px) / 2); }
+}
+@media (max-width: 991px) {
+  .hg-minimalist-theme #ko-article-cntr.slideout-panel.open { width: 100%; }
+  .hg-minimalist-theme .hg-article { padding: var(--ui-space-5); }
+  .hg-minimalist-theme .ko-homepage-top { padding: var(--ui-space-7) var(--ui-space-4); }
+  .hg-minimalist-theme .homepage-widgets .col-md-4.col-sm-6 { margin-bottom: var(--ui-space-5); }
+}
+@media (min-width: 576px) {
+  .hg-minimalist-theme.hg-home-page .category-list > div { width: auto; float: none; }
+  .hg-minimalist-theme .category-img { max-width: 64px; }
+}
+@media (max-width: 575px) {
+  .hg-minimalist-theme .ko-homepage-top { padding: var(--ui-space-6) var(--ui-space-4); margin: 0 -15px var(--ui-space-5); }
+  .hg-minimalist-theme .hg-article { padding: var(--ui-space-5) var(--ui-space-4); border-radius: var(--ui-radius-md); }
+  .hg-minimalist-theme .navbar { min-height: 60px; padding: 0 var(--ui-space-3); }
+  .hg-minimalist-theme .hg-project-name { display: none; }
+}
+
+/* ==========================================================================
+   29) REDUCED MOTION  —  honor prefers-reduced-motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* ============================================================================
+   EDITOR READABILITY GUARD  (mandatory — keep in every build; see CLAUDE-RULES)
+   The Froala article editor is a WHITE iframe that loads ko.css + this compiled
+   Custom CSS, but NOT the Style-Settings color block or Custom <head> (quirk #28).
+   So any text color applied via an UNSCOPED stock rule (KO's own
+   a:not(.btn){color:var(--text-links-color)}) or a .documentation-article-scoped
+   rule paints inside the editor too — where a light/brand color is unreadable on
+   the white canvas. These editor-only selectors restore KO's stock readable text.
+   fr-view / fr-editor-svelte / cke_editable exist ONLY in the editor iframe (never
+   on public pages or in PDF), so this cannot affect the live site. Literal hex on
+   purpose: :root tokens are absent in the iframe. Edit the hexes only if a KB's
+   editor canvas is intentionally not the default white. Guard headings + links only
+   (never blanket-reset body text — it would override authors' own toolbar colors).
+   ============================================================================ */
+.fr-view, .fr-editor-svelte, .cke_editable { --text-links-color: #3C80BA; }
+.fr-view h1, .fr-view h2, .fr-view h3, .fr-view h4, .fr-view h5, .fr-view h6,
+.fr-editor-svelte h1, .fr-editor-svelte h2, .fr-editor-svelte h3, .fr-editor-svelte h4, .fr-editor-svelte h5, .fr-editor-svelte h6,
+.cke_editable h1, .cke_editable h2, .cke_editable h3, .cke_editable h4, .cke_editable h5, .cke_editable h6 {
+  color: #212121 !important;
+}
+.fr-view a:not(.btn), .fr-editor-svelte a:not(.btn), .cke_editable a:not(.btn) {
+  color: #3C80BA !important;
+}

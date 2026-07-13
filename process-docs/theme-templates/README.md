@@ -10,7 +10,8 @@ This folder is the **single home** for the template subsystem: the templates the
 
 | Template | What it is |
 |----------|------------|
-| [`modern-docs/`](modern-docs/) | A clean, professional "modern documentation" theme (Mintlify/Notion-adjacent): branded top nav, hero homepage with a photo + gradient wash, glow/depth polish, a whisper-subtle animated ambient, and a docs-style article page with a left TOC. See its [`README.md`](modern-docs/README.md) for the full swap point + Style Settings map. |
+| [`modern-docs/`](modern-docs/) | A clean, professional "modern documentation" theme (Mintlify/Notion-adjacent): branded **dark** top nav, hero homepage with a photo + gradient wash, glow/depth polish, a whisper-subtle animated ambient, and a docs-style article page with a left TOC. See its [`README.md`](modern-docs/README.md) for the full swap point + Style Settings map. |
+| [`aurora-docs/`](aurora-docs/) | A bright, airy docs theme: a **light** top nav, a vibrant multi-color gradient hero (primary → action → accent) with a tagline, rounded card categories, a soft-tinted fully-colored left TOC, dark code blocks, and a colored footer. Ships with the Outfit webfont (swappable). See its [`README.md`](aurora-docs/README.md) for the swap point + Style Settings map. |
 
 More templates get built directly here over time (see "Building a new template" below).
 
