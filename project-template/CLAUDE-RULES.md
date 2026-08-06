@@ -131,7 +131,19 @@ On a fresh build the *rest* of the capture is largely moot too, so scale it to w
 - **Screenshots** — one homepage and one article is enough. There's no customer design to preserve, so don't chase a full page inventory.
 - **Legacy Homepage Custom content** — always empty on a brand-new KB, so there's nothing to check: record `empty` in `# Baseline` (step 2), leave the `no-changes` placeholder as-is, and move on.
 
-**Never use this path on a KB that already has custom code.** The `no-changes` folder exists to preserve the customer's existing code as the rollback baseline — capture that the normal way instead.
+**Don't use this path to overwrite a KB whose custom code is worth keeping.** The `no-changes` folder exists to preserve the customer's real work as the rollback baseline — capture that the normal way instead.
+
+### The exception: deliberately discarding a throwaway theme
+
+There's a legitimate and fairly common case the rule above would otherwise forbid: **a sandbox already carries a trial-era or pre-sales first-pass theme, and the build is meant to start over from stock.** Nobody wants to roll back to it. Don't treat that as "the KB has custom code, capture it" — but don't silently bulldoze it either. Ask which of these the user wants:
+
+| Option | When it fits |
+|---|---|
+| **Capture the live code as a true rollback point** (normal path) | Any chance someone wants the old theme back, or it's on a live KB |
+| **Use the Minimalist defaults as the baseline** | A sandbox throwaway nobody will miss — cleanest start |
+| **Defaults as baseline, old theme archived in `Reference/`** | Recommended default for a throwaway: costs one file, keeps the option to look back |
+
+**One consequence to handle explicitly if you take either defaults route:** `style-settings-colors.md` no longer describes the live KB — it now holds the Minimalist defaults, not the customer's actual swatches. That silently breaks the Color-Change Checkpoint, which needs a real "Current value" for its table and would otherwise produce a table of fiction. So **confirm the 8 live Style Settings swatches before deploying the first version** and record those as the current values. Cheap, but nothing else prompts you to do it.
 
 ## Using a Pre-Built Template — Only on Explicit Request
 

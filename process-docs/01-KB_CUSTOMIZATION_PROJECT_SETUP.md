@@ -66,6 +66,22 @@ The color picker only reveals one hex code at a time, so you'll need to record e
 
 ## 3. Capture the Current State
 
+### First: is the KB reachable without a login?
+
+Many customer KBs aren't — reader-restricted KBs are the norm rather than the exception in healthcare, insurance, and finance — and a KB **on trial** has public access disabled by KnowledgeOwl outright. Two different gates, worth telling apart:
+
+- **Reader-restricted KB:** an unauthenticated request doesn't return a clean 401. It enters a self-referential `?r=` redirect loop that terminates in **HTTP 414 (URI Too Long)** — which reads like a malformed URL and sends you hunting for a typo that doesn't exist. If you see a 414 on a KB URL, you're being asked to log in.
+- **Trial KB:** redirects to a KnowledgeOwl gate reading roughly *"During your trial, public access to your knowledge base is disabled."*
+
+**Neither blocks the capture — you just have to be signed in.** Claude's built-in browser can be signed into like any other browser (see "Browser Tooling" in `CLAUDE-RULES.md`), so once you log in there, snapshots and screenshots can be captured normally. Claude never enters credentials, so that sign-in step is yours.
+
+If you'd rather not sign in, or the KB is behind SSO that won't authenticate a separate browser profile:
+
+- Capture from **your own** authenticated browser instead (the DevTools steps below work unchanged), or use KO admin's **Preview / "View as"**, or a shared link.
+- Or **mark the snapshots and screenshots pending and leave the `no-changes` folder UNLOCKED** until you have them. Don't `chmod` an incomplete baseline read-only — the lock is meant to protect a finished record, not to freeze a half-captured one.
+
+Either way the build isn't blocked: the 12 code files and `style-settings-colors.md` can be filled from the documented Minimalist defaults on a stock KB (see `04-MINIMALIST_THEME_DEFAULTS.md`), and the localhost-preview path that works with **no KB access at all** is in `03-LOCALHOST_PREVIEW.md` → "Previewing a Build BEFORE Anything Is Deployed."
+
 ### Screenshots
 Add screenshots of key pages in the customer's current knowledge base to the `Screenshots/` folder inside the no-changes folder:
 - Homepage
