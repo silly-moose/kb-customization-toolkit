@@ -220,6 +220,13 @@ Different page types get different high-level classes applied to the `body` elem
 | `.hg-search-page` | Search results page |
 | `.hg-contact-page` | Contact form pages |
 | `.hg-login-page` | Reader login pages |
+| `.hg-widget-page` | **All three** article-list pages — new / updated / popular share one class |
+| `.hg-glossary-page` | Glossary |
+| `.ko-error-page` | 404 — note the **`ko-`** prefix, not `hg-` |
+| `.ko-manage-subscriptions-page` | Manage reader subscriptions — also **`ko-`** prefixed |
+| *(none)* | **Restricted-access ("no access") page has NO distinct page class** — it renders via the login body path, so scope it with `.hg-site-login` |
+
+The body class is assembled as `hg-site [theme] [page-name] [layout] [toc]` (`site-wrapper.phtml`), with `page-name` coming from `HelpController::__pageName`. **The prefix is inconsistent** — most pages are `hg-`, but 404 and manage-subscriptions are `ko-`, and the restricted-access page gets none at all. Don't guess a class from the page's name; check this table.
 
 ```css
 /* Target only article pages (exclude categories) */
@@ -424,6 +431,22 @@ The homepage category tiles (`[template("icon-cats,col=N")]`, see `knowledgeowl-
 
 The tiles are direct `<a class="cat-icon-panel">` children of `.category-list` (no wrapping `<div>`), so target `.category-list > .cat-icon-panel` — `> div` won't match.
 
+> **Specificity trap — any later override of these properties must repeat BOTH selectors.** The base rule above is a two-selector list: `.hg-minimalist-theme.hg-home-page .cat-icons-cntr .category-list` is **(0,4,0)** while `.hg-minimalist-theme.hg-home-page .category-list` is **(0,3,0)**, and CSS resolves a rule at its **highest**-specificity selector. So the natural mobile override — written with just the short form inside a media query — loses at (0,3,0): the `gap` keeps its desktop value and the tiles stay one-per-row, **with no error**. Write the media query with both selectors:
+>
+> ```css
+> @media (max-width: 767px) {
+>   .hg-minimalist-theme.hg-home-page .cat-icons-cntr .category-list,
+>   .hg-minimalist-theme.hg-home-page .category-list {
+>     gap: 12px;
+>   }
+>   .hg-minimalist-theme.hg-home-page .category-list > .cat-icon-panel {
+>     flex: 0 0 calc(50% - 6px) !important; max-width: calc(50% - 6px);
+>   }
+> }
+> ```
+>
+> This cost a full debug cycle once — 2-up mobile tiles that appeared "not to apply" until the computed `gap` gave it away. If a responsive override of the tile grid seems inert, check which selector the browser resolved the rule at before touching anything else.
+
 ## 27. Centering an Icon in a Nav Toggle Button — Use Flex, Not `line-height`
 
 KO's slideout toggles are `<button>`s holding a single Font Awesome glyph — e.g. the left TOC toggle `.ko-slideout-left-toggle` wraps `<i class="fa fa-bars fa-2x">`. To vertically center that icon in a taller nav bar, set the button to **`display: flex; align-items: center;` with a fixed `height`** — the same technique `.navbar-brand` uses. Do **not** reach for `line-height`: on an inline icon it only aligns the glyph to the text **baseline** (which sits below the visual center), so the icon rides high with a gap beneath it.
@@ -542,8 +565,180 @@ For UI that should show only to logged-in authors (e.g. an author-only validatio
 body:has(.ko-app-edit:not(.hide)) .my-author-note { display: block; }
 ```
 
+> **Article PREVIEW and the LIVE site use DIFFERENT author flags — so `.ko-app-edit` alone makes author-only UI invisible in Preview, i.e. exactly where authors check their work.** Verified in source: `editorBar()` (which emits the admin bar including `<li class="ko-app-edit">`, `editor-bar.phtml`) is gated on `viewVars['isEditor']`, set **only** by `HelpController` — the live site. `previewBar()` (which emits `<div class="article-preview-bar">`, `SiteRenderer.php` / `KbRenderer.php`) is gated on `viewVars['preview']`, set by `KbController` for `article-preview` / `home-page-preview`. **`KbController` never sets `isEditor` at all**, and `site.phtml` maps the two flags separately. Net effect: an author-only panel gated on `.ko-app-edit` had never once rendered in Preview.
+>
+> **Gate author-only UI on both:** `.ko-app-edit, .article-preview-bar`. Both are author-only — a logged-out reader has neither.
+>
+> ```css
+> body:has(.ko-app-edit:not(.hide)) .my-author-note,
+> body:has(.article-preview-bar) .my-author-note { display: block; }
+> ```
+
 ## 33. KB Search Never Indexes `<script>` Content
 
 KnowledgeOwl strips `<script>` blocks out of the article body *before* indexing it (`Indexer.php:265`: `preg_replace('/<script.*?<\/script>/is', ' ', $cleanBody)`). So any article whose content is **rendered by JavaScript** (a config-object-plus-engine pattern, a script that builds the DOM on load, etc.) is **invisible to KB search** — the words never enter the index.
 
 The same JS-rendered content also (a) does **not** appear in PDF exports on the mpdf path and is unreliable on wkhtmltopdf (§14), and (b) shows as **raw code** in the WYSIWYG editor. So for interactive article content, prefer **plain markup in the article body** enhanced by a theme-level (Custom `<head>`) progressive-enhancement script, rather than generating the body from JS inside the article itself.
+
+## 34. SiteRenderer Executes Merge Codes EVERYWHERE — Including Inside CSS Comments
+
+KO's SiteRenderer replaces merge codes across the whole assembled page, and it does **not** skip comments. A merge code written purely as documentation inside a `/* … */` block in Custom CSS — `[template("icon-cats,col=4")]`, `[[hg-id:…]]`, `[translation(…)]` — is **executed on every page render**, and its rendered HTML is embedded invisibly into the compiled `<style>` block. Confirmed live: a `[template("icon-cats,…")]` written in an explanatory comment rendered the current category's entire icon-panel markup into the stylesheet.
+
+Two costs: it's wasteful (a server-side render plus page bloat on every single load), and it's **fragile** — if the rendered output ever contains `*/`, it closes the CSS comment early and silently breaks every rule after it.
+
+**When documenting a merge code in a comment, omit the square brackets.** Write `template("icon-cats,col=4")`, not `[template("icon-cats,col=4")]`. Applies to Custom `<head>` and Custom HTML comments too.
+
+## 35. A Marker Class Applied by a `<head>` SCRIPT Is Absent in PDF and the Editor
+
+KO has two no-JS contexts, and a theme's own scripts run in neither:
+
+- **PDF export** runs no JavaScript on the mpdf path — `PdfGenerator` builds `.hg-pdf > .documentation-article > [body HTML]` and no scripts execute (§14).
+- **The Froala editor iframe** doesn't run the theme's `<head>` scripts either (§28).
+
+So if you move a styling hook from **static article HTML** to a **JS-applied class**, it vanishes in both. Two distinct failure modes:
+
+1. Styling that depends on the class simply doesn't render there.
+2. Worse — a PDF-specific rule that was *correct while the class was static* becomes wrong once it isn't. A rule that re-lightens text "because this panel is dark" turns into white-on-white when the panel is no longer being darkened.
+
+**Key PDF/editor-relevant rules on a selector that exists in every context** — an element `#id`, or a native KO class — never on the JS-applied one. And re-test a real PDF export after any such move; this is not a change you can verify on screen.
+
+## 36. KO Has NO Article Custom Fields — Tags Are the Per-Article Metadata Hook
+
+An article's editable fields are Internal title, Short title, Custom title tag, **Tags**, and Search phrases. There is **no article custom-fields UI**, and no `[article("customfield:…")]` merge code. Confirmed in source: `help/article.phtml`'s `meta_data` loop renders `<input class="{field}" value="{value}">`, but `meta_data` for articles is populated only via **API/import**, never the editor. (The Support KB documents custom fields for contact forms, reader signup, and SAML — never articles.)
+
+**So to drive a body class or content-type coding per article, use a TAG:**
+
+```html
+<!-- in Custom HTML > Article -->
+<span class="my-article-tags" hidden>[template("article-tag-names")]</span>
+```
+
+`[template("article-tag-names")]` (`KbRenderer::articleTagNames`) outputs the article's tag names **comma-separated**; `[template("article-tags")]` gives tag *HTML* instead. A theme `<head>` script reads that element, matches a known tag, and adds a class to `<body>` — so the author flow is just "tag the article."
+
+**Where the `meta_data` route DOES apply** (API/import-populated fields only), the value surfaces three ways, which is worth knowing when auditing an imported KB:
+
+1. `<input class="{field}" value="{value}">` inside the article content (`help/article.phtml:26-33`) — rendered as a sibling **before** `.hg-article`, *not* inside `.hg-article-body`. Resolve the body via the shared `.ko-content-cntr`, not `input.closest('.hg-article-body')`.
+2. `data-{field}="{value}"` on each TOC `<li class="article-container" data-id>` (`KbRenderer::renderArticleTocHtml`).
+3. **Not** on a category-landing `.article-block` — `faq-navigation.phtml` doesn't loop `meta_data` there. To badge a landing list by field value, cross-reference the TOC `<li>` by `data-id`.
+
+**Caveat on the tag route:** tags drive the article **page** class only. A category-landing list exposes no per-article tag in its DOM, so landing-list badges still need route 2's `data-` attribute — which tags don't produce.
+
+## 37. `[template("icon-cats,max=N")]` SILENTLY Drops Categories Past the Nth
+
+`help/icon-category.phtml` sets `$maxCategories` only when `max` is passed and `> 0`, then stops emitting panels once the count exceeds it (lines ~9/11/64). With no `max`, the default is `false` = render **all** top-level categories.
+
+So `icon-cats,max=5` hard-caps the homepage doors at five: add a sixth top-level category and it just **doesn't appear**, with no error. This reads convincingly like a KO bug ("only 5 doors show").
+
+**Omit `max` and curate what's top-level instead of capping the render.** Since the tiles are homogeneous, assign per-door accents with `:nth-child`, cycling as `5n+1`, `5n+2`, … so any category count stays styled.
+
+## 38. Native Form Controls Ignore a Dark `background-color` — and Computed Style LIES
+
+On reader pages, `<input type="search">` and `<select>` render with **OS-native** (light) appearance and ignore a dark `background-color` until you disable that appearance. The trap is that `getComputedStyle` reports your dark value while the control paints white.
+
+```css
+.hg-contact-page .form-control[type="search"],
+.hg-search-page select.form-control {
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+}
+```
+
+For `<select>` you must **also** supply a chevron — the native arrow disappears with `appearance: none`. An inline `data:image/svg+xml` down-caret as `background-image` works.
+
+**Scope note:** a `type="search"` input already inside a wrapper that carries the color (KO's `.hg-search-bar` / `.ko-large-search` pill) renders fine. **Standalone** search inputs and all `<select>`s do not.
+
+> **Process corollary — this class of bug is invisible in local preview.** `getComputedStyle` reported the dark value and a small screenshot read as "dark enough"; it only showed on a live, logged-in pass. For form-heavy KO pages, judge the **rendered pixel**, not the computed style. A source-plus-preview build is high-confidence for structure and scoping, but it can miss native-control rendering entirely.
+
+## 39. Dark-Theming KO's SECONDARY Reader Pages
+
+For search / article-lists / glossary / 404 / restricted / manage-subscriptions / contact, the dark page canvas, text, and links come **free** from a global `body.hg-site` rule. The actual work is darkening the **light flat-ui / ko-css components** on each page — and because KO's per-page body classes are inconsistent (§15), fence every override to its page class so nothing leaks into article bodies or the editor.
+
+Components that are light by default:
+
+| Component | Note |
+|---|---|
+| `.well` | Search/list empty-states, plus `.pager.pager-pop-articles` |
+| `.ko-search-pager`, `.pager` links | KO's kept minimalist default sends these to navy `--primary-color` |
+| `.form-control` inputs/selects | Contact form + search sort — see §38, they need `appearance: none` |
+| `.ko-tag` | Tag chips |
+| `.badge-new`, `.badge-updated`, `.badge-pdf` | flat-ui gives these `opacity: .5` → murky on dark; de-opacify and darken the text |
+| `.glossary-*`, `.ko-glossary-popover` | White |
+| `.ko-subbed-cat*` | Subscription rows |
+| `.hg-contact-form-container` | White form panel |
+
+**Two "light notice" surfaces** mirror the login page's two flash mechanisms (§23): **restricted-access** uses `.alert.alert-danger` (KO's kept default paints it pink `#F4E2E2`), **manage-subscriptions** uses `.bs-callout-warning` / `.bs-callout-info`. Reader signup and reset modals live on the login page, so the §23 fix already covers them.
+
+## 40. The Sidebar TOC Contains the FULL Article Tree (a No-Auth "All Articles" Source)
+
+KO renders the **entire** article tree into every help page's sidebar TOC server-side (`ul.documentation-outter-list`, confirmed in `tableofcontents.phtml`). Hidden branches are `display: none` — **not** absent, and not lazy-loaded for the help site.
+
+That makes the TOC DOM a client-side source for "every article" — useful for an A–Z index or any theme feature needing the full list:
+
+- Articles: `li.article-container[data-id] > a.article-link[href]` (title = link text).
+- Category path: walk up ancestor `li.category-container > a.documentation-category`.
+- Reader-group permissions apply for free — the TOC only contains what the current viewer can access.
+
+> **Do NOT call the KO API from theme JS to get this.** A theme runs in the reader's browser, so an embedded API key is visible in view-source — and **KO keys are account-wide** with no granular scoping, so one leaked key exposes every KB in the account. Reading the TOC DOM avoids the problem entirely.
+
+## 41. Category Landing Pages: Native Markup and the Double Body Class
+
+A "Default" category with **Subcategory Display = Icon panels** renders a landing whose `<body>` carries **both** `hg-article-page` **and** `hg-category-page` — so article-page-scoped rules leak onto it. Outrank them with the compound `.hg-article-page.hg-category-page` **(0,4,0)**.
+
+Markup (`help/faq-navigation.phtml` + `icon-category.phtml`, `faq_display='icons'`):
+
+```
+.ko-content-cntr
+├── ul.hg-breadcrumbs
+└── .faq-nav-wrapper
+    ├── h1.faq-header
+    ├── .faq-top-description
+    └── .faq-nav-content
+        ├── .cat-icons-wrapper > .cat-icons-cntr > .category-list.panels.colN
+        │   └── a.cat-icon-panel  (.category-icon > img.cat-icon-img, h3.category-header, .faq-description)
+        ├── h2  "Articles"   (optional)
+        └── .article-block[data-id]  rows
+```
+
+The Icon-panels sub-cards reuse the **same** `.cat-icon-panel` markup as the homepage `icon-cats` doors, so one CSS recipe styles both levels (and both inherit §26's specificity trap).
+
+## 42. Every `<h2>` Inside `.faq-nav-content` Is Hidden — by a DESCENDANT Selector
+
+KO's stock template carries `.hg-minimalist-theme .faq-nav-content h2 { display: none }`. Its purpose is hiding the native "Articles" heading (§41) — but because it's a **descendant** selector rather than `> h2`, it also swallows any `<h2>` you inject anywhere inside `.faq-nav-content`, including a section head or prompt of your own.
+
+Fix either way: give your injected heading `display: block !important`, or inject it **outside** `.faq-nav-content` (e.g. into `.faq-nav-wrapper`).
+
+## 43. Breadcrumbs Are Ancestors-Only — and They Already Render Separators
+
+Two independent traps in `help/partials/breadcrumb.phtml`:
+
+**It never includes the current page.** The partial walks **up** from the current category's parent, so a top-level category page shows just "Home." To render a full `Home » … » Current` trail, append the current name (from `h1.faq-header`'s text) as a final `<li>` with a small theme script. Don't try to style "the current page" with `:last-child` — on a bare KO crumb trail that's the *parent*, not the current page.
+
+**It emits real separator elements.** Between crumbs, whenever the page has parents, KO renders `<li><i class="fa fa-angle-double-right"></i></li>`. So a theme rule like `.hg-breadcrumbs li:not(:first-child)::before { content: "›" }` **doubles** every separator on any nested article or category page.
+
+This one ships unnoticed with dispiriting reliability: if the only test content is top-level, the breadcrumb is just "Home" — one `<li>`, no separators — so the bug stays dormant and invisible. **Dim KO's native chevrons rather than inventing `::before` separators**, or gate the `::before` with `content: none` on pages that have real ones.
+
+## 44. `.hg-project-name` Is `display: none` — Replacing Custom CSS Can Erase the KB's Name
+
+`ko-css.css:1876` sets `.hg-minimalist-theme .hg-project-name { display: none }` — the Minimalist theme **hides the knowledge base name in the header by default**. KBs that show their name are doing it with an override in their own Custom CSS, often a lone `display: inline-block` rule.
+
+That makes it easy to destroy without noticing: replacing the whole Custom CSS field is the normal way to apply a theme, and the loss shows up as an **absence** rather than something visibly wrong.
+
+**Before replacing Custom CSS wholesale, grep the baseline for `display` overrides on stock-hidden elements.** `.hg-project-name` is the known one. More generally, this is why a version should be checked for *dropped* baseline selectors, not just added ones.
+
+## 45. Copying a Block in the Froala Editor Duplicates Its `id`
+
+Copy-pasting a block in the WYSIWYG brings its `id` along, producing duplicate ids the author cannot see, edit, or reason about — ids are invisible in the editor.
+
+This reproduces a whole bug class for any theme convention keyed off an **attribute** rather than visible text. If an engine resolves navigation or state via `id`, a duplicated block silently collapses two distinct items onto one.
+
+Two corollaries:
+
+1. **Resolve to an index at parse time** and never re-derive position from a string or id later.
+2. **Prefer conventions keyed off VISIBLE text** — a heading, a list, a `Keyword:` line — over attributes the author can't see.
+
+A starter template that ships explicit ids hands every author a loaded gun the moment they copy a block.
+
+## 46. `sessionStorage` Survives a Hard Refresh
+
+A hard refresh does **not** clear `sessionStorage`. So any author-facing cache keyed on article content goes stale the moment an author edits, and the author's instinct — reload harder — won't fix it.
+
+Either bypass the cache for authors (gate on the author signals in §32) or key it on something that actually changes with the edit.

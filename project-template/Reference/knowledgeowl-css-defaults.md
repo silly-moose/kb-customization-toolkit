@@ -111,7 +111,7 @@ The theme class is generated as `hg-{theme_name}-theme`; `theme_name` is one of 
 | `.navbar-default` | Top navigation bar |
 | `.navbar-brand` | Logo/brand area |
 | `.hg-header` | Header wrapper |
-| `.hg-project-name` | Project name text in header |
+| `.hg-project-name` | Project name text in header — **`display: none` in the Minimalist theme** (`ko-css.css:1876`); see quirks doc #44 |
 | `.nav.navbar-right` | Right-aligned nav items (search, login) |
 | `.hg-search-bar` | Search bar component |
 | `.ko-slideout-left-toggle` | Left TOC slideout button (the "bars"/"X" toggle) |
@@ -208,7 +208,11 @@ So net stock article headings are **H1 48px, H2 28px, H3 24px, H4 18px** — and
 | Ordered-list items | `padding: 10px 0` (`.hg-article-body ol li`, seeded Custom CSS) |
 | Paragraphs inside lists | `margin: 20px 0 0` (`.hg-article-body ul p, .hg-article-body ol p`, seeded Custom CSS) |
 
-> **Paragraph-spacing trap:** because the seeded Custom CSS zeroes `.documentation-article p { margin-bottom: 0 }`, restoring space between paragraphs needs a `p`-level `margin-bottom` override — adding padding/margins to a container won't do it. Body-text *color* has no p/li-level default in stock KO (it inherits Flat UI's `body { color: #34495e }`), but customer KBs frequently add their own `p` / `li` color rules in Custom CSS — if a container-level `color` override "does nothing", grep the KB's Custom CSS for direct `p` / `li` rules.
+> **Paragraph-spacing trap — MEASURE the computed margins before adding any:** the seeded Custom CSS zeroes only the *bottom* (`.documentation-article p { margin-bottom: 0 }`), so `ko-css`'s `margin: 20px 0` survives as `20px 0 0`. That surviving **top** margin is usually already providing the gap between paragraphs. Adding a `p`-level `margin-bottom` on top of it therefore *compounds* rather than restores — e.g. a 16px bottom margin puts paragraphs 36px apart. Container-level padding still won't do it, but the first move is to read the computed value, not to add one.
+>
+> **The two spacing defaults COMPOUND inside list items.** `ol li` padding (`10px 0`, seeded) stacks with the paragraph top margin above, and the result is far larger than either number suggests: a **single-line numbered step measured 83px tall** on a stock-spacing KB. Tune `ol > li` padding and the `ol p` margin **together**, and use the height of a one-line list item as the thing you measure. On procedural KBs — where articles are almost entirely numbered steps — getting this right took **21% off the height** of a typical article.
+>
+> Body-text *color* has no p/li-level default in stock KO (it inherits Flat UI's `body { color: #34495e }`), but customer KBs frequently add their own `p` / `li` color rules in Custom CSS — if a container-level `color` override "does nothing", grep the KB's Custom CSS for direct `p` / `li` rules.
 
 ---
 
@@ -386,7 +390,11 @@ The homepage `[template("icon-cats…")]` renders category tiles that are distin
 | `.cat-icon-img` | Uploaded image icon. `width: 100px; height: 100px` |
 | `.category-header` | The label. `font-size: 18px; color: #1D284F; text-align: center` |
 
-Notes: the per-category icon **color** is set in the Category editor (inline on the `<i>`), so recoloring all icons from Custom CSS needs `!important`. And `.category-icon i` carries `margin-top: 16px`, so the icon's vertical position is tied to its size — if you change the `font-size`, adjust the margin/centering to match.
+Notes: the per-category icon **color** is set in the Category editor (inline on the `<i>`), so recoloring all icons from Custom CSS needs `!important`.
+
+> **Check the per-category icon colors during setup — they're frequently an off-brand rainbow.** KO's category color picker offers its own stock swatches, and KBs that never curated them end up with icons in KO's alert-border palette (`#69B2F0` blue, `#E6ADA9` red, `#BDDCBC` green, `#FBD9A4` amber). Because the value is **inline**, no amount of theme CSS fixes it without `!important`. Make it an explicit decision rather than a surprise: a blanket `!important` normalize gives a cohesive theme out of the box, while leaving them per-category keeps the customer in control of each one. Pick one and say which in the CHANGES file.
+
+> **If you resize `.category-icon i`, zero its box too.** The default carries `margin-top: 16px` + `padding: 5px`, sized for the 75px homepage glyph. Drop it into a smaller custom container (say a 54px tile) and override only `font-size`, and that stock top margin pushes the glyph ~16px low — `place-items: center` on the parent **can't** fix it, because it centers the margin-box. Set `margin: 0; padding: 0; line-height: 1` on the `<i>` as well.
 
 **Tile structure:** each `.cat-icon-panel` is an `<a>` that is a **direct child of `.category-list`** (no wrapping `<div>`), so `.category-list > div` won't match — target `.category-list > .cat-icon-panel`. The grid always reserves N tracks (`repeat(N, 1fr)`), so when a KB has fewer categories than columns the tiles left-align and leave empty trailing tracks rather than centering — see quirks doc #26 for the flex fix.
 
@@ -495,6 +503,13 @@ Arial, Courier New, Georgia, Tahoma, Times New Roman, Trebuchet MS, Verdana
 ### Google Fonts Available
 
 Roboto, Open Sans, Noto Sans JP, Montserrat, Lato, Poppins, Source Sans Pro, Roboto Condensed, Oswald, Raleway, Inter, Roboto Slab, Merriweather, Neuton, and others
+
+**KO self-hosts these families, and ships only THREE weights — 300 / 400 / 700.** When a family is picked in Style Settings, KO puts its own stylesheet in the page `<head>`, served from `https://d1whm9yla4elqy.cloudfront.net/<family>/<family>.css`. One `curl` of that URL lists exactly what's available for that family — typically 300, 400, 700 plus italics, **not** a full variable-font range.
+
+Two consequences for any theme:
+
+- **`font-weight: 500` and `600` silently render at 700.** The browser snaps to the nearest available weight, so a "medium" nav link or sub-heading comes out as bold and becomes indistinguishable from the genuinely-bold elements — flattening the hierarchy the theme was trying to build. **Pick the theme's weight ramp from what's actually served** (300/400/700 gives you light / regular / bold), and check the family's CSS before designing around an intermediate weight.
+- **Don't add a Google Fonts `<link>` in Custom `<head>` for a family already set in Style Settings.** KO is already loading it; a second load of the same family is pure waste and risks a FOUT mismatch between the two copies.
 
 ### Custom Web Font
 
