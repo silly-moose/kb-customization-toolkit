@@ -66,10 +66,10 @@ When a `current-state` folder is created, the user should also refresh supportin
 
 ## Browser Tooling
 
-A session may expose more than one browser surface, and the tool names change over time — so check what's actually available rather than assuming, and pick by **whether the target needs a login**:
+A session may expose more than one browser surface, and the tool names change over time — so check what's actually available rather than assuming. **Default to the built-in browser for everything**, login-gated targets included: it's a separate profile from the user's everyday browser, so it starts signed out, but it can be logged into like any other browser.
 
-- **Default to the built-in browser** for anything publicly reachable: a customer's marketing site, a public KB, and the localhost preview below.
-- **Use the real-Chrome surface** — the one carrying the user's existing logged-in sessions — when the target sits **behind a login**: the KnowledgeOwl admin app (`app.knowledgeowl.com`, including the article editor iframe), a private or IP-restricted KB, or a post-login state like the Restricted Access page. Never enter credentials yourself. If no logged-in surface is available, ask the user to drive that step and report what they see.
+- **Never enter credentials yourself.** When a target needs a login — the KnowledgeOwl admin app (`app.knowledgeowl.com`, including the article editor iframe), a private or IP-restricted KB, a post-login state like the Restricted Access page — ask the user to sign in inside the built-in browser, then continue working there.
+- **The real-Chrome surface is a convenience, not a capability.** Its only edge is already carrying the user's existing sessions. Reach for it when the user is signed in there and would rather not re-authenticate, or when they ask for it — not merely because a page sits behind a login.
 
 Either way, pull **values** — hex codes, font names, computed styles, element rects — rather than whole files. Browser tool results can truncate or filter large or encoded payloads (base64 images, long SVG path data).
 
@@ -81,7 +81,7 @@ For sessions involving significant visual iteration (CSS changes, layout adjustm
 
 > "This involves visual changes. Want me to set up localhost preview so you can see changes without deploying each time?"
 
-If accepted, fetch `03-LOCALHOST_PREVIEW.md` from the process docs and follow its Step-by-Step Setup section. During the session, keep `preview/custom-css.css` in sync with the version folder on every CSS edit, and run `rm -rf preview` when teardown is needed. Use the session's browser tooling (see "Browser Tooling" above — localhost needs no login, so the built-in browser is right) to verify changes visually: screenshot for **look**, computed styles and element rects for **geometry**.
+If accepted, fetch `03-LOCALHOST_PREVIEW.md` from the process docs and follow its Step-by-Step Setup section. During the session, keep `preview/custom-css.css` in sync with the version folder on every CSS edit, and run `rm -rf preview` when teardown is needed. Use the session's browser tooling (see "Browser Tooling" above) to verify changes visually: screenshot for **look**, computed styles and element rects for **geometry**.
 
 If declined, use the normal deploy-and-verify workflow.
 
@@ -110,7 +110,7 @@ Key source files for targeted lookup:
 
 ## Capturing Exact Brand Colors
 
-Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use the session's browser tooling to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). A marketing site is public, so the built-in browser is the right default here — see "Browser Tooling" above. Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
+Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use the session's browser tooling to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`) — see "Browser Tooling" above. Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
 
 ## Fresh or Stock-Minimalist Builds
 

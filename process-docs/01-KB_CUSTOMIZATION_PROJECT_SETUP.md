@@ -137,7 +137,7 @@ Reference/
 
 A static capture isn't always enough. Modern marketing sites often ship **compiled/minified CSS** (e.g., Tailwind) where brand colors are buried in utility classes, define colors as **CSS variables** or apply them via **JavaScript** at runtime, or render logos/images **client-side or as data URIs**.
 
-When the downloaded files don't give you confident, exact values for the brand colors (or fonts, or the logo), have Claude read them off the **live site with its browser tooling**. A marketing site is public, so Claude's built-in browser handles this — it only needs your logged-in Chrome for pages behind a login (see "Browser Tooling" in `CLAUDE-RULES.md`):
+When the downloaded files don't give you confident, exact values for the brand colors (or fonts, or the logo), have Claude read them off the **live site with its browser tooling** — Claude's built-in browser handles this, and a marketing site needs no login at all (see "Browser Tooling" in `CLAUDE-RULES.md`):
 
 1. Point Claude at the customer's site and ask it to report the **computed styles** of the key brand elements — primary/CTA button background, headings, body text, links, top nav, footer — plus the heading and body `font-family`.
 2. `getComputedStyle()` returns the value the browser actually paints, regardless of how it was authored, so you get exact hex codes and real font stacks even from compiled CSS or JS-applied styles.

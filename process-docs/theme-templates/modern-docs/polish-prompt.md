@@ -14,7 +14,7 @@ Start by reading its `README.md` (what it is, the `--brand-*` / `--ui-*` swap po
 - **Localhost preview** — follow `../../03-LOCALHOST_PREVIEW.md`, rendering the CSS against the bundled reference snapshots in `../_reference-snapshots/` (a genericized homepage + article — no live build needed).
 - The KO CSS reference docs in `../../../project-template/Reference/` (`knowledgeowl-css-quirks.md`, `knowledgeowl-css-defaults.md`).
 
-**Goal:** genuinely excellent. Assess improvement opportunities broadly and implement the ones that raise quality. Draw ideas from anywhere — **Mintlify** (feel free to inspect mintlify.com or their docs with your browser tooling — these are public sites, so the built-in browser is fine), and other best-in-class docs sites (GitBook, Stripe docs, Notion, Linear), plus your own judgment.
+**Goal:** genuinely excellent. Assess improvement opportunities broadly and implement the ones that raise quality. Draw ideas from anywhere — **Mintlify** (feel free to inspect mintlify.com or their docs with your browser tooling), and other best-in-class docs sites (GitBook, Stripe docs, Notion, Linear), plus your own judgment.
 
 **Please work in this order:**
 1. **Assess first.** Audit the template across *every* page type (homepage, article, **category, search, login, reader-subscriptions, 404, restricted-access**), plus typography, spacing/rhythm, the glow/depth effects, the animated ambient, the TOC, responsive/mobile, dark-mode potential, and accessibility (color contrast, reduced-motion). Give me a **prioritized list of proposed improvements before writing code.**
