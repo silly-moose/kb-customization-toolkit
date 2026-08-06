@@ -827,3 +827,25 @@ html .hg-minimalist-theme.toc-always-open .ko-site-footer { width: 100% }
 Because these rules live in cross-origin bundles, §47's diagnostic can't see them: when it reports a blocked sheet, `curl` the bundle and grep for the selector.
 
 > **Known KO bug worth reporting upstream:** that `calc(100% - 360px)` resolves against the **padded 1410px container** rather than the viewport, so KO's own footer leaves a ~30px white sliver at the right edge on every Minimalist `toc-always-open` KB — independent of any customization.
+
+## 49. Vertically Centring Things in the Minimalist Top Bar — `min-height` on the Brand, and Leave the Toggle Alone
+
+Two elements in the top bar look like the same problem and aren't.
+
+**The logo / `.navbar-brand` — flex-centring alone does nothing useful.** KO floats it as a **35px** box at the **top** of a **55px** bar: `.hg-minimalist-theme .navbar-brand { height: 35px; padding: 10px 15px 10px 0 }`. So `display: flex; align-items: center` centres the image inside the *short* box — which looks correct, reads correct, and still leaves the logo riding high (measured on one build: logo centre 49.5 vs bar centre 59.5, and the customer spotted it).
+
+**The fix is `min-height`, and `height` provably does not work:**
+
+```css
+.hg-minimalist-theme .navbar-brand {
+  display: flex;
+  align-items: center;
+  min-height: var(--nav-height);   /* NOT height — see below */
+}
+```
+
+A `height` override on this element does not take from Custom CSS — not appended last, not with `!important` (all four combinations verified live) — while `min-height` applies every time. No rule in `ko-css` explains it, so treat this as the working declaration rather than a mechanism to reason from: **use `min-height`.**
+
+**The nav toggle needs none of this.** `.ko-slideout-left-toggle` centres correctly with the flex recipe in §27 — chasing it alongside the brand is the natural wrong move. Fix the brand, leave the toggle.
+
+> When measuring any of this in a browser, re-assert from a **clean reload** and include a control that proves your probe actually took effect. Two measurements on this exact bug came back wrong because a probe stylesheet from an earlier call was still in the page and one probe's own control had silently failed. See `03-LOCALHOST_PREVIEW.md` → "Cache-bust every reload".

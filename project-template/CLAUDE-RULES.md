@@ -11,6 +11,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
    - **`.claude/rules/project.md`** — check if it exists. If missing, fetch the template from the repo and save it locally (the user will fill in customer details). If it already exists, leave its filled-in values alone (they're customer-specific) — but if it has no `# Baseline` section, append that section from the template with its values unfilled, so projects created before it existed pick it up too:
      - `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/.claude/rules/project.md`
    - Do this quietly — no need to announce each file. Only mention it if a file was missing and created (e.g., "I noticed `.claude/rules/project.md` was missing, so I created it from the template — you'll need to fill in the customer name and KB.").
+   - **Size tripwire on `project.md`.** It auto-loads every session, so its length is a standing tax on every conversation — one long-running project let it reach ~102 KB (~40K tokens, *every* session), roughly 60% of it superseded per-version notes. If it's over **~20 KB**, say so once and offer to prune: keep **full detail only for the newest version** (plus anything not yet live) and compress each superseded entry to a one-line digest. Nothing is lost — the CHANGES file in each version folder is the durable record. Don't prune unprompted; just flag it.
 2. Review the latest version folder, the most recent `YYYY.MM.DD-current-state` folder (if one exists), or the `YYYY.MM.DD-no-changes` folder if no versions exist yet. **If this is the first session** (only the no-changes folder exists), confirm that all content is in place — code files, HTML snapshots, `style-settings-colors.md`, and screenshots — then run `chmod -R a-w [no-changes-folder]/` to make it read-only and protect it from accidental edits. Do not lock the folder until the user has finished adding all files. (The same lock-when-complete rule applies to `current-state` folders in step 3.)
    - **Settle the `# Baseline` facts here, once.** While confirming first-session content, fill in the `# Baseline` section of `.claude/rules/project.md` so later sessions never have to re-check the live KB for them:
      - **Homepage Custom content (legacy)** — ask the user whether **Customize > Homepage > Homepage content > Custom content** has anything in it. Most modern KBs leave it empty, and a brand-new KB always does. Record `empty` or `in use`. If `in use`, have them paste that field into `homepage-custom-content.html` before the folder is locked; if `empty`, leave the placeholder as-is — in the `no-changes` folder an empty placeholder is the record that the field was empty at project start, so don't delete it here (later `current-state` snapshots do skip the file — step 3). Ask this **one time only**; from then on, read the recorded answer instead of re-checking.
@@ -49,6 +50,8 @@ Help the toolkit get sharper over time by capturing what caused friction in how 
 - Files in any previous version folder
 - Files in the `YYYY.MM.DD-no-changes` backup folder — this is the permanent baseline and emergency rollback point
 - Files in any `YYYY.MM.DD-current-state` folder — these are snapshots of the live KB taken when returning to a project after a gap
+
+**Corollary — don't reorganize project docs that locked folders point at.** Because version and current-state folders are `chmod`'d read-only, any path referenced *inside* them is effectively frozen: you cannot fix a stale reference in a locked folder without unlocking a permanent record. So renaming a doc, number-prefixing it, or moving it into a subfolder can break references you have no clean way to repair. Before moving any project doc, grep for its path across `.claude/rules/project.md`, the process docs, and **every** version folder — and if a locked folder references it, leave the path alone.
 
 ## Current-State Folders
 
@@ -210,6 +213,32 @@ Every time you update code and ask the user to test or deploy, tell them in the 
 **Before handing over deployment instructions for a wholesale field replacement, assert that no baseline selector went missing.** Replacing the whole Custom CSS field is the normal way to apply a theme, and it's also how a customer's one hand-added rule gets silently deleted — the loss shows up as an *absence*, which nobody notices (quirks §44 is the classic case: a lone `display` override that keeps the KB's own name visible). Cheap mechanical check: parse selectors out of both files (`([^{}]+)\{`), set-difference baseline → new, and report anything that disappeared. On a real build this proved a new version dropped none of the baseline's 159 selectors. If something *is* intentionally dropped, say so in the CHANGES file rather than letting it be silent.
 
 **Lead with the deploy list — keep it scannable.** The first thing the user should see when you hand off a change is a tight list (a short table or a few bullets) of exactly which file(s) to copy and where each one goes in KnowledgeOwl. Put that up front and keep the surrounding prose minimal — the user is usually mid-deploy and needs the "what + where," not a long explanation. Save rationale and detail for after the list (or the CHANGES file).
+
+## Risky Edits — Bulk Renames and Control Characters
+
+**Before ANY bulk rename or find-replace, enumerate every occurrence and hunt false positives first.** A rename that looks like a one-line `sed` routinely isn't. Two real near-misses, both invisible to a grep for the obvious string:
+
+- A local variable `var cb = el('input','')` in a **different** engine on the same page — a bare `cb` → `faq` replace would have silently broken an unrelated control. The fix was to only ever rewrite the token `cb-`, hyphen **required**, never a bare `cb`.
+- A CSS class the JS *composes* at runtime (`'gt-' + typeSlug`), so renaming the slug without the matching CSS silently drops a whole column's color. Same hazard for `[data-content_type="…"]` attribute selectors whose `::before` carries visible text.
+
+**Rename with a script that:** (a) lists every distinct token and its count **first**, for you to eyeball; (b) applies rules **longest-first in ONE pass**; (c) asserts a list of MUST-SURVIVE patterns afterwards; (d) asserts zero orphans of the old token. And note that a cyclic renumber (06→07, 07→08, 08→06) **must** be a single atomic pass — sequential replaces collide and corrupt each other.
+
+**Never write a raw control character into a file.** Writing prose *about* one is enough to embed it — a session documenting this very bug put a real NUL into `.claude/rules/project.md`, where it sat undetected for two days. Always write the escape (`\x00`) or the word NUL, never the literal byte.
+
+Why it's nasty: `file` reports the doc as **`data`** rather than text, and plain `grep` then returns **nothing** (exit 1) while `grep -a` finds the content. So an end-of-session consistency sweep *passes* — it found no stale text because it couldn't read the file at all. Two sessions' greps came back silently empty.
+
+- **Guard:** `file .claude/rules/project.md *.md` — anything reporting `data` is corrupted. Or `grep -rlP '[\x00-\x08\x0B\x0C\x0E-\x1F]' .` to find offenders directly.
+- **Habit:** if a grep of a file you *know* has content returns empty, suspect a binary byte before doubting the content.
+
+## Customer-Facing Docs — Verify the Claims and the Links
+
+When a build produces an author guide or any doc the customer will follow, two things need checking that nothing else in this process catches:
+
+**1. Every "the theme does X automatically" claim must name the code that does X.** Documentation written *ahead* of the implementation is worse than stale documentation, because the reader has no way to tell. On one build an author followed the project's own guide verbatim — "write it like a normal article, nothing special" — and got nothing, because that sentence described the *intended* no-code behavior while the implementation still required about a dozen hand-pasted classes. Cheap end-of-build check: for each such claim, point at the code. If you can't, it's a promise, not a doc — either mark the gap explicitly in the guide or don't ship the sentence.
+
+**2. Verify KnowledgeOwl help-doc links against the LIVE site, never against the local `support-kb` Markdown mirror.** The mirror's file layout does **not** map 1:1 to live URLs: it has standalone `.md` files for topics that are actually **sections within a parent article**. Real examples — `create-a-blank-article` and `create-a-new-article-from-template` are anchors under `create-new-article` (`…/help/create-new-article#create-a-blank-article`); `add-a-category-or-subcategory` lives under `create-a-category#…`; `reorder-categories-or-articles` under `reorder-and-move-categories#…`.
+
+So "the mirror has a file named `{slug}.md`" is **not** evidence the URL exists. That false confidence shipped **four wrong help links** in an author guide after they were all reported "verified," and the customer found them. Check each slug against the live site (`https://support.knowledgeowl.com/help/{slug}`, or search the live Support KB) and use the real URL including any `#anchor`. The mirror is fine for content and grep — not for URL validity.
 
 ## Post-Deploy Verification (don't stop at "pasted the files")
 

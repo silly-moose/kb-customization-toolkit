@@ -4,10 +4,12 @@ You are helping customize a KnowledgeOwl knowledge base.
 
 ## First: Load the latest process rules
 
-1. **Fetch the rules file** from the template repo:
-   `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/CLAUDE-RULES.md`
-2. **Save it** as `CLAUDE-RULES.md` in this project folder, replacing the existing copy.
-3. **Read the saved file** and follow all instructions in it for the rest of this session.
+1. **Download the rules file with `curl -o`** — not a web-fetch tool. Fetch-and-transcribe fails here: a summarizing fetcher won't echo a full file back verbatim, so the saved copy ends up truncated or paraphrased.
+   ```bash
+   curl -fsSL -o CLAUDE-RULES.md.new https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/CLAUDE-RULES.md && mv CLAUDE-RULES.md.new CLAUDE-RULES.md
+   ```
+   This writes it byte-exact, and downloading to a temp file first means a **failed or interrupted** fetch can't clobber the local copy you'd fall back on (a network drop mid-transfer would otherwise leave a truncated file). The same applies anywhere else a doc says "fetch X and save it" — download it, don't retype it.
+2. **Read the saved file** and follow all instructions in it for the rest of this session.
 
 If the fetch fails (e.g., network issue), read the existing local `CLAUDE-RULES.md` instead — it was saved during the last successful session.
 
