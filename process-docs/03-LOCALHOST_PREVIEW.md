@@ -64,6 +64,30 @@ Caveats: (a) the snapshot's embedded Style-Settings `<style>` reflects the KB's 
 
 ---
 
+### Previewing a Build BEFORE Anything Is Deployed (snapshot + a simulated Style-Settings block)
+
+The setup below assumes you're iterating on CSS against a KB you can reach. There's a cheaper variant that needs **no dev server and no KB access at all**, and it's the one to reach for on a first build — especially an **auth-walled** KB. It takes ~15 minutes to wire up and it catches deploy-blockers that no amount of reading the CSS will. On one build it caught four real defects before a single line was pasted into KnowledgeOwl: a `:root` split that had silently dropped seven stock rules, a paragraph/list spacing blow-up, mobile category tiles stuck one-per-row, and a logo that vanished against the nav.
+
+The whole trick is that you **generate the Style-Settings block yourself** instead of hoping the snapshot's is current:
+
+1. Start from the `no-changes` folder's `full-html-snapshot-*.html`.
+2. Build the Style-Settings CSS from your **proposed** swatches, using KO's selector map (`knowledgeowl-css-defaults.md` → "Theme Builder Color Mapping"). This is the piece a snapshot can't give you — its embedded block reflects the KB's colors *when it was captured*.
+3. Prepend that block to your new Custom CSS, and put the result inside the snapshot's **first inline `<style>`** — i.e. in the same position, and the same order, as the real page.
+4. Hide the author bar so it doesn't skew layout.
+
+Everything else loads for free: the snapshot's stylesheet `<link>`s are **absolute CDN URLs**, so KO's real platform CSS arrives exactly as it does in production.
+
+> **Why the fidelity holds:** KO ships its entire reader stylesheet as **one compiled CDN bundle** (`min/css/ko-*.css`, ~287 KB — flat-ui bootstrap + flat-ui + `ko-css` + the theme, concatenated) loaded **before** Custom CSS. So a local page that links that exact bundle, then your custom `<head>` tokens, then your Custom CSS, reproduces KO's defaults byte-for-byte. If you want to confirm the bundle really has everything before trusting a result, `grep` it for a few representative selectors (`form-control`, `bs-callout`, `pager-pop-articles`).
+
+**Two capture gotchas that will otherwise read as real bugs:**
+
+- **A `position: fixed` navbar mis-composites in a scrolled screenshot** — the captured image shows it in the wrong place. Temporarily set it to `position: static` before capturing, or capture unscrolled.
+- **KO pins `.documentation-article` to `min-height: calc(100vh - 60px)`**, so on a short page the footer sits below the fold and a screenshot looks like the footer is missing. It isn't.
+
+> **Never reuse a post-JS capture as the INPUT for verifying a theme script.** An `outerHTML` capture is the **already-transformed** DOM. If a theme script rewrites article bodies, the capture shows its *output* — enhanced-flags, moved nodes, injected UI — so feeding it back in makes the script correctly skip or mis-parse, and the test silently tests nothing while looking like it passed. Instead extract only the page **skeleton** from the capture (body classes plus the wrapper chain — e.g. `.hg-article` > tags-span + `.hg-article-header` + `.hg-article-body` > root), drop the **raw** article body inside it, then inject the new custom code. For author-only UI, stub a `.ko-app-edit` element (quirks §32); for a merge-code bridge, hand-write the *rendered* span rather than the merge code.
+
+*(Mapping which selectors to override on KO's secondary reader pages used to be its own research task; that map is now documented directly in `knowledgeowl-css-quirks.md` §39.)*
+
 ## Step-by-Step Setup
 
 ### 1. Create the preview folder
@@ -127,11 +151,27 @@ Then either:
 
 Claude should mention when the preview has been synced, and still provide deployment instructions for the final deploy to KnowledgeOwl.
 
+### Cache-bust every reload, or you'll debug stale code
+
+The preview server serves **static files**, and browsers cache them across edits. Navigating to the same URL after an edit can silently re-run the **old** code while the tool result looks completely authoritative. This has produced two near-false conclusions in a single session: a half-rendered page read as "the script only parsed 2 of 5 steps," and an already-applied fix read as "not working."
+
+Both were wrong, and neither announced itself. So after every edit, either:
+
+- **Cache-bust the URL** — append `?r=2`, `?r=3`, … on each reload; or
+- **Assert the new code is actually present** before trusting anything — check for a marker string from the edit (e.g. look for it among `document.querySelectorAll('script')`, or read back the served CSS).
+
+Cheap, and it converts a silent false negative into a visible one. The same discipline applies to injected probe styles: re-assert from a **clean reload** and include a control that proves the injection took, before drawing a conclusion from a measurement.
+
 ### Verify layout with measurements, not screenshots
 
 For **geometry** — widths, positions, overlaps, whether something is centered — trust the DOM over the screenshot. A screenshot doesn't always render at the same viewport the browser reports via `window.innerWidth`, so it can look "off-center" or "too narrow" when the real layout is fine (and send you chasing non-bugs). Read element rects and computed styles by evaluating JavaScript in the page instead — e.g. `document.querySelector(sel).getBoundingClientRect()` and `getComputedStyle(el)`. Use the screenshot for **look** (color, spacing, polish), not precise dimensions.
 
 To find which element paints a hover/active style, hover it and inspect the hover chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])`. That's how you pin down, e.g., whether a TOC highlight lives on the link or the `<li>` (see `knowledgeowl-css-quirks.md` #24).
+
+> **Clicks may be in SCREENSHOT-pixel space, not CSS pixels.** A preview screenshot (say 800×450) is a *scaled* view of the CSS viewport (say 1280×720), so passing a CSS coordinate from `getBoundingClientRect()` straight to a click misses the target **with no error** — two false-negative clicks were burned before this was diagnosed. Three ways out, best first:
+> - **Click by element reference** rather than by coordinate, if the tooling can target an element directly. No arithmetic, nothing to get wrong.
+> - **Hit-test in JavaScript instead of clicking** — `document.elementFromPoint(cssX, cssY)` works in CSS pixels and answers "is the right element at this point?" without a real click. Reserve actual clicks for end-to-end proof.
+> - **Convert** if you must compute: `scale = window.innerWidth / screenshotWidth`, then click at `(cssX / scale, cssY / scale)`.
 
 ---
 

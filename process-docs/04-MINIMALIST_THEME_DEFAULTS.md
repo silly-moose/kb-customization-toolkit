@@ -85,6 +85,17 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 
 ---
 
+## "Stock + a couple of hand-added rules" — reconstruct, don't transcribe
+
+A common middle case: the KB isn't pristine stock, but it isn't really customized either — it's the seeded default plus one or two rules someone added by hand. Transcribing the customer's paste risks a silent character-level error in ~900 lines. Instead **rebuild the baseline from this folder's file and script the customer's additions back in** at their exact positions. The result is byte-accurate, and it makes the customer's real additions explicit rather than buried.
+
+Two reusable moves:
+
+1. **Verify "is this actually stock?" by comparing SECTION HEADERS first.** `custom-css.css` carries 21 distinctive `/*** … ***/` banners. Matching those in order is a fast, high-confidence signal — do it before diffing rule bodies, which is slower and noisier.
+2. **Then assert no baseline selector is missing from whatever you ship.** Parse selectors (`([^{}]+)\{`) out of both files and set-difference them. This is what catches the "replaced the whole field and silently lost the customer's one custom rule" failure — see the pre-deploy check in `CLAUDE-RULES.md` → Deployment Instructions.
+
+On one build this turned a hand-transcription job into a two-line script, and the selector diff then proved the new version dropped none of the baseline's 159 selectors.
+
 ## Style Settings colors
 
 The Minimalist theme's default Style Settings colors (Customize > Style > Style Settings > Colors) are **already documented** — this doc does not duplicate them:

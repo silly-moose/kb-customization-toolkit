@@ -926,7 +926,7 @@ a.btn.btn-info:focus-visible,
   --brand-accent:       #0170b9;      /* accent: icons, focus, highlights, decoration  */
   --brand-accent-rgb:   1, 112, 185;  /*   ^ same color as R,G,B (feeds glows/tints)   */
   /* Link TEXT is a separate token because it must pass contrast, and a brand accent
-     often doesn't. Defaults to the accent (which is AA-safe at #0170b9, ~4.6:1). If the
+     often doesn't. Defaults to the accent (which is AA-safe at #0170b9 — 5.22:1). If the
      prospect's accent is warm or light — orange/amber/lime/yellow — it will FAIL as body
      text: set --brand-link to a darker readable variant (var(--brand-accent-lo), or a
      hand-picked hex) and leave --brand-accent bright for the decorative roles. */

@@ -148,6 +148,88 @@ Prefer the static download first (offline, archivable); use the live capture as 
 
 **Tip:** browser tool results can truncate or filter large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
 
+### Colour math: contrast and "did this colour actually change?"
+
+Two colour questions come up on nearly every build, and both are judgment calls until you measure them. This helper answers both — drop it in a scratch file and import it.
+
+**Use it for:**
+
+- **Contrast, before assigning a brand colour to anything that colours TEXT.** The theme templates *require* AA (≥4.5:1) on their text tokens, and real brands routinely fail: a logo terracotta `#D05030` measures **4.31:1** on white — under the floor — and a brand orange `#ff5f14` is only **3.04:1**, unreadable as body-link text. Without a prescribed check, the natural move is to paste the brand hex and move on.
+- **Perceptual delta, when a customer sends "revised" colours** with no statement of what changed. CIEDE2000 turns "should we redo anything?" into a number: on one build all four revised hues came in under **ΔE 2.0** (three under 0.6) — perceptually the same colour, so nothing needed redoing.
+
+```python
+import math
+
+def _lin(c):
+    c /= 255
+    return c/12.92 if c <= 0.04045 else ((c+0.055)/1.055) ** 2.4
+
+def hex_rgb(h):
+    h = h.lstrip('#')
+    if len(h) == 3: h = ''.join(c*2 for c in h)
+    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+
+def luminance(h):
+    r, g, b = (_lin(c) for c in hex_rgb(h))
+    return 0.2126*r + 0.7152*g + 0.0722*b
+
+def contrast(fg, bg='#ffffff'):
+    """WCAG 2.x contrast ratio. AA body text needs >= 4.5; large text >= 3.0."""
+    a, b = luminance(fg), luminance(bg)
+    return (max(a, b) + 0.05) / (min(a, b) + 0.05)
+
+def _lab(h):
+    r, g, b = (_lin(c) for c in hex_rgb(h))
+    x = (0.4124*r + 0.3576*g + 0.1805*b) / 0.95047
+    y =  0.2126*r + 0.7152*g + 0.0722*b
+    z = (0.0193*r + 0.1192*g + 0.9505*b) / 1.08883
+    f = lambda t: t ** (1/3) if t > 216/24389 else (841/108)*t + 4/29
+    fx, fy, fz = f(x), f(y), f(z)
+    return 116*fy - 16, 500*(fx - fy), 200*(fy - fz)
+
+def delta_e(h1, h2):
+    """CIEDE2000 between two hex colours. <1 imperceptible; <2 ~ 'same colour'."""
+    L1, a1, b1 = _lab(h1); L2, a2, b2 = _lab(h2)
+    C1, C2 = math.hypot(a1, b1), math.hypot(a2, b2)
+    Cb = (C1 + C2) / 2
+    G = 0.5 * (1 - math.sqrt(Cb**7 / (Cb**7 + 25**7))) if Cb else 0.5
+    a1p, a2p = (1+G)*a1, (1+G)*a2
+    C1p, C2p = math.hypot(a1p, b1), math.hypot(a2p, b2)
+    h1p = math.degrees(math.atan2(b1, a1p)) % 360 if (a1p or b1) else 0
+    h2p = math.degrees(math.atan2(b2, a2p)) % 360 if (a2p or b2) else 0
+    dLp, dCp = L2 - L1, C2p - C1p
+    if C1p*C2p == 0:            dhp = 0
+    elif abs(h2p-h1p) <= 180:   dhp = h2p - h1p
+    elif h2p <= h1p:            dhp = h2p - h1p + 360
+    else:                       dhp = h2p - h1p - 360
+    dHp = 2*math.sqrt(C1p*C2p)*math.sin(math.radians(dhp)/2)
+    Lbp, Cbp = (L1+L2)/2, (C1p+C2p)/2
+    if C1p*C2p == 0:            hbp = h1p + h2p
+    elif abs(h1p-h2p) <= 180:   hbp = (h1p+h2p)/2
+    elif h1p+h2p < 360:         hbp = (h1p+h2p+360)/2
+    else:                       hbp = (h1p+h2p-360)/2
+    T = (1 - 0.17*math.cos(math.radians(hbp-30)) + 0.24*math.cos(math.radians(2*hbp))
+         + 0.32*math.cos(math.radians(3*hbp+6)) - 0.20*math.cos(math.radians(4*hbp-63)))
+    Sl = 1 + (0.015*(Lbp-50)**2)/math.sqrt(20 + (Lbp-50)**2)
+    Sc, Sh = 1 + 0.045*Cbp, 1 + 0.015*Cbp*T
+    Rc = 2*math.sqrt(Cbp**7/(Cbp**7 + 25**7)) if Cbp else 0
+    Rt = -math.sin(math.radians(2 * 30*math.exp(-(((hbp-275)/25)**2)))) * Rc
+    return math.sqrt((dLp/Sl)**2 + (dCp/Sc)**2 + (dHp/Sh)**2 + Rt*(dCp/Sc)*(dHp/Sh))
+```
+
+*The `delta_e` implementation is verified against the published Sharma et al. CIEDE2000 test pairs, and `contrast` against the canonical `#767676` = 4.54:1 AA boundary. Don't rewrite them from memory — copy this block.*
+
+**When a brand colour fails AA as text:** darken it, **record both values**, and note the deviation inline in the CSS, so a later session doesn't "fix" the link colour back to the official brand hex. The templates already separate these roles — link text goes through an AA-checked token while the bright brand colour keeps the decorative roles (see any template's README).
+
+**Also worth measuring:** a logo against the nav it sits on — sample the logo PNG's **opaque** pixels, take their 10th-percentile luminance, and run `contrast()` against the nav colour. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
+
+### Getting exact palettes out of source files rather than off a render
+
+Sampling a screenshot introduces JPEG error and guesswork. Prefer the source:
+
+- **The customer's downloaded marketing site is worth mining even when they've sent brand guidelines.** On a WordPress/Goodlayers build, the theme's *generated* options stylesheet (`wp-content/uploads/gdlr-style-custom.css`) revealed the live site ran an entirely different palette from the guidelines — plus a large transparent white logo that answered the dark-nav variant question for free. Grepping that one generated file beat every other approach; on WordPress builds it's the single highest-value file in the capture.
+- **PPTX decks:** unzip and pull `srgbClr val="…"` from `ppt/slides/slideN.xml` in document order, then zip against the `<a:t>` label runs — exact hexes plus their names, no rendering step. (`pdfimages` plays the same role for PDF swatch pages.)
+
 **Tip — the logo goes in Style Settings, not custom code:** Upload the KB's logo through KnowledgeOwl's native uploader at **Customize > Style > Style Settings > Logo** (upload the right variant per KB — e.g., a white version for a dark nav). Don't hardcode a logo URL in Custom CSS/HTML or recolor a logo with a CSS `filter`. It's more robust and keeps the theme portable as a template. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
 
 **Tip — host other theme images in the KB:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control.
