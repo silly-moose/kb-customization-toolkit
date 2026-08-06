@@ -20,6 +20,7 @@ Use this when you're starting work on a customer's knowledge base for the first 
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
 5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section — plus the legacy `homepage-custom-content.html` if the KB has anything in Customize > Homepage > Homepage content > Custom content)
    - **Stock Minimalist KB?** If the KB is uncustomized (still on the default Minimalist theme), skip the hand-copying — ask Claude to drop in the documented Minimalist defaults as the baseline instead (see `04-MINIMALIST_THEME_DEFAULTS.md`)
+   - **The legacy file is a one-time question.** Claude confirms whether that field is in use during the first session and records the answer in `.claude/rules/project.md` under `# Baseline` — so it won't come up again in later sessions (and is skipped entirely on a new KB, where it's always empty)
 6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
 7. **Capture HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html`
 8. **Record the current Style Settings colors** (Customize > Style > Style Settings > Colors) — either screenshot each color swatch or paste the hex codes into `style-settings-colors.md` in the no-changes folder
@@ -145,7 +146,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 |------|---------|
 | `CLAUDE.md` | Auto-read by Claude Code at session start — bootstrap file that fetches the latest `CLAUDE-RULES.md` from GitHub |
 | `CLAUDE-RULES.md` | Process rules fetched fresh from GitHub each session (local copy serves as fallback if fetch fails) |
-| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, project notes) |
+| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, one-time baseline facts, project notes) |
 | `.claude/launch.json` | Dev-server config for the optional localhost preview (see `03-LOCALHOST_PREVIEW.md`) |
 | `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (e.g., screenshots, mockups, emails, Asana tasks, assets) |
 | `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, screenshots folder, `style-settings-colors.md`, and CHANGES template |
