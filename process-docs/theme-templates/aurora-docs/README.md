@@ -38,8 +38,10 @@ Everything derives from the **`--brand-*` tokens** in the `:root` block at the t
 |-------|------|
 | `--brand-primary` **+** `--brand-primary-rgb` | Dark brand color — headings, footer, table header, dark code blocks, TOC text, category icons; via `-rgb` it feeds the shadows and hero gradient. **Set both.** |
 | `--brand-primary-dark` | Deeper primary. **Auto-derives** from `--brand-primary` via `color-mix()` (hex is a fallback) — leave it. |
-| `--brand-action` **+** `--brand-action-rgb` | Interactive blue — links, buttons, focus rings, active states, search button; via `-rgb` it feeds focus glows + the hero gradient middle. **Set both.** Keep it **AA-contrast** on white (≥4.5:1) since it colors body links. |
-| `--brand-action-dark` | Link/button hover. **Auto-derives** via `color-mix()` — leave it. |
+| `--brand-action` **+** `--brand-action-rgb` | Interactive blue — **button fills**, focus rings, active states, search button; via `-rgb` it feeds focus glows + the hero gradient middle. **Set both.** Carries **white text** on the buttons, so it must not be too light. |
+| `--brand-action-dark` | Button hover. **Auto-derives** via `color-mix()` — leave it. |
+| `--brand-link` **+** `--brand-link-rgb` | **Link TEXT** — body, article, "see more", search-pager links, and KO's `--text-links-color`; the `-rgb` feeds the article link underline. **Defaults to `--brand-action`**, so nothing changes unless you override it. Must hit **AA ≥4.5:1 on white**. |
+| `--brand-link-dark` | Link hover. Defaults to `--brand-action-dark` — leave it unless you overrode `--brand-link`. |
 | `--brand-accent` **+** `--brand-accent-rgb` | Accent (used sparingly) — checklist bullets, blockquote bar, image-caption links, hero gradient tail, category card top-bar. **Set both.** |
 | `--brand-accent-dark` | Accent hover. **Auto-derives** — leave it. |
 | `--brand-tint` | Pale surface tint — background washes (widgets, ratings, related, well, blockquote), TOC hover/active highlight, top-nav search field, text selection. Usually a very light wash of the action color. |
@@ -61,7 +63,8 @@ The `--ui-*` tokens (radius, spacing, shadows, motion, the fixed functional aler
 1. **Capture their exact colors** (their downloaded marketing site, or computed styles read with Claude's browser tooling — see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`).
 2. **Map the three hues:**
    - `--brand-primary` = their **darkest/dominant** brand color (headings, footer, code, TOC). Set `--brand-primary-rgb`. `-dark` auto-derives.
-   - `--brand-action` = their **link/CTA color** (a mid, saturated tone). Set `--brand-action-rgb`. **Check it hits AA (≥4.5:1) on white** — it colors body links. `-dark` auto-derives.
+   - `--brand-action` = their **interactive/CTA color** (a mid, saturated tone) — this fills the buttons, so it must stay dark enough for **white text on it**. Set `--brand-action-rgb`. `-dark` auto-derives.
+   - **Then AA-check it as link text.** `--brand-link` defaults to `--brand-action`, which works only while that colour is mid-tone (the shipped `#1f5fd6` is 5.73:1 both ways). The two roles pull in opposite directions: too light breaks link text on white *and* the button's white label; too dark is free for links but muddies the button. If the brand's action colour fails AA as body-link text, **override `--brand-link` (and `--brand-link-rgb` to match) to a darker variant and leave `--brand-action` alone** for the buttons. Measure with the helper in `../../01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4.
    - `--brand-accent` = a **secondary highlight** (used sparingly). Set `--brand-accent-rgb`. `-dark` auto-derives. If a brand has only two colors, reuse the action color or a tint.
    - `--brand-tint` = a very pale wash (often ~8–12% of the action color on white).
 3. **Text + surfaces:** the `--brand-heading` / `--brand-body` / `--brand-muted` grays and `--brand-bg` / `--brand-surface` defaults usually work; nudge toward the brand if their site does.

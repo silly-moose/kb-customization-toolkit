@@ -934,10 +934,24 @@ a.btn.btn-info:focus-visible,
   --brand-primary-dark: #06003d;                                     /* deeper primary (fallback) */
   --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 72%, #000000);
 
-  --brand-action:       #1f5fd6;      /* interactive blue: links, buttons, focus, active states       */
+  --brand-action:       #1f5fd6;      /* interactive blue: BUTTON FILLS, focus rings, active states   */
   --brand-action-rgb:   31, 95, 214;  /*   ^ same color as R,G,B (feeds focus rings/gradient/glow)     */
-  --brand-action-dark:  #16489f;                                     /* link/button hover (fallback) */
+  --brand-action-dark:  #16489f;                                     /* button hover (fallback)     */
   --brand-action-dark:  color-mix(in srgb, var(--brand-action) 76%, #000000);
+
+  /* Link TEXT is a separate token from the button fill above, because the two have
+     OPPOSITE contrast requirements and one colour can't safely serve both:
+       - as link text it needs AA (>=4.5:1) against the WHITE page  -> must not be too light
+       - as a button fill it carries WHITE text on top             -> must not be too light either,
+         but darkening it far past AA is free, while LIGHTENING it breaks the button.
+     The shipped #1f5fd6 satisfies both at 5.73:1 only because it's a mid-tone blue; a
+     prospect's brand often won't. Default chains to --brand-action, so nothing changes
+     out of the box. If the brand's action colour fails AA as body-link text, override
+     --brand-link (and --brand-link-rgb) to a darker variant and leave --brand-action
+     alone for the buttons. */
+  --brand-link:         var(--brand-action);       /* body/article/pager link text — keep AA >=4.5:1 on white */
+  --brand-link-rgb:     var(--brand-action-rgb);   /*   ^ set to match if you override --brand-link            */
+  --brand-link-dark:    var(--brand-action-dark);  /* link hover                                              */
 
   --brand-accent:       #2fd285;      /* accent green: checklist, blockquote bar, caption links, hero  */
   --brand-accent-rgb:   47, 210, 133; /*   ^ same color as R,G,B (feeds gradient/glow)                 */
@@ -1008,7 +1022,7 @@ a.btn.btn-info:focus-visible,
   /* Remap KO's own theme variables to the brand palette (the stock CSS above uses these) */
   --primary-color:     var(--brand-primary);
   --secondary-color:   var(--brand-accent);
-  --text-links-color:  var(--brand-action);
+  --text-links-color:  var(--brand-link);
   --border-color:      var(--brand-border);
   --border-hover-color: var(--brand-border-strong);
   --toc-border-color:  var(--brand-border);
@@ -1065,7 +1079,7 @@ body {
 
 .hg-minimalist-theme a:not(.btn),
 a:not(.btn) {
-  color: var(--brand-action);
+  color: var(--brand-link);
   text-decoration: none;
   font-weight: 500;
   transition: color var(--ui-duration-fast) var(--ui-ease), border-color var(--ui-duration-fast) var(--ui-ease);
@@ -1073,8 +1087,8 @@ a:not(.btn) {
 }
 .hg-minimalist-theme a:not(.btn):hover,
 a:not(.btn):hover {
-  color: var(--brand-action-dark);
-  border-bottom-color: var(--brand-action-dark);
+  color: var(--brand-link-dark);
+  border-bottom-color: var(--brand-link-dark);
 }
 
 ::selection { background: var(--brand-tint); color: var(--brand-primary); }
@@ -1468,11 +1482,11 @@ body.hg-site.hg-minimalist-theme .navbar-default .navbar-nav > li > a:hover {
 .hg-minimalist-theme .stat-list li { padding: var(--ui-space-2) 0; border-bottom: 1px solid rgba(var(--brand-primary-rgb), .08); }
 .hg-minimalist-theme .stat-list li:last-child { border-bottom: none; }
 .hg-minimalist-theme .stat-list li a { color: var(--brand-body) !important; font-weight: 400; }
-.hg-minimalist-theme .stat-list li a:hover { color: var(--brand-action-dark) !important; }
+.hg-minimalist-theme .stat-list li a:hover { color: var(--brand-link-dark) !important; }
 .hg-minimalist-theme .list-action { border-top: none; margin-top: var(--ui-space-3); }
 .hg-minimalist-theme .list-action a {
   font-weight: 600;
-  color: var(--brand-action) !important;
+  color: var(--brand-link) !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -1585,12 +1599,12 @@ body.hg-site.hg-minimalist-theme .documentation-article .hg-article-body li {
 .hg-minimalist-theme .hg-article-body p { margin-bottom: var(--ui-space-5); }
 .hg-minimalist-theme .hg-article-body li { margin-bottom: var(--ui-space-2); }
 .hg-minimalist-theme .documentation-article a:not(.btn) {
-  color: var(--brand-action);
-  border-bottom: 1px solid rgba(var(--brand-action-rgb), .40);
+  color: var(--brand-link);
+  border-bottom: 1px solid rgba(var(--brand-link-rgb), .40);
   padding-bottom: 1px;
   font-weight: 500;
 }
-.hg-minimalist-theme .documentation-article a:not(.btn):hover { color: var(--brand-action-dark); border-bottom-color: var(--brand-action-dark); }
+.hg-minimalist-theme .documentation-article a:not(.btn):hover { color: var(--brand-link-dark); border-bottom-color: var(--brand-link-dark); }
 .documentation-article p { margin-bottom: var(--ui-space-4); }
 blockquote {
   font-size: inherit;
@@ -1796,8 +1810,8 @@ ul.check-list li::before {
 }
 .hg-minimalist-theme .ko-search-pager li.current,
 .hg-minimalist-theme .ko-search-pager li.current a { background: var(--brand-action); color: var(--brand-surface) !important; border-radius: var(--ui-radius-sm); }
-.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn) { color: var(--brand-action); }
-.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn):hover { color: var(--brand-action-dark); }
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn) { color: var(--brand-link); }
+.hg-minimalist-theme div.ko-search-pager .pull-left:not(.current) a:not(.btn):hover { color: var(--brand-link-dark); }
 
 /* ==========================================================================
    18) RIGHT COLUMN PANELS
