@@ -160,6 +160,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-LOCALHOST_PREVIEW.md` | Optional localhost preview for faster CSS iteration |
 | `04-MINIMALIST_THEME_DEFAULTS.md` | The Minimalist theme's stock default code (Custom CSS/HTML/`<head>`) + how to copy it into a project's `no-changes` folder as a baseline |
+| `editor-simulation/` | A ready-made harness that reproduces the article editor's CSS cascade locally, so the mandatory Editor Readability Guard can be verified **before** deploying instead of eyeballed after. Start at its `README.md`. |
 | `theme-templates/` | Reusable, brand-swappable theme templates (each a subfolder) + how to apply one in a build and how to build new ones. Start at `theme-templates/README.md`. **Opt-in:** a build starts from a template only if you ask — otherwise Claude designs bespoke. |
 
 ---

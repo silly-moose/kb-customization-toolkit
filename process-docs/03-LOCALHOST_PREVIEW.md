@@ -88,6 +88,14 @@ Everything else loads for free: the snapshot's stylesheet `<link>`s are **absolu
 
 *(Mapping which selectors to override on KO's secondary reader pages used to be its own research task; that map is now documented directly in `knowledgeowl-css-quirks.md` §39.)*
 
+### The same idea for the article EDITOR
+
+The Froala editor is the other context you can't just look at — and the **Editor Readability Guard is mandatory in every build**, so it needs verifying every time. It's reproducible for exactly the same reason: its cascade is fully specified (body classes `documentation-article hg-article-body fr-editor-svelte` + `fr-view`, **no** `hg-minimalist-theme`, and neither the Style-Settings block nor the Custom `<head>` — quirks §28).
+
+A ready-made harness ships in the toolkit: **[`../editor-simulation/`](../editor-simulation/)**. Copy `editor-simulation.html` into `preview/`, point it at the KB's `ko-*.css` bundle URL plus the version's compiled `custom-css.css`, and open it — it prints a measured PASS / FAIL / STOCK table per element instead of leaving you to judge by eye. Full instructions and how to read the result are in that folder's README.
+
+This runs **before** deploying, which is the main win: the guard's failure mode used to surface only after a customer's author opened an article.
+
 ## Step-by-Step Setup
 
 ### 1. Create the preview folder

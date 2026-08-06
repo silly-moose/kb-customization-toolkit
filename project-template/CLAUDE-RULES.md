@@ -322,8 +322,28 @@ color (heading, link, body, or a `--text-*` token), as part of that checkpoint *
 guard is present in Custom CSS and that any newly-recolored text element is covered by it** —
 and say so in the conversation (e.g. "Editor Readability Guard present; covers the new link
 color"). If a build's editor canvas is intentionally not white, adjust the guard's hexes
-rather than removing it. (Verify against the real editor after deploy — the iframe can't be
-fully reproduced locally; see quirk #28.)
+rather than removing it.
+
+**Verify it mechanically, before deploying — don't eyeball it afterwards.** The editor's
+cascade is fully specified (body classes `documentation-article hg-article-body
+fr-editor-svelte` + `fr-view`, **no** `hg-minimalist-theme`, and neither the Style-Settings
+block nor the Custom `<head>`), so it *is* reproducible locally — what can't be reproduced is
+Froala's UI, which is irrelevant here. Use the harness:
+`https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/editor-simulation/editor-simulation.html`
+(how-to: `process-docs/editor-simulation/README.md`). Point it at the KB's `ko-*.css` bundle
+URL plus the version's compiled `custom-css.css`, open it, and read the PASS/FAIL/STOCK table.
+Report the result in the conversation as part of the Color-Change Checkpoint.
+
+Two distinct failures, with **different** fixes — the harness tells you which:
+- **Heading or link fails** → the guard is missing or doesn't cover it. Add/extend §28's block.
+- **Body-level text fails** → do **not** extend the guard (it leaves body text alone by design
+  so authors' toolbar colors survive). Scope the leaking theme rule live+PDF-only with
+  `.hg-article-body:not(.documentation-article)` — quirk #29.
+
+Rows reading **STOCK** are at KO's own editor color and are not build regressions, even where
+KO's default is itself below AA (its stock link blue is ~4.2:1 on white). A live spot-check in
+the real editor after deploy is still worth doing as confirmation — but it is no longer the
+mechanism.
 
 ## KnowledgeOwl File-to-Section Mapping
 

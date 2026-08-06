@@ -26,6 +26,7 @@ Available docs (fetch from GitHub when needed):
 - `02-VERSION_CONTROL_PROCESS.md` — Full version control process, examples, and rollback procedures
 - `03-LOCALHOST_PREVIEW.md` — Optional localhost preview for faster CSS iteration
 - `04-MINIMALIST_THEME_DEFAULTS.md` — Minimalist theme default code + how to copy it into a project's `no-changes` folder as a baseline
+- `editor-simulation/README.md` — harness that reproduces the article editor's cascade locally; use it to verify the mandatory Editor Readability Guard before deploying
 - `theme-templates/README.md` — Reusable, brand-swappable theme templates + how to apply one to a build (templates live in `process-docs/theme-templates/`). **Fetch only when the user explicitly asks to use a template** — builds default to a bespoke design.
 
 If the user asks a question about the process, setup, or version control, fetch the relevant doc from:

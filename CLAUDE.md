@@ -15,6 +15,7 @@ You're in the **KB Customization Toolkit**: the shared, reusable how-to + assets
 |-----|------|
 | Repo map + onboarding | `process-docs/00-README.md` |
 | Rules governing customer builds | `project-template/CLAUDE-RULES.md` |
+| Editor Readability Guard harness | `process-docs/editor-simulation/README.md` |
 | Theme-template subsystem (build a new one + apply one) | `process-docs/theme-templates/README.md` |
 | Suggestions / friction awaiting review | `improvement-log.md` *(local-only, git-ignored)* |
 
