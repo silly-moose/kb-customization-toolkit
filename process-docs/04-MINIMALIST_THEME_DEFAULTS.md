@@ -77,12 +77,14 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 
 **Fidelity notes** — these files reproduce KO's stock code exactly, including KO's own oddities:
 
-- `custom-css.css` line ~817 is missing a trailing comma in the long `:focus-visible` selector list (verified present in KO's source too), which silently merges two selectors into one descendant selector that can never match. Net effect: the homepage large-search input **and** `button.btn.btn-success` get no focus outline — a keyboard-accessibility regression inside the block whose stated purpose is accessibility.
+- `custom-css.css` line ~817 is missing a trailing comma in the long `:focus-visible` selector list (verified present in KO's source too), which silently merges two selectors into one descendant selector that can never match: `.hg-minimalist-theme .ko-large-search input.form-control:focus-visible button.btn.btn-success:focus-visible` (a `button` can't descend from an `input`).
 
-  **Leave it as-is *here*.** This folder is a byte-for-byte mirror of what a stock KB ships, and its whole value is that a diff against a live KB comes back clean; "fixing" it would break that. The bug is real, though, so it's handled in the two other places it matters:
+  **There is NO live focus-outline regression, though** — a claim to the contrary was corrected on 2026.08.06. The merged line sits in one 62-selector rule spanning lines **767–832**, and both orphaned elements are still matched by more general selectors *in that same rule*: `.form-control:focus-visible` (line 777) covers the large-search input, and `.btn-success:focus-visible` (line 830) covers the success button. So the practical effect today is one dead selector, not a missing outline.
 
-  - **The theme templates DO fix it** (`theme-templates/*/custom-css.css`). Those are our design layer, not a stock mirror — shipping a known a11y regression to a prospect to preserve fidelity with a bug would be the wrong trade.
-  - **It's worth fixing upstream in KO's seeded template**, so new KBs stop inheriting it. Until that lands, expect a one-line diff between this mirror and any template's copy of that block.
+  **Leave it as-is *here*.** This folder is a byte-for-byte mirror of what a stock KB ships, and its whole value is that a diff against a live KB comes back clean; "fixing" it would break that.
+
+  - **The theme templates DO fix it** (`theme-templates/*/custom-css.css`) — for correctness, and because a template that ever narrows or drops those two general selectors would turn a latent defect into a real keyboard-accessibility bug. Cheap insurance, not an urgent fix.
+  - **It's worth reporting upstream** so new KBs stop inheriting it. Until that lands, expect a one-line diff between this mirror and any template's copy of that block.
 - The footer in `custom-html-1-body.html` reads `Copyright © 2025 Your Company, LLC` — that year is hardcoded in KO's own template, so KBs created after KO bumps it may show a different year. If the live KB's footer differs, reconcile that one line against the live KB rather than deploying the baseline's year.
 
 ---
