@@ -1,6 +1,8 @@
 # Theme Templates — reusable, brand-swappable KB themes
 
-Pre-built KnowledgeOwl theme templates, each layered on the stock **Minimalist** baseline with **every brand value tokenized** so it re-skins from a handful of CSS variables. A customer build starts from the best-fit template and swaps in the prospect's colors, fonts, and imagery — instead of designing every theme from scratch.
+Pre-built KnowledgeOwl theme templates, each layered on the stock **Minimalist** baseline with **every brand value tokenized** so it re-skins from a handful of CSS variables. When a build is asked to start from one, it takes the best-fit template and swaps in the prospect's colors, fonts, and imagery.
+
+> **Opt-in only.** Builds default to a **bespoke** design. Claude won't start a build from a template — or even propose one — unless you explicitly ask for it, so an existing template's limits never cap what gets designed. See "Using a Pre-Built Template — Only on Explicit Request" in [`../../project-template/CLAUDE-RULES.md`](../../project-template/CLAUDE-RULES.md).
 
 This folder is the **single home** for the template subsystem: the templates themselves, the process for building new ones, and this doc for applying them. Claude fetches a template's files from GitHub **raw URLs** at build time — the same fetch-and-apply-by-name mechanism the toolkit uses for the Minimalist defaults (see [`../04-MINIMALIST_THEME_DEFAULTS.md`](../04-MINIMALIST_THEME_DEFAULTS.md)).
 
@@ -20,7 +22,9 @@ More templates get built directly here over time (see "Building a new template" 
 
 ## When to use this
 
-Use it when a prospect build should **start from a pre-built template** rather than a fully bespoke theme — the fast path for the "custom theme for a qualified trial" builds. The templates are generic in layout; **only colors, fonts, and imagery change per prospect.** If a build genuinely needs a one-off design, build it custom (and consider extracting it into a new template afterward).
+**Only when you explicitly ask for it.** Bespoke is the default for every build. These templates are generic in layout by construction — **only colors, fonts, and imagery change per prospect** — so starting from one trades design range for speed. That's a call worth making deliberately, which is why Claude leaves it to you rather than reaching for a template on its own.
+
+When you *do* ask, this is the fast path for "custom theme for a qualified trial" builds. And when a bespoke build turns out to be template-worthy, consider extracting it into a new template afterward (see "Building a new template" below).
 
 ---
 

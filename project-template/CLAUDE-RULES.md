@@ -129,10 +129,19 @@ On a fresh build the *rest* of the capture is largely moot too, so scale it to w
 
 **Never use this path on a KB that already has custom code.** The `no-changes` folder exists to preserve the customer's existing code as the rollback baseline — capture that the normal way instead.
 
-## Using a Pre-Built Template
+## Using a Pre-Built Template — Only on Explicit Request
 
-A build can start from a pre-built, brand-swappable theme template instead of a bespoke design. To apply one, follow the toolkit's `process-docs/theme-templates/README.md`: fetch the template's raw files into the current version folder, then swap the `--brand-*` tokens to the prospect's brand, reconcile the Style Settings, and set the logo + hero. The available templates and each one's token-by-token swap map live under `process-docs/theme-templates/`. Fetch the how-to on demand:
+**Design bespoke by default.** Do **not** start a build from a pre-built theme template, and do **not** propose one, unless the user explicitly asks. The templates are generic in layout by construction, so reaching for one unprompted caps the design at whatever that template already does. That trade-off is the user's to make, not yours.
+
+**"Explicitly asks" means** the user names a template ("apply `modern-docs`") or asks for the template path in substance ("start from one of the toolkit templates", "re-skin an existing template for this"). It does **not** include a stylistic brief that merely echoes a template's name — a prospect who wants a "modern" or "bright, airy" look is describing a **design direction**, not requesting `modern-docs` or `aurora-docs`. Design to the brief.
+
+**When the user does ask**, follow the toolkit's `process-docs/theme-templates/README.md`: fetch the template's raw files into the current version folder, then swap the `--brand-*` tokens to the prospect's brand, reconcile the Style Settings, and set the logo + hero. The available templates and each one's token-by-token swap map live under `process-docs/theme-templates/`. Fetch the how-to on demand:
 `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/theme-templates/README.md`
+
+**This gate covers using a template's files as a build's starting point — nothing else.** Still fine without asking:
+- **The stock Minimalist defaults** (`process-docs/minimalist-theme-defaults/`) — that's the `no-changes` baseline, not a designed theme. See "Fresh or Stock-Minimalist Builds" above.
+- **`theme-templates/_reference-snapshots/`** — a genericized homepage + article used as a preview harness, not a theme.
+- **Reading a template for reference** — e.g. to see how a pattern was tokenized. Take the technique, not the design; the build should still be its own.
 
 ## Brand Color Tokens
 
