@@ -6,6 +6,73 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 
 ---
 
+## Index — find it by symptom
+
+**"My override isn't taking / the rule seems to do nothing"**
+[§1](#1-heavy-important-usage) `!important` everywhere ·
+[§2](#2-theme-namespaced-selectors) theme-namespaced selectors ·
+[§3](#3-competing-link-selectors) competing link selectors ·
+[§15](#15-page-type-body-classes) page-type body classes (**and the same-element compound-selector trap**) ·
+[§18](#18-deep-selector-nesting-for-theme-overrides) deep nesting ·
+[§26](#26-homepage-icon-cats-tiles-left-align-with-fewer-categories-than-columns) icon-cats grid (**two-selector specificity trap**) ·
+[§47](#47-content-level-style-blocks-load-after-custom-css-and-can-outrank-the-theme) **content-level `<style>` beats the theme** ·
+[§48](#48-ko-css-prefixes-some-rules-with-a-bare-html-selector-purely-to-win-specificity) bare `html` specificity prefix ·
+[§8](#8-theme-builder-can-overwrite-custom-css) Theme Builder can overwrite Custom CSS
+
+**Editor / PDF (the two contexts you can't just look at)**
+[§14](#14-pdf-specific-css-rules) PDF CSS stack + engines ·
+[§28](#28-froala-article-editor-is-an-iframe-editor-only-overrides-behave-differently) **editor is an iframe — canonical spec + the Readability Guard** ·
+[§29](#29-distinguishing-live-vs-pdf-vs-editor-when-scoping-hg-article-body) scoping live vs PDF vs editor ·
+[§33](#33-kb-search-never-indexes-script-content) search never indexes `<script>` ·
+[§35](#35-a-marker-class-applied-by-a-head-script-is-absent-in-pdf-and-the-editor) JS-applied classes absent in both ·
+[§45](#45-copying-a-block-in-the-froala-editor-duplicates-its-id) Froala copy duplicates `id`
+
+**Dark themes**
+[§20](#20-article-panels-default-to-white-dark-theme-trap) article panels default white ·
+[§23](#23-reader-login-page-light-panels--two-flash-mechanisms-dark-theme-trap) login page + two flash mechanisms ·
+[§38](#38-native-form-controls-ignore-a-dark-background-color--and-computed-style-lies) native form controls ignore dark bg (**computed style lies**) ·
+[§39](#39-dark-theming-kos-secondary-reader-pages) secondary reader pages (component map)
+
+**Layout & structure**
+[§5](#5-toc-slideout-layout-coupling) TOC slideout coupling ·
+[§6](#6-anchor-link-offset-for-fixed-navigation) anchor offset under fixed nav ·
+[§9](#9-responsive-breakpoints) breakpoints ·
+[§16](#16-z-index-layering-gaps) z-index gaps ·
+[§19](#19-full-bleed-footer-and-other-edge-to-edge-bands) full-bleed bands ·
+[§22](#22-homepage-article-panel-has-a-fixed-viewport-derived-height) viewport-derived panel height ·
+[§25](#25-flexbox-on-ko-homepage-top-collapses-the-homepage-search) flex collapses homepage search ·
+[§31](#31-hiding-article-chrome-on-full-bleed-custom-pages--use-descendant-selectors) hiding article chrome ·
+[§41](#41-category-landing-pages-native-markup-and-the-double-body-class) category landing markup + double body class ·
+[§49](#49-vertically-centring-things-in-the-minimalist-top-bar--min-height-on-the-brand-and-leave-the-toggle-alone) centring in the top bar (**`min-height`, not `height`**)
+
+**Typography, lists & content elements**
+[§4](#4-froala-image-classes-and-no-border) Froala image classes ·
+[§7](#7-alert-box-pseudo-elements) alert pseudo-elements ·
+[§11](#11-image-caption-selectors-fr-img-caption) image captions ·
+[§12](#12-nested-ordered-list-numbering) nested list numbering ·
+[§13](#13-search-bar-border-pattern) search bar border ·
+[§21](#21-href-less-a-are-hidden-as-anchor-jump-targets) href-less `<a>` hidden ·
+[§30](#30-article-header-and-body-sit-on-different-font-size-bases-em-doesnt-transfer) header vs body font base (`em` doesn't transfer) ·
+[§42](#42-every-h2-inside-faq-nav-content-is-hidden--by-a-descendant-selector) `<h2>` hidden in `.faq-nav-content` ·
+[§43](#43-breadcrumbs-are-ancestors-only--and-they-already-render-separators) breadcrumbs: ancestors-only + real separators ·
+[§44](#44-hg-project-name-is-display-none--replacing-custom-css-can-erase-the-kbs-name) `.hg-project-name` hidden by default
+
+**Merge codes, templates & content hooks**
+[§34](#34-siterenderer-executes-merge-codes-everywhere--including-inside-css-comments) merge codes execute **inside CSS comments** ·
+[§36](#36-ko-has-no-article-custom-fields--tags-are-the-per-article-metadata-hook) no article custom fields — tags are the hook ·
+[§37](#37-templateicon-catsmaxn-silently-drops-categories-past-the-nth) `icon-cats,max=N` silently drops categories ·
+[§40](#40-the-sidebar-toc-contains-the-full-article-tree-a-no-auth-all-articles-source) sidebar TOC holds the full article tree
+
+**Theme-level & client-side**
+[§10](#10-custom-utility-classes-to-know) utility classes ·
+[§17](#17-colors-are-css-variables-theme-dependent) colors are CSS variables ·
+[§24](#24-toc-hoveractive-highlight-is-generated-and-paints-on-multiple-elements) TOC highlight is generated ·
+[§27](#27-centering-an-icon-in-a-nav-toggle-button--use-flex-not-line-height) centring a nav toggle icon ·
+[§32](#32-detecting-a-logged-in-author-client-side-ko-app-edit) detecting a logged-in author (**incl. Preview vs live**) ·
+[§46](#46-sessionstorage-survives-a-hard-refresh) `sessionStorage` survives a hard refresh
+
+---
+
 ## 1. Heavy `!important` Usage
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
@@ -805,7 +872,7 @@ console.table(hits);
 
 Used correctly this named the culprit in a single paste, after ~20 minutes of source-grepping had failed to.
 
-## 48. `ko-css` Prefixes Some Rules with a Bare `html ` Purely to Win Specificity
+## 48. `ko-css` Prefixes Some Rules with a Bare `html` Selector Purely to Win Specificity
 
 Some platform rules carry a leading `html ` that does nothing semantically and exists only to add a element-selector's worth of specificity. Theme overrides written at the obvious level then lose **even though Custom CSS loads later** — with no error; the declaration simply doesn't take.
 

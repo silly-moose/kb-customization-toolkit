@@ -33,6 +33,18 @@ Help the toolkit get sharper over time by capturing what caused friction in how 
 3. **One-line heads-up.** Tell the user in one line what you logged (e.g. "Added 2 items to the toolkit improvement-log's AWAITING REVIEW, suggest-only, for your review."). Keep it to one line.
 4. **Never apply during a session.** Don't edit or push the toolkit yourself, and don't move items between the log's status sections. Applying accepted suggestions — and triaging `AWAITING REVIEW` into `APPLIED`/`DECLINED`/`DEFERRED` — is Chad's separate step, done in a session opened in the toolkit repo. At **project closeout**, review/dedupe `AWAITING REVIEW` — see "Project Closeout" in `02-VERSION_CONTROL_PROCESS.md`.
 
+## Mandatory Checks — the five that are easy to miss
+
+These are the gates that must not be skipped. Each has a full section below; this is the list so none gets lost in the middle of a build. **State the outcome of each in the conversation** — including "not needed this version," so the decision is visible rather than silently omitted.
+
+| Check | Fires when | Detail |
+|---|---|---|
+| **Snippets scan** | First session, during baseline capture | Check Library > Snippets for `<style>` / `<script>` and record it in `# Baseline`. Content-level CSS loads *after* Custom CSS and outranks the theme, so "the Custom CSS is stock" proves nothing — step 1 above, and quirks §47 |
+| **Color-Change Checkpoint** | Any version that adds or changes a color value | Reconcile against Style Settings, state the table, and contrast-check every token that colors text — "Style Settings Colors" below |
+| **Editor Readability Guard** | Every build | The guard block must be present in Custom CSS, and verified with the editor-simulation harness *before* deploying — "Editor Readability Guard" below |
+| **Pre-deploy selector diff** | Before deployment instructions for any wholesale field replacement | Set-difference the selectors so a customer's hand-added rule can't vanish silently — "Deployment Instructions" below |
+| **Post-deploy verification** | After the user deploys a color / type / layout change | Sample what actually rendered; this failure class is invisible in the version folder — "Post-Deploy Verification" below |
+
 ## Version Folders
 
 *Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` in the process docs.*

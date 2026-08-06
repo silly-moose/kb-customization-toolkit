@@ -6,6 +6,35 @@ Lookup reference for default selectors, property values, and CSS architecture in
 
 ---
 
+## Index
+
+**Start here if you're new to the cascade:**
+[CSS Architecture](#css-architecture-how-styles-layer) — the load order (platform bundle → generated Style-Settings → seeded Custom CSS) that explains *why* an override wins or loses ·
+[CSS Custom Properties](#css-custom-properties) — the `:root` tokens and which are seeded vs generated
+
+**Per-area defaults** — selectors and stock values you'd be overriding:
+[Layout & Containers](#layout-structure--container-classes) (body classes, page structure, width defaults) ·
+[Navigation & Header](#navigation--header) ·
+[Article Content](#article-content) (**typography, background and spacing defaults — incl. the paragraph/list-spacing compounding trap**) ·
+[Table of Contents](#table-of-contents-toc-sidebar) (incl. the nav-tree / `toc-always-open` variant) ·
+[Search](#search) ·
+[Components](#components) (ratings, comments, article actions, contact form, breadcrumbs, tags, related, required reading, glossary, favorites) ·
+[Category Pages](#category-pages) (**incl. homepage `icon-cats` tiles**) ·
+[Embedded Widget](#embedded-widget)
+
+**Lookups:**
+[Bootstrap 3 Classes](#bootstrap-3-classes-most-used-in-ko) ·
+[Responsive Breakpoints](#responsive-breakpoints) ·
+[Font Resources](#font-resources) (**KO self-hosts and ships only 300/400/700 — 500 and 600 silently render as 700**) ·
+[Icon Library](#icon-library) ·
+[Theme Builder Color Mapping](#theme-builder-color-mapping) (which selectors each Style Setting generates — needed to simulate the block locally) ·
+[Minimalist Style-Settings Defaults](#minimalist-theme--style-settings-defaults) (the 8 stock swatch values) ·
+[Source File Map](#source-file-map)
+
+**Colour math** (contrast + perceptual delta) lives in `../../process-docs/01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4, not here.
+
+---
+
 ## CSS Architecture: How Styles Layer
 
 A current (Minimalist-theme) KB loads its styles from three sources, in this order (later overrides earlier on equal specificity):
