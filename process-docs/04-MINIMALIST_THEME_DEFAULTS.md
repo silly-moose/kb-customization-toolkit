@@ -69,7 +69,9 @@ done
 
 **Timing note:** do this during initial setup, *before* the `no-changes` folder is locked read-only (`chmod -R a-w`). If the folder is already locked, unlock it first (`chmod -R u+w <folder>`), copy, then re-lock. See [`01-KB_CUSTOMIZATION_PROJECT_SETUP.md`](01-KB_CUSTOMIZATION_PROJECT_SETUP.md) §5 for the locking step.
 
-**What this does and doesn't touch:** it populates the 12 code files only. The HTML snapshots (`full-html-snapshot-*.html`), screenshots, and `CHANGES_FROM_no-changes.md` are still captured the normal way during setup. The legacy `homepage-custom-content.html` field is empty on stock Minimalist KBs, so leave its placeholder as-is.
+**What this does and doesn't touch:** it populates the 12 code files only. The HTML snapshots (`full-html-snapshot-*.html`), screenshots, and `CHANGES_FROM_no-changes.md` are still captured the normal way during setup — though on a fresh build they can be scaled down; see "Fresh or Stock-Minimalist Builds" in `CLAUDE-RULES.md`.
+
+The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, so leave its placeholder as-is there. On an *older* KB that merely looks stock, confirm it rather than assuming: **Customize > Homepage > Homepage content > Custom content** lives outside the Style editor entirely, so someone can have put content there without ever touching Custom CSS/HTML. Either way it's a one-time check — record the answer under `# Baseline` in `.claude/rules/project.md` and later sessions read it instead of asking again.
 
 **Fidelity notes** — these files reproduce KO's stock code exactly, including KO's own oddities:
 

@@ -47,7 +47,9 @@ If a customer has no existing custom code in a given field, leave the placeholde
 
 *Authoritative version: the mapping table in `CLAUDE-RULES.md` (which Claude fetches from GitHub automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE-RULES.md` first.*
 
-**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box (in the **Homepage content** card) on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
+**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box (in the **Homepage content** card) on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty, and a **brand-new KB always does**; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
+
+**Check it once, then record it.** Claude settles this during the first session and writes the answer (`empty` or `in use`) to the `# Baseline` section of `.claude/rules/project.md`. Once it's recorded as `empty`, the file is skipped in every later current-state snapshot and Claude won't ask about it again — so this is a one-time question, not a recurring one. (Older projects created before the `# Baseline` section existed get it appended automatically at the start of their next session.)
 
 ### Record Current Style Settings Colors
 
