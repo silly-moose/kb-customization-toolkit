@@ -2,6 +2,24 @@
 
 You are helping customize a KnowledgeOwl knowledge base. Follow these rules for every session.
 
+## Contents
+
+**Running a session** — [At the Start of Each Session](#at-the-start-of-each-session) · [At the End of Each Session](#at-the-end-of-each-session--reflect--improve-suggest-only) · [Mandatory Checks](#mandatory-checks--the-five-that-are-easy-to-miss)
+
+**Folders & versioning** — [Version Folders](#version-folders) · [Never Modify](#never-modify) · [Current-State Folders](#current-state-folders) · [CHANGES File](#changes-file)
+
+**Tools & environment** — [Browser Tooling](#browser-tooling) · [Localhost Preview](#localhost-preview-optional) · [KnowledgeOwl Source CSS Lookup](#knowledgeowl-source-css-lookup-chads-machine-only)
+
+**Starting a build** — [Fresh or Stock-Minimalist Builds](#fresh-or-stock-minimalist-builds) · [Using a Pre-Built Template](#using-a-pre-built-template--only-on-explicit-request) · [Capturing Exact Brand Colors](#capturing-exact-brand-colors)
+
+**Design rules** — [Brand Color Tokens](#brand-color-tokens) · [Logo & Brand Assets](#logo--brand-assets) · [Style Settings Colors](#style-settings-colors) · [Editor Readability Guard](#editor-readability-guard-mandatory--every-build)
+
+**Shipping** — [Deployment Instructions](#deployment-instructions) · [Post-Deploy Verification](#post-deploy-verification-dont-stop-at-pasted-the-files) · [Risky Edits](#risky-edits--bulk-renames-and-control-characters) · [Customer-Facing Docs](#customer-facing-docs--verify-the-claims-and-the-links)
+
+**Lookup** — [KnowledgeOwl File-to-Section Mapping](#knowledgeowl-file-to-section-mapping)
+
+---
+
 ## At the Start of Each Session
 
 1. **Sync template files** — older customer projects may be missing files that were added to the template after the project was created. Ensure these files exist and are up to date:
@@ -17,7 +35,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
      - **Homepage Custom content (legacy)** — ask the user whether **Customize > Homepage > Homepage content > Custom content** has anything in it. Most modern KBs leave it empty, and a brand-new KB always does. Record `empty` or `in use`. If `in use`, have them paste that field into `homepage-custom-content.html` before the folder is locked; if `empty`, leave the placeholder as-is — in the `no-changes` folder an empty placeholder is the record that the field was empty at project start, so don't delete it here (later `current-state` snapshots do skip the file — step 3). Ask this **one time only**; from then on, read the recorded answer instead of re-checking.
      - **Started from** — record whether the baseline came from the customer's existing code, the stock Minimalist defaults, or a theme template (and which).
    - **Check Library > Snippets for `<style>` / `<script>` blocks, and record what you find.** The 12 code fields are *not* the whole story: a snippet's `<style>` renders inside page content, which loads **after** Custom CSS, so it beats the theme at equal specificity — and it is invisible to the documented field-by-field capture. **"The Custom CSS is stock" is therefore not evidence that a KB has no custom styling.** A single snippet used across dozens of articles can override the theme's headings or links on exactly those pages. Note any such snippet in `# Baseline` (name + roughly how many articles reference it) so it's a known constraint rather than a post-deploy surprise. See quirks-doc §47 for the mechanism and the diagnostic.
-3. **Create a current-state snapshot if needed** — check the date of the latest version folder or `current-state` folder. If more than one day has passed since the last session, **always** create a new `YYYY.MM.DD-current-state` folder — do not ask whether to do this, just tell the user it's needed and walk them through it. Create the folder with empty placeholder files for all 12 code sections, and also create placeholder copies of any `full-html-snapshot-*.html` files and `style-settings-colors.md` found in the most recent version folder. For the legacy Homepage Custom content field, **read `# Baseline` in `.claude/rules/project.md` instead of re-checking the KB**: if it records `in use`, include a `homepage-custom-content.html` placeholder and have the user refresh it from Customize > Homepage > Homepage content > Custom content; if it records `empty`, skip the file entirely and don't raise it. Only if the answer isn't recorded yet (a project set up before the `# Baseline` section existed) ask once — then write the answer there so no later session asks again. **The user pastes code directly into each file themselves** (e.g., via VS Code) — do not ask them to paste code into the Claude Code conversation. Tell them which file to open and which KnowledgeOwl section to copy from, then move to the next file. For HTML snapshots, ask the user to paste fresh HTML into each placeholder (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML). For `style-settings-colors.md`, ask the user to update the hex values only if the Style Settings colors may have changed in KnowledgeOwl since the last session; otherwise they can copy the values from the previous version's file. Once all files are in place — the 12 code files, the html snapshot files, `style-settings-colors.md`, screenshots, **and the `CHANGES_FROM_v[last].md` drift record** (required in every current-state folder — see "Current-State Folders" below; write it before locking) — run `chmod -R a-w [current-state-folder]/` to make it read-only. Then proceed.
+3. **Create a current-state snapshot if needed** — if more than one day has passed since the latest version or `current-state` folder, **always** create a new `YYYY.MM.DD-current-state` folder. Do not ask whether to; tell the user it's needed and walk them through it. **The user pastes code into each file themselves** (e.g. via VS Code) — tell them which file to open and which KnowledgeOwl section to copy from, then move to the next. The full procedure — what the folder contains, reading `# Baseline` for the legacy field instead of re-checking the KB, the `CHANGES_FROM_v[last].md` drift record, and when to lock — is in **"Current-State Folders"** below.
 4. **Review the `Reference/` folder** — list its contents, **excluding `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** (these are permanent references that are always relevant — do not list them alongside project-specific files). Flag any project-specific files that may be stale (e.g., files that were present in earlier versions but may no longer be relevant). Ask the user: **"Here's what's in Reference/ (besides the KnowledgeOwl CSS reference docs, which are always included). Are all of these still relevant, or should any be removed before we start?"** Do not read everything upfront, as the folder may contain large files (e.g., downloaded marketing sites) — just list the filenames and ask.
 5. Check `.claude/rules/project.md` for the deployment target. If it's set, use it. If it says `[sandbox / live KB]` (i.e., hasn't been filled in yet), ask the user: **"Are we deploying to a sandbox or directly to the live KB?"** and update the file with their answer.
 6. Ask what the user wants to work on before making changes
@@ -69,7 +87,11 @@ These are the gates that must not be skipped. Each has a full section below; thi
 
 *Authoritative reference: `02-VERSION_CONTROL_PROCESS.md` — "Returning to an Existing Project After a Gap".*
 
-A `YYYY.MM.DD-current-state` folder contains the 12 code files copied from KnowledgeOwl's Customize > Style (HTML & CSS) sections (the core snapshot), plus placeholder copies of any `full-html-snapshot-*.html` files and `style-settings-colors.md` found in the most recent version folder — and `homepage-custom-content.html` only when `# Baseline` in `.claude/rules/project.md` records the legacy Homepage Custom content field as `in use`. The html snapshot files are not pulled from KnowledgeOwl — the user captures them from the browser. Include placeholders for each one and ask the user to paste in fresh HTML. For `style-settings-colors.md`, the user only needs to update the hex values if the Style Settings colors may have changed in KnowledgeOwl since the last session; otherwise they can copy the values from the previous version's file. Do not make the folder read-only until all content — code files, HTML snapshots, `style-settings-colors.md`, screenshots, and the `CHANGES_FROM_v[last].md` drift record (next paragraph) — has been added.
+A `YYYY.MM.DD-current-state` folder contains the 12 code files copied from KnowledgeOwl's Customize > Style (HTML & CSS) sections (the core snapshot), plus placeholder copies of any `full-html-snapshot-*.html` files and `style-settings-colors.md` found in the most recent version folder — and `homepage-custom-content.html` only when `# Baseline` in `.claude/rules/project.md` records the legacy Homepage Custom content field as `in use`. If that answer isn't recorded yet (a project predating the `# Baseline` section), ask once, then write it there so no later session asks again.
+
+The html snapshot files are not pulled from KnowledgeOwl — the user captures them from the browser (Chrome DevTools > Elements > right-click `<html>` > **Copy outerHTML**). Include a placeholder for each and ask the user to paste in fresh HTML. For `style-settings-colors.md`, the user only needs to update the hex values if the Style Settings colors may have changed in KnowledgeOwl since the last session; otherwise they can copy the values from the previous version's file.
+
+Once **all** content is in place — the 12 code files, the HTML snapshots, `style-settings-colors.md`, screenshots, and the `CHANGES_FROM_v[last].md` drift record (next paragraph) — run `chmod -R a-w [current-state-folder]/` to make it read-only, then proceed. Do not lock a partially-captured folder.
 
 Create a `current-state` folder whenever resuming work after more than one day has passed since the last session — or sooner if you know that you or the customer made changes directly in KnowledgeOwl. Treat it like the `no-changes` folder: never modify it, and use it as the starting point for the next version folder. If a `current-state` folder exists and is newer than the latest version folder, copy from it (not the old version) when creating the next version.
 
@@ -103,26 +125,13 @@ If declined, use the normal deploy-and-verify workflow.
 
 ## KnowledgeOwl Source CSS Lookup (Chad's Machine Only)
 
-Two reference files in `Reference/` cover the most common CSS lookup needs:
-- `knowledgeowl-css-quirks.md` — platform-specific gotchas and idiosyncrasies
-- `knowledgeowl-css-defaults.md` — default selectors, property values, and CSS architecture
+**Start with the two `Reference/` files** — `knowledgeowl-css-quirks.md` (platform gotchas) and `knowledgeowl-css-defaults.md` (default selectors, values, CSS architecture). They cover the vast majority of what you need when writing overrides. Each opens with an index; use it rather than reading the whole file.
 
-**Start with these files.** They cover the vast majority of what you need when writing CSS overrides.
+If they and the customer's HTML snapshot don't answer the question, and the KO source codebase is available at `/Users/chadtimblin/My Drive*/Claude Code/ko-codebase/knowledgeowl` (a glob — resolve with `ls -d`), you can read source CSS directly. **The codebase only exists on Chad's machine** — everyone else relies on the reference docs plus the snapshot, and inspects computed styles in the browser.
 
-If you need exact property values or full selector chains not covered in the reference files, and the KO source codebase is available at `/Users/chadtimblin/My Drive*/Claude Code/ko-codebase/knowledgeowl` (a glob — resolve it with `ls -d`; the git repo root — `public/`, `service/`, etc. live directly under it), you can read specific source CSS files directly for targeted lookups. **This codebase is only available on Chad's machine** — other teammates should rely on the reference files and the customer's HTML snapshot.
+Which file holds what, and when reading source beats debugging in the browser (notably the **editor-iframe** and **PDF** contexts, where it's often the only decisive view): **`knowledgeowl-css-defaults.md` → "Source File Map."**
 
-Key source files for targeted lookup:
-- `public/css/public/ko-css.css` — CSS custom properties and KO-specific utilities (~2,700 lines)
-- `public/css/public/publicview.css` — Classic theme layout (7,468 lines)
-- `public/css/public/publicview_modern.css` — Modern theme layout (7,416 lines)
-- `public/css/public/standard.css` — Classic theme colors/typography (906 lines)
-- `public/css/public/standard_modern.css` — Modern theme colors/typography (876 lines)
-- `service/views/scripts/themer-templates/custom-css.css` — default custom CSS template (alert styles, TOC anchors, image captions, list numbering, PDF rules, etc.)
-- `service/views/scripts/themer-templates/` — HTML templates defining page structure and class names
-
-**When to reach for the source (Chad only).** If a Custom CSS override "isn't taking," or an element renders unexpectedly (invisible, wrong size/color, clipped, mis-positioned), the fast path is to `grep` these files for the selector/element and read the *actual winning rule* — rather than deep-debugging computed styles in the browser, which is noisy and slow (accumulated injected styles, timing/JS races, cross-origin sheets you can't read). Confirm the real rule in the source, then write a scoped override that beats it. This is *especially* the fast path for the **editor-iframe** and **PDF-export** contexts (see quirks-doc §28 and §14): neither can be inspected like a normal page in the browser, so reading the source is often the only decisive way to see the real cascade there. (Teammates without the codebase: rely on the customer's HTML snapshot + the reference files, and inspect computed styles in the browser.)
-
-**Do not read these files speculatively.** Only look up a specific file when the reference files and HTML snapshot don't answer your question. Use targeted reads (specific line ranges) rather than reading entire files.
+**Do not read source speculatively.** Only open a specific file to answer a specific question, and use targeted line ranges rather than whole files.
 
 ## Capturing Exact Brand Colors
 
@@ -136,26 +145,11 @@ When the KB is **brand-new or still on the stock Minimalist theme** with no real
 
 If accepted, follow `04-MINIMALIST_THEME_DEFAULTS.md` (fetch on demand) — it `curl`s the 12 code files from the repo byte-exact, before the folder is locked. Record `stock Minimalist defaults` under **Started from** in `# Baseline`.
 
-On a fresh build the *rest* of the capture is largely moot too, so scale it to what actually exists rather than asking for the full set:
+On a fresh build the *rest* of the capture is largely moot too — scale it to what actually exists rather than asking for the full set (Style Settings values, snapshots, screenshots, the legacy field: see "Scaling the rest of the capture" in `04-MINIMALIST_THEME_DEFAULTS.md`).
 
-- **Style Settings colors** — on a **brand-new** KB the values *are* the Minimalist defaults already listed at the bottom of `style-settings-colors.md`, so copy them up into "Customer's values" rather than clicking through every swatch. On an **older KB that merely looks stock, confirm each swatch instead**: Style Settings live in their own UI, so the colors can have been changed without Custom CSS/HTML ever being touched.
-- **HTML snapshots** — still capture one homepage and one article. They show KO's stock rendered DOM, which is exactly what the build will be overriding.
-- **Screenshots** — one homepage and one article is enough. There's no customer design to preserve, so don't chase a full page inventory.
-- **Legacy Homepage Custom content** — always empty on a brand-new KB, so there's nothing to check: record `empty` in `# Baseline` (step 2), leave the `no-changes` placeholder as-is, and move on.
+**Don't use this path to overwrite a KB whose custom code is worth keeping** — the `no-changes` folder exists to preserve the customer's real work as the rollback baseline. **But "has custom code" isn't automatically "worth keeping":** a sandbox carrying a trial-era or pre-sales first-pass theme that this build is meant to replace is a legitimate restart-from-stock case. Don't bulldoze it silently either — ask which the user wants (capture it as a real rollback point / defaults as baseline / defaults plus the old theme archived in `Reference/`). Options and trade-offs: `04-MINIMALIST_THEME_DEFAULTS.md`.
 
-**Don't use this path to overwrite a KB whose custom code is worth keeping.** The `no-changes` folder exists to preserve the customer's real work as the rollback baseline — capture that the normal way instead.
-
-### The exception: deliberately discarding a throwaway theme
-
-There's a legitimate and fairly common case the rule above would otherwise forbid: **a sandbox already carries a trial-era or pre-sales first-pass theme, and the build is meant to start over from stock.** Nobody wants to roll back to it. Don't treat that as "the KB has custom code, capture it" — but don't silently bulldoze it either. Ask which of these the user wants:
-
-| Option | When it fits |
-|---|---|
-| **Capture the live code as a true rollback point** (normal path) | Any chance someone wants the old theme back, or it's on a live KB |
-| **Use the Minimalist defaults as the baseline** | A sandbox throwaway nobody will miss — cleanest start |
-| **Defaults as baseline, old theme archived in `Reference/`** | Recommended default for a throwaway: costs one file, keeps the option to look back |
-
-**One consequence to handle explicitly if you take either defaults route:** `style-settings-colors.md` no longer describes the live KB — it now holds the Minimalist defaults, not the customer's actual swatches. That silently breaks the Color-Change Checkpoint, which needs a real "Current value" for its table and would otherwise produce a table of fiction. So **confirm the 8 live Style Settings swatches before deploying the first version** and record those as the current values. Cheap, but nothing else prompts you to do it.
+**One consequence you must handle if you take either defaults route:** `style-settings-colors.md` then holds the Minimalist defaults, not the customer's actual swatches — so it no longer describes the live KB. That silently breaks the Color-Change Checkpoint, which needs a real "Current value" or it produces a table of fiction. **Confirm the 8 live Style Settings swatches before deploying the first version** and record those as the current values. Nothing else prompts you to do this.
 
 ## Using a Pre-Built Template — Only on Explicit Request
 
@@ -240,29 +234,24 @@ Every time you update code and ask the user to test or deploy, tell them in the 
 
 ## Risky Edits — Bulk Renames and Control Characters
 
-**Before ANY bulk rename or find-replace, enumerate every occurrence and hunt false positives first.** A rename that looks like a one-line `sed` routinely isn't. Two real near-misses, both invisible to a grep for the obvious string:
+**Before ANY bulk rename or find-replace, enumerate every occurrence and hunt false positives first.** A rename that looks like a one-line `sed` routinely isn't — real near-misses have included a same-named variable in an unrelated engine on the same page, and a CSS class the JS *composes* at runtime so the grep never sees it. Rename via a script that (a) lists every distinct token and count **first** for you to eyeball, (b) applies rules **longest-first in ONE pass**, (c) asserts a list of MUST-SURVIVE patterns, (d) asserts zero orphans of the old token. A cyclic renumber (06→07, 07→08, 08→06) **must** be a single atomic pass — sequential replaces collide.
 
-- A local variable `var cb = el('input','')` in a **different** engine on the same page — a bare `cb` → `faq` replace would have silently broken an unrelated control. The fix was to only ever rewrite the token `cb-`, hyphen **required**, never a bare `cb`.
-- A CSS class the JS *composes* at runtime (`'gt-' + typeSlug`), so renaming the slug without the matching CSS silently drops a whole column's color. Same hazard for `[data-content_type="…"]` attribute selectors whose `::before` carries visible text.
+**Never write a raw control character into a file** — writing prose *about* one is enough to embed it. Use the escape (`\x00`) or the word NUL, never the literal byte. A NUL makes `file` report the doc as **`data`** and plain `grep` return **nothing**, so an end-of-session consistency sweep silently *passes* while unable to read the file at all.
 
-**Rename with a script that:** (a) lists every distinct token and its count **first**, for you to eyeball; (b) applies rules **longest-first in ONE pass**; (c) asserts a list of MUST-SURVIVE patterns afterwards; (d) asserts zero orphans of the old token. And note that a cyclic renumber (06→07, 07→08, 08→06) **must** be a single atomic pass — sequential replaces collide and corrupt each other.
-
-**Never write a raw control character into a file.** Writing prose *about* one is enough to embed it — a session documenting this very bug put a real NUL into `.claude/rules/project.md`, where it sat undetected for two days. Always write the escape (`\x00`) or the word NUL, never the literal byte.
-
-Why it's nasty: `file` reports the doc as **`data`** rather than text, and plain `grep` then returns **nothing** (exit 1) while `grep -a` finds the content. So an end-of-session consistency sweep *passes* — it found no stale text because it couldn't read the file at all. Two sessions' greps came back silently empty.
-
-- **Guard:** `file .claude/rules/project.md *.md` — anything reporting `data` is corrupted. Or `grep -rlP '[\x00-\x08\x0B\x0C\x0E-\x1F]' .` to find offenders directly.
+- **Guard:** `file .claude/rules/project.md *.md` — anything reporting `data` is corrupted. Or `grep -rlP '[\x00-\x08\x0B\x0C\x0E-\x1F]' .`
 - **Habit:** if a grep of a file you *know* has content returns empty, suspect a binary byte before doubting the content.
+
+*Worked examples of both traps: `02-VERSION_CONTROL_PROCESS.md` → "Risky Edits".*
 
 ## Customer-Facing Docs — Verify the Claims and the Links
 
 When a build produces an author guide or any doc the customer will follow, two things need checking that nothing else in this process catches:
 
-**1. Every "the theme does X automatically" claim must name the code that does X.** Documentation written *ahead* of the implementation is worse than stale documentation, because the reader has no way to tell. On one build an author followed the project's own guide verbatim — "write it like a normal article, nothing special" — and got nothing, because that sentence described the *intended* no-code behavior while the implementation still required about a dozen hand-pasted classes. Cheap end-of-build check: for each such claim, point at the code. If you can't, it's a promise, not a doc — either mark the gap explicitly in the guide or don't ship the sentence.
+**1. Every "the theme does X automatically" claim must name the code that does X.** Documentation written *ahead* of the implementation is worse than stale documentation, because the reader has no way to tell — on one build an author followed the guide verbatim and got nothing, because the sentence described intended behavior the code didn't have yet. Cheap end-of-build check: for each such claim, point at the code. If you can't, it's a promise, not a doc — mark the gap explicitly in the guide or don't ship the sentence.
 
-**2. Verify KnowledgeOwl help-doc links against the LIVE site, never against the local `support-kb` Markdown mirror.** The mirror's file layout does **not** map 1:1 to live URLs: it has standalone `.md` files for topics that are actually **sections within a parent article**. Real examples — `create-a-blank-article` and `create-a-new-article-from-template` are anchors under `create-new-article` (`…/help/create-new-article#create-a-blank-article`); `add-a-category-or-subcategory` lives under `create-a-category#…`; `reorder-categories-or-articles` under `reorder-and-move-categories#…`.
+**2. Verify KnowledgeOwl help-doc links against the LIVE site, never against the local `support-kb` Markdown mirror.** The mirror's file layout does **not** map 1:1 to live URLs — it has standalone `.md` files for topics that are really **anchors inside a parent article**. So "the mirror has a file named `{slug}.md`" is **not** evidence the URL exists; that false confidence shipped **four wrong help links** in an author guide after all were reported "verified." Check each slug against the live site (`https://support.knowledgeowl.com/help/{slug}`, or search the live Support KB) and use the real URL including any `#anchor`. The mirror is fine for content and grep — not for URL validity.
 
-So "the mirror has a file named `{slug}.md`" is **not** evidence the URL exists. That false confidence shipped **four wrong help links** in an author guide after they were all reported "verified," and the customer found them. Check each slug against the live site (`https://support.knowledgeowl.com/help/{slug}`, or search the live Support KB) and use the real URL including any `#anchor`. The mirror is fine for content and grep — not for URL validity.
+*Known mirror paths that are really anchors: `02-VERSION_CONTROL_PROCESS.md` → "Customer-Facing Docs".*
 
 ## Post-Deploy Verification (don't stop at "pasted the files")
 
@@ -271,7 +260,7 @@ So "the mirror has a file named `{slug}.md`" is **not** evidence the URL exists.
 So after the user deploys a version that changed colors, typography, or layout:
 
 1. **Sample what actually rendered** — look at the live page and compare the real values against the intended tokens. A screenshot plus a pixel sample is enough to catch a wrong color; reading computed styles is better where you can.
-2. **If something doesn't match, enumerate the matching rules in cascade order** rather than reasoning about specificity by hand — use the guarded diagnostic in quirks-doc §47. Two traps make the naïve version of that snippet report a *false* "nothing else matches": KO's bundles are cross-origin (so `cssRules` throws and a bare `catch` hides it) and rules inside `@media` are missed without recursing.
+2. **If something doesn't match, enumerate the matching rules in cascade order** rather than reasoning about specificity by hand — use the **guarded** diagnostic in quirks-doc §47 (the naïve version reports a false "nothing else matches"; §47 explains why and ships the fixed snippet).
 3. **Say what you verified** in the conversation, the same way the Color-Change Checkpoint is stated — e.g. "Verified on the live article page: H1 renders `#343f37` as intended."
 
 If the KB is login-gated, have the user sign into the built-in browser (see "Browser Tooling") so this step is still possible.
@@ -309,13 +298,12 @@ If a version changes colors but **no** Style Setting is affected, say so explici
 
 ## Editor Readability Guard (mandatory — every build)
 
-The Froala **article editor** renders in a **white iframe** that loads `ko.css` + your
-compiled **Custom CSS** — but **NOT** the Style-Settings color block or the Custom `<head>`
-(quirk #28). So any text color the theme applies through an **unscoped** stock rule (KO's own
-`a:not(.btn){color:var(--text-links-color)}`) or a **`.documentation-article`-scoped** rule
-paints inside the editor too, where a light or brand color is **unreadable on the white
-canvas**. This is a recurring dark-/custom-theme trap (it bit headings and links on real
-builds).
+The Froala **article editor** renders your compiled Custom CSS in a **white iframe** that
+loads neither the Style-Settings color block nor the Custom `<head>` — so unscoped and
+`.documentation-article`-scoped theme text colors paint in there too, where a light or brand
+color is unreadable. A recurring dark-/custom-theme trap that has bitten headings and links on
+real builds. **Canonical spec of that cascade — body classes, what loads, why theme-scoped
+rules don't apply — is quirk #28; don't restate it, link it.**
 
 **The rule:** **every build's Custom CSS must contain the Editor Readability Guard block** —
 the canonical, copy-whole block in `Reference/knowledgeowl-css-quirks.md` §28. It is
@@ -336,15 +324,12 @@ and say so in the conversation (e.g. "Editor Readability Guard present; covers t
 color"). If a build's editor canvas is intentionally not white, adjust the guard's hexes
 rather than removing it.
 
-**Verify it mechanically, before deploying — don't eyeball it afterwards.** The editor's
-cascade is fully specified (body classes `documentation-article hg-article-body
-fr-editor-svelte` + `fr-view`, **no** `hg-minimalist-theme`, and neither the Style-Settings
-block nor the Custom `<head>`), so it *is* reproducible locally — what can't be reproduced is
-Froala's UI, which is irrelevant here. Use the harness:
+**Verify it mechanically, before deploying — don't eyeball it afterwards.** Because that
+cascade is fully specified (quirk #28), it reproduces locally. Use the ready-made harness:
 `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/editor-simulation/editor-simulation.html`
-(how-to: `process-docs/editor-simulation/README.md`). Point it at the KB's `ko-*.css` bundle
-URL plus the version's compiled `custom-css.css`, open it, and read the PASS/FAIL/STOCK table.
-Report the result in the conversation as part of the Color-Change Checkpoint.
+Point it at the KB's `ko-*.css` bundle URL plus the version's compiled `custom-css.css`, open
+it, and read the PASS/FAIL/STOCK table. Report the result in the conversation as part of the
+Color-Change Checkpoint. Setup and how to read it: `process-docs/editor-simulation/README.md`.
 
 Two distinct failures, with **different** fixes — the harness tells you which:
 - **Heading or link fails** → the guard is missing or doesn't cover it. Add/extend §28's block.

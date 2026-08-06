@@ -252,6 +252,32 @@ Project/
 
 ---
 
+## Risky Edits — worked examples
+
+The rules live in `CLAUDE-RULES.md` → "Risky Edits." These are the cases that produced them, kept here because they're what makes the rules land.
+
+**Bulk renames: the two near-misses a grep couldn't see.** Renaming a content type end-to-end (a class, an id, ~28 classes, and a tag slug) looked like a one-line `sed`. An audit first caught two things it would have broken:
+
+1. A local variable `var cb = el('input',''); cb.type='checkbox'` in a **different** engine on the same page — the guided path's compliance gate. A bare `cb` → `faq` replace would have silently broken a compliance control. Fix: only ever rewrite the token `cb-` with the hyphen **required**, never a bare `cb`.
+2. `.gt-background-context` in CSS, which the JS builds at runtime as `'gt-' + typeSlug`. Renaming the slug without the matching CSS silently drops a whole column's color — no error. Same hazard for `[data-content_type="…"]` attribute selectors whose `::before` carries a visible label.
+
+Hence the recipe: list every distinct token and count first, apply longest-first in one pass, assert MUST-SURVIVE patterns, assert zero orphans. And a cyclic renumber (06→07, 07→08, 08→06) has to be one atomic pass — done sequentially, the replaces collide.
+
+**Control characters: why the guard exists.** A JS sentinel string containing `\x00` seemed clever ("can never collide with an id") and poisoned every subsequent grep of that file. It then **recurred** in `.claude/rules/project.md` — written while *documenting* the first occurrence — and sat undetected for two days. `file` reported the doc as `data`, plain `grep` returned nothing while `grep -a` found the content, so two sessions' consistency sweeps passed without being able to read the project's most-read doc. Prefer sentinels that are illegal in the domain but plain ASCII (e.g. a string containing spaces — HTML ids can't contain them).
+
+## Customer-Facing Docs — mirror paths that are really anchors
+
+The rule lives in `CLAUDE-RULES.md` → "Customer-Facing Docs." These are the confirmed cases where a `support-kb` mirror filename does **not** correspond to a live URL — the mirror has a standalone `.md` file, but on the live site the topic is a section inside a parent article:
+
+| Mirror file | Actual live URL |
+|---|---|
+| `create-a-blank-article.md` | `…/help/create-new-article#create-a-blank-article` |
+| `create-a-new-article-from-template.md` | `…/help/create-new-article#…` |
+| `add-a-category-or-subcategory.md` | `…/help/create-a-category#…` |
+| `reorder-categories-or-articles.md` | `…/help/reorder-and-move-categories#…` |
+
+Four wrong links reached a customer's author guide after all of them were reported "verified" on the strength of the mirror having a matching filename. Treat this table as illustrative, not exhaustive — always confirm against the live site.
+
 ## Project Closeout
 
 Before closing out a project, review the improvement log, then check whether any process improvements were discovered during the work.

@@ -4,9 +4,9 @@ The **Editor Readability Guard** is mandatory in every build (`project-template/
 
 ## Why it works
 
-The Froala editor renders your compiled Custom CSS in an iframe on a white canvas, and loads **neither** the Style-Settings colour block **nor** the Custom `<head>` (quirks-doc §28). Its editable body carries `documentation-article hg-article-body fr-editor-svelte` (+ Froala's `fr-view`) and, crucially, **not** `hg-minimalist-theme` — which is why unscoped and `.documentation-article`-scoped theme colours leak in while theme-scoped ones don't.
+The Froala editor renders your compiled Custom CSS in an iframe on a white canvas, and loads **neither** the Style-Settings colour block **nor** the Custom `<head>` — which is why unscoped and `.documentation-article`-scoped theme colours leak in while theme-scoped ones don't. **Canonical spec of that cascade (exact body classes, what loads, why) is quirks-doc §28** — the single source of truth; this file doesn't restate it.
 
-That cascade is fully specified, so [`editor-simulation.html`](editor-simulation.html) recreates it exactly and measures the result. What it *doesn't* reproduce is Froala's own UI — irrelevant to readability.
+Because the cascade is fully specified, [`editor-simulation.html`](editor-simulation.html) recreates it exactly and measures the result. What it *doesn't* reproduce is Froala's own UI — irrelevant to readability.
 
 ## Use it
 

@@ -600,6 +600,14 @@ Default hex values for a stock (uncustomized) **Minimalist** theme KB, from Cust
 
 Source files in the KnowledgeOwl codebase that generate the styles described above. Compiled bundles are defined in `build-assets.mjs`; `KbRenderer::styleSheets()` decides what a page loads.
 
+> **Reading the source directly (Chad's machine only).** The KO codebase lives at `/Users/chadtimblin/My Drive*/Claude Code/ko-codebase/knowledgeowl` (a glob — resolve with `ls -d`; `public/`, `service/` etc. sit directly under it). Everyone else works from this doc, the quirks doc, and the customer's HTML snapshot.
+>
+> **When source beats the browser:** if an override "isn't taking," or an element renders unexpectedly (invisible, wrong size or color, clipped, mis-positioned), `grep` these files for the selector and read the **actual winning rule**. That's faster and more reliable than debugging computed styles in a live page, which is noisy — accumulated injected styles, timing and JS races, cross-origin sheets you can't enumerate (see quirks §47). Confirm the real rule, then write a scoped override that beats it.
+>
+> It's *especially* the fast path for the **editor iframe** (quirks §28) and **PDF export** (quirks §14): neither can be inspected like a normal page, so the source is often the only decisive view. Two starting points beyond the table below: `service/views/scripts/themer-templates/custom-css.css` is the seeded default Custom CSS (alerts, TOC anchors, image captions, list numbering, PDF rules), and `service/views/scripts/themer-templates/` holds the HTML templates that define page structure and class names.
+>
+> **Don't read speculatively** — open a file to answer a specific question, with targeted line ranges.
+
 **Loaded on current (Minimalist) KBs** — the `ko` bundle, in concatenation order:
 
 | File | Lines | Purpose |

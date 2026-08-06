@@ -89,6 +89,29 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 
 ---
 
+## Scaling the rest of the capture on a fresh build
+
+The defaults cover the 12 code files. On a genuinely fresh KB the *rest* of the setup capture is largely moot too, so scale it to what exists instead of asking for the full inventory:
+
+- **Style Settings colors** — on a **brand-new** KB the values *are* the Minimalist defaults already listed at the bottom of `style-settings-colors.md`, so copy them up into "Customer's values" rather than clicking through every swatch. On an **older KB that merely looks stock, confirm each swatch instead** — Style Settings live in their own UI, so the colors can have been changed without Custom CSS/HTML ever being touched.
+- **HTML snapshots** — still capture one homepage and one article. They show KO's stock rendered DOM, which is exactly what the build will be overriding.
+- **Screenshots** — one homepage and one article is enough. There's no customer design to preserve, so don't chase a full page inventory.
+- **Legacy Homepage Custom content** — always empty on a brand-new KB, so there's nothing to check: record `empty` in `# Baseline` and move on.
+
+### Deliberately discarding a throwaway theme
+
+A sandbox often already carries a trial-era or pre-sales first-pass theme that the build is meant to replace. That's a legitimate restart-from-stock case — but don't bulldoze it silently. Ask which the user wants:
+
+| Option | When it fits |
+|---|---|
+| **Capture the live code as a true rollback point** (normal path) | Any chance someone wants the old theme back, or it's on a live KB |
+| **Use the Minimalist defaults as the baseline** | A sandbox throwaway nobody will miss — cleanest start |
+| **Defaults as baseline, old theme archived in `Reference/`** | Recommended default for a throwaway: costs one file, keeps the option to look back |
+
+Either defaults route carries the Style-Settings consequence flagged in `CLAUDE-RULES.md` → "Fresh or Stock-Minimalist Builds": confirm the 8 live swatches before v1, or the Color-Change Checkpoint has nothing real to compare against.
+
+---
+
 ## "Stock + a couple of hand-added rules" — reconstruct, don't transcribe
 
 A common middle case: the KB isn't pristine stock, but it isn't really customized either — it's the seeded default plus one or two rules someone added by hand. Transcribing the customer's paste risks a silent character-level error in ~900 lines. Instead **rebuild the baseline from this folder's file and script the customer's additions back in** at their exact positions. The result is byte-accurate, and it makes the customer's real additions explicit rather than buried.
