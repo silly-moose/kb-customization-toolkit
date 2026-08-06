@@ -137,14 +137,14 @@ Reference/
 
 A static capture isn't always enough. Modern marketing sites often ship **compiled/minified CSS** (e.g., Tailwind) where brand colors are buried in utility classes, define colors as **CSS variables** or apply them via **JavaScript** at runtime, or render logos/images **client-side or as data URIs**.
 
-When the downloaded files don't give you confident, exact values for the brand colors (or fonts, or the logo), capture them from the **live site with Claude in Chrome**:
+When the downloaded files don't give you confident, exact values for the brand colors (or fonts, or the logo), have Claude read them off the **live site with its browser tooling**. A marketing site is public, so Claude's built-in browser handles this — it only needs your logged-in Chrome for pages behind a login (see "Browser Tooling" in `CLAUDE-RULES.md`):
 
 1. Point Claude at the customer's site and ask it to report the **computed styles** of the key brand elements — primary/CTA button background, headings, body text, links, top nav, footer — plus the heading and body `font-family`.
 2. `getComputedStyle()` returns the value the browser actually paints, regardless of how it was authored, so you get exact hex codes and real font stacks even from compiled CSS or JS-applied styles.
 
 Prefer the static download first (offline, archivable); use the live capture as the exactness fallback. Record the confirmed values somewhere durable in the project (e.g., a short `brand.md` in `Reference/`) so the build and any later session share one source of truth.
 
-**Tip:** the Claude-in-Chrome result filter can block large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
+**Tip:** browser tool results can truncate or filter large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
 
 **Tip — the logo goes in Style Settings, not custom code:** Upload the KB's logo through KnowledgeOwl's native uploader at **Customize > Style > Style Settings > Logo** (upload the right variant per KB — e.g., a white version for a dark nav). Don't hardcode a logo URL in Custom CSS/HTML or recolor a logo with a CSS `filter`. It's more robust and keeps the theme portable as a template. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
 

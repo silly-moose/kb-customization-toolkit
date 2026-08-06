@@ -64,6 +64,15 @@ When a `current-state` folder is created, the user should also refresh supportin
 - Remove outdated materials from `Reference/` (e.g., deployed mockups, completed task exports) and add any new reference files for upcoming work
 - Leave `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md` in place — they're permanent references
 
+## Browser Tooling
+
+A session may expose more than one browser surface, and the tool names change over time — so check what's actually available rather than assuming, and pick by **whether the target needs a login**:
+
+- **Default to the built-in browser** for anything publicly reachable: a customer's marketing site, a public KB, and the localhost preview below.
+- **Use the real-Chrome surface** — the one carrying the user's existing logged-in sessions — when the target sits **behind a login**: the KnowledgeOwl admin app (`app.knowledgeowl.com`, including the article editor iframe), a private or IP-restricted KB, or a post-login state like the Restricted Access page. Never enter credentials yourself. If no logged-in surface is available, ask the user to drive that step and report what they see.
+
+Either way, pull **values** — hex codes, font names, computed styles, element rects — rather than whole files. Browser tool results can truncate or filter large or encoded payloads (base64 images, long SVG path data).
+
 ## Localhost Preview (Optional)
 
 *Authoritative reference: `03-LOCALHOST_PREVIEW.md` in the process docs (`https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/03-LOCALHOST_PREVIEW.md`). Fetch it when the user accepts the trigger prompt below — it contains the full Step-by-Step Setup, troubleshooting, and limitations.*
@@ -72,7 +81,7 @@ For sessions involving significant visual iteration (CSS changes, layout adjustm
 
 > "This involves visual changes. Want me to set up localhost preview so you can see changes without deploying each time?"
 
-If accepted, fetch `03-LOCALHOST_PREVIEW.md` from the process docs and follow its Step-by-Step Setup section. During the session, keep `preview/custom-css.css` in sync with the version folder on every CSS edit, and run `rm -rf preview` when teardown is needed. If Claude Preview MCP tools are available, use `preview_screenshot` or `preview_inspect` to verify changes visually.
+If accepted, fetch `03-LOCALHOST_PREVIEW.md` from the process docs and follow its Step-by-Step Setup section. During the session, keep `preview/custom-css.css` in sync with the version folder on every CSS edit, and run `rm -rf preview` when teardown is needed. Use the session's browser tooling (see "Browser Tooling" above — localhost needs no login, so the built-in browser is right) to verify changes visually: screenshot for **look**, computed styles and element rects for **geometry**.
 
 If declined, use the normal deploy-and-verify workflow.
 
@@ -101,7 +110,7 @@ Key source files for targeted lookup:
 
 ## Capturing Exact Brand Colors
 
-Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use Claude in Chrome to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
+Prefer the customer's downloaded marketing site (in `Reference/`) for colors, fonts, and assets. If the download doesn't yield confident, exact values — e.g., compiled/minified CSS, colors set via JS, or JS-rendered logos — use the session's browser tooling to read the **computed styles** off their live site (primary/CTA buttons, headings, body, links, nav, footer, plus `font-family`). A marketing site is public, so the built-in browser is the right default here — see "Browser Tooling" above. Record the confirmed values in the project so the build and later sessions share one source of truth. See `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 for details.
 
 ## Fresh or Stock-Minimalist Builds
 

@@ -15,7 +15,7 @@ Full process: [`../../03-LOCALHOST_PREVIEW.md`](../../03-LOCALHOST_PREVIEW.md). 
 1. Copy the snapshots into your gitignored `preview/` folder as `preview/homepage.html` and `preview/article.html`.
 2. In each, inject `<link rel="stylesheet" href="custom-css.css">` just before `</head>`.
 3. Copy the template you're working on — e.g. [`../modern-docs/custom-css.css`](../modern-docs/custom-css.css) — to `preview/custom-css.css` (keep it in sync as you edit).
-4. Serve `preview/` (e.g. `python3 -m http.server`) and open `homepage.html` / `article.html`. Use the Claude Preview MCP (`preview_screenshot` / `preview_inspect`) or a browser to verify — check that tokens resolve, effects render, and there are no console errors.
+4. Serve `preview/` (e.g. `python3 -m http.server`) and open `homepage.html` / `article.html`. Use Claude's browser tooling (screenshot, computed styles, console) or your own browser to verify — check that tokens resolve, effects render, and there are no console errors.
 
 Because the injected `custom-css.css` loads **last**, the template's rules layer on top of the snapshot's baseline.
 

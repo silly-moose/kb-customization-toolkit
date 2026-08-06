@@ -54,7 +54,7 @@ The `--ui-*` tokens (radius, shadows, glows, and `--ui-read-max` — the article
 
 A repeatable way to fill in the `--brand-*` tokens for a new prospect:
 
-1. **Capture their exact colors** — prefer their downloaded marketing site; if that doesn't give confident values, read *computed* styles off their live site with Claude-in-Chrome (see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`). Record them in the project (e.g. a `brand.md`).
+1. **Capture their exact colors** — prefer their downloaded marketing site; if that doesn't give confident values, read *computed* styles off their live site with Claude's browser tooling (see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`). Record them in the project (e.g. a `brand.md`).
 2. **Map the two key colors:**
    - `--brand-primary` = their **dominant brand color** (anchors nav / headings / primary actions). Set `--brand-primary-rgb` to that color's R,G,B. The `-hi` / `-lo` shades **auto-derive** — leave them.
    - `--brand-accent` = their **link / CTA / highlight color** (often a brighter secondary). Set `--brand-accent-rgb`. The `-hi` / `-lo` shades **auto-derive** — leave them.

@@ -55,7 +55,7 @@ The `--ui-cta-ink` (dark text on the light CTA) and the entire layout/structure 
 
 ## From a prospect's brand → the token values
 
-1. **Capture their exact colors** (their marketing site, or computed styles via Claude-in-Chrome — see `../../../project-template/CLAUDE-RULES.md`).
+1. **Capture their exact colors** (their marketing site, or computed styles via Claude's browser tooling — see `../../../project-template/CLAUDE-RULES.md`).
 2. **Map the gradient:** `--brand-accent` (start), `--brand-gradient-mid` (middle), `--brand-cta` (end) form the tri-color gradient — pick three colors that read well left-to-right. Set the `-rgb` for accent + cta.
 3. **AA-check the text colors:** `--brand-accent` (colors category titles + banner text) and `--brand-link` must hit **≥4.5:1 on white**. Darken if needed — a too-light brand green/blue will fail.
 4. **CTA:** `--brand-cta` should be light enough that the dark `--ui-cta-ink` text reads on it (or change the ink).

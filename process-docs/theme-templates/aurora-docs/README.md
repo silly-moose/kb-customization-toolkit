@@ -58,7 +58,7 @@ The `--ui-*` tokens (radius, spacing, shadows, motion, the fixed functional aler
 
 ## From a prospect's brand → the token values
 
-1. **Capture their exact colors** (their downloaded marketing site, or computed styles read with Claude-in-Chrome — see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`).
+1. **Capture their exact colors** (their downloaded marketing site, or computed styles read with Claude's browser tooling — see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`).
 2. **Map the three hues:**
    - `--brand-primary` = their **darkest/dominant** brand color (headings, footer, code, TOC). Set `--brand-primary-rgb`. `-dark` auto-derives.
    - `--brand-action` = their **link/CTA color** (a mid, saturated tone). Set `--brand-action-rgb`. **Check it hits AA (≥4.5:1) on white** — it colors body links. `-dark` auto-derives.

@@ -44,11 +44,11 @@ HTML changes can also be previewed locally by editing the snapshot file directly
 
 ### Reproducing a Deployed Page to Diagnose It
 
-The same snapshot mechanism doubles as a **diagnostic tool** when a deployed change looks wrong but you can't inspect the live page directly — e.g. the KB requires reader login, so a fresh browser tab hits the login wall instead of the page. Reproduce the deployed state locally and inspect it:
+The same snapshot mechanism doubles as a **diagnostic tool** when a deployed change looks wrong but you can't inspect the live page directly — e.g. the KB requires reader login, so a fresh browser tab hits the login wall instead of the page. (The other way past a login wall is a browser surface that already carries the session — see "Browser Tooling" in `CLAUDE-RULES.md`. Reproducing locally is still the more portable option, and the only one that works when nobody's logged in.) Reproduce the deployed state locally and inspect it:
 
 1. Copy a **fresh** HTML snapshot (captured after the change) to `preview/`.
 2. Inject the *full* current code, not just a CSS `<link>`: insert the version folder's `custom-head.html` contents **and** the complete `custom-css.css` (wrapped in `<style>`) immediately before `</head>`, so the local copy matches what's actually deployed. For HTML/template changes, also swap the relevant DOM region of the snapshot for your resolved markup — resolve KO merge codes (e.g. `[template("large-search")]`, `[homepage("title")]`) to the HTML they render, which you can copy straight out of the snapshot itself.
-3. Serve it (`python3 -m http.server`) and open it with a browser automation tool (Claude in Chrome, or the built-in preview) to inspect **computed styles** — run `getComputedStyle` on the suspect elements. This is how you find the real cause fast: *which* wrapper is actually painting white, whether an element is `visibility:hidden`, what its real width/height is, etc.
+3. Serve it (`python3 -m http.server`) and open it with Claude's browser tooling to inspect **computed styles** — run `getComputedStyle` on the suspect elements. Localhost needs no login, so the built-in browser is the right default. This is how you find the real cause fast: *which* wrapper is actually painting white, whether an element is `visibility:hidden`, what its real width/height is, etc.
 
 Because the snapshot loads KnowledgeOwl's real CDN CSS, the computed styles match production. This needs only the snapshot + a browser — **no KO codebase required, so it works for any teammate.**
 
@@ -90,11 +90,11 @@ cp [version-folder]/custom-css.css preview/custom-css.css
 
 ### 4. Start the server
 
-**Option A — Claude Preview MCP tools (preferred when available):**
+**Option A — Claude's built-in preview server (preferred when available):**
 
-The project template includes `.claude/launch.json` with a preview server configuration. Claude runs `preview_start` with name `"preview"` to start the server. This also enables Claude to use `preview_screenshot` and `preview_inspect` for automated visual verification.
+The project template includes `.claude/launch.json` with a preview server configuration. Claude starts the server from that config by its name, `"preview"`, which also lets Claude screenshot and inspect the page for automated visual verification.
 
-> **Re-point the served directory first.** `.claude/launch.json`'s preview config points at a **specific directory** (often a per-session scratchpad path), which goes stale between sessions — if it's left pointing at a previous session's now-empty or old folder, `preview_start` silently serves the wrong thing. Before `preview_start`, update the config's directory arg to **this** session's `preview/` folder (use an absolute path), then start the server.
+> **Re-point the served directory first.** `.claude/launch.json`'s preview config points at a **specific directory** (often a per-session scratchpad path), which goes stale between sessions — if it's left pointing at a previous session's now-empty or old folder, the server silently serves the wrong thing. Before starting it, update the config's directory arg to **this** session's `preview/` folder (use an absolute path), then start the server.
 
 **Option B — Manual:**
 
@@ -123,13 +123,13 @@ cp [version-folder]/custom-css.css preview/custom-css.css
 
 Then either:
 - **You** refresh the browser to see changes
-- **Claude** uses `preview_screenshot` or `preview_inspect` (via Claude Preview MCP tools) to verify visually and share results
+- **Claude** screenshots and inspects the page with its browser tooling to verify visually and share results
 
 Claude should mention when the preview has been synced, and still provide deployment instructions for the final deploy to KnowledgeOwl.
 
 ### Verify layout with measurements, not screenshots
 
-For **geometry** — widths, positions, overlaps, whether something is centered — trust the DOM over the screenshot. `preview_screenshot` doesn't always render at the same viewport that `preview_resize` / `window.innerWidth` report, so a screenshot can look "off-center" or "too narrow" when the real layout is fine (and send you chasing non-bugs). Read element rects and computed styles via `preview_eval` instead — e.g. `document.querySelector(sel).getBoundingClientRect()` and `getComputedStyle(el)`. Use the screenshot for **look** (color, spacing, polish), not precise dimensions.
+For **geometry** — widths, positions, overlaps, whether something is centered — trust the DOM over the screenshot. A screenshot doesn't always render at the same viewport the browser reports via `window.innerWidth`, so it can look "off-center" or "too narrow" when the real layout is fine (and send you chasing non-bugs). Read element rects and computed styles by evaluating JavaScript in the page instead — e.g. `document.querySelector(sel).getBoundingClientRect()` and `getComputedStyle(el)`. Use the screenshot for **look** (color, spacing, polish), not precise dimensions.
 
 To find which element paints a hover/active style, hover it and inspect the hover chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])`. That's how you pin down, e.g., whether a TOC highlight lives on the link or the `<li>` (see `knowledgeowl-css-quirks.md` #24).
 
@@ -186,7 +186,7 @@ The preview is only as current as the HTML snapshot. If changes were made direct
 
 ## Claude Code's Built-in Preview
 
-Claude Code has its own in-app preview feature (powered by Claude Preview MCP tools) that can start a local server, take screenshots, inspect elements, and check console output — all without you opening a browser. Claude sometimes uses this automatically when it detects CSS changes that would benefit from visual verification. You can also ask Claude to use it at any time (e.g., "preview the homepage and show me a screenshot").
+Claude Code has its own in-app browser and preview server that can start a local server, take screenshots, inspect elements, and check console output — all without you opening a browser. Claude sometimes uses this automatically when it detects CSS changes that would benefit from visual verification. You can also ask Claude to use it at any time (e.g., "preview the homepage and show me a screenshot").
 
 This is the same toolset referenced as "Option A" in Step-by-Step Setup above. The key difference from the manual workflow is that Claude handles the entire loop — starting the server, syncing CSS, taking screenshots, and inspecting styles — so you don't need a browser tab open or need to refresh manually.
 
