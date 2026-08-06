@@ -742,3 +742,88 @@ A starter template that ships explicit ids hands every author a loaded gun the m
 A hard refresh does **not** clear `sessionStorage`. So any author-facing cache keyed on article content goes stale the moment an author edits, and the author's instinct — reload harder — won't fix it.
 
 Either bypass the cache for authors (gate on the author signals in §32) or key it on something that actually changes with the edit.
+
+## 47. Content-Level `<style>` Blocks Load AFTER Custom CSS and Can Outrank the Theme
+
+**A theme can be entirely correct and still lose.** KO KBs can carry `<style>` blocks inside **page content** — a Library snippet, or hand-written HTML in an article body. Content renders *after* Custom CSS, so a rule there wins at **equal** specificity, and nothing in Style Settings or any deployed field reveals it.
+
+Worked example: article headings rendered teal after a clean deploy. Style Settings was correct, Custom CSS was correct (`--primary-color` / the brand token both resolved to the intended dark green), yet a third rule won:
+
+```css
+/* found in a snippet's <style> block — NOT in any Custom CSS field */
+.hg-minimalist-theme .documentation-article h1, .cke_editable h1 { color: rgb(28,158,163) }
+```
+
+Same **(0,2,1)** specificity as the stock rule, but later in the cascade. The tell that it was hand-written content CSS: that selector is emitted **nowhere in the KO codebase** — KO's own Style Settings output uses the *unprefixed* `.documentation-article h1, .cke_editable h1` (`KbRenderer.php`).
+
+**Three implications:**
+
+1. **"The Custom CSS is stock" does NOT mean the KB has no custom styling.** A snippet with 39 article references is invisible to the documented field-by-field capture. Check Library > Snippets for `<style>` / `<script>` when capturing a baseline.
+2. **The fix belongs in the content, not the theme.** These markers are usually *semantic* (flagging a class of content), so a blanket heading override from the theme would flatten the distinction everywhere it's used. Edit the snippet.
+3. **The Editor Readability Guard (§28) will suppress a content-level heading color inside the editor** — `.cke_editable h1` gets the guard's dark hex `!important`. That's expected behavior, not a bug: the guard exists precisely so brand colors can't render unreadably on the editor's white canvas.
+
+### The diagnostic: enumerate every matching rule in cascade order
+
+Don't reason about specificity by hand — ask the browser which rules actually match, in order. **The naïve version of this snippet is actively misleading**, so use this one:
+
+```js
+// Which rules set `color` on this element, in cascade order?
+const el = document.querySelector('.documentation-article h1');
+const PROP = 'color';
+
+// 1) Report unreadable sheets FIRST. KO serves its bundles from a CDN, so
+//    `cssRules` throws SecurityError on them — a bare catch{} hides that and the
+//    enumeration comes back "only your own rule matches." That is a FALSE result.
+const blocked = [];
+for (const s of document.styleSheets) {
+  try { s.cssRules; } catch { blocked.push(s.href || '(inline)'); }
+}
+if (blocked.length) console.warn('UNREADABLE (cross-origin) — curl + grep these:', blocked);
+
+// 2) Walk readable sheets, recursing into @media / @supports / @layer.
+const hits = [];
+const walk = (rules, sheet) => {
+  for (const r of rules) {
+    if (r.cssRules) { walk(r.cssRules, sheet); continue; }   // grouping rule
+    if (!r.style || !r.style[PROP] || !r.selectorText) continue;
+    let m = false;
+    try { m = el.matches(r.selectorText); } catch { continue; }  // e.g. ::pseudo
+    if (m) hits.push([sheet, r.selectorText, r.style[PROP]]);
+  }
+};
+for (const s of document.styleSheets) {
+  let rules; try { rules = s.cssRules; } catch { continue; }
+  walk(rules, s.href || '(inline)');
+}
+console.table(hits);
+```
+
+**Two failure modes this guards against**, both of which have produced wrong conclusions:
+
+- **Cross-origin sheets are silently skipped.** KO's `ko-*.css`, `koFontawesome*.css` and the self-hosted font CSS are CDN-served, so `cssRules` throws and a bare `catch(e){}` swallows it. The unguarded snippet then reports that only *your* rule matches — which once led to a code comment blaming a nonexistent `!important` in `ko-css`. When a sheet is listed as blocked, `curl` the bundle and `grep` it instead; that is what actually finds the rule.
+- **Rules inside `@media` are missed** unless you recurse into grouping rules.
+
+Used correctly this named the culprit in a single paste, after ~20 minutes of source-grepping had failed to.
+
+## 48. `ko-css` Prefixes Some Rules with a Bare `html ` Purely to Win Specificity
+
+Some platform rules carry a leading `html ` that does nothing semantically and exists only to add a element-selector's worth of specificity. Theme overrides written at the obvious level then lose **even though Custom CSS loads later** — with no error; the declaration simply doesn't take.
+
+Worked example — the Minimalist footer on any `.toc-always-open` page:
+
+```css
+/* ko-css: (0,3,1) — note the leading `html ` */
+html .hg-minimalist-theme.toc-always-open .ko-site-footer { width: calc(100% - 360px) }
+
+/* the natural override: (0,3,0) — LOSES */
+.hg-minimalist-theme.toc-always-open .ko-site-footer { width: 100% }
+
+/* match the prefix instead of reaching for !important: (0,3,1), later in cascade → wins */
+html .hg-minimalist-theme.toc-always-open .ko-site-footer { width: 100% }
+```
+
+**Match the `html ` prefix rather than escalating to `!important`** — you keep a sane cascade and stay overridable later.
+
+Because these rules live in cross-origin bundles, §47's diagnostic can't see them: when it reports a blocked sheet, `curl` the bundle and grep for the selector.
+
+> **Known KO bug worth reporting upstream:** that `calc(100% - 360px)` resolves against the **padded 1410px container** rather than the viewport, so KO's own footer leaves a ~30px white sliver at the right edge on every Minimalist `toc-always-open` KB — independent of any customization.

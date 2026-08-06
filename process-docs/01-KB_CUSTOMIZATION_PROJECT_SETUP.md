@@ -27,6 +27,8 @@ Open each file in the `YYYY.MM.DD-no-changes` folder and replace the placeholder
 
 If a customer has no existing custom code in a given field, leave the placeholder comment as-is. It serves as a record that the field was empty at project start.
 
+**Also check Library > Snippets for `<style>` or `<script>` blocks.** These 12 fields aren't the whole picture: a snippet's `<style>` renders inside page *content*, which loads **after** Custom CSS, so it can override the theme on every article that uses it — and it won't show up anywhere in this capture. So finding stock Custom CSS doesn't mean the KB is unstyled. If you find one, tell Claude (it gets noted in `# Baseline`) so it's a known constraint from the start rather than a surprise after deploying.
+
 **Tip — stock Minimalist KB?** If the KB is still on KnowledgeOwl's default **Minimalist** theme and hasn't been customized, you don't have to copy each field out by hand. Ask Claude to drop in the documented Minimalist defaults as your baseline — see `04-MINIMALIST_THEME_DEFAULTS.md`. Those files are the same code a fresh Minimalist KB ships with, so the result is identical to copying from the live KB, just faster. If the KB already has real custom code, capture *that* instead, the normal way above — the defaults are only for stock KBs.
 
 | File Name | Source in KnowledgeOwl |
