@@ -170,6 +170,24 @@ Both were wrong, and neither announced itself. So after every edit, either:
 
 Cheap, and it converts a silent false negative into a visible one. The same discipline applies to injected probe styles: re-assert from a **clean reload** and include a control that proves the injection took, before drawing a conclusion from a measurement.
 
+### Kill transitions before measuring a state change
+
+A preview pane frequently reports **`document.hidden === true`**, and browsers **do not advance CSS transitions in a hidden document**. So if you toggle a class that animates and then measure, you read back the **pre-transition** value — a correct `transform: translateX(280px)` measures as `matrix(1, 0, 0, 1, 0, 0)`, and a width mid-change measures as unchanged. Waiting longer and reloading don't help, because time isn't passing for the animation. This has burned ~5 diagnostic rounds chasing a cascade bug that didn't exist.
+
+```js
+document.hidden      // true? every in-flight animated value you measure is meaningless
+```
+
+Before measuring, neutralise animation so the end state applies synchronously:
+
+```js
+const s = document.createElement('style');
+s.textContent = '*{transition:none !important;animation:none !important}';
+document.head.appendChild(s);
+```
+
+Then toggle the class and measure. Same idea as the cache-bust above: make sure what you're measuring is actually the thing you changed. (Also in `knowledgeowl-css-quirks.md` §47, next to the rule-enumeration diagnostic.)
+
 ### Verify layout with measurements, not screenshots
 
 For **geometry** — widths, positions, overlaps, whether something is centered — trust the DOM over the screenshot. A screenshot doesn't always render at the same viewport the browser reports via `window.innerWidth`, so it can look "off-center" or "too narrow" when the real layout is fine (and send you chasing non-bugs). Read element rects and computed styles by evaluating JavaScript in the page instead — e.g. `document.querySelector(sel).getBoundingClientRect()` and `getComputedStyle(el)`. Use the screenshot for **look** (color, spacing, polish), not precise dimensions.

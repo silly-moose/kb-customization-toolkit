@@ -129,6 +129,21 @@ The table of contents couples one width across three rules in two files:
 
 Changing one without the others breaks the layout. If you modify the TOC width, update all of them. (At ≤991px the seeded Custom CSS resets the open panel to `width: 100%`.)
 
+### First establish WHICH branch the KB runs — it decides whether CSS can fix it at all
+
+`help/partials/slideout-left.phtml` forks on the very first line:
+
+```js
+if ($('.slideout-new').length > 0 && $('.hg-minimalist-theme').length > 0)
+```
+
+| Branch | Mechanism | What controls the shift |
+|---|---|---|
+| **`.slideout-new` + Minimalist** (the modern path) | A **pure class toggle** — `$("html").toggleClass('slideout-open')`, plus `.open` on the menu and panel. **Slideout.js never initializes**, and the hidden `.slideout-width` input is **never read**. | **CSS, entirely.** The rules above are the whole story. |
+| **`else`** (legacy) | Runs `new Slideout({...})` with `slideWidth = $('.slideout-width').val()` (default **360**). Slideout.js writes **inline** `transform` / `width` onto the elements. | **Inline styles**, which beat any stylesheet rule — including `!important` in Custom CSS at equal specificity. |
+
+Why it matters: diagnosing a "the panel won't move" bug in the wrong branch sends you either to change the `.slideout-width` setting on a KB that never reads it, or to fight an inline style you can't find in the CSS. **Check for `.slideout-new` on the page first.** On the legacy branch, CSS alone won't win — adjust the width input, or override after Slideout.js has written its inline values.
+
 ## 6. Anchor Link Offset for Fixed Navigation
 
 Source: https://support.knowledgeowl.com/help/fix-anchor-links-hidden-by-top-navigation
@@ -847,15 +862,19 @@ for (const s of document.styleSheets) {
 }
 if (blocked.length) console.warn('UNREADABLE (cross-origin) — curl + grep these:', blocked);
 
-// 2) Walk readable sheets, recursing into @media / @supports / @layer.
+// 2) Walk readable sheets. Check each rule's OWN declarations, THEN recurse into any
+//    children it has. Do NOT branch on `if (r.cssRules)` — see trap 3 below.
 const hits = [];
 const walk = (rules, sheet) => {
   for (const r of rules) {
-    if (r.cssRules) { walk(r.cssRules, sheet); continue; }   // grouping rule
-    if (!r.style || !r.style[PROP] || !r.selectorText) continue;
-    let m = false;
-    try { m = el.matches(r.selectorText); } catch { continue; }  // e.g. ::pseudo
-    if (m) hits.push([sheet, r.selectorText, r.style[PROP]]);
+    if (r.style && r.style[PROP] && r.selectorText) {
+      let m = false;
+      try { m = el.matches(r.selectorText); } catch { m = false; }  // e.g. ::pseudo
+      if (m) hits.push([sheet, r.selectorText, r.style[PROP]]);
+    }
+    // Recurse on LENGTH, not truthiness: covers @media / @supports / @layer and
+    // genuinely nested rules (which have declarations AND children).
+    if (r.cssRules && r.cssRules.length) walk(r.cssRules, sheet);
   }
 };
 for (const s of document.styleSheets) {
@@ -865,10 +884,24 @@ for (const s of document.styleSheets) {
 console.table(hits);
 ```
 
-**Two failure modes this guards against**, both of which have produced wrong conclusions:
+**Three failure modes this guards against**, all of which have produced wrong conclusions:
 
 - **Cross-origin sheets are silently skipped.** KO's `ko-*.css`, `koFontawesome*.css` and the self-hosted font CSS are CDN-served, so `cssRules` throws and a bare `catch(e){}` swallows it. The unguarded snippet then reports that only *your* rule matches — which once led to a code comment blaming a nonexistent `!important` in `ko-css`. When a sheet is listed as blocked, `curl` the bundle and `grep` it instead; that is what actually finds the rule.
 - **Rules inside `@media` are missed** unless you recurse into grouping rules.
+- **`if (r.cssRules)` skips EVERY plain style rule.** Since CSS Nesting shipped, `CSSStyleRule` exposes a `cssRules` property that is a **truthy empty `CSSRuleList`** — so the idiomatic "is this a grouping rule?" test is true for *ordinary* rules too, and a `continue` after it walks past all of them. Verified in Chrome 148: that form returns **zero matches** on a sheet that provably matches, i.e. the same false "nothing else matches" this section exists to warn about, from a third cause. Hence the structure above: check declarations *and* recurse on `.cssRules.length`. (Branching on `r instanceof CSSMediaRule` also works, but the length check additionally handles `@supports`, `@layer`, and nested rules that carry both declarations and children.)
+
+> **Before measuring any state change, kill transitions and check `document.hidden`.** A preview pane or background tab commonly reports `document.hidden === true`, and browsers **do not advance CSS transitions** in a hidden document. So toggling a class that animates and then measuring reads back the **pre-transition** value: a correct `transform: translateX(280px)` reads as `matrix(1, 0, 0, 1, 0, 0)`, and a width that is changing reads as unchanged — across repeated waits and reloads, because time isn't passing for the animation. That has cost ~5 diagnostic rounds chasing a cascade problem that didn't exist.
+>
+> ```js
+> document.hidden            // true? transitions are frozen — measurements of any
+>                            // in-flight state change are meaningless
+> // Neutralise animation before measuring:
+> const s = document.createElement('style');
+> s.textContent = '*{transition:none !important;animation:none !important}';
+> document.head.appendChild(s);
+> ```
+>
+> With transitions off, the end state applies synchronously and the measurement is real. Same discipline as the stale-cache guard in `03-LOCALHOST_PREVIEW.md`: prove the thing you're measuring is actually the thing you changed.
 
 Used correctly this named the culprit in a single paste, after ~20 minutes of source-grepping had failed to.
 

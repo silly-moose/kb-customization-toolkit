@@ -183,12 +183,13 @@ A current-state capture means copying all 12 code files from KnowledgeOwl's Cust
 
 1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
 2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files and `style-settings-colors.md` found in the most recent version folder. Include `homepage-custom-content.html` only when the `# Baseline` section of `.claude/rules/project.md` records the legacy Homepage Custom content field as `in use` — when it records `empty`, skip the file. If the answer isn't recorded yet (a project set up before that section existed), Claude asks once and records it, so it doesn't come up again. Ask the user to paste fresh HTML into each snapshot placeholder (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML), and to update `style-settings-colors.md` only if the Style Settings colors may have changed (otherwise they can copy the values from the previous version's file).
-3. **Add fresh screenshots** of the KB's current appearance to the `Screenshots/` folder inside the `current-state` folder (homepage, category page, article page, and any pages relevant to the upcoming work)
-4. **Document what changed since the last version** — see "CHANGES File in Current-State Folders" below.
-5. **Lock the folder** — once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, screenshots, and CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
-6. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
-7. **Refresh the `Reference/` folder** — clean up outdated materials and add current ones (see details below)
-8. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+3. **Confirm the capture came from the right KB.** If the project has both a sandbox and a live KB, it's easy to snapshot the wrong one — and the mistake is invisible once the code is in the folder. On one project the target was a sandbox but the code files and both HTML snapshots came from live; the two had diverged in both directions, so the wrong baseline would have silently reverted real work. Check the `rel="canonical"` host in the captured `full-html-snapshot-*.html` against the deployment target in `.claude/rules/project.md`, and have Claude state which KB it snapshotted. If it's the wrong one, recapture rather than reconcile.
+4. **Add fresh screenshots** of the KB's current appearance to the `Screenshots/` folder inside the `current-state` folder (homepage, category page, article page, and any pages relevant to the upcoming work)
+5. **Document what changed since the last version** — see "CHANGES File in Current-State Folders" below.
+6. **Lock the folder** — once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, screenshots, and CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
+7. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
+8. **Refresh the `Reference/` folder** — clean up outdated materials and add current ones (see details below)
+9. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
 
 ### CHANGES File in Current-State Folders
 
