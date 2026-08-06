@@ -814,7 +814,7 @@ a.label:focus-visible,
 html .author-bar .ko-editor-nav-right .dropdown > a:focus-visible,
 .hg-minimalist-theme .ko-slideout-left-toggle:focus-visible,
 .hg-minimalist-theme .ko-slideout-right-toggle:focus-visible,
-.hg-minimalist-theme .ko-large-search input.form-control:focus-visible
+.hg-minimalist-theme .ko-large-search input.form-control:focus-visible,
 button.btn.btn-success:focus-visible,
 button.btn.btn-primary:focus-visible,
 button.btn.btn-default:focus-visible,
@@ -944,15 +944,27 @@ a.btn.btn-info:focus-visible,
      watermark renders (the url() simply fails to load — harmless). */
   --brand-watermark-image: url('REPLACE-WITH-KB-FILE-LIBRARY-URL');
 
+  /* TOC surfaces. Cool neutrals by default so they don't clash with a cool brand palette —
+     but on a WARM brand (parchment/taupe/terracotta) these read as dirty grey. Swap them
+     for warm neutrals rather than editing the TOC rules further down. */
+  --brand-toc-bg:       #f7f8f9;      /* TOC panel surface (mirror in Style Settings "Column background") */
+  --brand-toc-hover:    #e9edf1;      /* TOC hover / active row highlight                                */
+
   /* ========================================================================
      DERIVED — usually leave (these compose the brand tokens above)
      ======================================================================== */
-  --ui-cta-ink:  #333333;   /* dark text on the light gold CTA + the "see more" links (fixed, non-brand) */
+  /* TWO inks, deliberately separate — they sit on different backgrounds.
+     Do NOT collapse them: lightening the ink to suit a dark CTA would blank the
+     "see more" links, which sit on the white page. */
+  --ui-cta-ink:     #333333;   /* text ON the light CTA button — must contrast with --brand-cta */
+  --ui-action-ink:  #333333;   /* "see more" / .list-action links ON WHITE — must stay DARK     */
 
   /* Remap KO's own theme variables to the brand palette (the stock CSS above uses these) */
   --primary-color:    var(--brand-primary);
   --secondary-color:  var(--brand-secondary);
   --text-links-color: var(--brand-link);
+  /* Stock leaves the image-caption link an unbranded peach; claim it. */
+  --image-caption-link-color: var(--brand-link);
 }
 
 /* ==========================================================================
@@ -968,10 +980,11 @@ a.btn.btn-info:focus-visible,
 /* Table of Contents — the stock CSS leaves the panel bg + hover/active COMMENTED OUT
    (so the look would otherwise fall to Style Settings / KO's warm default). This theme
    opts in explicitly with cool-neutral surfaces + a faint highlight, so the TOC is
-   self-contained and doesn't clash with a cool brand palette. Also mirror Style
-   Settings "Column background" to #f7f8f9 (see README). */
+   self-contained. The surfaces are tokenized as --brand-toc-bg / --brand-toc-hover so a
+   warm brand can re-skin them from the swap block — don't edit these two rules. Also
+   mirror Style Settings "Column background" to --brand-toc-bg's value (see README). */
 .hg-minimalist-theme.hg-2column-layout .slideout-menu,
-.hg-minimalist-theme .documentation-categories.slideout-menu { background-color: #f7f8f9; }
+.hg-minimalist-theme .documentation-categories.slideout-menu { background-color: var(--brand-toc-bg); }
 .hg-minimalist-theme .documentation-categories li.active,
 .hg-minimalist-theme .category-link-container.active,
 .hg-minimalist-theme .documentation-categories .article-container:hover,
@@ -983,7 +996,7 @@ a.btn.btn-info:focus-visible,
 .hg-minimalist-theme .documentation-outter-list > .article-container.active,
 .hg-minimalist-theme .documentation-outter-list > .article-container .article-link:hover,
 .hg-minimalist-theme .documentation-outter-list > .article-container .article-link.active {
-  background-color: #e9edf1;
+  background-color: var(--brand-toc-hover);
 }
 
 /* ==========================================================================
@@ -1084,9 +1097,10 @@ a.btn.btn-info:focus-visible,
   margin: 2em -15px 0;
 }
 
-/* "See more" links — animated tri-color gradient underline */
+/* "See more" links — animated tri-color gradient underline.
+   These sit on the WHITE page, so they use --ui-action-ink, NOT the CTA's ink. */
 .hg-minimalist-theme .list-action a {
-  color: var(--ui-cta-ink);
+  color: var(--ui-action-ink);
   font-weight: 600;
   text-decoration: none;
   position: relative;
@@ -1104,7 +1118,7 @@ a.btn.btn-info:focus-visible,
   transition: width 0.3s ease;
 }
 .hg-minimalist-theme .list-action a:hover::after { width: 100%; }
-.hg-minimalist-theme .list-action a:hover { color: var(--ui-cta-ink); text-decoration: none; }
+.hg-minimalist-theme .list-action a:hover { color: var(--ui-action-ink); text-decoration: none; }
 
 /* Homepage category cards — centered icons, rounder corners, accent titles */
 .hg-minimalist-theme.hg-home-page .cat-icon-panel .category-icon {

@@ -46,8 +46,12 @@ Everything derives from the **`--brand-*` tokens** in the `:root` block at the t
 | `--brand-cta` **+** `--brand-cta-rgb` | CTA button fill, search-focus border, gradient **end**. Light enough for the dark CTA ink; via `-rgb` it feeds the CTA + search-focus shadows. **Set both.** |
 | `--brand-cta-hover` | CTA hover. **Auto-derives** from `--brand-cta` via `color-mix()` (hex is a fallback) — leave it. |
 | `--brand-watermark-image` | Optional homepage watermark — a **KB file-library URL**. |
+| `--brand-toc-bg` | TOC panel surface. Cool neutral (`#f7f8f9`) by default — **swap for a warm neutral on a warm brand** (parchment/taupe/terracotta), where the cool grey reads as dirty. Mirror in Style Settings "Column background". |
+| `--brand-toc-hover` | TOC hover / active row highlight (`#e9edf1` default). Swap alongside `--brand-toc-bg`. |
 
-The `--ui-cta-ink` (dark text on the light CTA) and the entire layout/structure are **brand-agnostic — leave them.** Font sizes stay at the Minimalist baseline.
+The entire layout/structure is **brand-agnostic — leave it.** Font sizes stay at the Minimalist baseline.
+
+> **The two inks are separate on purpose — don't collapse them.** `--ui-cta-ink` is the text **on the CTA button**; `--ui-action-ink` is the "see more" / `.list-action` link text **on the white page**. They happen to share a default (`#333333`), but they sit on different backgrounds: lightening the ink to suit a dark CTA would blank the "see more" links. See the CTA step below.
 
 > **Why the `-rgb` pairs?** The gradient shadows use `rgba(var(--brand-*-rgb), α)` so the same color drives both solid fills and translucent effects. If you change a hex, change its `-rgb` too, or the effects won't follow.
 
@@ -58,7 +62,7 @@ The `--ui-cta-ink` (dark text on the light CTA) and the entire layout/structure 
 1. **Capture their exact colors** (their marketing site, or computed styles via Claude's browser tooling — see `../../../project-template/CLAUDE-RULES.md`).
 2. **Map the gradient:** `--brand-accent` (start), `--brand-gradient-mid` (middle), `--brand-cta` (end) form the tri-color gradient — pick three colors that read well left-to-right. Set the `-rgb` for accent + cta.
 3. **AA-check the text colors:** `--brand-accent` (colors category titles + banner text) and `--brand-link` must hit **≥4.5:1 on white**. Darken if needed — a too-light brand green/blue will fail.
-4. **CTA:** `--brand-cta` should be light enough that the dark `--ui-cta-ink` text reads on it (or change the ink).
+4. **CTA:** `--brand-cta` must be **light enough that the dark `--ui-cta-ink` reads on it** — so keep the CTA light rather than lightening the ink. If the brand's natural CTA is dark (a forest green, a navy), you have two safe options: pick a lighter tint of it for the button, or set **only `--ui-cta-ink`** to white and leave `--ui-action-ink` dark. Do **not** lighten both — `--ui-action-ink` colors the "see more" links on the white page and would disappear.
 5. **Primary + secondary:** `--brand-primary` = the darkest brand color (headings/tables); `--brand-secondary` = a warm secondary for caption links.
 6. **Nav + logo:** decide the nav in Style Settings (light or primary), and upload a matching logo.
 
@@ -73,7 +77,7 @@ The `--ui-cta-ink` (dark text on the light CTA) and the entire layout/structure 
 | Top navigation bar / Header background | your choice — light or primary | `#ffffff` |
 | Top navigation text / Header text | dark on a light nav (or white on primary) | `#0f3d35` |
 | H1s, H2s, H3s, etc. / Header tags | `--brand-primary` | `#0f3d35` |
-| Table of contents / Column background | (matches the CSS TOC) | `#f7f8f9` |
+| Table of contents / Column background | `--brand-toc-bg` | `#f7f8f9` |
 | Table of contents text / Column text | `--brand-primary` | `#0f3d35` |
 | Highlights & Accents | `--brand-accent` | `#0a7d50` |
 | Default category icon colors — Icon color | `--brand-primary` | `#0f3d35` |

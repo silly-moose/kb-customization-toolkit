@@ -36,7 +36,8 @@ Everything derives from the **`--brand-*` tokens** in the `:root` block at the t
 |-------|------|
 | `--brand-primary` **+** `--brand-primary-rgb` | Primary brand color — nav, headings, primary actions, and (via the `-rgb`) all primary-colored glows/tints/ambient. **Set both.** |
 | `--brand-primary-hi` / `--brand-primary-lo` | Lighter / deeper primary. **Auto-derive** from `--brand-primary` via `color-mix()` — you normally don't touch these (the hex on each is just a fallback for old engines). `-lo` drives nav depth/borders; `-hi` is reserved. Override a hex only for a hand-tuned shade. |
-| `--brand-accent` **+** `--brand-accent-rgb` | Accent — links, icons, focus, highlights, active TOC item, and (via `-rgb`) the accent glows. **Set both.** |
+| `--brand-accent` **+** `--brand-accent-rgb` | Accent — icons, focus, highlights, active TOC item, and (via `-rgb`) the accent glows. Decorative roles, so a bright brand color is fine here. **Set both.** |
+| `--brand-link` | **Link TEXT** — body links, breadcrumbs, right-column links, image-caption links, and KO's `--text-links-color`. **Defaults to `--brand-accent`** and must hit **AA ≥4.5:1 on white**. Split out from the accent because link text has to pass contrast and a brand accent frequently doesn't — see the AA step below. |
 | `--brand-accent-hi` / `--brand-accent-lo` | Lighter / darker accent. **Auto-derive** from `--brand-accent` via `color-mix()` (same as the primary shades — leave them). `-lo` drives hover/active states; `-hi` is reserved. |
 | `--brand-heading` / `--brand-body` / `--brand-muted` | Text colors. |
 | `--brand-bg` / `--brand-bg-soft` | Page bg / soft section + sidebar bg. |
@@ -57,8 +58,9 @@ A repeatable way to fill in the `--brand-*` tokens for a new prospect:
 1. **Capture their exact colors** — prefer their downloaded marketing site; if that doesn't give confident values, read *computed* styles off their live site with Claude's browser tooling (see "Capturing Exact Brand Colors" in `../../../project-template/CLAUDE-RULES.md`). Record them in the project (e.g. a `brand.md`).
 2. **Map the two key colors:**
    - `--brand-primary` = their **dominant brand color** (anchors nav / headings / primary actions). Set `--brand-primary-rgb` to that color's R,G,B. The `-hi` / `-lo` shades **auto-derive** — leave them.
-   - `--brand-accent` = their **link / CTA / highlight color** (often a brighter secondary). Set `--brand-accent-rgb`. The `-hi` / `-lo` shades **auto-derive** — leave them.
+   - `--brand-accent` = their **highlight color** (often a brighter secondary) — icons, focus rings, active states, glows. Set `--brand-accent-rgb`. The `-hi` / `-lo` shades **auto-derive** — leave them.
    - If a brand really has just one color, use it for both (or a tint for the accent).
+   - **Then AA-check the accent as link text.** `--brand-link` defaults to the accent, and the accent is only AA-safe if it's a mid-dark color (the shipped `#0170b9` is ~4.6:1 on white). A **warm or light** brand accent — orange, amber, lime, yellow — will fail: an orange like `#ff5f14` measures ~3:1 and is unreadable as body-link text. When it fails, set `--brand-link` to a darker readable variant (`var(--brand-accent-lo)`, or a hand-picked hex such as `#c9490a` at ~4.7:1) and **leave `--brand-accent` bright** for the decorative roles. Record both values and note the deviation inline, so a later session doesn't "correct" the link color back to the brand hex.
 3. **Text + surfaces:** `--brand-heading` (near-black, lightly tinted toward the primary), `--brand-body` / `--brand-muted` (grays) — the defaults usually work; nudge toward their brand if their site does. Keep `--brand-bg` white and `--brand-bg-soft` / `--brand-border` light unless the brand is distinctly dark.
 4. **Nav text:** `--brand-nav-text` is `#ffffff` for a dark nav; use a dark value only if the primary is very light.
 5. **Hero:** upload their hero photo to the KB file library and set `--brand-hero-image` to that URL.

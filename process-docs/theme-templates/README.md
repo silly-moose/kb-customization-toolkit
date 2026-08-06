@@ -75,6 +75,10 @@ New templates are normally built **directly here in the toolkit**. The exception
 
 **Every template's `custom-css.css` must end with the Editor Readability Guard block** (canonical source: `../../project-template/Reference/knowledgeowl-css-quirks.md` §28). A template re-colors headings/links/text, so without the guard those colors leak into the white article editor and become unreadable — the guard is editor-only and safe on the live site. Keep it as the final block so a template consumer inherits it automatically.
 
+**Templates fix KO's missing-comma focus bug; the Minimalist mirror deliberately does not.** KO's seeded Custom CSS omits a trailing comma at ~line 817 of its `:focus-visible` list, which silently kills the focus outline on the homepage large-search input and `button.btn.btn-success`. Every template repairs it, because shipping a known keyboard-accessibility regression to a prospect in order to stay faithful to a bug is the wrong trade. `../minimalist-theme-defaults/custom-css.css` keeps the bug so it stays a byte-exact mirror of a stock KB — so expect a one-line diff there, and don't "reconcile" it away. See the fidelity notes in `../04-MINIMALIST_THEME_DEFAULTS.md`.
+
+**Link TEXT gets its own token, separate from the decorative accent.** A brand accent is often warm or light and fails WCAG AA as body-link text (an orange at ~3:1). Each template routes link text through a dedicated AA-checked token — `--brand-link` in modern-docs and spectrum-docs, `--brand-action` in aurora-docs — while the bright accent keeps the decorative roles (icons, focus, glows, active states). A new template should follow the same split rather than pointing link text at the accent.
+
 ---
 
 ## Keeping this current (for Chad / template maintainers)

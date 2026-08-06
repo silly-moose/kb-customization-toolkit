@@ -814,7 +814,7 @@ a.label:focus-visible,
 html .author-bar .ko-editor-nav-right .dropdown > a:focus-visible,
 .hg-minimalist-theme .ko-slideout-left-toggle:focus-visible,
 .hg-minimalist-theme .ko-slideout-right-toggle:focus-visible,
-.hg-minimalist-theme .ko-large-search input.form-control:focus-visible
+.hg-minimalist-theme .ko-large-search input.form-control:focus-visible,
 button.btn.btn-success:focus-visible,
 button.btn.btn-primary:focus-visible,
 button.btn.btn-default:focus-visible,
@@ -923,8 +923,14 @@ a.btn.btn-info:focus-visible,
      ======================================================================== */
   --brand-primary:      #133253;      /* primary brand: nav, headings, primary actions */
   --brand-primary-rgb:  19, 50, 83;   /*   ^ same color as R,G,B (feeds glows/tints)   */
-  --brand-accent:       #0170b9;      /* accent: links, icons, focus, highlights       */
+  --brand-accent:       #0170b9;      /* accent: icons, focus, highlights, decoration  */
   --brand-accent-rgb:   1, 112, 185;  /*   ^ same color as R,G,B (feeds glows/tints)   */
+  /* Link TEXT is a separate token because it must pass contrast, and a brand accent
+     often doesn't. Defaults to the accent (which is AA-safe at #0170b9, ~4.6:1). If the
+     prospect's accent is warm or light — orange/amber/lime/yellow — it will FAIL as body
+     text: set --brand-link to a darker readable variant (var(--brand-accent-lo), or a
+     hand-picked hex) and leave --brand-accent bright for the decorative roles. */
+  --brand-link:         var(--brand-accent);   /* body/breadcrumb/right-column link text — keep AA ≥4.5:1 on white */
   /* The four -hi / -lo shades below AUTO-DERIVE from the two base colors via
      color-mix(), so a re-skin only needs the base --brand-primary / --brand-accent
      (and their -rgb pairs) above — you normally don't touch these. The literal hex on
@@ -968,7 +974,9 @@ a.btn.btn-info:focus-visible,
   /* Remap KO's own theme variables to the brand palette */
   --primary-color:    var(--brand-primary);
   --secondary-color:  var(--brand-accent);
-  --text-links-color: var(--brand-accent);
+  --text-links-color: var(--brand-link);
+  /* Stock leaves the image-caption link an unbranded peach; claim it. */
+  --image-caption-link-color: var(--brand-link);
   --border-color:     var(--brand-border);
 }
 
@@ -1312,7 +1320,7 @@ body.hg-minimalist-theme::before {
 }
 
 /* ---------- Breadcrumbs ---------- */
-.hg-minimalist-theme .hg-breadcrumbs a { color: var(--brand-accent) !important; }
+.hg-minimalist-theme .hg-breadcrumbs a { color: var(--brand-link) !important; }
 .hg-minimalist-theme .hg-breadcrumbs li i.fa { color: var(--brand-border-hi) !important; }
 
 /* ---------- Article header ---------- */
@@ -1432,7 +1440,7 @@ body.hg-minimalist-theme::before {
 
 /* ---------- Right column ("About this Article") ---------- */
 .hg-minimalist-theme .right-column { color: var(--brand-muted) !important; }
-.hg-minimalist-theme .right-column a { color: var(--brand-accent) !important; }
+.hg-minimalist-theme .right-column a { color: var(--brand-link) !important; }
 
 /* Accessibility: honor prefers-reduced-motion — neutralize transforms/animation */
 @media (prefers-reduced-motion: reduce) {

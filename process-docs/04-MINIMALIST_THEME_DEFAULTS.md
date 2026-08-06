@@ -75,7 +75,12 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 
 **Fidelity notes** — these files reproduce KO's stock code exactly, including KO's own oddities:
 
-- `custom-css.css` line ~817 is missing a trailing comma in the long `:focus-visible` selector list (verified present in KO's source too), which silently merges two selectors. **Leave it as-is** — "fixing" it would break the byte-for-byte match with a stock KB.
+- `custom-css.css` line ~817 is missing a trailing comma in the long `:focus-visible` selector list (verified present in KO's source too), which silently merges two selectors into one descendant selector that can never match. Net effect: the homepage large-search input **and** `button.btn.btn-success` get no focus outline — a keyboard-accessibility regression inside the block whose stated purpose is accessibility.
+
+  **Leave it as-is *here*.** This folder is a byte-for-byte mirror of what a stock KB ships, and its whole value is that a diff against a live KB comes back clean; "fixing" it would break that. The bug is real, though, so it's handled in the two other places it matters:
+
+  - **The theme templates DO fix it** (`theme-templates/*/custom-css.css`). Those are our design layer, not a stock mirror — shipping a known a11y regression to a prospect to preserve fidelity with a bug would be the wrong trade.
+  - **It's worth fixing upstream in KO's seeded template**, so new KBs stop inheriting it. Until that lands, expect a one-line diff between this mirror and any template's copy of that block.
 - The footer in `custom-html-1-body.html` reads `Copyright © 2025 Your Company, LLC` — that year is hardcoded in KO's own template, so KBs created after KO bumps it may show a different year. If the live KB's footer differs, reconcile that one line against the live KB rather than deploying the baseline's year.
 
 ---
