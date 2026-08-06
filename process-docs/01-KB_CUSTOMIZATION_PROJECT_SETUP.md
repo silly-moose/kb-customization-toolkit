@@ -27,7 +27,12 @@ Open each file in the `YYYY.MM.DD-no-changes` folder and replace the placeholder
 
 If a customer has no existing custom code in a given field, leave the placeholder comment as-is. It serves as a record that the field was empty at project start.
 
-**Also check Library > Snippets for `<style>` or `<script>` blocks.** These 12 fields aren't the whole picture: a snippet's `<style>` renders inside page *content*, which loads **after** Custom CSS, so it can override the theme on every article that uses it — and it won't show up anywhere in this capture. So finding stock Custom CSS doesn't mean the KB is unstyled. If you find one, tell Claude (it gets noted in `# Baseline`) so it's a known constraint from the start rather than a surprise after deploying.
+**Also audit content-level CSS — in two places, because snippets alone aren't enough.** These 12 fields aren't the whole picture: a `<style>` block inside page *content* loads **after** Custom CSS, so it can override the theme wherever it appears — and it won't show up anywhere in this capture.
+
+1. **Library > Snippets** — check each for `<style>` / `<script>`. On a KB with a lot of them, Claude can read them all in one pass rather than you opening each modal.
+2. **One or two rendered articles** — authors paste CSS straight into article bodies, and a clean snippet audit does not catch that. On one KB all 17 snippets were fine and a rendered article still carried a hand-written unscoped `body { font-family: … }`.
+
+So finding stock Custom CSS doesn't mean the KB is unstyled. Tell Claude what turns up — it gets recorded in `# Baseline` so it's a known constraint from the start rather than a surprise after deploying.
 
 **Tip — stock Minimalist KB?** If the KB is still on KnowledgeOwl's default **Minimalist** theme and hasn't been customized, you don't have to copy each field out by hand. Ask Claude to drop in the documented Minimalist defaults as your baseline — see `04-MINIMALIST_THEME_DEFAULTS.md`. Those files are the same code a fresh Minimalist KB ships with, so the result is identical to copying from the live KB, just faster. If the KB already has real custom code, capture *that* instead, the normal way above — the defaults are only for stock KBs.
 
@@ -163,6 +168,14 @@ When the downloaded files don't give you confident, exact values for the brand c
 Prefer the static download first (offline, archivable); use the live capture as the exactness fallback. Record the confirmed values somewhere durable in the project (e.g., a short `brand.md` in `Reference/`) so the build and any later session share one source of truth.
 
 **Tip:** browser tool results can truncate or filter large/encoded payloads (base64, long SVG path data) — pull *values* (hex, font names) rather than whole files, and grab assets like logos from the page source or the downloaded site.
+
+### When a customer names a reference site, record the MECHANISM — not the measurement
+
+Customers often point at another KB or docs site: *"we want our content column like theirs."* Measuring that column and copying the number is the obvious move and it is frequently wrong, because the same width can be produced by completely different means — and the mechanism is what has to survive the transplant.
+
+A real case: the cited reference had a ~1060px centre column, which read as support for capping prose width. It wasn't. That site gets the width **structurally** — both rails are permanently visible (left nav always open, right TOC always present) — with no per-element cap anywhere. The customer's own KB had a *collapsible* slideout nav and an *opt-in* right TOC, so the identical CSS produced a far wider column and a different result entirely.
+
+So when capturing a reference, write down **how** it achieves the effect: what's permanently visible vs. collapsible, whether the constraint lives on a container or per-element, what the page structure is. Then check whether the customer's KB shares those preconditions. If it doesn't, the reference tells you the *goal*, not the implementation. Record this next to the brand values in the project so a later session doesn't re-derive it from the pixel value.
 
 ### Colour math: contrast and "did this colour actually change?"
 
