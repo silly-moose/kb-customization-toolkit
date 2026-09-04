@@ -23,7 +23,15 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 
 ## 2. Populate the Backup Folder with Current Code
 
-Open each file in the `YYYY.MM.DD-no-changes` folder and replace the placeholder comment with the current code from the customer's knowledge base.
+**KnowledgeOwl teammates: use the `ko-code-capture` bookmarklet instead of copying by hand.** It runs from your existing KO admin session (Super Admin "log in as" for customer accounts), needs no API key, and downloads one zip named `<KB-Name>-YYYY.MM.DD-no-changes.zip` containing all 12 Style fields under this toolkit's exact filenames, the legacy `homepage-custom-content.html` when it has content, and a `snippets/` folder with one file per snippet plus a `manifest.json` whose `has_style_block` / `has_script_block` flags are the snippet half of the content-CSS audit below. Unzip it into the `YYYY.MM.DD-no-changes` folder and the files land in place. Install and usage instructions are in Silly Moose under Engineering > Dev, "Capture a KB's custom code and snippets (ko-code-capture)"; the source is the private `silly-moose/ko-code-capture` repo. Three limits to know:
+
+- It reads the **default (`en`) language only**, so on a multilingual KB a snippet whose content lives under another language comes out as an empty file. The tool warns about every empty snippet and sets `body_empty` in the manifest; check those in the KO editor before treating the capture as complete.
+- It **cannot tell saved custom code from KO's default template**, because the Style editor renders the default into any section with nothing saved. Each captured file says so in its header. If you need the "was this field empty at project start?" record described below, confirm it yourself and leave the placeholder comment in that file.
+- It covers snippets, not article bodies. Step 2 of the audit below is still manual.
+
+The bookmarklet reads the KO admin UI, so a KO markup change can make it return warnings or empty fields. A warning means the capture is incomplete; fall back to hand-copying for that field rather than shipping an incomplete baseline.
+
+**Everyone else, or when the bookmarklet is unavailable:** open each file in the `YYYY.MM.DD-no-changes` folder and replace the placeholder comment with the current code from the customer's knowledge base.
 
 If a customer has no existing custom code in a given field, leave the placeholder comment as-is. It serves as a record that the field was empty at project start.
 
