@@ -901,15 +901,16 @@ a.btn.btn-info:focus-visible,
 }
 /* ============================================================================
    EDITOR READABILITY GUARD  (mandatory — keep in every build; see CLAUDE-RULES)
-   The Froala article editor is a WHITE iframe that loads ko.css + this compiled
-   Custom CSS, but NOT the Style-Settings color block or Custom <head> (quirk #28).
+   The Froala article editor is a WHITE iframe that loads ko.css + the compiled
+   theme CSS (Style-Settings rules + this Custom CSS) but NOT Custom <head>, and
+   its <body> carries no theme class, so theme-scoped fixes never match (quirk #28).
    So any text color applied via an UNSCOPED stock rule (KO's own
    a:not(.btn){color:var(--text-links-color)}) or a .documentation-article-scoped
    rule paints inside the editor too — where a light/brand color is unreadable on
    the white canvas. These editor-only selectors restore KO's stock readable text.
    fr-view / fr-editor-svelte / cke_editable exist ONLY in the editor iframe (never
    on public pages or in PDF), so this cannot affect the live site. Literal hex on
-   purpose: :root tokens are absent in the iframe. Edit the hexes only if a KB's
+   purpose: the guard must not depend on the theme's :root tokens or Custom <head>. Edit the hexes only if a KB's
    editor canvas is intentionally not the default white. Guard headings + links only
    (never blanket-reset body text — it would override authors' own toolbar colors).
    ============================================================================ */

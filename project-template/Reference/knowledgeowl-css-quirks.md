@@ -77,7 +77,7 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-KnowledgeOwl's default styles use `!important` regularly. On a current Minimalist KB the loaded CSS carries ~150 instances (Bootstrap 3.0.0 ≈63, Flat UI ≈63, `ko-css.css` 20, seeded Custom CSS 6) — primarily on display/visibility utilities (`display: block !important`, `display: none !important`), float utilities, responsive table rules, and print styles. (The legacy `publicview*.css` bundles add ~153 each, but those don't load on Minimalist KBs.) Custom CSS overrides often need `!important` too, or very high specificity selectors, to take effect.
+KnowledgeOwl's default styles use `!important` regularly. On a current Minimalist KB the loaded CSS carries ~150 instances (Bootstrap 3.2.0: 63, Flat UI 2.2.2: 63, `ko-css.css` 20, seeded Custom CSS 6, `github.css` and `pdf.css` 0; counts re-verified 2026-09-04) — primarily on display/visibility utilities (`display: block !important`, `display: none !important`), float utilities, responsive table rules, and print styles. (The legacy `publicview*.css` bundles add ~153 each, but those don't load on Minimalist KBs.) Custom CSS overrides often need `!important` too, or very high specificity selectors, to take effect.
 
 ## 2. Theme-Namespaced Selectors
 
@@ -107,7 +107,18 @@ Link styling can be tricky — make sure your selector targets the right context
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
-Images inserted via the Froala editor can have classes applied (all in `ko-css.css`): `.fr-shadow` (adds `box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 1px 1px rgba(0,0,0,.16)`), `.fr-bordered` (adds `border: solid 5px #CCC`), and `.fr-rounded` (adds `border-radius: 10px`). These are opt-in per image, not blanket defaults — but they appear frequently because the editor applies them. The `.no-border` class KnowledgeOwl's docs reference is **not** in the platform CSS or the seeded Custom CSS template — if a KB relies on it, the rule was added to that KB's own Custom CSS (define it yourself if you want it). When writing image-related CSS, be aware of these Froala classes and their specificity.
+Images inserted via the Froala editor can have classes applied (all in `ko-css.css`): `.fr-shadow`, `.fr-bordered`, and `.fr-rounded`. These are opt-in per image, not blanket defaults — but they appear frequently because the editor applies them.
+
+**The values depend on whether the image is captioned**, because `ko-css.css` defines each class twice. KO's own rules near line 2522 are `img.fr-rounded, .fr-img-caption.fr-rounded img { border-radius: 10px }` and `img.fr-bordered, .fr-img-caption.fr-bordered img { border: solid 5px #CCC }` at specificity (0,1,1). But the file's last line (2714) is Froala's stock content stylesheet, minified, with `.documentation-article img.fr-rounded { border-radius: 100% }` and `.documentation-article img.fr-bordered { border: solid 10px #CCC; box-sizing: content-box }` at (0,2,1). Inside an article the later, more specific Froala rules win, so:
+
+| Image | `.fr-bordered` | `.fr-rounded` |
+|---|---|---|
+| Plain `<img>` in the article body | **10px** `#CCC` border | **circle** (`border-radius: 100%`) |
+| Captioned (`span.fr-img-caption.fr-bordered > … img`) | 5px `#CCC` border | 10px radius |
+
+`.fr-shadow` is consistent: `box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 1px 1px rgba(0,0,0,.16)` for both. Override at (0,2,1) or higher (`.hg-minimalist-theme .documentation-article img.fr-bordered`) or the Froala block silently keeps winning.
+
+The `.no-border` class KnowledgeOwl's docs reference is **not** in any public bundle or the seeded Custom CSS template (the only `.no-border` in the codebase is `.page-header.no-border` in the admin app's `application.css`) — if a KB relies on it, the rule was added to that KB's own Custom CSS (define it yourself if you want it).
 
 ## 5. TOC Slideout Layout Coupling
 
@@ -161,13 +172,15 @@ Anchor links scroll behind the fixed top navigation bar. KnowledgeOwl compensate
 
 Any custom anchor approach needs to account for the fixed nav height.
 
+KO's newer **Header anchors** feature (a per-KB setting; `header-anchors.phtml`) uses a different mechanism: it adds `.ko-header-anchor` to `.hg-article-body h1`–`h6` on article pages and `ko-css.css` gives that class `scroll-margin-top: 100px`. The two offsets (140px vs 100px) are independent, so a theme that changes the nav height has to update both.
+
 ## 7. Alert Box Pseudo-Elements
 
 Source: https://support.knowledgeowl.com/help/change-alert-div-icon
 
 Alert/callout boxes use `::before` pseudo-elements for icons — a `65px × 60px` **floated** block holding a 48px Font Awesome 6 Pro glyph (weight 900), from the seeded Custom CSS. Because the icon is a float:
 
-- **Paragraphs** get no margin — the text simply wraps around the float (alerts also get `min-height: 90px` so short ones don't collapse below the icon, and `p` inside alerts get `margin-top: 0`).
+- **Paragraphs** get no margin — the text simply wraps around the float (the four typed alerts get `min-height: 90px` so short ones don't collapse below the icon, and `p` inside `.alert-info` / `.alert-success` / `.alert-warning` get `margin-top: 0`; **`.alert-danger p` is left out of that rule**, so danger alerts keep the 20px paragraph top margin and sit lower than the others).
 - **Lists** don't wrap cleanly, so the seeded CSS offsets them explicitly: `.alert ul, .alert ol { margin-left: 75px }`.
 
 Other block elements you place inside alerts may need the same `margin-left` treatment to avoid overlapping the icon. Per-type icons/colors: `.alert.alert-danger/-info/-success/-warning` each set a background, border, and a `content: "\fXXX"` glyph.
@@ -186,13 +199,14 @@ KnowledgeOwl uses Bootstrap 3 breakpoints plus custom ones (the custom ones live
 
 | Breakpoint | Direction | Typical Use |
 |------------|-----------|-------------|
-| 576px      | `min-width` | Homepage category list goes 2-up |
+| 576px      | `min-width` | Seeded homepage "category list 2-up" rules. **Dead code**: they are written `.hg-minimalist-theme .hg-home-page …` with a space, and both classes are on `<body>` (see §15), so they never match |
+| 767px      | `max-width` | `ko-css.css`: all `icon-cats` tile grids collapse to `repeat(auto-fit, minmax(190px, 1fr))`; nav items stack |
 | 768px      | `min-width` | Tablet (Bootstrap `sm`) |
-| 991px / 992px | `max` / `min` | Small desktop / landscape tablet (Bootstrap `md`); ≤991px also disables the TOC-open article squeeze |
+| 991px / 992px | `max` / `min` | Small desktop / landscape tablet (Bootstrap `md`); ≤991px also disables the TOC-open article squeeze and switches `col5`/`col6` tiles to auto-fit; **≥992px is the only range where `.toc-always-open` and `.is-author` layout rules exist** |
 | 1200px     | `min-width` | Large desktop (Bootstrap `lg`) |
-| 1473px     | **`max-width`** | Three-column squeeze: below this, content narrows to 700px and the right column widens (KO-specific) |
+| 1473px     | **`max-width`** | Three-column squeeze: below this, content narrows to 700px and the right column widens (KO-specific, seeded) |
 
-**Note:** watch the directions — 1473px is a `max-width` query (it applies to screens *narrower* than 1474px), not a `min-width` one. `ko-css.css` also has a `min-width: 1400px` rule for wide screens. The five listed above are the primary ones to align with.
+**Note:** watch the directions — 1473px is a `max-width` query (it applies to screens *narrower* than 1474px), not a `min-width` one. `ko-css.css` also has a `min-width: 1400px` rule for wide screens. The stock homepage tiles have **no** breakpoint between 768px and 991px: a `col=4` grid stays four across down to 992px, then jumps to auto-fit at 767px.
 
 ## 10. Custom Utility Classes to Know
 
@@ -238,6 +252,8 @@ Source: https://support.knowledgeowl.com/help/default-custom-css
 
 Individual search input elements have their borders removed (`.hg-search-bar input.form-control`, `.input-group-btn .btn` → `border: none`). The visible border is on the outer `.input-group` wrapper instead (`1px solid var(--input-border-color)` + a soft box-shadow). Focus state is handled via `.hg-search-bar .input-group:focus-within:not(:focus-visible)`, which adds a `box-shadow: 0 0 0 2px var(--input-focus-color)` ring. All of this lives in the seeded Custom CSS. Styling the search bar requires targeting the wrapper, not the input.
 
+**Seeded focus-ring list has a missing comma.** The long `:focus-visible` selector list near the end of the template omits the comma after `.hg-minimalist-theme .ko-large-search input.form-control:focus-visible`, so that selector and the next one (`button.btn.btn-success:focus-visible`) fuse into one descendant selector that never matches. It happens to be harmless today because both elements are also caught by the generic `.form-control:focus-visible` and `.btn-success:focus-visible` entries in the same list, but if you copy that block into a theme and trim it, keep the comma in mind: the two specific entries are not doing anything.
+
 ## 14. PDF-Specific CSS Rules
 
 Source: https://support.knowledgeowl.com/help/default-custom-css
@@ -267,20 +283,22 @@ Two traps follow:
 1. **`hg-minimalist-theme` sits on `<body>` — an ANCESTOR of `.hg-pdf`, not a descendant** — so a `.hg-pdf .hg-minimalist-theme …` fence never matches in a PDF (this silently killed an alert-icon hide for a whole version). The correct PDF prefix is **`.hg-pdf .documentation-article …`**.
 2. **The page-type class (`.hg-article-page`, etc., see §15) and all page chrome are absent** — no breadcrumbs, related, ratings, comments, or reading-panel wrappers exist in the PDF. Don't rely on them in PDF selectors.
 
-The PDF **does** load Custom CSS + Custom `<head>`, so `:root` tokens are defined. (Full PDF CSS stack: Bootstrap + Flat UI + `ko-css.css` — or a legacy `publicview` bundle for older themes — plus `public/css/pdf.css` and the KB's Custom CSS; see `ResourceLoader::loadRawPdfCss()`.) Common gotcha: Font Awesome alert icons (`.alert.alert-{type}::before { content:"\fXXX" }`, from KO's default template) render as tofu (□) because the PDF engine has no FA webfont — hide them with:
+**What the PDF `<head>` actually contains** (`PdfGenerator::createPDF`, in order): the KB's Custom `<head>` with its `<script>` tags stripped; the theme's font links **including the Font Awesome bundle** (`KbRenderer::font($linkOnly=false, $includeFontAwesome=true)`); one `<style>` of raw CSS from `ResourceLoader::loadRawPdfCss()` (Bootstrap + Flat UI + `ko-css.css` + `public/css/pdf.css` for current themes, or the legacy `publicview` bundle + `pdf.css` for older custom-HTML themes); then `KbRenderer::css()`, which is the **same** inline block the live page gets, so both the generated Style-Settings rules (heading colors, the 16px body pin) **and** the Custom CSS with its `:root` tokens are present. `pdf.css` itself only caps `.hg-article-body img` at `max-width: 100%`, zeroes `.hg-article` padding/border, and hides `.ko-article-actions`, `.hg-article-pdf` and `.hg-article-footer`; it sets no colors.
+
+Common gotcha: Font Awesome alert icons (`.alert.alert-{type}::before { content:"\fXXX" }`, from KO's default template) render as tofu (□). The FA stylesheet *is* linked, but the old WebKit inside wkhtmltopdf does not reliably load the Pro 6 webfonts before capture, so treat the glyphs as unavailable and hide them:
 
 ```css
 .hg-pdf .documentation-article .alert::before { content: none !important; display: none !important; }
 ```
 
-**Two PDF engines, both weak — never depend on JS or advanced layout.** KO renders PDFs with *two* different engines depending on the export type, so behavior isn't uniform:
+**One weak rendering engine, plus an assembler — never depend on JS or advanced layout.** Every PDF type renders article HTML through **wkhtmltopdf** (Knp\Snappy) and then hands the pages to **mpdf** only for assembly (importing the wkhtmltopdf pages, header/footer HTML, watermark, password, and for Full PDFs the cover page and table of contents; `FullPdf.php` still carries the old `$mpdf->WriteHTML(... hg-pdf ...)` article path, commented out). `ArticleVersionPdf.php` just calls `PdfGenerator::createPDF()`. So the layout engine is the same everywhere, and it is an old QtWebKit build:
 
-- **Single-article download → wkhtmltopdf** (`PdfGenerator.php`, via Knp\Snappy — JS is *enabled*; the `disable-javascript` option is commented out). It's an old WebKit build, so JS *runs* but **unreliably**: on large or Word-pasted articles it frequently doesn't finish before the page is captured, so a script that works on the live page silently no-ops in the PDF.
-- **Full-KB / multi-article / version PDFs → mpdf** (`FullPdf.php`, `ArticleVersionPdf.php`). mpdf is a pure-PHP engine that runs **no JavaScript at all**, has **weak flex/grid support** (grids collapse to one column), and **mis-positions** absolutely-positioned / flex `::before` counters (numbered-step digits float outside their circles, etc.).
+- **JavaScript runs, with a fixed 1000ms `javascript-delay`**, and is unreliable: on large or Word-pasted articles scripts frequently don't finish before capture, so a script that works on the live page silently no-ops in the PDF. `<iframe>`s are stripped before rendering. If the first render throws, KO retries with YouTube/Vimeo embeds hidden, and a third attempt runs with `disable-javascript`, `disable-external-links` and `no-images`, so a PDF can legitimately come back with no images and no JS at all.
+- **No CSS Grid and only old-syntax flexbox**, so grids collapse to one column and flex-positioned `::before` counters drift (numbered-step digits float outside their circles, etc.).
 
 Practical rule: anything that must render in a PDF should be **CSS-only and simple-layout** (block/table, not flex/grid) and must not rely on JS. Give decorative `::before` counters a plain inline fallback for the PDF context. (This is why the Approved-By / metadata patterns moved to CSS-only — see the customer project notes.)
 
-**Dark component panels vs. the white-page text fence.** If a component keeps a dark background in the PDF, the usual "make PDF text dark on white paper" fence — e.g. `.hg-pdf .documentation-article p, .hg-pdf .documentation-article li { color: #212121 }` (whether from KO's `pdf.css` or one you added) — turns the text *inside* the dark panel unreadable (dark-on-dark). Re-lighten per panel with a **more specific** selector — an `#id` in the chain outranks the class-only fence:
+**Dark component panels vs. the white-page text fence.** If a component keeps a dark background in the PDF, the usual "make PDF text dark on white paper" fence — e.g. `.hg-pdf .documentation-article p, .hg-pdf .documentation-article li { color: #212121 }` (a rule you add; KO's `pdf.css` has none) — turns the text *inside* the dark panel unreadable (dark-on-dark). Re-lighten per panel with a **more specific** selector — an `#id` in the chain outranks the class-only fence:
 
 ```css
 .hg-pdf .documentation-article #my-dark-panel p,
@@ -325,20 +343,22 @@ body.hg-home-page .some-element { ... }
 
 **Gotcha — the theme class and the page class are on the SAME element:** `.hg-minimalist-theme` (the theme class) and the page-type classes (`.hg-home-page`, `.hg-category-page`, etc.) are all applied to the same `<body>`. So a *descendant* selector with a space between them (`.hg-minimalist-theme .hg-home-page …`) does **not** match — there's no ancestor/descendant relationship. Use a **compound** selector with no space: `.hg-minimalist-theme.hg-home-page …`. This fails silently — the rule simply never applies, with no error — so homepage/category-scoped overrides written with a space appear to "do nothing."
 
+**KO's own seeded template makes this mistake five times**, which is a useful warning about copying its patterns. In `custom-css.css` the rules at lines 99 (`.hg-minimalist-theme .hg-category-page .hg-article-body`), 226 (`.hg-minimalist-theme .hg-category-page .category-list .col-md-6.col-lg-4`), 358 (`.hg-minimalist-theme .hg-home-page .category-header`), and the 576px / 992px media-query rules at 878 and 895 (`.hg-minimalist-theme .hg-home-page .category-list > div`) are all written with the space, and no page class ever appears on anything but `<body>` (verified against every reader template). They have never applied on any KB. The correct compound form does appear elsewhere in the same file (`.hg-minimalist-theme.hg-3column-layout:not(.hg-home-page) .ko-content-cntr`), so the template is not a reliable model for this.
+
 ## 16. Z-Index Layering Gaps
 
 The default CSS uses z-index values with large gaps between layers. If you create positioned elements (sticky headers, floating buttons, overlays), be aware of the existing layers (from `ko-css.css` unless noted):
 
 | Z-Index | Used By |
 |---------|---------|
-| 0 / 1 | `.slideout-menu` (TOC panel) / `.slideout-panel` (article panel) |
-| 2 | Slideout toggles, right column |
+| 0 / 1 | `.slideout-menu` (closed TOC panel) / `.slideout-panel` (article panel) |
+| 2 | Slideout toggles, the **open** Minimalist TOC (`.documentation-categories.slideout-menu.open`), right column |
 | 3 / 5 | Loading spinner / article preview bar |
-| 20 | Autocomplete/type-ahead menu (`.ui-menu`) |
+| 20 | Search type-ahead menu (`.ui-menu`, the class KO's autocomplete library still emits) |
 | 100 | `.back-to-top` snippet (seeded Custom CSS) |
 | 1030 | Fixed navbar (Bootstrap `.navbar-fixed-top`) |
-| 1031 | Minimalist `toc-always-open` TOC sidebar (sits just above the navbar) |
-| 1040 / 1050 | Bootstrap modal backdrop / modal dialogs |
+| 1031 | Minimalist `toc-always-open` TOC sidebar at ≥992px (sits just above the navbar) |
+| 1040 / 1050 | Bootstrap modal backdrop / modal dialogs (`ko-css.css` repeats 1050 on `.modal-dialog`) |
 
 Custom positioned elements should avoid 1030+ unless you intend to overlay the header, TOC, or modals.
 
@@ -393,6 +413,8 @@ Override **both** (transparent, or your dark fill), and kill the `.documentation
 
 These are plain single-class rules (low specificity), so a scoped override wins easily — the trap is simply *forgetting* they exist, since the outer wrappers are the ones you think of first.
 
+Two footnotes from the source. On Minimalist the box-shadow is already gone (`.hg-minimalist-theme .hg-site-body .documentation-article { box-shadow: none }` in `ko-css.css`), so the `box-shadow: none` line above is insurance for other themes rather than a fix you will see. And the outer wrappers are not transparent by default either: `ko-css.css` paints `.hg-site` grey (`#eee`) and the seeded Custom CSS repaints `.hg-site` and `.hg-minimalist-theme .documentation-body` with `var(--white)`, so a dark theme that only re-tokens `--white` will also turn those two surfaces, which is sometimes what you want and sometimes not.
+
 ## 21. Href-less `<a>` Are Hidden as Anchor Jump-Targets
 
 `ko-css.css` treats any anchor **without an `href`** as an in-page jump target and hides it:
@@ -409,7 +431,7 @@ Fixes: use `<div>` for dormant/placeholder cards (switch to `<a href>` once wire
 
 ## 22. Homepage Article Panel Has a Fixed (Viewport-Derived) Height
 
-For the TOC slideout mechanism, KO pins the homepage article container's height to its ancestors — `ko-css.css` sets `.hg-article { height: 100% }` (and `.hg-site-body .documentation-article { min-height: calc(100vh - 60px) }`), so the panel chain (`#ko-article-cntr` / `.ko-content-cntr` / `.hg-article`) resolves to roughly the viewport height, *not* to the content. Stock homepages are short enough to fit, but a **taller custom homepage overflows it**: the content spills out visually (overflow is visible, so you still see it) and the footer — positioned after the pinned-height panel — rides **up over** the content.
+For the TOC slideout mechanism, KO pins the homepage article container's height to its ancestors — `ko-css.css` sets `.hg-article { height: 100% }` (and `.hg-site-body .documentation-article { min-height: calc(100vh - 60px) }`, which Minimalist tightens to `calc(100vh - 110px)`, or `- 160px` under an editor bar), so the panel chain (`#ko-article-cntr` / `.ko-content-cntr` / `.hg-article`) resolves to roughly the viewport height, *not* to the content. Stock homepages are short enough to fit, but a **taller custom homepage overflows it**: the content spills out visually (overflow is visible, so you still see it) and the footer — positioned after the pinned-height panel — rides **up over** the content.
 
 Fix by letting the homepage containers grow to their content:
 
@@ -490,7 +512,7 @@ Consequences for a restyle:
 
 1. A single `<li>`-level override kills the beige for articles but leaves it on categories — a "looks fixed until you hover a category" bug. You must override **both container-level and link-level** selectors.
 2. The color isn't in any stylesheet — changing the TOC background Style Setting silently changes the hover color too.
-3. `ko-css.css` also has static `#ddd` fallbacks on the same elements (`.article-container:hover`, `.category-link-container:hover`, `li a:hover`), so killing only the generated rule can reveal gray.
+3. `ko-css.css` also has static `#ddd` fallbacks on the same elements (`.article-container:hover`, `.category-link-container:hover`, `li a:hover`), so killing only the generated rule can reveal gray. And there is a **second generated hover color** underneath: for every theme `KbRenderer` emits the TOC background **lightened** by 20/255 per channel on the unscoped `.article-container:hover`, `.category-link-container:hover`, `.documentation-categories li a:hover`, `.category-link-container.active`, `li.active` (`$effectMap['hover']`). On Minimalist the darker `.hg-minimalist-theme …` set wins by specificity, so removing only that set reveals the lighter tint, not the gray.
 
 To find where a hover paints, hover the element and read the `:hover` chain: `[...document.querySelectorAll(':hover')].map(e => [e.className, getComputedStyle(e).backgroundColor])` (see `03-LOCALHOST_PREVIEW.md`). For a clean full-row highlight, kill the default on the painting elements and apply one tint to the row (the `<li>` for articles, the `.category-link-container` for categories), leaving the link plain. (The seeded Custom CSS also ships commented-out hover overrides wired to `--toc-category-hover-color` / `--toc-article-hover-color` — a customer may have uncommented those.)
 
@@ -547,23 +569,33 @@ Leave KO's `float`, `width`, and `padding-right` in place so only the vertical a
 
 ## 28. Froala Article Editor Is an IFRAME (Editor-Only Overrides Behave Differently)
 
-The article editor renders inside an **iframe**, which changes how "editor-only" CSS must be written:
+The article editor renders inside an **iframe**, which changes how "editor-only" CSS must be written. What loads in that iframe (current Svelte editor: `app-svelte/src/lib/FroalaEditor.svelte` builds `cssFiles`, `app-svelte/src/lib/froala/config.ts` passes them as `iframeStyleFiles`; the values come from `kb/article-svelte.phtml`):
+
+1. Froala's own editor CSS.
+2. The **`koFroalaEditor` bundle**: Bootstrap + Flat UI + `ko-css.css` + `github.css` + `public/css/app/article-content-editor.css` (editor-only tweaks such as the 930px canvas cap).
+3. The KB's **compiled theme stylesheet**, `{projectID}_css.css` (`Model_Theme::cssFile`). `KbController` writes this file from `KbRenderer::css()` and regenerates it when the theme is saved, so it is the **same inline block the live page gets**: the generated Style-Settings rules **and** the Custom CSS, `:root` tokens included. (The file body still starts with the literal `<style type="text/css">` tag, which corrupts the first generated rule, the header background; nothing else is affected.)
+4. The theme's font links, including the Font Awesome bundle.
+
+So the differences from the live page are structural, not "which CSS loaded":
 
 - **`.fr-box` lives in the PARENT document**, not the iframe — so `.fr-box .fr-element h1` (a common "style headings only in the editor" override) **never matches** the headings inside the editor.
-- The iframe `<body>` carries `documentation-article hg-article-body fr-editor-svelte` (+ Froala's own `fr-view`) — **crucially NOT `hg-minimalist-theme`** — so theme-scoped rules don't apply inside the editor either.
-- The per-KB **Style-Settings color block is NOT injected into the editor iframe.** Only Custom CSS, the static `koFroalaEditor` bundle, and fonts load there — so `:root` tokens defined via Style Settings are **absent**, and editor overrides must use **literal hex**, not `var(--…)`.
+- The iframe `<body>` carries `documentation-article hg-article-body fr-editor-svelte` (`editorBodyClass`, `config.ts:34`; Froala adds `fr-view`) — **crucially NOT `hg-minimalist-theme`**, no page-type class, no layout class — so every theme-scoped rule (`.hg-minimalist-theme …`) is dead inside the editor, while unscoped and `.documentation-article`-scoped rules apply.
+- **Custom `<head>` is not loaded**, so any `<style>`, font `<link>` or script a theme puts there is absent. Tokens defined in Custom CSS's `:root` **are** present; tokens defined in Custom `<head>` are not.
+- Because the seeded `.hg-minimalist-theme .documentation-article h1 { color: var(--primary-color) }` cannot match, the editor's H1 shows the **Header tags Style-Settings color** (the generated `.documentation-article h1, .cke_editable h1` rule) rather than `--primary-color`. That is stock KO behavior, not a theme bug.
 
 This bites **two** text elements in practice: **headings** (a theme's `.documentation-article h1{…}`-style rule matches the editor body) and **links** (KO's seeded base-link rule from §3 — `.hg-minimalist-theme a:not(.btn), a:not(.btn){color:var(--text-links-color)}` — reaches the editor through its **second, unscoped** `a:not(.btn)` selector, so a re-tokened light link color renders unreadable on the white canvas).
 
 ### Editor Readability Guard (the canonical fix — paste whole into every build's Custom CSS)
 
-This is **mandatory in every build** (see `CLAUDE-RULES.md` → "Editor Readability Guard"). It's editor-only and provably safe — `fr-view` / `fr-editor-svelte` / `cke_editable` exist **only** inside the editor iframe, never on public pages or in PDF — so it cannot touch the live site. Literal hex on purpose (the `:root` tokens are absent in the iframe). Only change the hexes if a KB's editor canvas is intentionally not the default white.
+This is **mandatory in every build** (see `CLAUDE-RULES.md` → "Editor Readability Guard"). It's editor-only and provably safe — `fr-view` / `fr-editor-svelte` / `cke_editable` exist **only** inside the editor iframe, never on public pages or in PDF — so it cannot touch the live site. Literal hex on purpose: the guard's job is to be readable no matter what a theme has done to the `:root` tokens, and it must not depend on anything in Custom `<head>`, which the iframe never loads. Only change the hexes if a KB's editor canvas is intentionally not the default white.
 
 ```css
 /* ── EDITOR READABILITY GUARD — keep readable text on the white Froala canvas ──
-   The editor iframe loads ko.css + compiled Custom CSS but NOT the Style-Settings
-   block or Custom <head>, so unscoped / .documentation-article-scoped theme text
-   colors leak in. These editor-only selectors restore KO's stock readable colors. */
+   The editor iframe loads the ko bundle + the compiled theme CSS (Style-Settings
+   rules + Custom CSS) but its <body> has no theme class and Custom <head> is not
+   loaded, so unscoped / .documentation-article-scoped theme text colors leak in
+   while theme-scoped fixes do not. These editor-only selectors restore KO's stock
+   readable colors. */
 .fr-view, .fr-editor-svelte, .cke_editable { --text-links-color: #3C80BA; }
 .fr-view h1, .fr-view h2, .fr-view h3, .fr-view h4, .fr-view h5, .fr-view h6,
 .fr-editor-svelte h1, .fr-editor-svelte h2, .fr-editor-svelte h3, .fr-editor-svelte h4, .fr-editor-svelte h5, .fr-editor-svelte h6,
@@ -578,7 +610,7 @@ This is **mandatory in every build** (see `CLAUDE-RULES.md` → "Editor Readabil
 Notes:
 - The first line **re-points `--text-links-color`** inside the editor, which generically neutralizes *any* unscoped ko.css rule that consumes that token (belt-and-suspenders beyond the explicit link rule below it).
 - Guard **headings and links only** — do **not** blanket-reset body `p`/`li` text: a blanket `!important` there would also override an author's own toolbar text colors (they'd look default-black while editing, then publish colored). If a specific build's authors color headings and you want those preserved in the editor, exclude them with `:not([style*="color"])` on the heading selector.
-- (Source: `wysiwyg.js:46-50` loads `[koCssPath, customCSS, …fonts]`, applied at `:901`/`:1086`; `editorBodyClass` at `:906`/`:1089`. The on-page heading rule `.documentation-article h1, .cke_editable h1{color:…}` from `KbRenderer.php` has **no** `!important`, so the guard wins.)
+- (Source: current editor `FroalaEditor.svelte:50-55` builds `[froalaCss, koFroalaEditor bundle, …customCss, …fontFiles]`, `config.ts:29` applies it as `iframeStyleFiles`, `config.ts:34` sets `editorBodyClass`; the legacy `public/js/app/wysiwyg.js` (category, snippet and home-page editors) does the same at `:46-50`, `:901`/`:1086` and `:906`/`:1089`. `customCss` is `Model_Theme::cssFile`, written by `KbController` from `KbRenderer::css()`. The on-page heading rule `.documentation-article h1, .cke_editable h1{color:…}` from `KbRenderer.php` has **no** `!important`, so the guard wins.)
 
 ## 29. Distinguishing Live vs PDF vs Editor When Scoping `.hg-article-body`
 
@@ -614,7 +646,7 @@ Consequence: a header metadata element at `font-size: 0.75em` computes to **13.5
 
 Two more wrinkles:
 
-1. **PDF differs again.** The PDF stylesheet (`ResourceLoader::loadRawPdfCss`, see §14) may not carry the generated 16px body pin, so the same `em` rule can look correct in the PDF yet wrong in the live KB (or vice-versa) — verify both contexts.
+1. **PDF can still differ.** The PDF `<head>` does include `KbRenderer::css()`, so the generated 16px body pin is present there too (see §14). But the PDF has no `.hg-article-header` (only the article body is rendered) and wkhtmltopdf's old WebKit computes some cascades differently, so the same `em` rule can look correct in the PDF yet wrong in the live KB (or vice-versa) — verify both contexts.
 2. **Don't hand-compute the cascade** across Bootstrap + Flat UI + `ko-css` + generated + Custom CSS to guess the px — it's error-prone. Measure the target's computed `font-size` (reproduce the snapshot locally + `getComputedStyle`, or have the user paste one from the live page — see `03-LOCALHOST_PREVIEW.md`), then set that px explicitly for the context that's wrong.
 
 Related specificity note (also in `knowledgeowl-css-defaults.md`): the generated `.hg-article-body p` rule is specificity **(0,1,1)**, so a bare custom class **(0,1,0)** loses to it — scope custom body-paragraph styling as `.hg-article-body p.my-class` **(0,2,1)**.
@@ -635,7 +667,7 @@ So a `:has()`/child-combinator fence written with `>` (e.g. `.ko-content-cntr:ha
 .ko-content-cntr:has(.my-wrapper) .hg-ratings { display: none; }
 ```
 
-Related: KO's front-end JS **appends** `#`-anchor icons (`.ko-anchor-icon`) to article-body headings at runtime (h2 and h3+), so a custom landing-page component built from headings needs a scoped `.ko-anchor-icon { display: none }` too — the icons aren't in the static snapshot; they appear after load. (Same "href-less anchor" family as §21.)
+Related: when the KB's **Header anchors** setting is on (`project.header_anchors`, rendered by `help/partials/header-anchors.phtml`), KO's front-end JS **appends** `#`-anchor icons (`.ko-anchor-icon`) to every `.hg-article-body h1`–`h6` at runtime, on `.hg-article-page` bodies only, and adds `.ko-header-anchor` to the heading itself. So a custom landing-page component built from headings needs a scoped `.ko-anchor-icon { display: none }` too — the icons aren't in the static snapshot; they appear after load. (Same "href-less anchor" family as §21; the icons are excluded from that rule via `:not(.ko-anchor-icon)`.)
 
 ## 32. Detecting a Logged-In Author Client-Side (`.ko-app-edit`)
 
@@ -660,7 +692,7 @@ body:has(.ko-app-edit:not(.hide)) .my-author-note { display: block; }
 
 KnowledgeOwl strips `<script>` blocks out of the article body *before* indexing it (`Indexer.php:265`: `preg_replace('/<script.*?<\/script>/is', ' ', $cleanBody)`). So any article whose content is **rendered by JavaScript** (a config-object-plus-engine pattern, a script that builds the DOM on load, etc.) is **invisible to KB search** — the words never enter the index.
 
-The same JS-rendered content also (a) does **not** appear in PDF exports on the mpdf path and is unreliable on wkhtmltopdf (§14), and (b) shows as **raw code** in the WYSIWYG editor. So for interactive article content, prefer **plain markup in the article body** enhanced by a theme-level (Custom `<head>`) progressive-enhancement script, rather than generating the body from JS inside the article itself.
+The same JS-rendered content also (a) is unreliable in PDF exports, where wkhtmltopdf gives scripts one second and KO's fallback renders disable JS entirely (§14), and (b) shows as **raw code** in the WYSIWYG editor. So for interactive article content, prefer **plain markup in the article body** enhanced by a theme-level (Custom `<head>`) progressive-enhancement script, rather than generating the body from JS inside the article itself.
 
 ## 34. SiteRenderer Executes Merge Codes EVERYWHERE — Including Inside CSS Comments
 
@@ -674,7 +706,7 @@ Two costs: it's wasteful (a server-side render plus page bloat on every single l
 
 KO has two no-JS contexts, and a theme's own scripts run in neither:
 
-- **PDF export** runs no JavaScript on the mpdf path — `PdfGenerator` builds `.hg-pdf > .documentation-article > [body HTML]` and no scripts execute (§14).
+- **PDF export** cannot be trusted to run JavaScript — `PdfGenerator` builds `.hg-pdf > .documentation-article > [body HTML]`, strips scripts from the Custom `<head>`, gives what remains one second, and falls back to `disable-javascript` renders on error (§14).
 - **The Froala editor iframe** doesn't run the theme's `<head>` scripts either (§28).
 
 So if you move a styling hook from **static article HTML** to a **JS-applied class**, it vanishes in both. Two distinct failure modes:
@@ -784,9 +816,9 @@ The Icon-panels sub-cards reuse the **same** `.cat-icon-panel` markup as the hom
 
 ## 42. Every `<h2>` Inside `.faq-nav-content` Is Hidden — by a DESCENDANT Selector
 
-KO's stock template carries `.hg-minimalist-theme .faq-nav-content h2 { display: none }`. Its purpose is hiding the native "Articles" heading (§41) — but because it's a **descendant** selector rather than `> h2`, it also swallows any `<h2>` you inject anywhere inside `.faq-nav-content`, including a section head or prompt of your own.
+KO's **seeded Custom CSS** (line 222 of the template, so it lives in the KB's own editable Custom CSS, not in a platform bundle) carries `.hg-minimalist-theme .faq-nav-content h2 { display: none }`. Its purpose is hiding the native `<h2>Articles</h2>` that `help/faq-navigation.phtml` emits above the article rows (§41) — but because it's a **descendant** selector rather than `> h2`, it also swallows any `<h2>` you inject anywhere inside `.faq-nav-content`, including a section head or prompt of your own.
 
-Fix either way: give your injected heading `display: block !important`, or inject it **outside** `.faq-nav-content` (e.g. into `.faq-nav-wrapper`).
+Fix either way: give your injected heading `display: block !important`, inject it **outside** `.faq-nav-content` (e.g. into `.faq-nav-wrapper`), or, since the rule is in Custom CSS you control, tighten it to `.faq-nav-content > h2` in the theme.
 
 ## 43. Breadcrumbs Are Ancestors-Only — and They Already Render Separators
 
@@ -923,6 +955,8 @@ html .hg-minimalist-theme.toc-always-open .ko-site-footer { width: 100% }
 ```
 
 **Match the `html ` prefix rather than escalating to `!important`** — you keep a sane cascade and stay overridable later.
+
+The whole `toc-always-open` block in `ko-css.css` (the `html`-prefixed footer, header and `#ko-article-cntr` shifts, the `z-index: 1031` TOC) sits inside `@media (min-width: 992px)`, so put the override inside the same query, or accept that it also applies below 992px where KO's rule does not.
 
 Because these rules live in cross-origin bundles, §47's diagnostic can't see them: when it reports a blocked sheet, `curl` the bundle and grep for the selector.
 

@@ -310,10 +310,11 @@ If a version changes colors but **no** Style Setting is affected, say so explici
 
 ## Editor Readability Guard (mandatory — every build)
 
-The Froala **article editor** renders your compiled Custom CSS in a **white iframe** that
-loads neither the Style-Settings color block nor the Custom `<head>` — so unscoped and
-`.documentation-article`-scoped theme text colors paint in there too, where a light or brand
-color is unreadable. A recurring dark-/custom-theme trap that has bitten headings and links on
+The Froala **article editor** renders the compiled theme CSS (Style-Settings rules plus your
+Custom CSS) in a **white iframe** whose `<body>` has no theme class and which never loads the
+Custom `<head>` — so unscoped and `.documentation-article`-scoped theme text colors paint in
+there too, while `.hg-minimalist-theme`-scoped fixes do not, and a light or brand color is
+unreadable. A recurring dark-/custom-theme trap that has bitten headings and links on
 real builds. **Canonical spec of that cascade — body classes, what loads, why theme-scoped
 rules don't apply — is quirk #28; don't restate it, link it.**
 
