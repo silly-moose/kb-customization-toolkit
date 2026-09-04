@@ -188,6 +188,21 @@ Define the brand palette as CSS custom properties at the top of Custom CSS (a `:
 
 Without the `-rgb` pair, `rgba()` effects keep hardcoded color literals and *don't* follow a token change — so the theme only half-re-skins. This is what makes a build cleanly reusable as a template (see the `theme-templates/` templates and their extraction process).
 
+**Rotating an accent across items (category tiles, cards, steps): assign one per-item custom property, then write the styling ONCE.** Do not duplicate a block per hue. Give each item its hue with an `:nth-child` cycle, and let a single rule set consume it:
+
+```css
+/* assign: one line per hue, cycling so any item count stays styled */
+.tile:nth-child(4n+1) { --tile-hue: var(--brand-primary);   --tile-hue-rgb: var(--brand-primary-rgb); }
+.tile:nth-child(4n+2) { --tile-hue: var(--brand-secondary); --tile-hue-rgb: var(--brand-secondary-rgb); }
+/* …4n+3, 4n+4 */
+/* style: written once, reads the per-item property */
+.tile .medallion        { border-color: var(--tile-hue); color: var(--tile-hue); }
+.tile:hover             { box-shadow: 0 12px 30px -12px rgba(var(--tile-hue-rgb), .45); }
+.tile:hover .label      { color: var(--tile-hue); }
+```
+
+Five hue-specific blocks collapse to four one-line assignments plus one shared block, and because the assignments point at the brand tokens, swapping the palette still re-skins everything (the `-rgb` pairs are what let the `rgba()` tints follow). Before promising a rotation, **check the palette can carry one**: a palette of three near-identical purples and a blue puts the tints 8–17 RGB values apart, and no alpha makes those distinct. Say so to the customer and let the saturated glyph or border carry the signal, rather than inventing off-palette hues.
+
 ## Logo & Brand Assets
 
 **Upload the logo through KnowledgeOwl's native uploader, not custom code.** KO has a dedicated logo field at **Customize > Style > Style Settings > Logo** — that's where a KB's logo belongs. It lives where the customer expects to manage it, survives theme and version changes, and KO handles the markup and responsive sizing for you.

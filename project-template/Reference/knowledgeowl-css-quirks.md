@@ -43,7 +43,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§25](#25-flexbox-on-ko-homepage-top-collapses-the-homepage-search) flex collapses homepage search ·
 [§31](#31-hiding-article-chrome-on-full-bleed-custom-pages--use-descendant-selectors) hiding article chrome ·
 [§41](#41-category-landing-pages-native-markup-and-the-double-body-class) category landing markup + double body class ·
-[§49](#49-vertically-centring-things-in-the-minimalist-top-bar--min-height-on-the-brand-and-leave-the-toggle-alone) centring in the top bar (**`min-height`, not `height`**)
+[§49](#49-vertically-centring-things-in-the-minimalist-top-bar--min-height-on-the-brand-and-leave-the-toggle-alone) centring in the top bar (**`min-height`, not `height`**) ·
+[§50](#50-homepage-widget-lists-list-action-is-hard-coded-to-width-40) homepage widget `.list-action` is `width: 40%`
 
 **Typography, lists & content elements**
 [§4](#4-froala-image-classes-and-no-border) Froala image classes ·
@@ -61,7 +62,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§34](#34-siterenderer-executes-merge-codes-everywhere--including-inside-css-comments) merge codes execute **inside CSS comments** ·
 [§36](#36-ko-has-no-article-custom-fields--tags-are-the-per-article-metadata-hook) no article custom fields — tags are the hook ·
 [§37](#37-templateicon-catsmaxn-silently-drops-categories-past-the-nth) `icon-cats,max=N` silently drops categories ·
-[§40](#40-the-sidebar-toc-contains-the-full-article-tree-a-no-auth-all-articles-source) sidebar TOC holds the full article tree
+[§40](#40-the-sidebar-toc-contains-the-full-article-tree-a-no-auth-all-articles-source) sidebar TOC holds the full article tree (**conditional: verify per KB**) ·
+[§51](#51-recent-articles-from-category-x-on-the-homepage-no-merge-code-exists-and-the-simplest-fix-is-a-same-origin-fetch) recent articles from a category on the homepage (**no merge code; same-origin fetch**)
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -783,9 +785,16 @@ Components that are light by default:
 
 ## 40. The Sidebar TOC Contains the FULL Article Tree (a No-Auth "All Articles" Source)
 
-KO renders the **entire** article tree into every help page's sidebar TOC server-side (`ul.documentation-outter-list`, confirmed in `tableofcontents.phtml`). Hidden branches are `display: none` — **not** absent, and not lazy-loaded for the help site.
+KO renders the article tree into every help page's sidebar TOC server-side (`ul.documentation-outter-list`; the current renderer is `KbRenderer::toc()` and its `render*Toc*` helpers, with `help/tableofcontents.phtml` as the older twin). Collapsed branches are `style="display:none"` — **not** absent, and not lazy-loaded for the help site.
 
-That makes the TOC DOM a client-side source for "every article" — useful for an A–Z index or any theme feature needing the full list:
+**But "the full tree" is conditional, and one KB shipped with ZERO article links in its TOC.** On EvolveNXT both the homepage and an article page carried 10 category links and no `.article-link` at all, which would have sunk a homepage feature built on this section. The source explains exactly when articles are omitted rather than hidden:
+
+- **"Hide subcategories and articles in TOC"** on a category (`toc_hide_children`, offered for Default, Topic and Basic categories) makes the renderer skip the whole branch: `if(!$hideChildren)` wraps the `renderInnerCategories` / `renderOutterArticles` calls, the category renders as a leaf link (`alt-icon` chevron, direct `href`), and its `ul.documentation-articles` is emitted **empty** with class `hide`.
+- **Blog categories** always behave that way (`$hideChildren = true` for `type == 'blog'`).
+- Articles with **"Hide from TOC"** (`hide_from_toc`) are excluded from the article map entirely, and categories with no visible content are skipped for readers (editors still see them).
+- `toc()` serves from a cache; if another worker holds the rebuild lock and there is no stale copy, it returns an **empty string** for that request, so a snapshot taken at the wrong moment can show no TOC at all.
+
+So verify before designing against it, on the live KB or a snapshot: `document.querySelectorAll('.article-link').length` and, per branch, whether the `ul.documentation-articles` under a category has the `hide` class (omitted) or only `display:none` (present, collapsed). Where the TOC does carry the tree it is a client-side source for "every article" — useful for an A–Z index or any theme feature needing the full list:
 
 - Articles: `li.article-container[data-id] > a.article-link[href]` (title = link text).
 - Category path: walk up ancestor `li.category-container > a.documentation-category`.
@@ -983,3 +992,34 @@ A `height` override on this element does not take from Custom CSS — not append
 **The nav toggle needs none of this.** `.ko-slideout-left-toggle` centres correctly with the flex recipe in §27 — chasing it alongside the brand is the natural wrong move. Fix the brand, leave the toggle.
 
 > When measuring any of this in a browser, re-assert from a **clean reload** and include a control that proves your probe actually took effect. Two measurements on this exact bug came back wrong because a probe stylesheet from an earlier call was still in the page and one probe's own control had silently failed. See `03-LOCALHOST_PREVIEW.md` → "Cache-bust every reload".
+
+## 50. Homepage Widget Lists: `.list-action` Is Hard-Coded to `width: 40%`
+
+The stock homepage content lists (`[template("new-articles")]`, `pop-articles`, `up-articles`, rendered inside `.homepage-widgets` as `ul.stat-list` plus a "View more…" row) carry this in `ko-css.css`:
+
+```css
+.list-action { width: 40%; border-top: 1px solid #cecece; font-style: italic; }
+```
+
+40% is fine at the stock three-up `col-md-4`. Move the lists to four columns (`col-lg-3`, roughly 231px each) and the "View more…" row becomes about 80px wide, narrow enough to wrap the link one word per line, which reads as a broken column rather than a styling nit. Any change to the number of homepage widget columns should trigger a look at `.list-action`: set `width: auto` (and restyle it as a small button if the design wants one).
+
+The rest of the stock widget defaults, for the same restyle: `.homepage-widgets { padding: 1em 0; margin: 2em 0 }` (the seeded Custom CSS changes it to `margin: 2em -15px`), `.homepage-widgets h3 { margin-top: 0 }`, `.stat-list { font-size: 18px; line-height: 22px }` (seeded: `14px`, `line-height: 1.3`, `li { padding: 4px 0 }`), and the `.badge-new` / `.badge-updated` chips at `opacity: .5` (§39).
+
+## 51. "Recent Articles From Category X on the Homepage": No Merge Code Exists, and the Simplest Fix Is a Same-Origin Fetch
+
+A common customer ask with a non-obvious answer. Every natural assumption fails, and each one costs a lookup:
+
+- `KbRenderer`'s template map has only `pop-articles`, `new-articles` and `up-articles`, all **KB-wide**; there is no per-category variant.
+- `content-list` and `panel-list` return an empty string unless the current page **is** a category (`$this->article->category_view`), so they do nothing on the homepage.
+- Merge-code arguments (`[template("x,a=1")]`) are parsed into `mergeCodeParams`, but **only `icon-cats` reads them** (`max`, `col`, `desc`; see §37). Arguments on any other code are silently ignored.
+- KO's own support KB does it with `[ko_api(articles|{…filter…}|)]` inside a Library snippet, which `resolveApiMacros()` rewrites to a `/help/ko-api/…` URL for the browser to fetch. That macro is expanded **only** on the `{{snippet.…}}` path (it cannot go straight into Custom HTML) and needs an **API key on the account**, which is account-wide and not delegable (§40's warning). So that route always implies KO Admin work, not just theme work.
+
+**The simplest thing that works needs none of that.** The category's own page is already a same-origin HTML listing of its articles, so ~40 lines of vanilla JS in Custom HTML can fetch it and lift the links, with zero admin involvement. Three implementation notes that cost real debugging:
+
+1. **Listings live in different containers per category layout**, so use a fallback chain, not one selector: `.blog-article-cntr` (Blog), `.category-list` / `.article-block` (Default), `.article-container`, `.faq-content-list-container`, `.topic-toc-item` (Topic quick links).
+2. **In Default-layout categories the whole tile is one `<a>` wrapping heading and description**, so raw `textContent` yields `"Categories Categories are like folders…"`. Read an inner heading (`h3`, `.category-header`) or the link's `title` attribute instead.
+3. **`fetch(url, { credentials: 'same-origin' })` makes reader permissions work for free**: the reader only receives what they may see. That is a genuine advantage over an API key, which returns whatever the key is scoped to regardless of who is looking.
+
+Verified live across Blog and Default layouts and a 404 (where the column degrades to its heading and "View more…" button). Two graceful-degradation facts if you do go the snippet route: KO replaces a missing `{{snippet.x}}` with an **empty string**, so a column can ship as heading + button today and light up once the snippet exists; and a snippet's `<style>`/`<script>` loads after Custom CSS (§47).
+
+The process lesson lives in `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 ("Ask what the simplest thing that could work is"): the heavier reference implementation was recommended first because it was *KO's* implementation, and only re-examined when the customer pushed back.

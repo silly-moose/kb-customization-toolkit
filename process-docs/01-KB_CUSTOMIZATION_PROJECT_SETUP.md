@@ -177,6 +177,14 @@ A real case: the cited reference had a ~1060px centre column, which read as supp
 
 So when capturing a reference, write down **how** it achieves the effect: what's permanently visible vs. collapsible, whether the constraint lives on a container or per-element, what the page structure is. Then check whether the customer's KB shares those preconditions. If it doesn't, the reference tells you the *goal*, not the implementation. Record this next to the brand values in the project so a later session doesn't re-derive it from the pixel value.
 
+### Ask what the simplest thing that could work is BEFORE recommending a reference implementation
+
+The mirror-image trap: when a customer asks for a feature and you find how KnowledgeOwl's own KB (or another reference) implements it, that implementation is a data point, not the answer. Weigh it against the requirement before recommending it.
+
+A real case: "show recent articles from category X on the homepage." KO's own support site does this with an API macro inside a Library snippet, which needs an account-wide API key and admin work. That was researched carefully and reported as the answer, and the customer immediately pushed back that it "doesn't make sense." They were right. The category's own page is a same-origin HTML listing of its articles, so about 40 lines of vanilla JS in Custom HTML did the whole job with no admin involvement, and reader permissions came along for free because the fetch runs as the reader. The recommendation had anchored on replicating KO's implementation instead of solving the customer's problem, and only got re-examined when challenged.
+
+The habit: once you know what the reference does, ask "what is the simplest thing that satisfies the requirement, using what this KB already exposes?" If the reference is heavier than that (extra credentials, admin steps, another system), say so and lead with the lighter option. The KO-mechanics details of this particular case (which merge codes exist, why arguments are ignored, the per-layout container list) are in the quirks doc, §51.
+
 ### Colour math: contrast and "did this colour actually change?"
 
 Two colour questions come up on nearly every build, and both are judgment calls until you measure them. This helper answers both — drop it in a scratch file and import it.

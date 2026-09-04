@@ -405,6 +405,17 @@ Two markup facts worth knowing (`help/partials/toc.phtml`, `help/tableofcontents
 |----------|---------------|
 | `.ko-js-favorites` | Favorite/bookmark button |
 
+### Homepage Content Lists (`new-articles` / `pop-articles` / `up-articles`)
+
+The three stock list merge codes are KB-wide (no per-category variant; see quirks doc §51) and share these `ko-css.css` defaults:
+
+| Selector | Default |
+|----------|---------|
+| `.homepage-widgets` | `padding: 1em 0; margin: 2em 0` (seeded Custom CSS: `margin: 2em -15px`); `h3 { margin-top: 0 }`; self-clearing `::after` |
+| `ul.stat-list` | `font-size: 18px; line-height: 22px` (seeded: `14px`, `line-height: 1.3`, `margin-left: 1px`; `li { padding: 4px 0 }`) |
+| `.list-action` (the "View more…" row) | **`width: 40%`**; `border-top: 1px solid #cecece; font-style: italic` (seeded removes the border). The 40% breaks at four columns; quirks doc §50 |
+| `.badge-new`, `.badge-updated` | See Tags above |
+
 ---
 
 ## Category Pages
