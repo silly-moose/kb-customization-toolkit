@@ -157,6 +157,13 @@ On a fresh build the *rest* of the capture is largely moot too — scale it to w
 
 **Don't use this path to overwrite a KB whose custom code is worth keeping** — the `no-changes` folder exists to preserve the customer's real work as the rollback baseline. **But "has custom code" isn't automatically "worth keeping":** a sandbox carrying a trial-era or pre-sales first-pass theme that this build is meant to replace is a legitimate restart-from-stock case. Don't bulldoze it silently either — ask which the user wants (capture it as a real rollback point / defaults as baseline / defaults plus the old theme archived in `Reference/`). Options and trade-offs: `04-MINIMALIST_THEME_DEFAULTS.md`.
 
+**If the deployment target is a COPIED KB, two things did not come across with the copy.** Copying a KB inside KnowledgeOwl, and the Reset Theme > "use settings from another knowledge base" path, both carry the 12 code fields, the Style Settings colors and the logo. Neither carries:
+
+- **the homepage title**, which stays whatever the source KB had, so a sandbox copied from a migration workspace shows that workspace's name to anyone who looks; and
+- **Default Text**, which reverts to KO's stock strings ("articles", "Search", and the rest), silently undoing any wording the customer had agreed to.
+
+Add both to the CHANGES file's **Manual Steps in KnowledgeOwl** section whenever the target is a copied sandbox, and check them before post-deploy verification. Neither shows up in the 12 code files, so nothing else in this process catches them. The field-by-field way to confirm a copy is in `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §2, "Verifying a Reset Theme copy between two KBs."
+
 **One consequence you must handle if you take either defaults route:** `style-settings-colors.md` then holds the Minimalist defaults, not the customer's actual swatches — so it no longer describes the live KB. That silently breaks the Color-Change Checkpoint, which needs a real "Current value" or it produces a table of fiction. **Confirm the 8 live Style Settings swatches before deploying the first version** and record those as the current values. Nothing else prompts you to do this.
 
 ## Using a Pre-Built Template — Only on Explicit Request

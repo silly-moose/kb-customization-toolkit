@@ -23,6 +23,7 @@ Lookup reference for default selectors, property values, and CSS architecture in
 [Embedded Widget](#embedded-widget)
 
 **Lookups:**
+[Merge-Code Syntax](#merge-code-syntax-parentheses-and-double-quotes-only) (**the support KB's article table prints the bracket form, which does not work**) ·
 [Bootstrap 3 Classes](#bootstrap-3-classes-most-used-in-ko) ·
 [Responsive Breakpoints](#responsive-breakpoints) ·
 [Font Resources](#font-resources) (**KO self-hosts and ships only 300/400/700 — 500 and 600 silently render as 700**) ·
@@ -374,6 +375,18 @@ Two markup facts worth knowing (`help/partials/toc.phtml`, `help/tableofcontents
 
 ### Tags
 
+`[template("article-tags")]` prints an article's tags anywhere in the Article template, using the same markup search results use (`help/partials/tags.phtml`). It is absent from KO's merge-code helper menu and documented only inside the "Tags feature overview" support article, so it is easy to conclude it does not exist:
+
+```html
+<div class="ko-tags-container">
+  <span class="ko-tag-label">Tags</span>
+  <a class="ko-tag" href="/<root>/search?phrase=:onboarding">onboarding</a>
+  <a class="ko-tag" href="/<root>/search?phrase=:billing">billing</a>
+</div>
+```
+
+The label text comes from Default Text (`search:article-tags-label`), each chip links to a tag search, and tags flagged **internal** are filtered out before rendering. The whole container is omitted when the article has no visible tags, so style it defensively rather than reserving vertical space for it. Tags are also KO's only per-article metadata hook; see quirks doc §36.
+
 | Selector | What it styles |
 |----------|---------------|
 | `.ko-tags-container` | Article tags container |
@@ -416,6 +429,8 @@ The three stock list merge codes are KB-wide (no per-category variant; see quirk
 | `.list-action` (the "View more…" row) | **`width: 40%`**; `border-top: 1px solid #cecece; font-style: italic` (seeded removes the border). The 40% breaks at four columns; quirks doc §50 |
 | `.badge-new`, `.badge-updated` | See Tags above |
 
+**Each row is `li > div > a`, and the `<div>` carries `data-thumbnail`** when the article has a Thumbnail set (`help/partials/new-articles.phtml` and its siblings). The attribute is a JS hook only: nothing in KO's CSS or JS consumes it, and no `<img>` is emitted. It is the supported way to build a thumbnail card list without an API key, but it takes JS: CSS cannot read an attribute's value into `background-image`, so a few lines that read `el.dataset.thumbnail` and insert an `<img>` (or set an inline background) are the actual route. CSS alone can only select on presence, which is still useful for giving thumbnail-less rows a different layout. Six partials emit it: `new-articles`, `pop-articles`, `up-articles`, `favorite-articles`, `required-reading`, `recent-content`.
+
 ---
 
 ## Category Pages
@@ -429,6 +444,20 @@ The three stock list merge codes are KB-wide (no per-category variant; see quirk
 | `.article-container` | Article list item |
 | `.article-link` | Article title link |
 | `.faq-nav-wrapper` | FAQ-style category layout |
+
+### Category Image Fields: Icon, Thumbnail and Banner
+
+Categories carry **three** image fields, not just the Icon that KO's 2021 release note and most of the docs describe. Which ones the editor offers depends on the category **type** (`kb/partials/category-editor.phtml`):
+
+| Field | Offered on | Stored on | Where it renders |
+|---|---|---|---|
+| **Icon** (image file or Font Awesome glyph) | every type | the **category** (`cat-icon-*`) | `icon-cats` tiles print it as `img.cat-icon-img` or an `<i>`; see below |
+| **Thumbnail** | **Custom content** and **Topic** only | the category's backing **article** (`art-thumbnail-url`) | `[article("thumbnail")]`; also emitted as `data-thumbnail` on homepage list rows (see Homepage Content Lists above) |
+| **Banner** | **Custom content** and **Topic** only | the category's backing **article** (`art-banner-url`) | `[article("banner")]` in the Article template |
+
+Because Thumbnail and Banner write to the backing article rather than to the category, **`[article("banner")]` in the Article template does print a category's banner on its landing page** for those two types. That is what makes a category hero possible at all. On a Default category the fields are not offered and the merge code prints nothing.
+
+The trap that pairs with this: a Custom content category renders through the Article template with an **empty** `.hg-article-body` and no list of its articles, so a banner-per-category theme produces good-looking empty landings. Quirks doc §54 has the routing and the three ways out. Decide category types before designing category landings.
 
 ### Homepage Category Icons (`icon-cats` template)
 
@@ -475,6 +504,22 @@ The **legacy** widget's outer chrome (container, modal, backdrop) is styled by C
 | `.hg-widget-articles` | Article list inside widget (`widgetiframe.css`) |
 | `#hg-widget-article-iframe` | Article iframe (min-height: 425px) |
 | `#hg-widget-contact-form` | Contact form (min-height: 450px) |
+
+---
+
+## Merge-Code Syntax: Parentheses and Double Quotes Only
+
+Every merge-code family is matched by a regex in `KbRenderer` that accepts **`(` `"` ... `"` `)`** and nothing else, e.g.
+
+```php
+public $articleRegex = '/(\[article\((\"|&quot;)[^"]*(\"|&quot;)\)\])/';
+```
+
+So the only valid forms are `[article("banner")]`, `[template("icon-cats")]`, `[reader("groups")]`, `[translation("search:article-tags-label")]`. A code written any other way is not an error: it simply never matches, and **SiteRenderer prints the literal text to every page** that includes that field.
+
+**Watch for this when copying from the support KB.** Its *Article merge codes* table renders the two image codes in the bracket form, `[article["thumbnail"]]` and `[article["banner"]]`, which is wrong. Copying the table verbatim printed that literal string on every article and category page after a deploy. The working form is `[article("thumbnail")]` / `[article("banner")]` (`themer/html-pane.phtml` option values; `KbRenderer::$articleMergeCodes` maps `'banner' => 'artBanner'`).
+
+Related: single quotes do not work either, arguments are only read by `icon-cats` (quirks doc §37), and merge codes are executed **everywhere**, including inside CSS comments (quirks doc §34).
 
 ---
 

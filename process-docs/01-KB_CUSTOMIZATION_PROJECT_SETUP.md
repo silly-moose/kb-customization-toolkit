@@ -28,6 +28,7 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 - It reads the **default (`en`) language only**, so on a multilingual KB a snippet whose content lives under another language comes out as an empty file. The tool warns about every empty snippet and sets `body_empty` in the manifest; check those in the KO editor before treating the capture as complete.
 - It **cannot tell saved custom code from KO's default template**, because the Style editor renders the default into any section with nothing saved. Each captured file says so in its header. If you need the "was this field empty at project start?" record described below, confirm it yourself and leave the placeholder comment in that file.
 - It covers snippets, not article bodies. Step 2 of the audit below is still manual.
+- **Every captured file gets a header comment prepended**, so a byte-compare against the previous version folder reports all 12 files as changed even when nothing moved. Strip the headers before writing a `CHANGES_FROM_v[last].md` drift record, or diff after stripping. They also must not be deployed: strip them from any file you copy forward into a version folder.
 
 The bookmarklet reads the KO admin UI, so a KO markup change can make it return warnings or empty fields. A warning means the capture is incomplete; fall back to hand-copying for that field rather than shipping an incomplete baseline.
 
@@ -65,6 +66,42 @@ So finding stock Custom CSS doesn't mean the KB is unstyled. Tell Claude what tu
 **About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box (in the **Homepage content** card) on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty, and a **brand-new KB always does**; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
 
 **Check it once, then record it.** Claude settles this during the first session and writes the answer (`empty` or `in use`) to the `# Baseline` section of `.claude/rules/project.md`. Once it's recorded as `empty`, the file is skipped in every later current-state snapshot and Claude won't ask about it again — so this is a one-time question, not a recurring one. (Older projects created before the `# Baseline` section existed get it appended automatically at the start of their next session.)
+
+### Reading the Style editor's fields directly (a supplement, not a replacement)
+
+From any signed-in `app.knowledgeowl.com` tab, the Style editor and its neighbors are plain server-rendered forms, so Claude can read them with same-origin `fetch` calls instead of the user pasting each field. This does **not** replace the `ko-code-capture` bookmarklet, which already produces a correctly-named zip in one click and is the documented path above. It exists for the two things the bookmarklet does not do:
+
+1. **Capturing what the 12 fields leave out**: Default Text, the homepage title, the legacy Custom content field.
+2. **Diffing two KBs field by field**, which is the only practical way to verify a Reset Theme copy (next subsection).
+
+| Endpoint | What it yields |
+|---|---|
+| `/kb/style/id/<projectID>` | All 12 code fields as form controls: `textarea[name=custom-css]`, plus `body-html`, `nav-html`, `article-html`, `articleversion-html`, `homepage-html`, `login-html`, `readersub-html`, `error404-html`, `noaccess-html`, `rcol-html`, and `#custom-head`. Also `#js-theme-json`, which carries the 8 Style Settings colors, the logo file id, the favicon and the layout. |
+| `/kb/home-page/id/<projectID>` | `#title` (the homepage title) and `#content` (the legacy Custom content field) |
+| `/tools/multilingual/id/<projectID>/language/en/section/<section>` | Default Text for that section, as a table with one `user-translation` cell per string |
+| `/library/snippets` and `/library/snippet-edit/.../sid/<id>` | The snippet library and each snippet's body |
+| Reader-side `document.documentElement.outerHTML` | The full-page snapshots |
+
+Verified against a `ko-code-capture` zip on one project: identical for all 12 fields. **The same rules still apply** either way: the user still supplies screenshots, and the folder still gets locked read-only only once everything is in place.
+
+### Verifying a Reset Theme copy between two KBs
+
+Hash the 12 fields and the theme JSON from both KBs' `/kb/style` pages and compare. This is how to confirm that **Customize > Style > Reset Theme > "use settings from another knowledge base"** actually did what you expect, which matters whenever a sandbox is seeded from a source KB.
+
+What that copy **does** carry: the 12 code fields, the Style Settings colors, and the logo.
+
+What it **does not** carry, and therefore has to be redone by hand in the target KB:
+
+- **Default Text** (every string stays at KO's stock wording)
+- **the homepage title** and the legacy **Custom content** field
+- **the contact-form on/off setting**
+- articles and categories (content is untouched in both directions)
+
+Snippets are a separate story: the copy does not create or delete them, so whatever the target KB already had is what it still has. If the theme depends on a snippet, check for it explicitly.
+
+### Uploading files to the KB's File Library
+
+**Have the human drag the files in.** The endpoint itself is unremarkable (`POST /library/chunked-upload?id=<projectID>` with `csrf-token`, `name` and `file`), but it is not reachable from Claude's side in practice: the browser pane blocks requests from `app.knowledgeowl.com` to a local http server (Private Network Access), and passing file bytes as base64 through a tool call only works for trivially small files. Once the user has uploaded them, look the URLs up with `/library/ajax-file-search` rather than asking them to copy each one.
 
 ### Record Current Style Settings Colors
 

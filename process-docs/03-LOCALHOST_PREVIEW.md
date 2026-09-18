@@ -86,6 +86,15 @@ Everything else loads for free: the snapshot's stylesheet `<link>`s are **absolu
 
 > **Never reuse a post-JS capture as the INPUT for verifying a theme script.** An `outerHTML` capture is the **already-transformed** DOM. If a theme script rewrites article bodies, the capture shows its *output* — enhanced-flags, moved nodes, injected UI — so feeding it back in makes the script correctly skip or mis-parse, and the test silently tests nothing while looking like it passed. Instead extract only the page **skeleton** from the capture (body classes plus the wrapper chain — e.g. `.hg-article` > tags-span + `.hg-article-header` + `.hg-article-body` > root), drop the **raw** article body inside it, then inject the new custom code. For author-only UI, stub a `.ko-app-edit` element (quirks §32); for a merge-code bridge, hand-write the *rendered* span rather than the merge code.
 
+**Dry-running a script that rewrites KO's own markup, with no server at all.** When a theme script restructures markup KO generates (a reader-signup modal, a login form, a native list), you can test it against the real thing in about two minutes:
+
+1. `fetch` the page with `credentials: 'omit'` so you get the logged-out markup.
+2. Parse the response with `DOMParser` into a detached document.
+3. Run the script's function against that document.
+4. Serialize the resulting form with `new FormData(form)` and confirm the new controls still post under the **original field names**.
+
+Step 4 is the one that earns its keep: rewriting a KO form is exactly where a renamed or dropped input passes visual inspection and then fails on submit. This is the counterpart to the warning above, not a contradiction of it. The rule there is about not feeding an already-transformed capture back into a script; here the input is a **fresh fetch of KO's untransformed output**, which is what makes it a valid test. It caught nothing on the build that produced this note, and it still removed a deploy-and-see round trip.
+
 *(Mapping which selectors to override on KO's secondary reader pages used to be its own research task; that map is now documented directly in `knowledgeowl-css-quirks.md` §39.)*
 
 ### The same idea for the article EDITOR

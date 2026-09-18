@@ -44,7 +44,9 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§31](#31-hiding-article-chrome-on-full-bleed-custom-pages--use-descendant-selectors) hiding article chrome ·
 [§41](#41-category-landing-pages-native-markup-and-the-double-body-class) category landing markup + double body class ·
 [§49](#49-vertically-centring-things-in-the-minimalist-top-bar--min-height-on-the-brand-and-leave-the-toggle-alone) centring in the top bar (**`min-height`, not `height`**) ·
-[§50](#50-homepage-widget-lists-list-action-is-hard-coded-to-width-40) homepage widget `.list-action` is `width: 40%`
+[§50](#50-homepage-widget-lists-list-action-is-hard-coded-to-width-40) homepage widget `.list-action` is `width: 40%` ·
+[§53](#53-login-restricted-access-and-404-each-swap-a-different-part-of-the-layout) **login / restricted-access / 404 layout matrix** ·
+[§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) custom-content categories render EMPTY
 
 **Typography, lists & content elements**
 [§4](#4-froala-image-classes-and-no-border) Froala image classes ·
@@ -56,14 +58,16 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§30](#30-article-header-and-body-sit-on-different-font-size-bases-em-doesnt-transfer) header vs body font base (`em` doesn't transfer) ·
 [§42](#42-every-h2-inside-faq-nav-content-is-hidden--by-a-descendant-selector) `<h2>` hidden in `.faq-nav-content` ·
 [§43](#43-breadcrumbs-are-ancestors-only--and-they-already-render-separators) breadcrumbs: ancestors-only + real separators ·
-[§44](#44-hg-project-name-is-display-none--replacing-custom-css-can-erase-the-kbs-name) `.hg-project-name` hidden by default
+[§44](#44-hg-project-name-is-display-none--replacing-custom-css-can-erase-the-kbs-name) `.hg-project-name` hidden by default ·
+[§52](#52-rem-is-10px-not-16px) **`rem` is 10px, not 16px**
 
 **Merge codes, templates & content hooks**
 [§34](#34-siterenderer-executes-merge-codes-everywhere--including-inside-css-comments) merge codes execute **inside CSS comments** ·
 [§36](#36-ko-has-no-article-custom-fields--tags-are-the-per-article-metadata-hook) no article custom fields — tags are the hook ·
 [§37](#37-templateicon-catsmaxn-silently-drops-categories-past-the-nth) `icon-cats,max=N` silently drops categories ·
 [§40](#40-the-sidebar-toc-contains-the-full-article-tree-a-no-auth-all-articles-source) sidebar TOC holds the full article tree (**conditional: verify per KB**) ·
-[§51](#51-recent-articles-from-category-x-on-the-homepage-no-merge-code-exists-and-the-simplest-fix-is-a-same-origin-fetch) recent articles from a category on the homepage (**no merge code; same-origin fetch**)
+[§51](#51-recent-articles-from-category-x-on-the-homepage-no-merge-code-exists-and-the-simplest-fix-is-a-same-origin-fetch) recent articles from a category on the homepage (**no merge code; same-origin fetch**) ·
+[§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -324,9 +328,9 @@ Different page types get different high-level classes applied to the `body` elem
 | `.hg-login-page` | Reader login pages |
 | `.hg-widget-page` | **All three** article-list pages — new / updated / popular share one class |
 | `.hg-glossary-page` | Glossary |
-| `.ko-error-page` | 404 — note the **`ko-`** prefix, not `hg-` |
+| `.ko-error-page` | 404. Note the **`ko-`** prefix, not `hg-`. The Top Navigation HTML **does** render here; see §53 |
 | `.ko-manage-subscriptions-page` | Manage reader subscriptions — also **`ko-`** prefixed |
-| *(none)* | **Restricted-access ("no access") page has NO distinct page class** — it renders via the login body path, so scope it with `.hg-site-login` |
+| *(none)* | **Restricted-access ("no access") page has NO distinct page class.** It renders via the login body path, so scope it with `.hg-site-login` or `.login-container`; full matrix in §53 |
 
 The body class is assembled as `hg-site [theme] [page-name] [layout] [toc]` (`site-wrapper.phtml`), with `page-name` coming from `HelpController::__pageName`. **The prefix is inconsistent** — most pages are `hg-`, but 404 and manage-subscriptions are `ko-`, and the restricted-access page gets none at all. Don't guess a class from the page's name; check this table.
 
@@ -346,6 +350,8 @@ body.hg-home-page .some-element { ... }
 **Gotcha — the theme class and the page class are on the SAME element:** `.hg-minimalist-theme` (the theme class) and the page-type classes (`.hg-home-page`, `.hg-category-page`, etc.) are all applied to the same `<body>`. So a *descendant* selector with a space between them (`.hg-minimalist-theme .hg-home-page …`) does **not** match — there's no ancestor/descendant relationship. Use a **compound** selector with no space: `.hg-minimalist-theme.hg-home-page …`. This fails silently — the rule simply never applies, with no error — so homepage/category-scoped overrides written with a space appear to "do nothing."
 
 **KO's own seeded template makes this mistake five times**, which is a useful warning about copying its patterns. In `custom-css.css` the rules at lines 99 (`.hg-minimalist-theme .hg-category-page .hg-article-body`), 226 (`.hg-minimalist-theme .hg-category-page .category-list .col-md-6.col-lg-4`), 358 (`.hg-minimalist-theme .hg-home-page .category-header`), and the 576px / 992px media-query rules at 878 and 895 (`.hg-minimalist-theme .hg-home-page .category-list > div`) are all written with the space, and no page class ever appears on anything but `<body>` (verified against every reader template). They have never applied on any KB. The correct compound form does appear elsewhere in the same file (`.hg-minimalist-theme.hg-3column-layout:not(.hg-home-page) .ko-content-cntr`), so the template is not a reliable model for this.
+
+**Same trap, `body` edition: `.hg-minimalist-theme body { … }` never matches either.** The theme class is *on* `<body>` (`site-wrapper.phtml`), so the descendant form has no element left to select and the rule is dead. This one is easy to write without thinking, because "set the theme's body color" reads naturally as `.hg-minimalist-theme body`. Use the compound `body.hg-minimalist-theme { … }`, or just `.hg-minimalist-theme`. A shipped v10 carried a brand body color written the dead way for two months while the text stayed on KO's stock `#34495e`.
 
 ## 16. Z-Index Layering Gaps
 
@@ -1023,3 +1029,64 @@ A common customer ask with a non-obvious answer. Every natural assumption fails,
 Verified live across Blog and Default layouts and a 404 (where the column degrades to its heading and "View more…" button). Two graceful-degradation facts if you do go the snippet route: KO replaces a missing `{{snippet.x}}` with an **empty string**, so a column can ship as heading + button today and light up once the snippet exists; and a snippet's `<style>`/`<script>` loads after Custom CSS (§47).
 
 The process lesson lives in `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §4 ("Ask what the simplest thing that could work is"): the heavier reference implementation was recommended first because it was *KO's* implementation, and only re-examined when the customer pushed back.
+
+## 52. `rem` Is 10px, Not 16px
+
+Bootstrap 3 sets `html { font-size: 10px }` (`public/flatui/dist/css/vendor/bootstrap.min.css`, first in the `ko` bundle's concatenation order) and nothing later in the stack restores the browser default. Flat UI and `ko-css.css` both set `body` font sizes, which does not touch the root. So on every KO reader page **`1rem` computes to 10px**.
+
+Every `rem` you write in Custom CSS therefore lands at 62.5% of what it looks like:
+
+| You write | You get |
+|---|---|
+| `1rem` | 10px |
+| `1.08rem` | 10.8px |
+| `clamp(1.05rem, 1.6vw, 1.25rem)` | caps at 12.5px |
+
+It fails quietly. The text still renders, it is just far too small, so a tile label at `1.08rem` reads as a design miss rather than a unit bug. A v10 build shipped that way.
+
+**Write px.** If you want `rem` anyway (say, for a customer who will scale type later), multiply the 16px-based number by 1.6: a 17px target is `1.7rem`, not `1.0625rem`. `em` is unaffected, since it resolves against the element's own inherited font-size; the separate 16px-body / 18px-header split is §30.
+
+**One-line check, worth running once per KB** during localhost preview or on the live page, because this comes from a platform bundle and a future Bootstrap upgrade would change it:
+
+```js
+getComputedStyle(document.documentElement).fontSize   // "10px" on a KO reader page
+```
+
+## 53. Login, Restricted Access and 404 Each Swap a Different Part of the Layout
+
+All three render inside the normal `site-wrapper.phtml` shell, so each gets the `<head>`, the theme class and the footer JS. What differs is which of the 12 fields supplies the body, whether the Top Navigation HTML renders at all, and what page class lands on `<body>`. `KbRenderer::userBody()` and `navContents()` are the authority; both branch on the same `login` / `errorPage` / `readerSubscriptions` flags.
+
+| Page | URL | Body comes from | Top Navigation HTML | `<body>` page class |
+|---|---|---|---|---|
+| Reader login | `/<root>/login` | **Login HTML** (field 6) | suppressed (empty string) | `hg-login-page` |
+| Manage reader subscriptions | `/<root>/manage-subscriptions` | **Manage Reader Subs HTML** (field 7) | renders | `ko-manage-subscriptions-page` |
+| Restricted access | `/<root>/noaccess` | **Login HTML** (field 6), with the **Restricted Access HTML** (field 9) printed into it by `[template("login-page")]` | suppressed | **none** |
+| 404 | any bad URL | fixed `error-body` themer template, with the **404 HTML** (field 8) printed into it by `[template("login-page")]` | **renders** | `ko-error-page` |
+
+Three consequences, each of which has cost a deploy:
+
+1. **The Restricted Access page gets no page class at all.** `HelpController::noaccessAction()` never assigns `__pageName`. So any rule scoped `body.hg-login-page …` misses it, and a freshly restyled login page leaves this one looking stock even though it is sitting inside the very `.container.login-container` your Login HTML defines. Either scope to `.login-container` / `.hg-site-login` (the stock Restricted Access template supplies the latter), or add the class yourself with a one-line script in the Restricted Access HTML.
+2. **The 404 page does show the Top Navigation HTML.** The support article says Body and Top Navigation HTML do not display there. Body is right, nav is not: `navContents()` returns an empty string only when `login && !errorPage && !readerSubscriptions`, and the 404 route sets `errorPage`. Expect the nav to be present and style it. There is no footer and no TOC.
+3. **`/<root>/noaccess` renders for anyone, logged in or not.** That makes it the cheapest way to test restricted-access styling; you do not need a reader account that lacks permissions. Add it to the post-deploy pass whenever the login page is restyled, since the two share a body field and diverge on everything else.
+
+## 54. Custom-Content and Topic Categories Render Through the ARTICLE Template, With an Empty Body
+
+A category's **type** decides which template renders its landing page, and two of the types emit no list of the category's articles at all.
+
+`HelpController` routes on `$category->type`: `blog` forwards to `blog-category`, `topic` to the topic templates (or the ghost-article path), anything that is **not** `content` forwards to `faq-navigation` (the §41 markup), and `content` falls through to the **article** render path with the category's backing article in scope.
+
+So on a **Custom content** category:
+
+- the page renders the **Article HTML** template (field 3), not a category template;
+- `.hg-article-body` holds whatever the author typed into the category's content box, which on a new category is **nothing**;
+- no article list is emitted anywhere in the main column. The category's articles appear only in the left TOC.
+
+The failure mode is a theme that gives categories a banner or hero through the Article template: every category landing comes out as a correct-looking banner sitting over an empty page. Nothing in the theme is wrong, and nothing in the theme can fix it, because the category type is the cause. Check the types before promising category landings.
+
+Three ways out, cheapest first:
+
+1. **Change the category type** to Default (or Blog / Topic) and get KO's native article list.
+2. **Put a list merge code inside the category's custom content**, which keeps the type and fills the body.
+3. **Render a list from the theme**, e.g. the same-origin fetch in §51, when the layout has to be bespoke.
+
+**Related, and useful:** Custom content and Topic are exactly the two types whose editor exposes **Thumbnail** and **Banner** fields (`kb/partials/category-editor.phtml` gates both on `type == 'content' || type == 'topic'`). Both write to the category's backing **article** (`art-thumbnail-url` / `art-banner-url`), which is why `[article("banner")]` in the Article template really does print a category's banner on its landing page. On a Default category the fields are not offered and the merge code prints nothing.
