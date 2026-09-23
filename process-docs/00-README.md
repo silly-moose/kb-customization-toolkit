@@ -18,28 +18,17 @@ Use this when you're starting work on a customer's knowledge base for the first 
 2. **Rename** the copy to the customer's name (e.g., `Acme`)
 3. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
 4. **Fill in** `.claude/rules/project.md` with the customer name and KB
-5. **Paste** the customer's current code into each file in the no-changes folder (one file per KnowledgeOwl Customize > Style section — plus the legacy `homepage-custom-content.html` if the KB has anything in Customize > Homepage > Homepage content > Custom content)
-   - **KnowledgeOwl teammates: skip the pasting and run the `ko-code-capture` bookmarklet** from the KB's admin page. It zips all 12 fields under these exact filenames, plus the legacy homepage field and every snippet with a `manifest.json` that flags `<style>` / `<script>` blocks. Unzip into the no-changes folder. Instructions live in Silly Moose under Engineering > Dev. It reads the default language only and cannot tell custom code from a KO default, so see `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §2 for the checks that remain manual
-   - **Stock Minimalist KB?** If the KB is uncustomized (still on the default Minimalist theme), skip the hand-copying — ask Claude to drop in the documented Minimalist defaults as the baseline instead (see `04-MINIMALIST_THEME_DEFAULTS.md`)
-   - **The legacy file is a one-time question.** Claude confirms whether that field is in use during the first session and records the answer in `.claude/rules/project.md` under `# Baseline` — so it won't come up again in later sessions (and is skipped entirely on a new KB, where it's always empty)
-   - **Also audit content-level CSS — Library > Snippets *and* a rendered article or two.** These 12 fields aren't the whole picture: a `<style>` block inside page *content* loads **after** Custom CSS, so it can override the theme wherever it appears, and it won't show up in this capture. Snippets alone aren't enough — authors also paste CSS straight into article bodies. Finding stock Custom CSS therefore doesn't mean the KB is unstyled. Tell Claude what turns up; it gets recorded in `# Baseline` so it's a known constraint instead of a post-deploy surprise
-6. **Add screenshots** of the customer's current KB to the `Screenshots/` folder inside the no-changes folder
-7. **Capture HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html`
-8. **Record the current Style Settings colors** (Customize > Style > Style Settings > Colors) — either screenshot each color swatch or paste the hex codes into `style-settings-colors.md` in the no-changes folder
-9. **Drop reference materials** (e.g., screenshots, mockups, emails, Asana tasks, assets) into the `Reference/` folder
-10. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder — Claude can read the HTML/CSS to match their brand exactly
+5. **Drop reference materials** (e.g., screenshots, mockups, emails, Asana tasks, assets) into the `Reference/` folder
+6. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder. Claude can read the HTML/CSS to match their brand exactly
+7. **Open Claude Code in the customer folder and paste:**
+   ```
+   Capture the baseline for [customer name]'s KB at [KB URL], then review Reference/ and let me know when you're ready to start.
+   ```
+8. **Sign in to KnowledgeOwl when Claude asks**, in the browser pane inside the Claude app. KO staff: use Super Admin "log in as" a user with Style admin rights, because every save is credited to whoever is signed in. Claude never types credentials.
 
-For the full walkthrough — including the file-to-KnowledgeOwl mapping table, the HTML snapshot steps, the marketing site download process, and a folder structure diagram — see `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` in the template repo (or ask Claude to fetch it).
+Claude then captures the baseline itself: all 12 Customize > Style fields, the legacy homepage field, the Style Settings and HTML snapshots of the homepage and an article, each checked against the live KB. It also audits content-level CSS (Library > Snippets *and* a rendered article or two, because a `<style>` block in page content loads after Custom CSS and can override the theme), records the one-time facts under `# Baseline` in `.claude/rules/project.md`, asks once whether you want to add screenshots, and locks the folder. How it works: `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
 
-**Once setup is complete**, open Claude Code in the customer folder and paste:
-```
-Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
-```
-
-**Or let Claude walk you through setup.** Open Claude Code in the customer folder and paste:
-```
-I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me through the setup process.
-```
+**No built-in browser?** In a terminal or IDE session, use the manual path: KnowledgeOwl teammates run the `ko-code-capture` bookmarklet (Silly Moose > Engineering > Dev) and unzip it into the no-changes folder; anyone else pastes each field into its file. `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §2 has the file-to-KnowledgeOwl mapping table, the DevTools snapshot steps and a folder structure diagram.
 
 ---
 
@@ -47,24 +36,15 @@ I'm starting a new project for [customer name]. Their KB is at [KB URL]. Walk me
 
 Use this when you're resuming work on a customer's knowledge base that you've worked on before.
 
-1. **Open the customer's existing project folder** — don't create a new one
-2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date) if more than one day has passed since the last session (or sooner if you know changes were made directly in KnowledgeOwl)
-3. **Pull fresh code** from the customer's live KB (copy from each Customize > Style section) into the `current-state` folder
-4. **Add fresh screenshots** of the customer's current KB to the `Screenshots/` folder inside the `current-state` folder
-5. **Capture fresh HTML snapshots** of the homepage and an article via Chrome DevTools and paste them into `full-html-snapshot-homepage.html` and `full-html-snapshot-article.html` in the `current-state` folder
-6. **Update the `Reference/` folder** — remove outdated materials and add any new ones (e.g., screenshots, mockups, emails, Asana tasks, assets)
+1. **Open the customer's existing project folder.** Don't create a new one
+2. **Update the `Reference/` folder**: remove outdated materials and add any new ones (e.g., screenshots, mockups, emails, Asana tasks, assets)
+3. **Open Claude Code in the folder and paste:**
+   ```
+   I want to resume work on [customer name]. Check the live KB for changes, then let me know when you're ready to start.
+   ```
+4. **Sign in to KnowledgeOwl in the browser pane if Claude asks**
 
-For the full walkthrough — including how Claude documents what changed since the last version, folder locking, and why refreshing supporting files matters — see the "Returning to an Existing Project After a Gap" section in `02-VERSION_CONTROL_PROCESS.md` (or ask Claude to fetch it).
-
-**Once setup is complete**, open Claude Code in the customer folder and paste:
-```
-Review the current-state folder and the reference materials in Reference/. Then let me know when you're ready to start.
-```
-
-**Or let Claude walk you through setup.** Open Claude Code in the customer folder and paste:
-```
-I want to resume work on [customer name]. Walk me through the setup process so we can get started.
-```
+If more than a day has passed, Claude reads the live KB and compares it with the project's folders. If nothing changed outside the project, it says so and you carry on. If something did, it captures a `YYYY.MM.DD-current-state` folder, writes down what drifted, locks it, and builds the next version from it. Screenshots are optional; Claude asks once. The full walkthrough is the "Returning to an Existing Project After a Gap" section in `02-VERSION_CONTROL_PROCESS.md`; without the built-in browser you paste the fields as before (05's manual path).
 
 ---
 
@@ -74,8 +54,8 @@ I want to resume work on [customer name]. Walk me through the setup process so w
 2. **Tell Claude to review** the latest version folder and any relevant reference materials
 3. **Describe the changes you need** — Claude writes the HTML/CSS/JS for you
 4. **Claude creates versioned folders** as it works. Each set of substantial changes gets a new folder like `2026.02.06-v1`, `2026.02.06-v2`, etc., copied from the previous version
-5. **Each version folder includes a `CHANGES_FROM_*.md`** file documenting what changed, which files were modified, and deployment instructions
-6. **You deploy** by copying the updated file contents into the corresponding KnowledgeOwl fields — either to a sandbox for testing first, or directly to the live KB
+5. **Each version folder includes a `CHANGES_FROM_*.md`** file documenting what changed, which files were modified, and what it deploys
+6. **Claude deploys, after your yes.** It lists exactly what it will save to which KB (a sandbox first, or the live KB), waits for you to say yes, saves through the browser pane, checks that what KO stored matches the files, and records the save in `DEPLOYMENTS.md`. You upload any images (logo, favicon, hero), because the pane has no file picker. If Claude's click on Save is refused, you click Save in the pane; nobody pastes code
 
 ---
 
@@ -83,7 +63,7 @@ I want to resume work on [customer name]. Walk me through the setup process so w
 
 Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` is a small bootstrap file that tells Claude to fetch the latest process rules (`CLAUDE-RULES.md`) from the GitHub repo. This ensures you always have the latest rules without any manual copying. `.claude/rules/project.md` contains customer-specific settings like the deployment target — if it's already set, Claude uses it automatically; otherwise it asks.
 
-Claude also **syncs template files** at the start of each session — it fetches the latest KnowledgeOwl CSS reference docs from the repo and creates any missing project files (like `.claude/rules/project.md`) from the template. This means older customer projects automatically pick up new reference files without any manual copying.
+Claude also **syncs template files** at the start of each session — it fetches the latest KnowledgeOwl CSS reference docs and the capture-and-deploy helpers (`.claude/kb-io/`) from the repo and creates any missing project files (like `.claude/rules/project.md`) from the template. This means older customer projects automatically pick up new reference files without any manual copying.
 
 Use the prompt templates from the Quick Setup checklists above to kick off each session.
 
@@ -119,7 +99,7 @@ Fetch the latest CLAUDE-RULES.md from GitHub, save it locally, and follow the up
 
 ## Version Control, Deployment, and Project Closeout
 
-See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deployment instructions, rollback procedures, and project closeout checklist. Ask Claude to fetch it, or find it in the template repo. Claude handles versioning and deployment instructions automatically during sessions.
+See `02-VERSION_CONTROL_PROCESS.md` for the full version control process, deployment, rollback procedures, and project closeout checklist, and `05-BROWSER_CAPTURE_AND_DEPLOY.md` for how Claude captures and deploys. Ask Claude to fetch them, or find them in the template repo. Claude handles versioning and deploys during sessions.
 
 ---
 
@@ -148,8 +128,9 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 |------|---------|
 | `CLAUDE.md` | Auto-read by Claude Code at session start — bootstrap file that fetches the latest `CLAUDE-RULES.md` from GitHub |
 | `CLAUDE-RULES.md` | Process rules fetched fresh from GitHub each session (local copy serves as fallback if fetch fails) |
-| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, one-time baseline facts, project notes) |
+| `.claude/rules/project.md` | Auto-read by Claude Code at session start — customer-specific settings (deployment target, deploy targets, one-time baseline facts, project notes) |
 | `.claude/launch.json` | Dev-server config for the optional localhost preview (see `03-LOCALHOST_PREVIEW.md`) |
+| `DEPLOYMENTS.md` | One row per save and drift check: which version reached which KB, when, and whether the read-back passed. Claude writes it |
 | `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (e.g., screenshots, mockups, emails, Asana tasks, assets) |
 | `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, screenshots folder, `style-settings-colors.md`, and CHANGES template |
 
@@ -162,6 +143,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `02-VERSION_CONTROL_PROCESS.md` | Full version control process with examples and rollback procedures |
 | `03-LOCALHOST_PREVIEW.md` | Optional localhost preview for faster CSS iteration |
 | `04-MINIMALIST_THEME_DEFAULTS.md` | The Minimalist theme's stock default code (Custom CSS/HTML/`<head>`) + how to copy it into a project's `no-changes` folder as a baseline |
+| `05-BROWSER_CAPTURE_AND_DEPLOY.md` | How Claude captures a KB and deploys versions through the built-in browser: sign-in, the yes before each save, the save gate and read-back, uploads, and the manual path. The helpers it uses are in `kb-io/` |
 | `editor-simulation/` | A ready-made harness that reproduces the article editor's CSS cascade locally, so the mandatory Editor Readability Guard can be verified **before** deploying instead of eyeballed after. Start at its `README.md`. |
 | `theme-templates/` | Reusable, brand-swappable theme templates (each a subfolder) + how to apply one in a build and how to build new ones. Start at `theme-templates/README.md`. **Opt-in:** a build starts from a template only if you ask — otherwise Claude designs bespoke. |
 
@@ -171,8 +153,8 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 
 Before getting started, make sure you have:
 
-- **Visual Studio Code (VS Code), or a comparable code editor** — for opening code files and copying updated code into customers' KBs. Download VS Code at https://code.visualstudio.com
-- **Claude desktop app** — Claude Code runs inside the desktop app (the web version at claude.ai isn't optimal for this workflow). Download at https://claude.ai/download
+- **Claude desktop app**: Claude Code runs inside the desktop app, and its built-in browser pane is what lets Claude capture and deploy KB code for you. In a terminal or IDE session there is no pane, so you fall back to pasting (05's manual path). Download at https://claude.ai/download
+- **Optional: Visual Studio Code (VS Code), or a comparable code editor**, for reading the project's files. You no longer copy code into KB fields by hand. Download VS Code at https://code.visualstudio.com
 
 ---
 
@@ -233,7 +215,7 @@ git pull
 
 - **Screenshots matter.** Claude can read images, so before/after screenshots help it understand what the KB looks like and what needs to change. Use full-page screenshots when possible (in Chrome: open DevTools, press **Cmd+Shift+P** / **Ctrl+Shift+P**, type `screenshot`, select **Capture full size screenshot**) — they capture content below the fold that regular screenshots miss.
 - **The HTML snapshot gives Claude context** about the full rendered page structure, including elements generated by KnowledgeOwl's templates that aren't visible in the Custom HTML fields alone.
-- **If a customer has no existing custom code**, leave the placeholder comments in the no-changes files as-is. They serve as a record that the fields were empty at project start.
+- **Placeholders mean "not captured".** When Claude captures a KB, an empty field becomes an empty file and every other field holds exactly what KO has. A file that still contains only its template comment ("Paste customer's ...") was never captured, and Claude never deploys it.
 
 ### Working with Claude
 

@@ -1,6 +1,6 @@
 # Editor Simulation — check the Editor Readability Guard before you deploy
 
-The **Editor Readability Guard** is mandatory in every build (`project-template/CLAUDE-RULES.md`), but until now the only way to confirm it actually worked was to deploy and look at a real article in the editor. This harness replaces that with a measurement you can run **before** anything is pasted into KnowledgeOwl.
+The **Editor Readability Guard** is mandatory in every build (`project-template/CLAUDE-RULES.md`), but until now the only way to confirm it actually worked was to deploy and look at a real article in the editor. This harness replaces that with a measurement you can run **before** anything is deployed to KnowledgeOwl.
 
 ## Why it works
 

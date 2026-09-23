@@ -76,45 +76,44 @@ Since you copied the entire previous version folder (step 1), a CHANGES file alr
 - **First version (v1):** The file is already named `CHANGES_FROM_no-changes.md` — keep that name, since v1 is based on the no-changes folder
 - **Subsequent versions:** Rename the file to `CHANGES_FROM_v[previous].md` (e.g., in the v3 folder, rename it to `CHANGES_FROM_v2.md`)
 
-Clear out the previous version's content and update the title, Date, and Based On fields. Then fill in each section. See the template for the required sections: summary, files modified, color palette, visible changes, manual steps, and deployment instructions.
+Clear out the previous version's content and update the title, Date, and Based On fields. Then fill in each section. See the template for the required sections: summary, files modified, color palette, visible changes, Style Settings, manual steps, and files to deploy.
 
-### 4. Provide Deployment Instructions
+### 4. Deploy
 
 In the CHANGES file, always specify:
-- Exactly which file(s) need to be deployed
-- Exactly where to deploy them in KnowledgeOwl
+- Exactly which file(s) the version deploys, and where each goes in KnowledgeOwl
+- Any Style Settings it changes (the table below); set the same values in the version's `style-settings-colors.md`, which is what the deploy sets
 - What changed in this version
 - Expected results after deployment
-- Where to deploy (sandbox or live KB, based on the deployment target for this project)
+- Where it deploys (sandbox or live KB, based on the deployment target for this project)
 
-**Color-Change Checkpoint:** If this version changed any color in Custom CSS, reconcile it against the Style Settings and surface a `Setting | Current | New | Why` table **in the conversation** (not only in the CHANGES file), listing Style Settings changes before the code files. If colors changed but no Style Setting is affected, say so explicitly. The authoritative definition lives under "Style Settings Colors → Color-Change Checkpoint" in `CLAUDE-RULES.md`.
+Claude then deploys it through the built-in browser (`05-BROWSER_CAPTURE_AND_DEPLOY.md`): it plans the deploy against a fresh read of the live KB, shows the list of what it will save where, waits for your yes, saves, reads the result back, and records it in `DEPLOYMENTS.md`. On the manual path, the same list is what you paste.
+
+**Color-Change Checkpoint:** If this version changed any color in Custom CSS, reconcile it against the Style Settings and surface a `Setting | Current | New | Why` table **in the conversation** (not only in the CHANGES file), listing Style Settings changes first. If colors changed but no Style Setting is affected, say so explicitly. The authoritative definition lives under "Style Settings Colors → Color-Change Checkpoint" in `CLAUDE-RULES.md`.
 
 **Example format:**
 ```markdown
-## Manual Steps in KnowledgeOwl
+## Style Settings
 
-### Update Style Settings Colors (do this BEFORE deploying code files)
-Go to Customize > Style > Style Settings > Colors and update:
-
-| Setting              | Current   | New       |
-|----------------------|-----------|-----------|
-| Highlights & accents | `#5b9bd5` | `#009d9c` |
-| Icon color           | `#5b9bd5` | `#009d9c` |
+| Style Setting        | Current   | New       | Why          |
+|----------------------|-----------|-----------|--------------|
+| Highlights & accents | `#5b9bd5` | `#009d9c` | Brand accent |
+| Icon color           | `#5b9bd5` | `#009d9c` | Brand accent |
 
 ## Files to Deploy
 
-### Custom CSS — COPY THIS FILE
+### Custom CSS
 **Source**: `/2026.01.22-v3/custom-css.css`
 **Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom CSS
 **Changes**: Updated brand colors, added card hover effects
 
-### Custom HTML > Homepage — COPY THIS FILE
+### Custom HTML > Homepage
 **Source**: `/2026.01.22-v3/custom-html-5-homepage.html`
 **Destination**: KnowledgeOwl > Customize > Style (HTML & CSS) > Custom HTML > Homepage
 **Changes**: Updated link colors to brand palette
 ```
 
-**Why Style Settings come first:** KnowledgeOwl's Style Settings color pickers generate dynamic theme CSS that loads *before* Custom CSS. If a version changes brand colors, the Style Settings should be updated first so the theme-level CSS and Custom CSS agree instead of competing.
+**Why Style Settings matter to the order:** KnowledgeOwl's Style Settings color pickers generate dynamic theme CSS that loads *before* Custom CSS, so the two should agree instead of competing. Claude's deploy sets both in one save. On the manual path, update the Style Settings first, then paste the code files.
 
 ---
 
@@ -161,11 +160,13 @@ Project/
 If a version has issues:
 
 1. **Identify the last working version** (e.g., v2 worked, v3 has issues)
-2. **Deploy files from the working version** (copy from v2 folder to KnowledgeOwl)
-3. **Document the rollback** (note in the project)
-4. **Fix issues in a new version** (create v4 with fixes — do not modify v3)
+2. **Redeploy the working version.** Claude plans a deploy of the v2 folder against the live KB, which moves every field v3 changed back to v2, and saves it after your yes (`05-BROWSER_CAPTURE_AND_DEPLOY.md`). On the manual path, paste the v2 files.
+3. **Document the rollback.** The deploy adds its row to `DEPLOYMENTS.md`; add a line to `.claude/rules/project.md` saying why.
+4. **Fix issues in a new version** (create v4 with fixes; do not modify v3)
 
 The broken version remains preserved for debugging.
+
+**KnowledgeOwl's own Revert is the emergency control.** Customize > Style keeps the last 10 whole-theme saves, and "Revert to previous save" restores one of them in one step, including the colors, fonts and logo. Use it when the live KB is broken and there's no time to plan a deploy. Claude never uses it without an explicit request, because its URL changes the theme as soon as it loads. Afterwards, run the drift check so the project files catch up with what's live.
 
 ---
 
@@ -175,18 +176,20 @@ When returning to a project after any gap — whether days, weeks, or months —
 
 **Claude automatically syncs template files.** The toolkit evolves over time — new reference files get added, existing ones get updated. At the start of every session, Claude fetches the latest `Reference/knowledgeowl-css-quirks.md` and `Reference/knowledgeowl-css-defaults.md` from the GitHub repo and overwrites the local copies. It also checks for `.claude/rules/project.md` and creates it from the template if missing. This means older projects automatically pick up new reference files without any manual copying.
 
-**Always create a fresh snapshot of the live KB code if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Rather than trying to figure out whether the code has drifted, just always capture the current state — it's quick and eliminates guesswork.
+**Check the live KB for drift if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Claude reads the live KB through the built-in browser and compares every field with the project's files (the drift check in `05-BROWSER_CAPTURE_AND_DEPLOY.md`). If everything matches, it says which version each field is at, adds a row to `DEPLOYMENTS.md`, and carries on with no new folder. If any field matches no local file, it records the live KB in a `current-state` folder.
 
-A current-state capture means copying all 12 code files from KnowledgeOwl's Customize > Style (HTML & CSS) sections into the `current-state` folder. The HTML snapshot files (`full-html-snapshot-*.html`) and `style-settings-colors.md` are also refreshed, but captured differently — not pulled from KnowledgeOwl's Customize > Style (HTML & CSS) sections, but captured from the browser's rendered DOM (for HTML snapshots) or the Style Settings UI (for color values). If the KB uses the legacy Homepage Custom content field, also refresh `homepage-custom-content.html` — it is copied from KnowledgeOwl, but from Customize > Homepage > Homepage content > Custom content, a different area than Style (HTML & CSS). Whether it applies is settled once at setup and recorded in the `# Baseline` section of `.claude/rules/project.md`; Claude reads that record rather than re-checking the KB each time, and skips the file entirely when it says `empty`.
+A `current-state` folder holds the 12 code fields as they are live, `style-settings-colors.md` (the Style Settings colors, fonts and logo), and fresh HTML snapshots of reader pages. Claude writes all of them from the live read. If the KB uses the legacy Homepage Custom content field, the folder also gets `homepage-custom-content.html`, from Customize > Homepage > Homepage content > Custom content. Whether it applies is settled once at setup and recorded in the `# Baseline` section of `.claude/rules/project.md`; Claude reads that record rather than re-checking the KB each time, and skips the file entirely when it says `empty`.
+
+Without the built-in browser (a terminal or IDE session), drift can't be checked, so the user pastes each field and snapshot into a new `current-state` folder every time (05's manual path).
 
 ### Steps
 
-1. **Create a `YYYY.MM.DD-current-state` folder** (using today's date)
-2. **Pull fresh code** from the customer's live KB (same process as the original setup — copy from each Customize > Style section) and populate the `current-state` folder with it. Also create placeholder copies of any `full-html-snapshot-*.html` files and `style-settings-colors.md` found in the most recent version folder. Include `homepage-custom-content.html` only when the `# Baseline` section of `.claude/rules/project.md` records the legacy Homepage Custom content field as `in use` — when it records `empty`, skip the file. If the answer isn't recorded yet (a project set up before that section existed), Claude asks once and records it, so it doesn't come up again. Ask the user to paste fresh HTML into each snapshot placeholder (captured via Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML), and to update `style-settings-colors.md` only if the Style Settings colors may have changed (otherwise they can copy the values from the previous version's file).
-3. **Confirm the capture came from the right KB.** If the project has both a sandbox and a live KB, it's easy to snapshot the wrong one — and the mistake is invisible once the code is in the folder. On one project the target was a sandbox but the code files and both HTML snapshots came from live; the two had diverged in both directions, so the wrong baseline would have silently reverted real work. Check the `rel="canonical"` host in the captured `full-html-snapshot-*.html` against the deployment target in `.claude/rules/project.md`, and have Claude state which KB it snapshotted. If it's the wrong one, recapture rather than reconcile.
-4. **Add fresh screenshots** of the KB's current appearance to the `Screenshots/` folder inside the `current-state` folder (homepage, category page, article page, and any pages relevant to the upcoming work)
+1. **Run the drift check.** If every field matches a local file, stop here: no folder, and the next version folder copies from the latest version as usual.
+2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date). `kb_io.py unpack --into` writes the 12 code files and `style-settings-colors.md` from the live read, and Claude takes fresh HTML snapshots of the same reader pages the most recent version folder has snapshots of. Include `homepage-custom-content.html` only when the `# Baseline` section of `.claude/rules/project.md` records the legacy Homepage Custom content field as `in use`. If the answer isn't recorded yet (a project set up before that section existed), Claude reads the field once and records it, so it doesn't come up again. On the manual path the user pastes each field and snapshot instead (Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML), and updates `style-settings-colors.md` only if the Style Settings may have changed.
+3. **Confirm the capture came from the right KB.** If the project has both a sandbox and a live KB, it's easy to snapshot the wrong one, and the mistake is invisible once the code is in the folder. On one project the target was a sandbox but the code files and both HTML snapshots came from live; the two had diverged in both directions, so the wrong baseline would have silently reverted real work. `read()` reports the host it read and `unpack --snapshot` reports each snapshot's `rel="canonical"` host. Claude checks both against the targets in `.claude/rules/project.md` and states which KB it captured. If it's the wrong one, recapture rather than reconcile.
+4. **Screenshots, if you want them.** Claude asks once whether you want fresh screenshots in the `Screenshots/` folder inside the `current-state` folder (homepage, category page, article page, and any pages relevant to the upcoming work). They're optional, since Claude can look at the live KB any time.
 5. **Document what changed since the last version** — see "CHANGES File in Current-State Folders" below.
-6. **Lock the folder** — once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, screenshots, and CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
+6. **Lock the folder** — once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, any screenshots, and the CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
 7. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
 8. **Refresh the `Reference/` folder** — clean up outdated materials and add current ones (see details below)
 9. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
@@ -195,7 +198,7 @@ A current-state capture means copying all 12 code files from KnowledgeOwl's Cust
 
 The `current-state` folder should include a `CHANGES_FROM_v[last].md` file (e.g., `CHANGES_FROM_v4.md` if v4 was the last version before the gap). This documents any differences between the last version and the current live KB — changes that may have been made by the customer, another teammate, or directly in KnowledgeOwl outside this system.
 
-Have Claude compare the `current-state` code files against the last version folder and note any differences. The CHANGES file should:
+Claude writes it from `unpack`'s report, which names every live field that matches no local file and which version the others match. The CHANGES file should:
 - List which files differ and summarize what changed
 - Note that these changes were **not made through this system** — they were discovered during the current-state snapshot, and their origin (customer, teammate, direct KO edit) may be unknown
 - Use the summary section to flag anything unexpected or potentially problematic
@@ -214,7 +217,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 
 **Screenshots (in `current-state/Screenshots/`):**
 - Don't copy screenshots over from previous version folders — they show what the KB _used to_ look like
-- Fresh screenshots of the KB's current appearance are captured in step 3, before the folder is locked (homepage, category page, article page, and any pages relevant to the upcoming work)
+- Fresh screenshots of the KB's current appearance, if you want them, are added in step 4, before the folder is locked (homepage, category page, article page, and any pages relevant to the upcoming work)
 
 **Reference files (in `Reference/` at the project root):**
 - Remove files no longer relevant to upcoming work (e.g., mockups for designs already deployed, Asana exports of completed tasks)
@@ -227,7 +230,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 
-**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md` through `04-`, plus `theme-templates/`) live in the repo only — they are never copied into customer folders.
+**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md` through `05-`, plus `theme-templates/`) live in the repo only; they are never copied into customer folders. The two capture-and-deploy helpers in `process-docs/kb-io/` are the exception: Claude downloads fresh copies into `.claude/kb-io/` at the start of each session.
 
 ### Example
 
@@ -238,7 +241,7 @@ Project/
 ├── 2026.01.21-v2/
 ├── 2026.01.28-v3/
 ├── 2026.01.28-v4/                # Last version from January work
-├── 2026.03.15-current-state/     # Fresh snapshot of live KB before resuming
+├── 2026.03.15-current-state/     # Live KB had drifted: snapshot before resuming
 │   └── CHANGES_FROM_v4.md        # Documents drift between v4 and current live KB
 ├── 2026.03.15-v5/                # New work resumes here (copied from current-state)
 │   └── CHANGES_FROM_current-state.md
@@ -248,7 +251,7 @@ Project/
 
 **Key points:**
 - The `no-changes` folder remains untouched — it's still the original baseline
-- Always create a `current-state` snapshot if more than one day has passed since the last session (or sooner if changes were made)
+- Check for drift if more than one day has passed since the last session (or sooner if changes were made). Create a `current-state` folder only when the live KB has changed, or every time on the manual path
 - Version numbering continues incrementing as usual
 
 ---

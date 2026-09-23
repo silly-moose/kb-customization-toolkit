@@ -19,10 +19,14 @@ A clean, professional "modern documentation" theme for KnowledgeOwl (Mintlify/No
 
 ## How to apply it to a prospect's KB
 
-1. **Custom CSS** — paste `custom-css.css` into *Customize › Style (HTML & CSS) › Custom CSS* (replace the whole field).
-2. **Style Settings colors** — set them to mirror the brand tokens (table below). Do this *before* the CSS ideally; they load first.
-3. **Logo** — upload the prospect's logo via *Customize › Style › Style Settings › Logo* (a light/white version if the nav is dark). Not in code.
-4. **Hero image** — upload the prospect's hero photo to the **KB file library**, then paste its KB-hosted URL into the `--brand-hero-image` token in `custom-css.css`.
+The template's files go into the build's current version folder (`../README.md`, "How to apply a template in a build"). Claude then deploys that version through the built-in browser after your yes (`../../05-BROWSER_CAPTURE_AND_DEPLOY.md`), and items 1 to 3 go in the same save.
+
+1. **Custom CSS:** `custom-css.css` replaces the whole *Customize › Style (HTML & CSS) › Custom CSS* field.
+2. **Style Settings colors:** set them in the version's `style-settings-colors.md` to mirror the brand tokens (table below). They load before the CSS, so the two should agree.
+3. **Logo:** upload the prospect's logo to *Library › Files* (a light/white version if the nav is dark) and put its File Library name in the `logo.file` row of `style-settings-colors.md`. Not in code.
+4. **Hero image:** upload the prospect's hero photo to the **KB file library**, then put its KB-hosted URL in the `--brand-hero-image` token in `custom-css.css` before the deploy.
+
+On the manual path, paste `custom-css.css` into the field and set the swatches and logo in *Customize › Style › Style Settings* by hand, swatches first.
 
 The 10 Custom HTML sections and Custom `<head>` are stock Minimalist defaults — no change needed (they already ship with a fresh Minimalist KB; see `../../minimalist-theme-defaults/`).
 

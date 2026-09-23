@@ -63,9 +63,9 @@ The **design lives entirely in `custom-css.css`**; the Custom `<head>` and the 1
 
 **2. Swap the brand.** Change only the `--brand-*` tokens (and their `-rgb` pairs) at the top of `custom-css.css` to the prospect's brand, and set `--brand-hero-image` to a KB-file-library URL. Leave the `--ui-*` tokens, layout, and font sizes. The template's own README has the token-by-token map and a "prospect's brand → token values" guide — see [`modern-docs/README.md`](modern-docs/README.md) — and the canonical tokenization policy is in [`../../project-template/CLAUDE-RULES.md`](../../project-template/CLAUDE-RULES.md) ("Brand Color Tokens").
 
-**3. Reconcile Style Settings, logo, and hero.** Mirror the KO Style Settings colors to the tokens, upload the logo via KO's native Style Settings uploader, and upload the hero to the KB file library. These follow the toolkit's canonical policy — see `CLAUDE-RULES.md` ("Style Settings Colors" + "Logo & Brand Assets") — and the template README's Style Settings table. The color-change checkpoint in `CLAUDE-RULES.md` still applies.
+**3. Reconcile Style Settings, logo, and hero.** Mirror the KO Style Settings colors to the tokens in the version's `style-settings-colors.md`, have the user upload the logo and the hero to the KB file library, and put the logo's File Library name in the `logo.file` row; the deploy sets the colors and the logo in the same save as the code. These follow the toolkit's canonical policy — see `CLAUDE-RULES.md` ("Style Settings Colors" + "Logo & Brand Assets") — and the template README's Style Settings table. The color-change checkpoint in `CLAUDE-RULES.md` still applies.
 
-**Timing note:** apply into a working version folder, then deploy per the normal version-control + deployment process (`../02-VERSION_CONTROL_PROCESS.md`). For faster visual iteration while adjusting the brand, use localhost preview (`../03-LOCALHOST_PREVIEW.md`).
+**Timing note:** apply into a working version folder, then deploy per the normal version-control + deployment process (`../02-VERSION_CONTROL_PROCESS.md` and `../05-BROWSER_CAPTURE_AND_DEPLOY.md`). For faster visual iteration while adjusting the brand, use localhost preview (`../03-LOCALHOST_PREVIEW.md`).
 
 ---
 

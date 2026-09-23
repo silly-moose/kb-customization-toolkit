@@ -21,12 +21,16 @@ A bright, airy documentation theme for KnowledgeOwl: a **light top nav**, a vibr
 
 ## How to apply it to a prospect's KB
 
-1. **Custom CSS** — paste `custom-css.css` into *Customize › Style (HTML & CSS) › Custom CSS* (replace the whole field).
-2. **Custom `<head>`** — paste `custom-head.html` (loads the webfont).
-3. **Homepage HTML** — paste `custom-html-5-homepage.html` (the hero tagline). The other Custom HTML sections are stock Minimalist defaults — no change needed on a fresh Minimalist KB.
-4. **Style Settings colors** — set them to mirror the brand tokens (table below).
-5. **Logo** — upload the prospect's logo via *Customize › Style › Style Settings › Logo*. **Use a DARK logo — the nav is light.** (This is the opposite of a dark-nav theme.)
-6. **Hero image** — upload the prospect's hero photo to the **KB file library**, then paste its KB-hosted URL into the `--brand-hero-image` token in `custom-css.css`. Until set, the hero shows the brand gradient alone.
+The template's files go into the build's current version folder (`../README.md`, "How to apply a template in a build"). Claude then deploys that version through the built-in browser after your yes (`../../05-BROWSER_CAPTURE_AND_DEPLOY.md`), and items 1 to 5 go in the same save.
+
+1. **Custom CSS:** `custom-css.css` replaces the whole *Customize › Style (HTML & CSS) › Custom CSS* field.
+2. **Custom `<head>`:** `custom-head.html` (loads the webfont).
+3. **Homepage HTML:** `custom-html-5-homepage.html` (the hero tagline). The other Custom HTML sections are stock Minimalist defaults, so nothing changes there on a fresh Minimalist KB.
+4. **Style Settings colors:** set them in the version's `style-settings-colors.md` to mirror the brand tokens (table below).
+5. **Logo:** upload the prospect's logo to *Library › Files* and put its File Library name in the `logo.file` row of `style-settings-colors.md`. **Use a DARK logo, because the nav is light.** (This is the opposite of a dark-nav theme.)
+6. **Hero image:** upload the prospect's hero photo to the **KB file library**, then put its KB-hosted URL in the `--brand-hero-image` token in `custom-css.css` before the deploy. Until set, the hero shows the brand gradient alone.
+
+On the manual path, paste each file into its field and set the swatches and logo in *Customize › Style › Style Settings* by hand.
 
 ---
 
@@ -70,7 +74,7 @@ The `--ui-*` tokens (radius, spacing, shadows, motion, the fixed functional aler
 3. **Text + surfaces:** the `--brand-heading` / `--brand-body` / `--brand-muted` grays and `--brand-bg` / `--brand-surface` defaults usually work; nudge toward the brand if their site does.
 4. **Nav text:** `--brand-nav-text` is **dark** (the nav is light).
 5. **Font:** set `--brand-font` **and** the `custom-head.html` `<link>` to the same family (or drop the webfont and use a system stack).
-6. **Hero + logo:** upload the hero to the KB file library → `--brand-hero-image`; upload a **dark** logo via Style Settings.
+6. **Hero + logo:** upload the hero to the KB file library → `--brand-hero-image`; upload a **dark** logo to the File Library → `logo.file`.
 
 Then contrast-check: heading/body on white, **action color as a link on white (≥4.5:1)**, nav-text on the light nav.
 

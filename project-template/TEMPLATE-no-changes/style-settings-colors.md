@@ -1,40 +1,29 @@
-# Style Settings Colors
+# Style Settings
 
-<!-- Record the customer's ACTUAL Style Settings colors from KnowledgeOwl
-     (Customize > Style > Style Settings > Colors). The color picker reveals one hex
-     at a time, so click each swatch to reveal its hex and fill it in under
-     "Customer's values" below. Leave a value blank if the customer has none set.
+<!-- Filled by Claude from the Style page (kb_io.py unpack). In a version folder this table is
+     what that version deploys: change a Value and the next deploy sets it. Without the
+     built-in browser, read each swatch in Customize > Style > Style Settings by hand (the
+     picker reveals one hex at a time) and type it in; leave a Value blank to leave that
+     setting alone. KnowledgeOwl labels some swatches differently by theme ("common /
+     variant"); the order is the same. Fonts are "Family size weight", e.g. `Lato 48 700`.
+     logo.file is the logo's File Library name. -->
 
-     KnowledgeOwl uses two labeling schemes depending on the KB's theme. Each row
-     lists both wordings ("common / variant") — match whichever your KB shows; the
-     swatch order is identical in both. Delete the wording you don't need (and this
-     comment) once the values are filled in.
+## Values
 
-     The Minimalist-theme DEFAULTS are listed at the bottom for reference (also in
-     Reference/knowledgeowl-css-defaults.md). Most stock / new trial KBs match these,
-     but always confirm each swatch against the customer's actual values — and use
-     the defaults as the baseline when reverting a KB to its original theme. -->
-
-## Customer's values
-
-- **Top navigation bar** / **Header background:** `#`
-- **Top navigation text** / **Header text:** `#`
-- **H1s, H2s, H3s, etc.** / **Header tags:** `#`
-- **Table of contents** / **Column background:** `#`
-- **Table of contents text** / **Column text:** `#`
-- **Highlights & Accents** / **Highlights & accents:** `#`
-- **Default category icon colors — Icon color:** `#`
-- **Default category icon colors — Icon background:** `#`
+| Setting | Key | Value |
+|---|---|---|
+| Top navigation bar / Header background | `colors.header` | `` |
+| Top navigation text / Header text | `colors.headerText` | `` |
+| H1s, H2s, H3s, etc. / Header tags | `colors.headers` | `` |
+| Table of contents / Column background | `colors.content` | `` |
+| Table of contents text / Column text | `colors.bodyText` | `` |
+| Highlights & Accents | `colors.accent` | `` |
+| Default category icon colors: Icon color | `colors.categoryIcon` | `` |
+| Default category icon colors: Icon background | `colors.categoryIconBackground` | `` |
+| Headers font | `font.title` | `` |
+| Article text font | `font.body` | `` |
+| Logo (File Library name) | `logo.file` | `` |
 
 ## Minimalist theme defaults (reference)
 
-Default values for a stock (uncustomized) Minimalist-theme KB. Confirm against the customer's actual settings above; these also serve as the baseline for reverting a KB to its original theme.
-
-- **Top navigation bar** / **Header background:** `#ffffff`
-- **Top navigation text** / **Header text:** `#1d284f`
-- **H1s, H2s, H3s, etc.** / **Header tags:** `#212121`
-- **Table of contents** / **Column background:** `#f8f4f1`
-- **Table of contents text** / **Column text:** `#1d284f`
-- **Highlights & Accents** / **Highlights & accents:** `#f8b88b`
-- **Default category icon colors — Icon color:** `#69b2f0`
-- **Default category icon colors — Icon background:** `#ffffff`
+A stock Minimalist KB ships with: top navigation bar `#ffffff`, top navigation text `#1d284f`, headings `#212121`, table of contents `#f8f4f1`, table of contents text `#1d284f`, highlights & accents `#f8b88b`, icon color `#69b2f0`, icon background `#ffffff`; fonts `Lato 48 700` (headers) and `Lato 16 400` (article text). Also in `Reference/knowledgeowl-css-defaults.md`. Always confirm against the live KB; these are the baseline for reverting a KB to its original theme.

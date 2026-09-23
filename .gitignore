@@ -12,3 +12,7 @@ improvement-log.md
 
 # Per-user Claude Code local settings (never ship — teammates have their own)
 **/.claude/settings.local.json
+
+# kb-io scratch (live reads, plans, call files) and Python bytecode
+process-docs/kb-io/work/
+__pycache__/

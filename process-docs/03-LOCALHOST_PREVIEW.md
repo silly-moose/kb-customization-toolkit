@@ -21,7 +21,7 @@ Use localhost preview when a session involves significant CSS iteration — e.g.
 
 ## How It Works
 
-The HTML snapshots captured from Chrome DevTools contain the full rendered page:
+The HTML snapshots (each page's rendered `outerHTML`, captured by Claude from the built-in browser or by hand from Chrome DevTools) contain the full rendered page:
 
 - Embedded `<style>` blocks with the KnowledgeOwl theme CSS and your custom CSS
 - `<link>` tags pointing to external CDN assets (Bootstrap, Font Awesome, fonts)
@@ -66,7 +66,7 @@ Caveats: (a) the snapshot's embedded Style-Settings `<style>` reflects the KB's 
 
 ### Previewing a Build BEFORE Anything Is Deployed (snapshot + a simulated Style-Settings block)
 
-The setup below assumes you're iterating on CSS against a KB you can reach. There's a cheaper variant that needs **no dev server and no KB access at all**, and it's the one to reach for on a first build — especially an **auth-walled** KB. It takes ~15 minutes to wire up and it catches deploy-blockers that no amount of reading the CSS will. On one build it caught four real defects before a single line was pasted into KnowledgeOwl: a `:root` split that had silently dropped seven stock rules, a paragraph/list spacing blow-up, mobile category tiles stuck one-per-row, and a logo that vanished against the nav.
+The setup below assumes you're iterating on CSS against a KB you can reach. There's a cheaper variant that needs **no dev server and no KB access at all**, and it's the one to reach for on a first build — especially an **auth-walled** KB. It takes ~15 minutes to wire up and it catches deploy-blockers that no amount of reading the CSS will. On one build it caught four real defects before a single line was deployed to KnowledgeOwl: a `:root` split that had silently dropped seven stock rules, a paragraph/list spacing blow-up, mobile category tiles stuck one-per-row, and a logo that vanished against the nav.
 
 The whole trick is that you **generate the Style-Settings block yourself** instead of hoping the snapshot's is current:
 
@@ -101,7 +101,7 @@ Step 4 is the one that earns its keep: rewriting a KO form is exactly where a re
 
 The Froala editor is the other context you can't just look at — and the **Editor Readability Guard is mandatory in every build**, so it needs verifying every time. It's reproducible for exactly the same reason: its cascade is fully specified (canonical spec: quirks §28).
 
-A ready-made harness ships in the toolkit: **[`../editor-simulation/`](../editor-simulation/)**. Copy `editor-simulation.html` into `preview/`, point it at the KB's `ko-*.css` bundle URL plus the version's compiled `custom-css.css`, and open it — it prints a measured PASS / FAIL / STOCK table per element instead of leaving you to judge by eye. Full instructions and how to read the result are in that folder's README.
+A ready-made harness ships in the toolkit: **[`editor-simulation/`](editor-simulation/)**. Copy `editor-simulation.html` into `preview/`, point it at the KB's `ko-*.css` bundle URL plus the version's compiled `custom-css.css`, and open it — it prints a measured PASS / FAIL / STOCK table per element instead of leaving you to judge by eye. Full instructions and how to read the result are in that folder's README.
 
 This runs **before** deploying, which is the main win: the guard's failure mode used to surface only after a customer's author opened an article.
 
@@ -166,7 +166,7 @@ Then either:
 - **You** refresh the browser to see changes
 - **Claude** screenshots and inspects the page with its browser tooling to verify visually and share results
 
-Claude should mention when the preview has been synced, and still provide deployment instructions for the final deploy to KnowledgeOwl.
+Claude should mention when the preview has been synced. The final version still goes to KnowledgeOwl through the normal deploy (`05-BROWSER_CAPTURE_AND_DEPLOY.md`), with its yes-request.
 
 ### Cache-bust every reload, or you'll debug stale code
 

@@ -23,27 +23,35 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 
 ## 2. Populate the Backup Folder with Current Code
 
+**Claude captures it.** Open Claude Code in the customer folder, sign in to KnowledgeOwl in the browser pane when asked, and Claude reads all 12 Customize > Style fields, the legacy homepage field and the Style Settings from the live KB, writes them into the `YYYY.MM.DD-no-changes` folder, and checks every file against the live value. Fields still at KO's stock template are recognized and copied from the toolkit's Minimalist files; the customer's own code is taken from the live text. The procedure is in `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
+
+### Manual path: the bookmarklet or copying by hand
+
+Use this only in a session without the built-in browser (a terminal or IDE), or when the pane can't reach the KB.
+
 **KnowledgeOwl teammates: use the `ko-code-capture` bookmarklet instead of copying by hand.** It runs from your existing KO admin session (Super Admin "log in as" for customer accounts), needs no API key, and downloads one zip named `<KB-Name>-YYYY.MM.DD-no-changes.zip` containing all 12 Style fields under this toolkit's exact filenames, the legacy `homepage-custom-content.html` when it has content, and a `snippets/` folder with one file per snippet plus a `manifest.json` whose `has_style_block` / `has_script_block` flags are the snippet half of the content-CSS audit below. Unzip it into the `YYYY.MM.DD-no-changes` folder and the files land in place. Install and usage instructions are in Silly Moose under Engineering > Dev, "Capture a KB's custom code and snippets (ko-code-capture)"; the source is the private `silly-moose/ko-code-capture` repo. Three limits to know:
 
 - It reads the **default (`en`) language only**, so on a multilingual KB a snippet whose content lives under another language comes out as an empty file. The tool warns about every empty snippet and sets `body_empty` in the manifest; check those in the KO editor before treating the capture as complete.
 - It **cannot tell saved custom code from KO's default template**, because the Style editor renders the default into any section with nothing saved. Each captured file says so in its header. If you need the "was this field empty at project start?" record described below, confirm it yourself and leave the placeholder comment in that file.
 - It covers snippets, not article bodies. Step 2 of the audit below is still manual.
-- **Every captured file gets a header comment prepended**, so a byte-compare against the previous version folder reports all 12 files as changed even when nothing moved. Strip the headers before writing a `CHANGES_FROM_v[last].md` drift record, or diff after stripping. They also must not be deployed: strip them from any file you copy forward into a version folder.
+- **Every captured file gets a header comment prepended**, so a byte-compare against the previous version folder reports all 12 files as changed even when nothing moved. `kb_io.py` strips these headers when it matches and plans, but strip them yourself before any other diff, and never paste one into KO.
 
 The bookmarklet reads the KO admin UI, so a KO markup change can make it return warnings or empty fields. A warning means the capture is incomplete; fall back to hand-copying for that field rather than shipping an incomplete baseline.
 
-**Everyone else, or when the bookmarklet is unavailable:** open each file in the `YYYY.MM.DD-no-changes` folder and replace the placeholder comment with the current code from the customer's knowledge base.
+**Everyone else, or when the bookmarklet is unavailable:** open each file in the `YYYY.MM.DD-no-changes` folder and replace the placeholder comment with the current code from the customer's knowledge base. If a field is empty in KO, leave its file empty (delete the placeholder comment): a placeholder that is still there means "not captured", and Claude never deploys it.
 
-If a customer has no existing custom code in a given field, leave the placeholder comment as-is. It serves as a record that the field was empty at project start.
+**Tip, manual path only: stock Minimalist KB?** If the KB is still on KnowledgeOwl's default **Minimalist** theme and hasn't been customized, you don't have to copy each field out by hand. Ask Claude to drop in the documented Minimalist defaults as your baseline (see `04-MINIMALIST_THEME_DEFAULTS.md`). Those files are the code a fresh Minimalist KB ships with, plus the Editor Readability Guard at the end of the CSS. If the KB already has real custom code, capture *that* instead; the defaults are only for stock KBs.
 
-**Also audit content-level CSS — in two places, because snippets alone aren't enough.** These 12 fields aren't the whole picture: a `<style>` block inside page *content* loads **after** Custom CSS, so it can override the theme wherever it appears — and it won't show up anywhere in this capture.
+### Also audit content-level CSS, in two places
 
-1. **Library > Snippets** — check each for `<style>` / `<script>`. On a KB with a lot of them, Claude can read them all in one pass rather than you opening each modal.
-2. **One or two rendered articles** — authors paste CSS straight into article bodies, and a clean snippet audit does not catch that. On one KB all 17 snippets were fine and a rendered article still carried a hand-written unscoped `body { font-family: … }`.
+These 12 fields aren't the whole picture: a `<style>` block inside page *content* loads **after** Custom CSS, so it can override the theme wherever it appears, and it won't show up anywhere in the Style capture. Claude checks two places, because snippets alone aren't enough:
 
-So finding stock Custom CSS doesn't mean the KB is unstyled. Tell Claude what turns up — it gets recorded in `# Baseline` so it's a known constraint from the start rather than a surprise after deploying.
+1. **Library > Snippets**: each one checked for `<style>` / `<script>`, all in one pass (`CLAUDE-RULES.md` has the bulk read).
+2. **One or two rendered articles**: authors paste CSS straight into article bodies, and a clean snippet audit does not catch that. On one KB all 17 snippets were fine and a rendered article still carried a hand-written unscoped `body { font-family: … }`.
 
-**Tip — stock Minimalist KB?** If the KB is still on KnowledgeOwl's default **Minimalist** theme and hasn't been customized, you don't have to copy each field out by hand. Ask Claude to drop in the documented Minimalist defaults as your baseline — see `04-MINIMALIST_THEME_DEFAULTS.md`. Those files are the same code a fresh Minimalist KB ships with, so the result is identical to copying from the live KB, just faster. If the KB already has real custom code, capture *that* instead, the normal way above — the defaults are only for stock KBs.
+So finding stock Custom CSS doesn't mean the KB is unstyled. What turns up is recorded in `# Baseline`, so it's a known constraint from the start rather than a surprise after deploying.
+
+### Which file holds which field
 
 | File Name | Source in KnowledgeOwl |
 |-----------|------------------------|
@@ -63,30 +71,15 @@ So finding stock Custom CSS doesn't mean the KB is unstyled. Tell Claude what tu
 
 *Authoritative version: the mapping table in `CLAUDE-RULES.md` (which Claude fetches from GitHub automatically). This copy is for human reference during setup. If KnowledgeOwl adds or changes sections, update `CLAUDE-RULES.md` first.*
 
-**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box (in the **Homepage content** card) on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty, and a **brand-new KB always does**; populate this file only if the customer has content there. Otherwise leave the placeholder as-is.
+**About `homepage-custom-content.html`:** This is a *legacy* field, separate from `custom-html-5-homepage.html`. It maps to the **Custom content** box (in the **Homepage content** card) on the standalone **Customize > Homepage** page (`app.knowledgeowl.com/kb/home-page/`) — not the Style editor's *Custom HTML > Homepage* section. Most modern KBs leave it empty, and a **brand-new KB always does**. Claude's capture reads it along with the Style fields.
 
 **Check it once, then record it.** Claude settles this during the first session and writes the answer (`empty` or `in use`) to the `# Baseline` section of `.claude/rules/project.md`. Once it's recorded as `empty`, the file is skipped in every later current-state snapshot and Claude won't ask about it again — so this is a one-time question, not a recurring one. (Older projects created before the `# Baseline` section existed get it appended automatically at the start of their next session.)
 
-### Reading the Style editor's fields directly (a supplement, not a replacement)
-
-From any signed-in `app.knowledgeowl.com` tab, the Style editor and its neighbors are plain server-rendered forms, so Claude can read them with same-origin `fetch` calls instead of the user pasting each field. This does **not** replace the `ko-code-capture` bookmarklet, which already produces a correctly-named zip in one click and is the documented path above. It exists for the two things the bookmarklet does not do:
-
-1. **Capturing what the 12 fields leave out**: Default Text, the homepage title, the legacy Custom content field.
-2. **Diffing two KBs field by field**, which is the only practical way to verify a Reset Theme copy (next subsection).
-
-| Endpoint | What it yields |
-|---|---|
-| `/kb/style/id/<projectID>` | All 12 code fields as form controls: `textarea[name=custom-css]`, plus `body-html`, `nav-html`, `article-html`, `articleversion-html`, `homepage-html`, `login-html`, `readersub-html`, `error404-html`, `noaccess-html`, `rcol-html`, and `#custom-head`. Also `#js-theme-json`, which carries the 8 Style Settings colors, the logo file id, the favicon and the layout. |
-| `/kb/home-page/id/<projectID>` | `#title` (the homepage title) and `#content` (the legacy Custom content field) |
-| `/tools/multilingual/id/<projectID>/language/en/section/<section>` | Default Text for that section, as a table with one `user-translation` cell per string |
-| `/library/snippets` and `/library/snippet-edit/.../sid/<id>` | The snippet library and each snippet's body |
-| Reader-side `document.documentElement.outerHTML` | The full-page snapshots |
-
-Verified against a `ko-code-capture` zip on one project: identical for all 12 fields. **The same rules still apply** either way: the user still supplies screenshots, and the folder still gets locked read-only only once everything is in place.
+The admin endpoints Claude reads (the Style form, the homepage page, Default Text, snippets) are listed at the end of `05-BROWSER_CAPTURE_AND_DEPLOY.md`. Its capture matched a `ko-code-capture` zip byte for byte on one project, and matched KO's own stock files on another.
 
 ### Verifying a Reset Theme copy between two KBs
 
-Hash the 12 fields and the theme JSON from both KBs' `/kb/style` pages and compare. This is how to confirm that **Customize > Style > Reset Theme > "use settings from another knowledge base"** actually did what you expect, which matters whenever a sandbox is seeded from a source KB.
+Read both KBs (`koIO.read` on each project ID) and compare the field hashes and the settings; `unpack` on each read reports them. This is how to confirm that **Customize > Style > Reset Theme > "use settings from another knowledge base"** actually did what you expect, which matters whenever a sandbox is seeded from a source KB.
 
 What that copy **does** carry: the 12 code fields, the Style Settings colors, and the logo.
 
@@ -101,16 +94,13 @@ Snippets are a separate story: the copy does not create or delete them, so whate
 
 ### Uploading files to the KB's File Library
 
-**Have the human drag the files in.** The endpoint itself is unremarkable (`POST /library/chunked-upload?id=<projectID>` with `csrf-token`, `name` and `file`), but it is not reachable from Claude's side in practice: the browser pane blocks requests from `app.knowledgeowl.com` to a local http server (Private Network Access), and passing file bytes as base64 through a tool call only works for trivially small files. Once the user has uploaded them, look the URLs up with `/library/ajax-file-search` rather than asking them to copy each one.
+**Have the human drag the files in.** The endpoint itself is unremarkable (`POST /library/chunked-upload?id=<projectID>` with `csrf-token`, `name` and `file`), but it is not reachable from Claude's side in practice: the browser pane blocks requests from `app.knowledgeowl.com` to a local http server (Private Network Access), and passing file bytes as base64 through a tool call only works for trivially small files. Once the user has uploaded them, look the URLs up with `/library/ajax-file-search` (`koIO.files`) rather than asking them to copy each one. For the logo, the File Library name is enough: put it in `logo.file` in the version's `style-settings-colors.md` and the deploy sets it.
 
 ### Record Current Style Settings Colors
 
-While you're in the Customize > Style area, also record the current Style Settings colors (Customize > Style > Style Settings > Colors). This captures the customer's original theme-level color configuration. If the project later changes brand colors, Claude will recommend updating these settings to match — having the original values on record makes that easier and provides a rollback reference.
+The capture also records the Style Settings (the 8 colors, the two fonts and the logo) in `style-settings-colors.md`, read from the Style page's theme data rather than one swatch at a time. That is the customer's original theme-level configuration: if the project later changes brand colors, Claude reconciles these settings, and the original values are the rollback reference.
 
-The color picker only reveals one hex code at a time, so you'll need to record each swatch separately. Use whichever approach is faster for you:
-
-- **Screenshot each swatch** — click each color to reveal its hex, capture it, and save all screenshots in the `Screenshots/` folder inside the no-changes folder.
-- **Type the hex codes into a file** — open `style-settings-colors.md` in the no-changes folder and fill in each color by its label (e.g., `Top navigation bar: #1D284F`).
+On the manual path the color picker only reveals one hex code at a time, so record each swatch separately: click each color to reveal its hex and type it into the `## Values` table in `style-settings-colors.md` (or screenshot each swatch into `Screenshots/`).
 
 ---
 
@@ -123,7 +113,7 @@ Many customer KBs aren't — reader-restricted KBs are the norm rather than the 
 - **Reader-restricted KB:** an unauthenticated request doesn't return a clean 401. It enters a self-referential `?r=` redirect loop that terminates in **HTTP 414 (URI Too Long)** — which reads like a malformed URL and sends you hunting for a typo that doesn't exist. If you see a 414 on a KB URL, you're being asked to log in.
 - **Trial KB:** redirects to a KnowledgeOwl gate reading roughly *"During your trial, public access to your knowledge base is disabled."*
 
-**Neither blocks the capture — you just have to be signed in.** Claude's built-in browser can be signed into like any other browser (see "Browser Tooling" in `CLAUDE-RULES.md`), so once you log in there, snapshots and screenshots can be captured normally. Claude never enters credentials, so that sign-in step is yours.
+**Neither blocks the capture — you just have to be signed in.** Claude's built-in browser can be signed into like any other browser (see "Browser Tooling" in `CLAUDE-RULES.md`), so once you log in there, Claude captures the snapshots normally. Claude never enters credentials, so that sign-in step is yours.
 
 If you'd rather not sign in, or the KB is behind SSO that won't authenticate a separate browser profile:
 
@@ -132,8 +122,8 @@ If you'd rather not sign in, or the KB is behind SSO that won't authenticate a s
 
 Either way the build isn't blocked: the 12 code files and `style-settings-colors.md` can be filled from the documented Minimalist defaults on a stock KB (see `04-MINIMALIST_THEME_DEFAULTS.md`), and the localhost-preview path that works with **no KB access at all** is in `03-LOCALHOST_PREVIEW.md` → "Previewing a Build BEFORE Anything Is Deployed."
 
-### Screenshots
-Add screenshots of key pages in the customer's current knowledge base to the `Screenshots/` folder inside the no-changes folder:
+### Screenshots (optional)
+Claude can look at the live KB any time, but its screenshots come back to the conversation, not to disk, so saved screenshots are yours to add if you want a visual record of the starting point. Claude asks once before locking the folder. Useful pages, in the `Screenshots/` folder inside the no-changes folder:
 - Homepage
 - An article page
 - A category page
@@ -147,7 +137,9 @@ Add screenshots of key pages in the customer's current knowledge base to the `Sc
 Chrome saves a full-length PNG automatically. This is especially useful for long article and category pages where the below-the-fold layout matters.
 
 ### Full HTML Snapshots (for Claude reference)
-Capture snapshots for both the homepage and an article page — each gives Claude visibility into a different template structure.
+Claude captures snapshots of the homepage and an article page from the live KB (`05-BROWSER_CAPTURE_AND_DEPLOY.md`, "Snapshots"). Each gives Claude visibility into a different template structure, and the preview harness in `03-LOCALHOST_PREVIEW.md` runs on them.
+
+On the manual path, capture them yourself:
 
 1. Open the customer's homepage in Google Chrome
 2. Right-click anywhere on the page and select **Inspect**
@@ -313,7 +305,7 @@ Sampling a screenshot introduces JPEG error and guesswork. Prefer the source:
 - **PPTX decks:** unzip and pull `srgbClr val="…"` from `ppt/slides/slideN.xml` in document order, then zip against the `<a:t>` label runs — exact hexes plus their names, no rendering step. (`pdfimages` plays the same role for PDF swatch pages.)
 - **On a live site, enumerate `:root`'s custom properties before sampling anything element-by-element.** Site builders in the CivicPlus / Squarespace / Webflow class declare the whole brand as CSS variables, so one read of the custom properties on `:root` returns the authoritative palette *and* the real font stack in a single call — far better than walking elements and reading computed styles one at a time. Worth trying first on any site whose CSS looks generated. Pixel-sampling the logo PNG can also surface an accent hue the CSS never exposes at all.
 
-**Tip — the logo goes in Style Settings, not custom code:** Upload the KB's logo through KnowledgeOwl's native uploader at **Customize > Style > Style Settings > Logo** (upload the right variant per KB — e.g., a white version for a dark nav). Don't hardcode a logo URL in Custom CSS/HTML or recolor a logo with a CSS `filter`. It's more robust and keeps the theme portable as a template. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
+**Tip — the logo goes in Style Settings, not custom code:** The logo belongs in KnowledgeOwl's native **Customize > Style > Style Settings > Logo** field. You upload the right variant per KB (e.g., a white version for a dark nav) to Library > Files, and Claude sets it as the logo in its next deploy. Don't hardcode a logo URL in Custom CSS/HTML or recolor a logo with a CSS `filter`. It's more robust and keeps the theme portable as a template. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
 
 **Tip — host other theme images in the KB:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control.
 
@@ -327,8 +319,10 @@ Your project should look like this:
 └── [Customer Name]/
     ├── CLAUDE.md                       (auto-read by Claude Code — bootstrap that fetches latest rules from GitHub)
     ├── CLAUDE-RULES.md                 (process rules — fetched fresh from GitHub each session, local copy is fallback)
+    ├── DEPLOYMENTS.md                  (one row per save and drift check, written by Claude)
     ├── .claude/
     │   ├── launch.json                 (localhost preview server config — see 03-LOCALHOST_PREVIEW.md)
+    │   ├── kb-io/                      (capture-and-deploy helpers, re-downloaded each session; work/ holds scratch files)
     │   └── rules/
     │       └── project.md              (auto-read by Claude Code — customer-specific settings)
     ├── Reference/
@@ -362,7 +356,7 @@ Your project should look like this:
 
 **Note:** Process docs (`00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, etc.) are not included in customer folders. They live in the template repo and Claude fetches them on demand.
 
-**Claude automatically protects the backup folder.** During your first session, after all content has been added to the no-changes folder (code files, HTML snapshots, `style-settings-colors.md`, and screenshots), Claude runs `chmod -R a-w YYYY.MM.DD-no-changes/` to make the folder read-only, preventing accidental edits. Similarly, Claude runs this command automatically after all content has been added to any `current-state` folder. If you need to correct a setup mistake before any real work has started, ask Claude to unlock the folder for you (or run `chmod -R u+w [folder-name]/` yourself).
+**Claude automatically protects the backup folder.** During your first session, once the capture is complete (code files, HTML snapshots and `style-settings-colors.md`, plus any screenshots you chose to add), Claude runs `chmod -R a-w YYYY.MM.DD-no-changes/` to make the folder read-only, preventing accidental edits. It does the same for every `current-state` folder. If you need to correct a setup mistake before any real work has started, ask Claude to unlock the folder for you (or run `chmod -R u+w [folder-name]/` yourself).
 
 ---
 
@@ -375,10 +369,10 @@ Once setup is complete, fill in the customer name and KB in `.claude/rules/proje
 Paste this prompt to kick off the first session:
 
 ```
-Review the no-changes folder and the reference materials in Reference/. Then let me know when you're ready to start.
+Capture the baseline for [customer name]'s KB at [KB URL], then review Reference/ and let me know when you're ready to start.
 ```
 
-Claude will review the code, check the deployment target (or ask if it hasn't been set yet), and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works.
+Claude will ask you to sign in to KnowledgeOwl in its browser pane, capture the baseline, check the deployment target (or ask if it hasn't been set yet), and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works, and deploy each one after your yes. If you already filled the no-changes folder by hand (the manual path), ask it to review that folder instead.
 
 **Alternatively**, if you'd rather have Claude walk you through setup instead of doing it on your own first, see the guided setup prompts in "Starting a New Claude Code Session" in `00-README.md`.
 

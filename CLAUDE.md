@@ -16,6 +16,8 @@ You're in the **KB Customization Toolkit**: the shared, reusable how-to + assets
 | Repo map + onboarding | `process-docs/00-README.md` |
 | Rules governing customer builds | `project-template/CLAUDE-RULES.md` |
 | Editor Readability Guard harness | `process-docs/editor-simulation/README.md` |
+| Browser capture and deploy (the procedure) | `process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md` |
+| Capture-and-deploy helpers (page script + local CLI) | `process-docs/kb-io/` (`ko-style-io.js`, `kb_io.py`) |
 | Theme-template subsystem (build a new one + apply one) | `process-docs/theme-templates/README.md` |
 | Suggestions / friction awaiting review | `improvement-log.md` *(local-only, git-ignored)* |
 

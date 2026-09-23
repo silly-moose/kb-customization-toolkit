@@ -23,12 +23,16 @@ A clean, **stock-adjacent** documentation theme for KnowledgeOwl, lifted with a 
 
 ## How to apply it to a prospect's KB
 
-1. **Custom CSS** — paste `custom-css.css` into *Customize › Style (HTML & CSS) › Custom CSS* (replace the whole field).
-2. **Homepage HTML** — paste `custom-html-5-homepage.html`, then set the banner's `href` (and optionally swap the Font Awesome icon for a custom `<img>` and edit the banner text). The other Custom HTML sections are stock defaults.
-3. **Style Settings colors** — set them to mirror the brand tokens (table below), including the **nav** (this theme leaves the nav to Style Settings).
-4. **Logo** — upload via *Customize › Style › Style Settings › Logo* (a dark logo for a light nav, or a white logo if you set the nav to the primary color).
-5. **Optional watermark** — upload a large brand image to the **KB file library** and paste its URL into `--brand-watermark-image`. Until set, no watermark renders.
-6. **Optional webfont** — uncomment the `<link>` in `custom-head.html` and add a `--brand-font` to `:root` if the brand has a distinctive typeface.
+The template's files go into the build's current version folder (`../README.md`, "How to apply a template in a build"). Claude then deploys that version through the built-in browser after your yes (`../../05-BROWSER_CAPTURE_AND_DEPLOY.md`), and everything below goes in the same save.
+
+1. **Custom CSS:** `custom-css.css` replaces the whole *Customize › Style (HTML & CSS) › Custom CSS* field.
+2. **Homepage HTML:** `custom-html-5-homepage.html`; set the banner's `href` first (and optionally swap the Font Awesome icon for a custom `<img>` and edit the banner text). The other Custom HTML sections are stock defaults.
+3. **Style Settings colors:** set them in the version's `style-settings-colors.md` to mirror the brand tokens (table below), including the **nav** (this theme leaves the nav to Style Settings).
+4. **Logo:** upload it to *Library › Files* (a dark logo for a light nav, or a white logo if you set the nav to the primary color) and put its File Library name in the `logo.file` row of `style-settings-colors.md`.
+5. **Optional watermark:** upload a large brand image to the **KB file library** and put its URL in `--brand-watermark-image`. Until set, no watermark renders.
+6. **Optional webfont:** uncomment the `<link>` in `custom-head.html` and add a `--brand-font` to `:root` if the brand has a distinctive typeface.
+
+On the manual path, paste each file into its field and set the swatches and logo in *Customize › Style › Style Settings* by hand.
 
 ---
 
