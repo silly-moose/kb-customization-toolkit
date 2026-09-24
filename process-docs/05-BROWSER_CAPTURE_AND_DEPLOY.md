@@ -96,7 +96,7 @@ On a reader page of the KB (e.g. the homepage or an article), run:
 })()
 ```
 
-Then `unpack <result> --snapshot YYYY.MM.DD-no-changes/full-html-snapshot-homepage.html`. It refuses KO's "Warmup Page" (load the page once and try again), reports the canonical host (check it against the deploy target), and says whether the page is the author view. Once the pane has opened the Style page it holds an author session on the KB for about two hours, so snapshots taken after that show the editor bar. Take them first.
+Then `unpack <result> --snapshot YYYY.MM.DD-no-changes/full-html-snapshot-homepage.html`. It refuses KO's "Warmup Page" (load the page once and try again), reports the canonical host (check it against the deploy target), and says whether the page is the author view. Once the pane has opened the Style page it holds an author session on the KB for about two hours, so snapshots taken after that show the editor bar. Take them first. If the reader site is restricted (a reader password, SSO or reader groups), don't ask the user for reader credentials: reach it through the "View knowledge base" link (`/kb/kb-admin-login/id/<pid>?r=/help`, see "Admin pages Claude may open"), and accept that the snapshots will be the author view.
 
 ---
 
@@ -203,3 +203,4 @@ In `app.knowledgeowl.com`, Claude opens or fetches only these. Anything else wai
 | `/library/ajax-file-search` (POST, `pid`, `term`, `typeFilter=image`) | File Library images, each with `data-name` and `data-url` |
 | `/library/snippets/id/<pid>`, `/library/snippet-edit/id/<pid>/sid/<id>` | The snippet list and each snippet's body (the audit in `CLAUDE-RULES.md`) |
 | `/tools/multilingual/id/<pid>/language/en/section/<section>` | Default Text for a section |
+| `/kb/kb-admin-login/id/<pid>?r=<path>` | The admin's "View knowledge base" link: opens the reader site signed in as the current author, so snapshots and the rendered-article audit work on a KB with a reader password or other reader restriction. It starts an author session, so pages opened this way are the author view. No need to ask before opening it |
