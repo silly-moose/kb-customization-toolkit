@@ -166,7 +166,7 @@ If a version has issues:
 
 The broken version remains preserved for debugging.
 
-**KnowledgeOwl's own Revert is the emergency control.** Customize > Style keeps the last 10 whole-theme saves, and "Revert to previous save" restores one of them in one step, including the colors, fonts and logo. Use it when the live KB is broken and there's no time to plan a deploy. Claude never uses it without an explicit request, because its URL changes the theme as soon as it loads. Afterwards, run the drift check so the project files catch up with what's live.
+**KnowledgeOwl's own Revert is the emergency control.** Customize > Style keeps the last 10 whole-theme saves, and "Revert to previous save" restores one of them in one step, including the colors, fonts and logo. Use it when the live KB is broken and there's no time to plan a deploy. Claude never uses it without an explicit request, because it changes the live theme immediately. Afterwards, run the drift check so the project files catch up with what's live.
 
 ---
 
