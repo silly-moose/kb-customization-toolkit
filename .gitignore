@@ -7,8 +7,8 @@ Thumbs.db
 # Localhost preview (ephemeral, generated per session)
 preview/
 
-# Private, local-only improvement log (never publish — contains internal/customer notes)
-improvement-log.md
+# Private, local-only improvement log and its archives (never publish — contains internal/customer notes)
+improvement-log*.md
 
 # Per-user Claude Code local settings (never ship — teammates have their own)
 **/.claude/settings.local.json
