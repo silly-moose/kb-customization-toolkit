@@ -15,7 +15,7 @@ Facts about the KB settled **once** during setup, so later sessions don't re-che
 
 # Deploy targets
 
-Every KB this project captures from or deploys to. Claude fills this in from the first read of each one (05-BROWSER_CAPTURE_AND_DEPLOY.md). A version counts as deployed only once it is on every target; `DEPLOYMENTS.md` at the project root records each save.
+The KB this project folder is for: one KB per project folder (00-README.md). Claude fills this in from the first read (05-BROWSER_CAPTURE_AND_DEPLOY.md); `DEPLOYMENTS.md` at the project root records each save.
 
 | Role | KB host | Project ID | Signed in as |
 |---|---|---|---|

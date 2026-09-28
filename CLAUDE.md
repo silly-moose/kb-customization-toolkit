@@ -21,7 +21,7 @@ You're in the **KB Customization Toolkit**: the shared, reusable how-to + assets
 | Theme-template subsystem (build a new one + apply one) | `process-docs/theme-templates/README.md` |
 | Suggestions / friction awaiting review | `improvement-log.md` *(local-only, git-ignored)* |
 
-`project-template/` is what teammates **duplicate** per customer; its own `CLAUDE.md` bootstraps *those* copied sessions, not this one.
+`project-template/` is what teammates **duplicate** per KB (one project folder per KB, inside a folder for the customer); its own `CLAUDE.md` bootstraps *those* copied sessions, not this one.
 
 ## Norms for working here
 

@@ -6,14 +6,18 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 
 ## 1. Create the Project Folder Structure
 
-1. Duplicate the `project-template/` folder from your local copy of the repo
-
-2. Rename the duplicated folder to the customer's name:
+1. Create the customer's folder if it doesn't exist yet. It holds one project folder per KB you customize for that customer:
    ```
-   Example: Acme Corp, Globex
+   Example: Acme custom theme, Globex custom theme
    ```
 
-3. Inside the customer folder, rename `TEMPLATE-no-changes` to the current date:
+2. Duplicate the `project-template/` folder from your local copy of the repo into the customer's folder, and rename the copy to the KB's name as it appears in KnowledgeOwl:
+   ```
+   Example: Acme Help Center, Sandbox - Redesign - Acme Help Center
+   ```
+   Each KB's folder holds all of that KB's code, versions and deploy records. Older projects that sit directly in the customer's folder keep working; move one into its own KB-named folder only when that customer needs a second KB.
+
+3. Inside the KB's project folder, rename `TEMPLATE-no-changes` to the current date:
    ```
    YYYY.MM.DD-no-changes
    ```
@@ -23,7 +27,7 @@ Detailed instructions for starting a new KnowledgeOwl knowledge base customizati
 
 ## 2. Populate the Backup Folder with Current Code
 
-**Claude captures it.** Open Claude Code in the customer folder, sign in to KnowledgeOwl in the browser pane when asked, and Claude reads all 12 Customize > Style fields, the legacy homepage field and the Style Settings from the live KB, writes them into the `YYYY.MM.DD-no-changes` folder, and checks every file against the live value. Fields still at KO's stock template are recognized and copied from the toolkit's Minimalist files; the customer's own code is taken from the live text. The procedure is in `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
+**Claude captures it.** Open Claude Code in the KB's project folder, sign in to KnowledgeOwl in the browser pane when asked, and Claude reads all 12 Customize > Style fields, the legacy homepage field and the Style Settings from the live KB, writes them into the `YYYY.MM.DD-no-changes` folder, and checks every file against the live value. Fields still at KO's stock template are recognized and copied from the toolkit's Minimalist files; the customer's own code is taken from the live text. The procedure is in `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
 
 ### Manual path: the bookmarklet or copying by hand
 
@@ -316,42 +320,44 @@ Sampling a screenshot introduces JPEG error and guesswork. Prefer the source:
 Your project should look like this:
 ```
 [your projects folder]/
-└── [Customer Name]/
-    ├── CLAUDE.md                       (auto-read by Claude Code — bootstrap that fetches latest rules from GitHub)
-    ├── CLAUDE-RULES.md                 (process rules — fetched fresh from GitHub each session, local copy is fallback)
-    ├── DEPLOYMENTS.md                  (one row per save and drift check, written by Claude)
-    ├── .claude/
-    │   ├── launch.json                 (localhost preview server config — see 03-LOCALHOST_PREVIEW.md)
-    │   ├── kb-io/                      (capture-and-deploy helpers, re-downloaded each session; work/ holds scratch files)
-    │   └── rules/
-    │       └── project.md              (auto-read by Claude Code — customer-specific settings)
-    ├── Reference/
-    │   ├── knowledgeowl-css-quirks.md  (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
-    │   ├── knowledgeowl-css-defaults.md (default selectors, property values, CSS architecture — Claude reads this automatically for CSS/HTML tasks)
-    │   ├── (screenshots, mockups, emails, Asana tasks, assets, etc.)
-    │   └── marketing-site-example.com/ (optional - see section 4)
-    │       ├── (downloaded site files)
-    │       └── Screenshots/
-    └── YYYY.MM.DD-no-changes/
-        ├── custom-css.css
-        ├── custom-head.html
-        ├── custom-html-1-body.html
-        ├── custom-html-2-top-navigation.html
-        ├── custom-html-3-article.html
-        ├── custom-html-4-article-version.html
-        ├── custom-html-5-homepage.html
-        ├── custom-html-6-login.html
-        ├── custom-html-7-manage-reader-subs.html
-        ├── custom-html-8-404-page.html
-        ├── custom-html-9-restricted-access-page.html
-        ├── custom-html-10-right-column.html
-        ├── full-html-snapshot-homepage.html
-        ├── full-html-snapshot-article.html
-        ├── homepage-custom-content.html    (legacy - only older KBs)
-        ├── style-settings-colors.md
-        ├── CHANGES_FROM_no-changes.md
-        └── Screenshots/
-            └── (current state screenshots)
+└── [Customer Name] custom theme/
+    ├── [Another KB name]/              (another KB for the same customer: same layout)
+    └── [KB name]/                      (one project folder per KB, named as it appears in KnowledgeOwl)
+        ├── CLAUDE.md                       (auto-read by Claude Code — bootstrap that fetches latest rules from GitHub)
+        ├── CLAUDE-RULES.md                 (process rules — fetched fresh from GitHub each session, local copy is fallback)
+        ├── DEPLOYMENTS.md                  (one row per save and drift check, written by Claude)
+        ├── .claude/
+        │   ├── launch.json                 (localhost preview server config — see 03-LOCALHOST_PREVIEW.md)
+        │   ├── kb-io/                      (capture-and-deploy helpers, re-downloaded each session; work/ holds scratch files)
+        │   └── rules/
+        │       └── project.md              (auto-read by Claude Code — customer-specific settings)
+        ├── Reference/
+        │   ├── knowledgeowl-css-quirks.md  (CSS quirks reference — Claude reads this automatically for CSS/HTML tasks)
+        │   ├── knowledgeowl-css-defaults.md (default selectors, property values, CSS architecture — Claude reads this automatically for CSS/HTML tasks)
+        │   ├── (screenshots, mockups, emails, Asana tasks, assets, etc.)
+        │   └── marketing-site-example.com/ (optional - see section 4)
+        │       ├── (downloaded site files)
+        │       └── Screenshots/
+        └── YYYY.MM.DD-no-changes/
+            ├── custom-css.css
+            ├── custom-head.html
+            ├── custom-html-1-body.html
+            ├── custom-html-2-top-navigation.html
+            ├── custom-html-3-article.html
+            ├── custom-html-4-article-version.html
+            ├── custom-html-5-homepage.html
+            ├── custom-html-6-login.html
+            ├── custom-html-7-manage-reader-subs.html
+            ├── custom-html-8-404-page.html
+            ├── custom-html-9-restricted-access-page.html
+            ├── custom-html-10-right-column.html
+            ├── full-html-snapshot-homepage.html
+            ├── full-html-snapshot-article.html
+            ├── homepage-custom-content.html    (legacy - only older KBs)
+            ├── style-settings-colors.md
+            ├── CHANGES_FROM_no-changes.md
+            └── Screenshots/
+                └── (current state screenshots)
 ```
 
 **Note:** Process docs (`00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, etc.) are not included in customer folders. They live in the template repo and Claude fetches them on demand.
@@ -362,7 +368,7 @@ Your project should look like this:
 
 ## 6. Ready to Start
 
-Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the customer folder — it automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md` (customer-specific settings).
+Once setup is complete, fill in the customer name and KB in `.claude/rules/project.md`, then open Claude Code in the KB's project folder — it automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md` (customer-specific settings).
 
 > **Note: `.claude/` is a hidden folder.** Dot-files are hidden by default (Mac: press **Command + Shift + .** in Finder to toggle them; Windows: **View > Show > Hidden items** in File Explorer). Easiest option: open the project folder in **VS Code**, which shows dotfiles without any toggling.
 

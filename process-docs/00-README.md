@@ -14,21 +14,24 @@ We use Claude Code to write and iterate on HTML/CSS/JS customizations for custom
 
 Use this when you're starting work on a customer's knowledge base for the first time.
 
-1. **Duplicate** the `project-template/` folder from your local copy of the repo
-2. **Rename** the copy to the customer's name (e.g., `Acme`)
-3. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
-4. **Fill in** `.claude/rules/project.md` with the customer name and KB
-5. **Drop reference materials** (e.g., screenshots, mockups, emails, Asana tasks, assets) into the `Reference/` folder
-6. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder. Claude can read the HTML/CSS to match their brand exactly
-7. **Open Claude Code in the customer folder and paste:**
+1. **Create the customer's folder** if it doesn't exist yet (e.g., `Acme custom theme`). It holds one project folder per KB you customize for that customer
+2. **Duplicate** the `project-template/` folder from your local copy of the repo into the customer's folder
+3. **Rename** the copy to the KB's name as it appears in KnowledgeOwl (e.g., `Acme Help Center`, or `Sandbox - Redesign - Acme Help Center` for a sandbox copy)
+4. **Rename** the inner `TEMPLATE-no-changes` folder to today's date: `YYYY.MM.DD-no-changes` (e.g., `2026.02.06-no-changes`)
+5. **Fill in** `.claude/rules/project.md` with the customer name and KB
+6. **Drop reference materials** (e.g., screenshots, mockups, emails, Asana tasks, assets) into the `Reference/` folder
+7. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder. Claude can read the HTML/CSS to match their brand exactly
+8. **Open Claude Code in the KB's project folder and paste:**
    ```
    Capture the baseline for [customer name]'s KB at [KB URL], then review Reference/ and let me know when you're ready to start.
    ```
-8. **Sign in to KnowledgeOwl when Claude asks**, in the browser pane inside the Claude app. KO staff: use Super Admin "log in as" a user with Style admin rights, because every save is credited to whoever is signed in. Claude never types credentials.
+9. **Sign in to KnowledgeOwl when Claude asks**, in the browser pane inside the Claude app. KO staff: use Super Admin "log in as" a user with Style admin rights, because every save is credited to whoever is signed in. Claude never types credentials.
 
 Claude then captures the baseline itself: all 12 Customize > Style fields, the legacy homepage field, the Style Settings and HTML snapshots of the homepage and an article, each checked against the live KB. It also audits content-level CSS (Library > Snippets *and* a rendered article or two, because a `<style>` block in page content loads after Custom CSS and can override the theme), records the one-time facts under `# Baseline` in `.claude/rules/project.md`, asks once whether you want to add screenshots, and locks the folder. How it works: `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
 
 **No built-in browser?** In a terminal or IDE session, use the manual path: KnowledgeOwl teammates run the `ko-code-capture` bookmarklet (Silly Moose > Engineering > Dev) and unzip it into the no-changes folder; anyone else pastes each field into its file. `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §2 has the file-to-KnowledgeOwl mapping table, the DevTools snapshot steps and a folder structure diagram.
+
+**One project folder per KB.** Each KB's folder holds all of that KB's code, versions and deploy records, so a sandbox and the live KB it was copied from are two folders side by side in the customer's folder. Older projects that sit directly in the customer's folder keep working; move one into its own KB-named folder only when that customer needs a second KB.
 
 ---
 
@@ -36,7 +39,7 @@ Claude then captures the baseline itself: all 12 Customize > Style fields, the l
 
 Use this when you're resuming work on a customer's knowledge base that you've worked on before.
 
-1. **Open the customer's existing project folder.** Don't create a new one
+1. **Open the KB's existing project folder** (inside the customer's folder, named after the KB). Don't create a new one
 2. **Update the `Reference/` folder**: remove outdated materials and add any new ones (e.g., screenshots, mockups, emails, Asana tasks, assets)
 3. **Open Claude Code in the folder and paste:**
    ```
@@ -50,7 +53,7 @@ If more than a day has passed, Claude reads the live KB and compares it with the
 
 ## How the Work Actually Happens
 
-1. **Open Claude Code** in the customer's project folder — Claude automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md`, picking up the version control rules and project settings
+1. **Open Claude Code** in the KB's project folder — Claude automatically reads `CLAUDE.md` (which fetches the latest `CLAUDE-RULES.md` from GitHub) and `.claude/rules/project.md`, picking up the version control rules and project settings
 2. **Tell Claude to review** the latest version folder and any relevant reference materials
 3. **Describe the changes you need** — Claude writes the HTML/CSS/JS for you
 4. **Claude creates versioned folders** as it works. Each set of substantial changes gets a new folder like `2026.02.06-v1`, `2026.02.06-v2`, etc., copied from the previous version
@@ -119,7 +122,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 
 | Folder | Purpose |
 |--------|---------|
-| `project-template/` | Duplicate this for each new customer project |
+| `project-template/` | Duplicate this for each KB you customize (one project folder per KB) |
 | `process-docs/` | Reference documentation — the single source of truth for all process docs. Claude fetches these directly from GitHub, so you never need a local copy. |
 
 **What's in `project-template/`:**
@@ -162,7 +165,7 @@ Before getting started, make sure you have:
 
 The project template lives in a shared GitHub repo: https://github.com/silly-moose/kb-customization-toolkit
 
-You need a copy of the `project-template/` folder so you can duplicate it for each new customer. There are two ways to get it: **manual download** (simplest) or **Git** (faster for repeat updates, if you have it installed). You don't need the `process-docs/` folder locally — Claude fetches those directly from GitHub whenever you ask about the process.
+You need a copy of the `project-template/` folder so you can duplicate it for each KB you customize. There are two ways to get it: **manual download** (simplest) or **Git** (faster for repeat updates, if you have it installed). You don't need the `process-docs/` folder locally — Claude fetches those directly from GitHub whenever you ask about the process.
 
 ### Option A: Manual download from GitHub
 

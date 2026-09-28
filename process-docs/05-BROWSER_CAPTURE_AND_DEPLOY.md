@@ -155,8 +155,8 @@ At the end of the session, read each target once more and `unpack` it: every fie
 
 ### Promotion, several KBs, and rollback
 
-- **Sandbox to live:** when both KBs are in the signed-in account, read and `unpack` the source KB too (that saves `.claude/kb-io/work/live-<source pid>.json`), then `plan YYYY.MM.DD-vN --from .claude/kb-io/work/live-<source pid>.json`. Fields the source already holds are copied from its saved Style page inside the browser, hash-checked, so nothing passes through the conversation. This path has not yet been exercised on a real pair of KBs; the read-back still proves the result. Each target gets its own read, plan and yes, unless the yes-request listed every target.
-- **Several KBs:** list them all under `# Deploy targets`. A version counts as deployed only once it is on every target.
+- **Sandbox to live:** each KB has its own project folder (`00-README.md`), so a sandbox's work goes live from the live KB's folder. Capture the live KB's baseline there, then build its next version by applying the changes the sandbox project's CHANGES files list, so anything live holds that the sandbox doesn't is kept, and name the sandbox project and version in the new CHANGES file. When both KBs are in the signed-in account, read and `unpack` the sandbox KB too (that saves `.claude/kb-io/work/live-<source pid>.json`), then `plan YYYY.MM.DD-vN --from .claude/kb-io/work/live-<source pid>.json`: fields the sandbox already holds are copied from its saved Style page inside the browser, hash-checked, so nothing passes through the conversation. This path has not yet been exercised on a real pair of KBs; the read-back still proves the result.
+- **Several KBs:** one project folder each. `# Deploy targets` lists the folder's own KB; a KB read only as a `--from` source is not a target.
 - **Rollback:** deploy the older version folder through the same steps. KO also keeps the last 10 whole-theme saves under "Revert to previous save"; reverting restores every field, color, font and the logo at once. That is the user's emergency control; Claude uses it only when asked.
 
 ---

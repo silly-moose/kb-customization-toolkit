@@ -45,7 +45,7 @@ The 12 editable code sections of a stock Minimalist KB. Each row maps the raw fi
 
 ### The one-line ask
 
-In a session opened in the **customer's project folder**, paste:
+In a session opened in the **KB's project folder**, paste:
 
 ```
 This KB is a stock Minimalist theme with no existing custom code. Copy the documented
