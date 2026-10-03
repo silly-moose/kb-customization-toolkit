@@ -399,8 +399,9 @@ rather than removing it.
 **Verify it mechanically, before deploying — don't eyeball it afterwards.** Because that
 cascade is fully specified (quirk #28), it reproduces locally. Use the ready-made harness:
 `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/editor-simulation/editor-simulation.html`
-Point it at the KB's `ko-*.css` bundle URL plus the version's compiled `custom-css.css`, open
-it, and read the PASS/FAIL/STOCK table. Report the result in the conversation as part of the
+Give it the KB's `ko-*.css` bundle URL, the KB's generated Style-Settings rules (the editor
+loads them, and the Header tags rule is unscoped) and the version's compiled `custom-css.css`,
+open it, and read the PASS/FAIL/STOCK table. Report the result in the conversation as part of the
 Color-Change Checkpoint. Setup and how to read it: `process-docs/editor-simulation/README.md`.
 
 Two distinct failures, with **different** fixes — the harness tells you which:

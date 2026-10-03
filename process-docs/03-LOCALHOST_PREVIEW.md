@@ -101,7 +101,7 @@ Step 4 is the one that earns its keep: rewriting a KO form is exactly where a re
 
 The Froala editor is the other context you can't just look at — and the **Editor Readability Guard is mandatory in every build**, so it needs verifying every time. It's reproducible for exactly the same reason: its cascade is fully specified (canonical spec: quirks §28).
 
-A ready-made harness ships in the toolkit: **[`editor-simulation/`](editor-simulation/)**. Copy `editor-simulation.html` into `preview/`, point it at the KB's `ko-*.css` bundle URL plus the version's compiled `custom-css.css`, and open it — it prints a measured PASS / FAIL / STOCK table per element instead of leaving you to judge by eye. Full instructions and how to read the result are in that folder's README.
+A ready-made harness ships in the toolkit: **[`editor-simulation/`](editor-simulation/)**. Copy `editor-simulation.html` into `preview/`, give it the KB's `ko-*.css` bundle URL, the KB's generated Style-Settings rules (lifted from a snapshot's first inline `<style>`) and the version's compiled `custom-css.css`, and open it — it prints a measured PASS / FAIL / STOCK table per element instead of leaving you to judge by eye. Full instructions and how to read the result are in that folder's README.
 
 This runs **before** deploying, which is the main win: the guard's failure mode used to surface only after a customer's author opened an article.
 

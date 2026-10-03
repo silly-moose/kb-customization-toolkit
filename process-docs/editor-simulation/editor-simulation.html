@@ -15,13 +15,15 @@
   editor's exact conditions and MEASURES the result, instead of you deploying and squinting.
   (What it does NOT reproduce is Froala's own UI — irrelevant to the readability question.)
 
-  SETUP — two steps
+  SETUP — three steps
     1. Replace REPLACE-WITH-KO-BUNDLE-URL below with the exact ko-*.css URL from the KB's
        page <head> (it is an absolute CDN URL, so it loads from anywhere).
-    2. Put the version folder's compiled custom-css.css next to this file.
+    2. Paste the KB's generated Style-Settings rules into the ko-sim-style-settings block
+       below (the README says where to get them). Without them a heading colour set in
+       Style Settings is not measured, and a missing guard reads as a clean STOCK result.
+    3. Put the version folder's compiled custom-css.css next to this file.
   Then serve and open it. Deliberately absent: the custom-head, which the editor never
-  loads. The generated Style-Settings rules are also left out (the guard's !important
-  overrides them either way); see the README for what that does and does not exercise.
+  loads.
 
   READING IT
   Green PASS / red FAIL per element, measured against the canvas colour this page actually
@@ -35,8 +37,13 @@
 <!-- 1) KO's compiled reader bundle — the same one the live editor iframe loads. -->
 <link rel="stylesheet" href="REPLACE-WITH-KO-BUNDLE-URL">
 
-<!-- 2) The build's compiled Custom CSS. No Custom <head>, which the editor never loads;
-        the generated Style-Settings rules are left out too (see the README). -->
+<!-- 2) The KB's generated Style-Settings rules, which the editor's compiled stylesheet
+        carries BEFORE the Custom CSS. Paste them between the style tags (README, "Use it"). -->
+<style id="ko-sim-style-settings">
+REPLACE-WITH-STYLE-SETTINGS-RULES
+</style>
+
+<!-- 3) The build's compiled Custom CSS. No Custom <head>, which the editor never loads. -->
 <link rel="stylesheet" href="custom-css.css">
 
 <style>
