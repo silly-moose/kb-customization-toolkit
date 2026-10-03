@@ -73,7 +73,7 @@ The whole trick is that you **generate the Style-Settings block yourself** inste
 1. Start from the `no-changes` folder's `full-html-snapshot-*.html`.
 2. Build the Style-Settings CSS from your **proposed** swatches, using KO's selector map (`knowledgeowl-css-defaults.md` → "Theme Builder Color Mapping"). This is the piece a snapshot can't give you — its embedded block reflects the KB's colors *when it was captured*.
 3. Prepend that block to your new Custom CSS, and put the result inside the snapshot's **first inline `<style>`** — i.e. in the same position, and the same order, as the real page.
-4. Hide the author bar so it doesn't skew layout.
+4. Hide the author bar so it doesn't skew layout. It is `div.author-bar.visible-lg.visible-md` (plus the fixed `#ko-ai-chatbot` and `#ko-ai-chatbot-btn` widgets on a KB with the chatbot), and an inline `style="display:none"` loses to Bootstrap's `.visible-lg { display: block !important }`, so put `.author-bar, #ko-ai-chatbot, #ko-ai-chatbot-btn { display: none !important }` in the injected CSS instead.
 
 Everything else loads for free: the snapshot's stylesheet `<link>`s are **absolute CDN URLs**, so KO's real platform CSS arrives exactly as it does in production.
 
@@ -136,6 +136,8 @@ cp [version-folder]/custom-css.css preview/custom-css.css
 The project template includes `.claude/launch.json` with a preview server configuration. Claude starts the server from that config by its name, `"preview"`, which also lets Claude screenshot and inspect the page for automated visual verification.
 
 > **Re-point the served directory first.** `.claude/launch.json`'s preview config points at a **specific directory** (often a per-session scratchpad path), which goes stale between sessions — if it's left pointing at a previous session's now-empty or old folder, the server silently serves the wrong thing. Before starting it, update the config's directory arg to **this** session's `preview/` folder (use an absolute path), then start the server.
+>
+> **If the preview tool reports no `launch.json`,** the session was opened in a different folder: the tool reads `.claude/launch.json` from the folder the session was *opened* in, even after the session has moved into the project folder (the `ko-kb-toolkit` skill does that mid-session). Copy the project's `.claude/launch.json` into that original folder's `.claude/`, with the directory arg set to an absolute path, and remove it at teardown.
 
 **Option B — Manual:**
 
@@ -174,7 +176,7 @@ The preview server serves **static files**, and browsers cache them across edits
 
 Both were wrong, and neither announced itself. So after every edit, either:
 
-- **Cache-bust the URL** — append `?r=2`, `?r=3`, … on each reload; or
+- **Cache-bust the URL** — append `?r=2`, `?r=3`, … on each reload (local preview only: on the live KB, `/help/<slug>?v=1` returns KO's 404 page, so reload or append a hash like `#r2` there instead); or
 - **Assert the new code is actually present** before trusting anything — check for a marker string from the edit (e.g. look for it among `document.querySelectorAll('script')`, or read back the served CSS).
 
 Cheap, and it converts a silent false negative into a visible one. The same discipline applies to injected probe styles: re-assert from a **clean reload** and include a control that proves the injection took, before drawing a conclusion from a measurement.
@@ -196,6 +198,8 @@ document.head.appendChild(s);
 ```
 
 Then toggle the class and measure. Same idea as the cache-bust above: make sure what you're measuring is actually the thing you changed. (Also in `knowledgeowl-css-quirks.md` §47, next to the rule-enumeration diagnostic.)
+
+**`requestAnimationFrame` never fires in a hidden document either.** A theme script that toggles its open/close class inside a `requestAnimationFrame` callback (the usual way to let an animation start from the closed state) never runs that callback in a background pane, so a test reads "nothing happened" and the drawer or overlay stays shut on the live site too whenever the tab is hidden. Force a reflow instead: insert the element, read `void el.offsetWidth`, then toggle the class. It works in hidden and visible tabs alike.
 
 ### Verify layout with measurements, not screenshots
 

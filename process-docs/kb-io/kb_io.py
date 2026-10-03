@@ -260,6 +260,18 @@ def decode_result(p):
                     return obj
             except json.JSONDecodeError:
                 pass
+        # A result returned through browser_batch arrives as a JSON string literal
+        # ("KOIO1{\"kind\"...}") inside the batch's results file, with other text
+        # around it: decode that string and look again.
+        j = s.find('"KOIO1')
+        if j >= 0:
+            try:
+                v, _ = dec.raw_decode(s, j)
+                if isinstance(v, str) and v.find('KOIO1') >= 0 and v != s:
+                    s = v
+                    continue
+            except json.JSONDecodeError:
+                pass
         t = s.lstrip()
         try:
             v, _ = dec.raw_decode(t)
@@ -274,7 +286,8 @@ def decode_result(p):
         else:
             break
     die(f'No KOIO1 result found in {p}. Save the javascript_tool result exactly as returned, '
-        'or read fewer fields per call.')
+        'or read fewer fields per call. A result run inside browser_batch is decoded too; if this '
+        'still fails, run the snippet as a single javascript_tool call.')
 
 
 def resolve_fields(obj, have):
@@ -647,6 +660,12 @@ def cmd_plan(a):
         check[key] = th
         was = label_of(sources) if sources else 'an outside edit (overwrite approved)'
         lines.append(f'{label}: live is {was}, becomes {vdir.name} ({how}, {len(target.encode("utf-8")):,} bytes)')
+        if key == 'css':
+            rem = re.findall(r'(?<![\w.-])\d*\.?\d+rem\b', target)
+            if rem:
+                lines.append(f'WARNING: Custom CSS uses rem {len(rem)} time{"s" if len(rem) != 1 else ""} '
+                             f'({", ".join(sorted(set(rem))[:6])}); 1rem is 10px on KO reader pages, not 16px '
+                             '(quirks-doc 52). Use px or em.')
         if key == 'css' and sources:
             dropped = sorted(selectors(norm(source_text(have, sources[0]))) - selectors(target))
             base_n = len(selectors(norm(source_text(have, sources[0]))))

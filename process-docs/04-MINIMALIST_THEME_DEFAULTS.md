@@ -26,7 +26,7 @@ The 12 editable code sections of a stock Minimalist KB. Each row maps the raw fi
 |------|----------------------|-----------------|-------|
 | `custom-css.css` | Custom CSS | KO's **default Custom CSS** — the template KO seeds into every new Minimalist KB's Custom CSS field: `:root` color variables plus layout, typography, TOC, search, homepage, and component tweaks, followed by the toolkit's Editor Readability Guard (the one addition to KO's stock). Deployable into Custom CSS as-is. (The bulk of the theme's styling lives in KO's compiled platform bundle, not here — see "CSS Architecture" in `project-template/Reference/knowledgeowl-css-defaults.md`.) | ~925 |
 | `custom-head.html` | Custom `<head>` | **Empty by default** — a fresh Minimalist KB ships with no Custom `<head>` code. The file is just the template's placeholder comment, which `kb_io.py` reads as empty; a field Claude captures empty is a 0-byte file instead. | 1 |
-| `custom-html-1-body.html` | Custom HTML > Body | Site body wrapper (`[template("layout")]`) + back-to-top + the default copyright / "Made with KnowledgeOwl" footer | 8 |
+| `custom-html-1-body.html` | Custom HTML > Body | Site body wrapper (`[template("layout")]`) + back-to-top + the default copyright / "Made with KnowledgeOwl" footer (the copyright line uses `[template("current-year")]` and `[template("account-name")]`) | 8 |
 | `custom-html-2-top-navigation.html` | Custom HTML > Top Navigation | Navbar: logo/brand, project name, search bar, TOC + nav toggles, and the right-side search / contact / login items | 29 |
 | `custom-html-3-article.html` | Custom HTML > Article | Article header (title + action icons + last-modified), body, and footer (related articles, rating, comments) | 21 |
 | `custom-html-4-article-version.html` | Custom HTML > Article Version | Article view with the full version-metadata block (version number, author, created/activated/deactivated dates) | 22 |
@@ -89,7 +89,7 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 
   - **The theme templates DO fix it** (`theme-templates/*/custom-css.css`) — for correctness, and because a template that ever narrows or drops those two general selectors would turn a latent defect into a real keyboard-accessibility bug. Cheap insurance, not an urgent fix.
   - **It's worth reporting upstream** so new KBs stop inheriting it. Until that lands, expect a one-line diff between this mirror and any template's copy of that block.
-- The footer in `custom-html-1-body.html` reads `Copyright © 2025 Your Company, LLC` — that year is hardcoded in KO's own template, so KBs created after KO bumps it may show a different year. If the live KB's footer differs, reconcile that one line against the live KB rather than deploying the baseline's year.
+- The footer in `custom-html-1-body.html` reads `Copyright © [template("current-year")] [template("account-name")]. All rights reserved.` (KO's current stock, refreshed 2026-10-03 from `default-body.phtml`). So a live footer that already shows the customer's name and this year is stock, not a customer edit. KBs created before KO switched to the merge codes hold the older `Copyright © 2025 Your Company, LLC.` line instead; `unpack` reports that body as `NEW` (05, "Older KBs can hold older stock code"), and the fix is to compare it with this file rather than treat it as custom code.
 
 ---
 

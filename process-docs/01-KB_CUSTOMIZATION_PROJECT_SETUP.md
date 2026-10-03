@@ -85,20 +85,22 @@ The admin endpoints Claude reads (the Style form, the homepage page, Default Tex
 
 Read both KBs (`koIO.read` on each project ID) and compare the field hashes and the settings; `unpack` on each read reports them. This is how to confirm that **Customize > Style > Reset Theme > "use settings from another knowledge base"** actually did what you expect, which matters whenever a sandbox is seeded from a source KB.
 
-What that copy **does** carry: the 12 code fields, the Style Settings colors, and the logo.
+What that copy **does** carry: the 12 code fields, the Style Settings colors, and the logo *setting* (a URL).
 
 What it **does not** carry, and therefore has to be redone by hand in the target KB:
 
 - **Default Text** (every string stays at KO's stock wording)
 - **the homepage title** and the legacy **Custom content** field
 - **the contact-form on/off setting**
+- **per-category icons** (each category's editor keeps its own; a category with none renders KO's fallback glyph, so check the editors, not the homepage)
+- **the files**: the copied logo URL and any image URL in the CSS still point at the source KB's File Library, and the favicon does not copy at all (05, "Sandbox to live")
 - articles and categories (content is untouched in both directions)
 
-Snippets are a separate story: the copy does not create or delete them, so whatever the target KB already had is what it still has. If the theme depends on a snippet, check for it explicitly.
+Snippets are a separate story: the copy does not create or delete them, so whatever the target KB already had is what it still has. If the theme depends on a snippet, check for it explicitly. `CLAUDE-RULES.md` ("If the deployment target is a COPIED KB") has the full list, including what a KB *copy* drops that a Reset Theme copy never touches (article tags, uploaded category Icon images).
 
 ### Uploading files to the KB's File Library
 
-**Have the human drag the files in.** The endpoint itself is unremarkable (`POST /library/chunked-upload?id=<projectID>` with `csrf-token`, `name` and `file`), but it is not reachable from Claude's side in practice: the browser pane blocks requests from `app.knowledgeowl.com` to a local http server (Private Network Access), and passing file bytes as base64 through a tool call only works for trivially small files. Once the user has uploaded them, look the URLs up with `/library/ajax-file-search` (`koIO.files`) rather than asking them to copy each one. For the logo, the File Library name is enough: put it in `logo.file` in the version's `style-settings-colors.md` and the deploy sets it.
+**Have the human drag the files in.** The endpoint itself is unremarkable (`POST /library/chunked-upload?id=<projectID>` with `csrf-token`, `name` and `file`), but it is not reachable from Claude's side in practice: the browser pane blocks requests from `app.knowledgeowl.com` to a local http server (Private Network Access), and passing file bytes as base64 through a tool call only works for trivially small files. Once the user has uploaded them, look the URLs up with `/library/ajax-file-search` (`koIO.files`) rather than asking them to copy each one. For the logo, the File Library name is enough: put it in `logo.file` in the version's `style-settings-colors.md` and the deploy sets it. The one scripted alternative is KO's API, from a local terminal rather than the pane: with an API key for the KB on hand, `POST https://app.knowledgeowl.com/api/head/file.json` (multipart) uploads a file to the File Library (05, "Style Settings and the logo").
 
 ### Record Current Style Settings Colors
 

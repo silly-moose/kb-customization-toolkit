@@ -52,6 +52,8 @@ A current (Minimalist-theme) KB loads its styles from three sources, in this ord
 
 Custom CSS loads last, so it wins on equal specificity. Some rules in the bundles use `!important` (see quirks doc #1), so you'll sometimes need `!important` or high specificity to override.
 
+**Bootstrap sets `html { font-size: 10px }`** and nothing later in the stack restores the browser default, so `1rem` is 10px on every reader page, not 16px. Write px or em in Custom CSS, never rem (quirks doc §52).
+
 `KbRenderer::styleSheets()` emits the same two bundles for every theme name; there is no per-theme bundle. Two theme **options** change what loads: "bare minimum mode" (`bare_mode`) drops the `ko` bundle and loads only Font Awesome plus Bootstrap, and also suppresses the generated Style-Settings rules; "barer minimum mode" (`barer_mode`) loads Font Awesome alone. Both are advanced-user toggles on the theme's Options pane and are off on every normal KB.
 
 **Other contexts reuse the same pieces.** The article editor iframe loads the `koFroalaEditor` bundle (the `ko` bundle plus `public/css/app/article-content-editor.css`) and a compiled copy of the inline block (see quirks doc §28). PDFs load Bootstrap + Flat UI + `ko-css.css` + `pdf.css` as raw text, then the inline block (quirks doc §14).
@@ -128,7 +130,7 @@ The theme class is generated as `hg-{theme_name}-theme`; `theme_name` is one of 
 
 | Element | Default Value |
 |---------|---------------|
-| `.hg-article` (article content) | `max-width: 800px; margin: 0 auto; height: 100%; line-height: 1.5; border: none`. On a **1-column homepage** `.hg-1column-layout.hg-home-page .hg-article` widens to `max-width: 1100px`. |
+| `.hg-article` (article content) | `max-width: 800px; margin: 0 auto; height: 100%; line-height: 1.5; border: none`. **Minimalist raises the cap to `max-width: 930px`** (`.hg-minimalist-theme .hg-article`, `ko-css.css`), on every page type including the homepage, and on the 2-column layout the TOC panel leaves a left margin beside it (about 235px measured). A full-width homepage grid therefore needs `.hg-home-page .ko-content-cntr .hg-article { max-width: none; margin: 0 }`. On a **1-column homepage** `.hg-1column-layout.hg-home-page .hg-article` widens to `max-width: 1100px`. |
 | `.ko-content-cntr` (content column, non-homepage) | `.hg-minimalist-theme:not(.hg-home-page) .ko-content-cntr { max-width: 900px; margin: 0 auto }` (no width cap on the homepage) |
 | `.documentation-body` | `padding: 0 15px`; Minimalist adds `min-height: 100%` |
 | `.hg-site-body` | `margin-top: 100px; position: relative` (room for the fixed header) |
@@ -428,6 +430,8 @@ The three stock list merge codes are KB-wide (no per-category variant; see quirk
 | `ul.stat-list` | `font-size: 18px; line-height: 22px` (seeded: `14px`, `line-height: 1.3`, `margin-left: 1px`; `li { padding: 4px 0 }`) |
 | `.list-action` (the "View more…" row) | **`width: 40%`**; `border-top: 1px solid #cecece; font-style: italic` (seeded removes the border). The 40% breaks at four columns; quirks doc §50 |
 | `.badge-new`, `.badge-updated` | See Tags above |
+
+**List length is a KB setting, not CSS:** Customize > Website > Article list settings, 1–10 per list. Each list ends in a "See more..." row (`.list-action`). A fourth list, `[reader("favorite-articles")]`, renders the signed-in reader's favourites in the same `ul.stat-list` markup; it needs Favorites turned on in the KB settings and a logged-in reader, and the star that adds a favourite already sits in `[article("action_icons")]`, so it can be labelled and styled as a button. Together the four make a self-filling "popular / new / updated / favourites" panel with no API key.
 
 **Each row is `li > div > a`, and the `<div>` carries `data-thumbnail`** when the article has a Thumbnail set (`help/partials/new-articles.phtml` and its siblings). The attribute is a JS hook only: nothing in KO's CSS or JS consumes it, and no `<img>` is emitted. It is the supported way to build a thumbnail card list without an API key, but it takes JS: CSS cannot read an attribute's value into `background-image`, so a few lines that read `el.dataset.thumbnail` and insert an `<img>` (or set an inline background) are the actual route. CSS alone can only select on presence, which is still useful for giving thumbnail-less rows a different layout. Six partials emit it: `new-articles`, `pop-articles`, `up-articles`, `favorite-articles`, `required-reading`, `recent-content`.
 

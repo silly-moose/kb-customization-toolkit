@@ -44,7 +44,7 @@ Page functions (all return JSON; `read()` prefixes it with `KOIO1`):
 
 ## Before anything: sign in and confirm the KB
 
-1. Open `https://app.knowledgeowl.com` in the pane and ask the user to sign in. Claude never types credentials. The pane can lose its session between Claude sessions; if a read reports "no Style form", the pane is signed out or in the wrong account.
+1. Ask the user to sign in. For a customer working in their own account, open `https://app.knowledgeowl.com` in the pane. For KO staff, open `https://app.knowledgeowl.com/admin/index` instead and ask them to sign in there and use Super Admin "Login As" to reach the customer's account as a user with Style admin rights. Don't open the KB's reader login page and don't ask for a reader password; a restricted reader site is reached through the "View knowledge base" link (below). Claude never types credentials. The pane can lose its session between Claude sessions; if a read reports "no Style form", the pane is signed out or in the wrong account.
 2. Find the KB's project ID (the 24-character id in any `/kb/.../id/<pid>` admin URL) and record it with the reader host under `# Deploy targets` in `.claude/rules/project.md`.
 3. Say which KB and which signed-in account every capture and deploy is for, e.g. "Reading acme-sandbox.knowledgeowl.com as Jordan (admin)". `read()` reports the host, the KB name and whether the account can save Style settings.
 
@@ -60,6 +60,8 @@ Keep two tabs: one on the KB's article list (a control tab for reads and read-ba
 
 - **Large results spill to disk.** A result over about 50,000 characters is written by the harness to a `tool-results/...txt` file instead of entering the conversation. Run `unpack` on that path. A 150K-character homepage snapshot spilled on the first try.
 - **Smaller results come back inline** (up to about 48,000 characters in testing). Save the result exactly as shown, including its quotes, with the Write tool to `.claude/kb-io/work/read.txt`, and run `unpack` on that.
+- **Or make a smaller result spill anyway,** which avoids retyping a 35K-character result through the Write tool: `koIO.read('<pid>', HAVE, {pad: true})` appends 60,000 spaces after the JSON, so the harness writes it to a `tool-results` file. `unpack` ignores anything after the JSON. For the snapshot snippet, append `+ ' '.repeat(60000)` to its return value for the same effect.
+- **A result from a `browser_batch` call** arrives as a JSON string literal inside the batch's results file, with other text around it. `unpack` decodes that form too, so the snapshot snippet can run inside a batch.
 - Either way `unpack` re-checks every field against the hash the page computed, so a mis-copied inline result is caught, never saved.
 
 To keep inline results small, pass `HAVE`: fields that already match a local file come back as hashes only, and `unpack` copies the matching local file instead.
@@ -143,19 +145,24 @@ In the control tab, `koIO.read('<pid>', HAVE)`, then:
 
 `python3 .claude/kb-io/kb_io.py unpack <result> --expect --record DEPLOYMENTS.md` (add `--clicked-by you` when the user clicked Save)
 
-It passes only when all 12 fields hash to the plan, the Style Settings match, and KO's list of previous saves gained exactly one entry (two means someone else saved in between). Then do the post-deploy verification on the reader page (`CLAUDE-RULES.md`), at 1440 px wide.
+It passes only when all 12 fields hash to the plan, the Style Settings match, and KO's list of previous saves gained exactly one entry (two means someone else saved in between). Then do the post-deploy verification on the reader page (`CLAUDE-RULES.md`), at 1440 px wide. To see the fresh page, reload it or add a hash (`/help/<slug>#r2`); never add a query string to an article URL. `/help/<slug>?v=1` returns KO's 404 page, so that cache-bust verifies the wrong page while looking right. The homepage (`/help?v=1`) and search (`/help/search?phrase=`) do accept query strings.
 
 At the end of the session, read each target once more and `unpack` it: every field should still be at the version you deployed. That catches a stale tab elsewhere that saved over the work.
 
 ### Style Settings and the logo
 
 - Colors and fonts go in the same save as the code. The version folder's `style-settings-colors.md` is the source: its `## Values` table is what that version deploys. Custom web fonts are set by hand for now.
-- **Logo:** the user uploads the image to Library > Files. Put its File Library name in the table's `logo.file` row, and `stage()` finds it (exactly one image with that name) and sets it as the logo in the same save. KO's logo URL carries a slug, not the name, so `read()` looks the name up by file id.
+- **Logo:** the user uploads the image to Library > Files. Put its File Library name in the table's `logo.file` row, and `stage()` finds it (exactly one image with that name) and sets it as the logo in the same save. KO's logo URL carries a slug, not the name, so `read()` looks the name up by file id. If an API key for the KB is on hand (KO staff, or a customer who holds one), the upload can be scripted from the local terminal instead: `POST https://app.knowledgeowl.com/api/head/file.json` (multipart, the key as the Basic-auth username) puts the file in the File Library, and `stage()` then finds it by name. That worked with an SVG on 2026-09-30. Everyone else uploads in the pane.
 - **Favicon:** the user uploads it through Customize > Style > Style Settings > Favicon. It saves immediately and is separate from the Style save.
 
 ### Promotion, several KBs, and rollback
 
 - **Sandbox to live:** each KB has its own project folder (`00-README.md`), so a sandbox's work goes live from the live KB's folder. Capture the live KB's baseline there, then build its next version by applying the changes the sandbox project's CHANGES files list, so anything live holds that the sandbox doesn't is kept, and name the sandbox project and version in the new CHANGES file. When both KBs are in the signed-in account, read and `unpack` the sandbox KB too (that saves `.claude/kb-io/work/live-<source pid>.json`), then `plan YYYY.MM.DD-vN --from .claude/kb-io/work/live-<source pid>.json`: fields the sandbox already holds are copied from its saved Style page inside the browser, hash-checked, so nothing passes through the conversation. This path has not yet been exercised on a real pair of KBs; the read-back still proves the result.
+
+  Whichever way a theme reaches a second KB, including KO's own Reset Theme > "use settings from another knowledge base" (the user's one-click control; Claude never clicks it), check what did **not** travel with the Style fields:
+  - **The files.** The copied logo URL and any image URL in the CSS (a hero `background-image`, say) still point at files in the **source** KB's File Library: `read()` on the target reports `logoFile: null`, because the file id is not in its library, and `koIO.files(<source pid>, <file id>)` finds it. Deleting or resetting the source KB would then break the live KB. Treat it as a manual step: the user uploads the files to the target KB, and the next deploy repoints `logo.file` and the CSS URLs. `plan` lists new KB-hosted image references for exactly this reason.
+  - **The favicon**, which never copies. Compare `document.querySelector('link[rel~=icon]')?.href` on a reader page of each KB; the target may have none.
+  - **Per-category icons, Default Text, the homepage title, snippets and article tags**, all per KB. The list and the checks are in `CLAUDE-RULES.md`, "If the deployment target is a COPIED KB".
 - **Several KBs:** one project folder each. `# Deploy targets` lists the folder's own KB; a KB read only as a `--from` source is not a target.
 - **Rollback:** deploy the older version folder through the same steps. KO also keeps the last 10 whole-theme saves under "Revert to previous save"; reverting restores every field, color, font and the logo at once. That is the user's emergency control; Claude uses it only when asked.
 
@@ -203,4 +210,5 @@ In `app.knowledgeowl.com`, Claude opens or fetches only these. Anything else wai
 | `/library/ajax-file-search` (POST, `pid`, `term`, `typeFilter=image`) | File Library images, each with `data-name` and `data-url` |
 | `/library/snippets/id/<pid>`, `/library/snippet-edit/id/<pid>/sid/<id>` | The snippet list and each snippet's body (the audit in `CLAUDE-RULES.md`) |
 | `/tools/multilingual/id/<pid>/language/en/section/<section>` | Default Text for a section |
+| `/kb/category/id/<pid>/cid/<cid>` | A category's editor, read-only: `cat-icon-type`, `cat-icon-fa-id`, `cat-icon-variant`, `cat-icon-color` and `cat-icon-background-color`, the per-category icon that a Style copy does not carry. Check it here, not on the homepage: a category with no icon saved still renders KO's fallback (`fa-duotone fa-aperture` in `#69B2F0`) while its editor says "No icon chosen". Never save it |
 | `/kb/kb-admin-login/id/<pid>?r=<path>` | The admin's "View knowledge base" link: opens the reader site signed in as the current author, so snapshots and the rendered-article audit work on a KB with a reader password or other reader restriction. It starts an author session, so pages opened this way are the author view. No need to ask before opening it |

@@ -37,7 +37,7 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§5](#5-toc-slideout-layout-coupling) TOC slideout coupling ·
 [§6](#6-anchor-link-offset-for-fixed-navigation) anchor offset under fixed nav ·
 [§9](#9-responsive-breakpoints) breakpoints ·
-[§16](#16-z-index-layering-gaps) z-index gaps ·
+[§16](#16-z-index-layering-gaps) z-index gaps (**and the article panel is a stacking context**) ·
 [§19](#19-full-bleed-footer-and-other-edge-to-edge-bands) full-bleed bands ·
 [§22](#22-homepage-article-panel-has-a-fixed-viewport-derived-height) viewport-derived panel height ·
 [§25](#25-flexbox-on-ko-homepage-top-collapses-the-homepage-search) flex collapses homepage search ·
@@ -67,7 +67,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§37](#37-templateicon-catsmaxn-silently-drops-categories-past-the-nth) `icon-cats,max=N` silently drops categories ·
 [§40](#40-the-sidebar-toc-contains-the-full-article-tree-a-no-auth-all-articles-source) sidebar TOC holds the full article tree (**conditional: verify per KB**) ·
 [§51](#51-recent-articles-from-category-x-on-the-homepage-no-merge-code-exists-and-the-simplest-fix-is-a-same-origin-fetch) recent articles from a category on the homepage (**no merge code; same-origin fetch**) ·
-[§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE
+[§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE ·
+[§55](#55-ko_api-merge-codes-need-a-scoped-key-render-single-use-urls-and-fail-with-http-200) **`[ko_api(...)]`: scoped key, single-use URLs, errors are HTTP 200**
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -75,7 +76,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§24](#24-toc-hoveractive-highlight-is-generated-and-paints-on-multiple-elements) TOC highlight is generated ·
 [§27](#27-centering-an-icon-in-a-nav-toggle-button--use-flex-not-line-height) centring a nav toggle icon ·
 [§32](#32-detecting-a-logged-in-author-client-side-ko-app-edit) detecting a logged-in author (**incl. Preview vs live**) ·
-[§46](#46-sessionstorage-survives-a-hard-refresh) `sessionStorage` survives a hard refresh
+[§46](#46-sessionstorage-survives-a-hard-refresh) `sessionStorage` survives a hard refresh ·
+[§56](#56-under-google-tag-manager-send-events-with-datalayerpush-not-gtagevent) Google Tag Manager wants `dataLayer.push`, not `gtag('event')`
 
 ---
 
@@ -369,6 +371,8 @@ The default CSS uses z-index values with large gaps between layers. If you creat
 | 1040 / 1050 | Bootstrap modal backdrop / modal dialogs (`ko-css.css` repeats 1050 on `.modal-dialog`) |
 
 Custom positioned elements should avoid 1030+ unless you intend to overlay the header, TOC, or modals.
+
+**The article panel is a stacking context, so a fixed element inside it cannot reach the navbar's layer.** `ko-css.css` gives `.slideout-panel` (the `#ko-article-cntr` wrapper around every article) `position: relative; z-index: 1`, which makes it a stacking context. Every descendant, `.hg-article-body` included, is layered inside z-index 1, so a `position: fixed` drawer or overlay placed in the article markup paints under the fixed top bar (1030) and the author bar (1032) however high its own z-index, and `!important` changes nothing. Re-parent such elements to `<body>` when the script initialises (`document.body.appendChild(el)`) and they layer normally.
 
 ## 17. Colors Are CSS Variables (Theme-Dependent)
 
@@ -1090,3 +1094,26 @@ Three ways out, cheapest first:
 3. **Render a list from the theme**, e.g. the same-origin fetch in §51, when the layout has to be bespoke.
 
 **Related, and useful:** Custom content and Topic are exactly the two types whose editor exposes **Thumbnail** and **Banner** fields (`kb/partials/category-editor.phtml` gates both on `type == 'content' || type == 'topic'`). Both write to the category's backing **article** (`art-thumbnail-url` / `art-banner-url`), which is why `[article("banner")]` in the Article template really does print a category's banner on its landing page. On a Default category the fields are not offered and the merge code prints nothing.
+
+## 55. `[ko_api(...)]` Merge Codes Need a Scoped Key, Render Single-Use URLs, and Fail With HTTP 200
+
+`[ko_api(...)]` lets a template or snippet call KO's own API with no key in the page: `KbRenderer` renders each call as a one-time URL that the page then fetches. Three things about it are not in the support docs:
+
+- **The KB needs a scoped API key with Read on the exact objects the call touches** (Article, Tag, and so on). A legacy or read/write key on the account does not count: the rendered URL answers 200 with `{"error":"No available API key"}` (`KbRenderer.php`). Creating the key is an account-level change on the customer's account, so plan it into the deploy steps and tell the customer it exists (read-only, used only by the theme).
+- **Each rendered URL is single-use.** A second GET returns `{"error":"Invalid call"}` (`HelpController.php`). To debug, `fetch()` the page HTML for a fresh render and call each URL once; never re-use a URL the page has already consumed.
+- **Errors come back as HTTP 200 with an `error` key**, so a status check passes. A snippet must treat `error` in the JSON as a failure. (KO's REST API does the same: errors are 200 with `valid: false`.)
+
+Known to work: the merge code inside a snippet embedded from a Custom HTML template (`{{snippet.x}}` at the end of the Article template), and `%cur_cat_id%` resolving on a custom-content category page rendered through the Article template (§54). Not tested: `[ko_api(...)]` written directly in a template with no snippet.
+
+## 56. Under Google Tag Manager, Send Events With `dataLayer.push`, Not `gtag('event')`
+
+A customer's KB may carry Google Tag Manager rather than a direct gtag.js install, and the two take events differently. Under GTM, `gtag` is defined only after `gtm.js` has loaded (after `DOMContentLoaded`), so a theme script's `typeof gtag === 'function'` guard silently drops every event fired during init, and GTM never forwards page-level `gtag('event', ...)` calls to GA4 anyway.
+
+Detect GTM with `document.querySelector('script[src*="googletagmanager.com/gtm.js"]')` and push plain objects:
+
+```js
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({ event: 'ko_theme_toc_open', article_id: id });
+```
+
+Keep `gtag('event', ...)` as the fallback for direct gtag.js installs. The customer then owes a Custom Event trigger, a GA4 Event tag and any custom dimensions in their GTM container; list that in the CHANGES file's manual steps, since nothing in the theme can do it for them.

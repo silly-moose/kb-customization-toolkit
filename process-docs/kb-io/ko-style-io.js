@@ -204,6 +204,9 @@ function koioFactory() {
   // hash and byte count, the settings and the Revert list. A field's text is
   // included only when its hash is not in have[key] (have.all returns every
   // text). opts.home also reads the legacy homepage Custom content field.
+  // opts.pad appends 60,000 spaces after the JSON so that a result the harness
+  // would otherwise show inline spills to a tool-results file instead; unpack
+  // ignores anything after the JSON.
   K.read = async function (pid, have, opts) {
     have = have || {};
     opts = opts || {};
@@ -239,7 +242,7 @@ function koioFactory() {
         o.home = { title: title ? title.value : '', content: f };
       }
     }
-    return 'KOIO1' + out(o);
+    return 'KOIO1' + out(o) + (opts.pad ? ' '.repeat(60000) : '');
   };
 
   // files(pid, name): File Library images whose name contains name; exact holds

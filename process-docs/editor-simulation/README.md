@@ -17,6 +17,38 @@ Because the cascade is fully specified, [`editor-simulation.html`](editor-simula
 
 **Do not add the Style-Settings block or the custom-head.** Their absence is what makes this faithful.
 
+**Serve it; don't open it by `file://` in the Claude app's browser pane.** The pane renders a local file as a static snapshot, so the relative `custom-css.css` link never loads, the page measures KO's bundle alone, and every row reads STOCK: a clean result that tested nothing. If a stylesheet fails to load for any reason the same thing happens, which is why the report ends with that reminder.
+
+## Run it with no local server
+
+When the permission layer blocks `python3 -m http.server`, or you want the check inside the browser pane without a preview folder, build the page in memory and read the report. Run this in any tab that may fetch GitHub (a reader page of the KB works), after setting the two values at the top:
+
+```js
+(async () => {
+  const BUNDLE = 'REPLACE: the ko-*.css URL from the KB page <head>';
+  const CSS = 'REPLACE: the version folder\'s compiled custom-css.css, as one string';
+  const src = await (await fetch('https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/editor-simulation/editor-simulation.html')).text();
+  const html = src.split('REPLACE-WITH-KO-BUNDLE-URL').join(BUNDLE)
+    .replace('<link rel="stylesheet" href="custom-css.css">', '<style>' + CSS.replace(/<\/style/gi, '<\\/style') + '</style>');
+  const f = document.createElement('iframe');
+  f.style.cssText = 'position:fixed;left:-9999px;width:1000px;height:800px';
+  f.srcdoc = html;
+  document.body.appendChild(f);
+  await new Promise(r => { f.onload = r; });
+  const out = f.contentDocument.getElementById('ko-sim-report').innerText;
+  f.remove();
+  return out;
+})()
+```
+
+Three things the snippet gets right that a quick version gets wrong:
+
+- **It replaces every occurrence of the placeholder.** The first `REPLACE-WITH-KO-BUNDLE-URL` in the file is in the instructions comment, so a single `.replace()` leaves the real `<link>` broken and every row reads STOCK.
+- **It inlines the CSS as a `<style>` block** instead of linking `custom-css.css`, which an in-memory page cannot resolve.
+- **It loads the page as an off-screen `srcdoc` iframe** and reads `#ko-sim-report` after `load`, when the bundle has arrived and the script has run.
+
+Where `CSS` comes from: the version folder's file, passed in chunks if it is too long for one call (`05-BROWSER_CAPTURE_AND_DEPLOY.md`, `koIO.put`), or, to check what is already live, the Style page's `textarea[name=custom-css]` fetched same-origin from an admin tab.
+
 ## Reading the result
 
 | Verdict | Meaning |
