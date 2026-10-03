@@ -137,7 +137,7 @@ The project template includes `.claude/launch.json` with a preview server config
 
 > **Re-point the served directory first.** `.claude/launch.json`'s preview config points at a **specific directory** (often a per-session scratchpad path), which goes stale between sessions — if it's left pointing at a previous session's now-empty or old folder, the server silently serves the wrong thing. Before starting it, update the config's directory arg to **this** session's `preview/` folder (use an absolute path), then start the server.
 >
-> **If the preview tool reports no `launch.json`,** the session was opened in a different folder: the tool reads `.claude/launch.json` from the folder the session was *opened* in, even after the session has moved into the project folder (the `ko-kb-toolkit` skill does that mid-session). Copy the project's `.claude/launch.json` into that original folder's `.claude/`, with the directory arg set to an absolute path, and remove it at teardown.
+> **If the preview tool reports no `launch.json`,** the session was opened in a different folder: the tool reads `.claude/launch.json` from the folder the session was *opened* in, even after the session has moved into the project folder (the `ko-kb-toolkit-build` skill does that mid-session). Copy the project's `.claude/launch.json` into that original folder's `.claude/`, with the directory arg set to an absolute path, and remove it at teardown.
 
 **Option B — Manual:**
 
