@@ -4,7 +4,7 @@ The **Editor Readability Guard** is mandatory in every build (`project-template/
 
 ## Why it works
 
-The Froala editor renders your compiled Custom CSS in an iframe on a white canvas, and loads **neither** the Style-Settings colour block **nor** the Custom `<head>` — which is why unscoped and `.documentation-article`-scoped theme colours leak in while theme-scoped ones don't. **Canonical spec of that cascade (exact body classes, what loads, why) is quirks-doc §28** — the single source of truth; this file doesn't restate it.
+The Froala editor renders the KB's compiled theme stylesheet (the generated Style-Settings rules plus your Custom CSS) in an iframe on a white canvas whose `<body>` carries no theme class, and it never loads the Custom `<head>`. That is why unscoped and `.documentation-article`-scoped theme colours leak in while theme-scoped ones don't. **Canonical spec of that cascade (exact body classes, what loads, why) is quirks-doc §28** — the single source of truth; this file doesn't restate it.
 
 Because the cascade is fully specified, [`editor-simulation.html`](editor-simulation.html) recreates it exactly and measures the result. What it *doesn't* reproduce is Froala's own UI — irrelevant to readability.
 
@@ -15,7 +15,7 @@ Because the cascade is fully specified, [`editor-simulation.html`](editor-simula
 3. Copy the version folder's compiled `custom-css.css` next to it.
 4. Serve the folder and open the page — see [`../03-LOCALHOST_PREVIEW.md`](../03-LOCALHOST_PREVIEW.md).
 
-**Do not add the Style-Settings block or the custom-head.** Their absence is what makes this faithful.
+**Do not add the custom-head:** the editor never loads it, so leaving it out is what makes this faithful. The harness also leaves out the generated Style-Settings rules, which the editor *does* load (quirks §28). The guard restores KO's stock colours with `!important`, so the result holds for everything the guard covers; what this harness does not exercise is a body-level colour set only through Style Settings, which quirks §29 covers by scoping instead.
 
 **Serve it; don't open it by `file://` in the Claude app's browser pane.** The pane renders a local file as a static snapshot, so the relative `custom-css.css` link never loads, the page measures KO's bundle alone, and every row reads STOCK: a clean result that tested nothing. If a stylesheet fails to load for any reason the same thing happens, which is why the report ends with that reminder.
 

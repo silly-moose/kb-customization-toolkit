@@ -3,9 +3,10 @@
   KO ARTICLE-EDITOR SIMULATION — checks the Editor Readability Guard before you deploy.
 
   WHY THIS EXISTS
-  The Froala article editor renders your compiled Custom CSS inside an iframe on a WHITE
-  canvas, but it loads NEITHER the Style-Settings colour block NOR the Custom <head>
-  (quirks-doc §28). So any text colour a theme applies through an unscoped stock rule, or a
+  The Froala article editor renders the KB's compiled theme stylesheet (the generated
+  Style-Settings rules plus your Custom CSS) inside an iframe on a WHITE canvas whose body
+  has no theme class, and it never loads the Custom <head> (quirks-doc §28). So any text
+  colour a theme applies through an unscoped stock rule, or a
   `.documentation-article`-scoped rule, paints inside the editor too — where a light or
   brand colour is unreadable. The Editor Readability Guard exists to prevent that, and it
   is mandatory in every build.
@@ -18,8 +19,9 @@
     1. Replace REPLACE-WITH-KO-BUNDLE-URL below with the exact ko-*.css URL from the KB's
        page <head> (it is an absolute CDN URL, so it loads from anywhere).
     2. Put the version folder's compiled custom-css.css next to this file.
-  Then open it. Deliberately absent: the Style-Settings block and custom-head. That
-  omission is the whole point — do not "fix" it by adding them.
+  Then serve and open it. Deliberately absent: the custom-head, which the editor never
+  loads. The generated Style-Settings rules are also left out (the guard's !important
+  overrides them either way); see the README for what that does and does not exercise.
 
   READING IT
   Green PASS / red FAIL per element, measured against the canvas colour this page actually
@@ -33,8 +35,8 @@
 <!-- 1) KO's compiled reader bundle — the same one the live editor iframe loads. -->
 <link rel="stylesheet" href="REPLACE-WITH-KO-BUNDLE-URL">
 
-<!-- 2) The build's compiled Custom CSS. Nothing else: no Style-Settings block,
-        no Custom <head>. The editor iframe loads neither. -->
+<!-- 2) The build's compiled Custom CSS. No Custom <head>, which the editor never loads;
+        the generated Style-Settings rules are left out too (see the README). -->
 <link rel="stylesheet" href="custom-css.css">
 
 <style>

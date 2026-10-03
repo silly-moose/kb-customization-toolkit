@@ -29,7 +29,7 @@ Use this when you're starting work on a customer's knowledge base for the first 
 
 Claude then captures the baseline itself: all 12 Customize > Style fields, the legacy homepage field, the Style Settings and HTML snapshots of the homepage and an article, each checked against the live KB. It also audits content-level CSS (Library > Snippets *and* a rendered article or two, because a `<style>` block in page content loads after Custom CSS and can override the theme), records the one-time facts under `# Baseline` in `.claude/rules/project.md`, asks once whether you want to add screenshots, and locks the folder. How it works: `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
 
-**No built-in browser?** In a terminal or IDE session, use the manual path: KnowledgeOwl teammates run the `ko-code-capture` bookmarklet (Silly Moose > Engineering > Dev) and unzip it into the no-changes folder; anyone else pastes each field into its file. `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §2 has the file-to-KnowledgeOwl mapping table, the DevTools snapshot steps and a folder structure diagram.
+**No built-in browser?** In a terminal or IDE session, use the manual path: KnowledgeOwl teammates run the `ko-code-capture` bookmarklet (Silly Moose > Engineering > Dev) and unzip it into the no-changes folder; anyone else pastes each field into its file. `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` has the file-to-KnowledgeOwl mapping table (§2), the DevTools snapshot steps (§3) and a folder structure diagram (§5).
 
 **One project folder per KB.** Each KB's folder holds all of that KB's code, versions and deploy records, so a sandbox and the live KB it was copied from are two folders side by side in the customer's folder. Older projects that sit directly in the customer's folder keep working; move one into its own KB-named folder only when that customer needs a second KB.
 
@@ -158,7 +158,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 Before getting started, make sure you have:
 
 - **Claude desktop app**: Claude Code runs inside the desktop app, and its built-in browser pane is what lets Claude capture and deploy KB code for you. In a terminal or IDE session there is no pane, so you fall back to pasting (05's manual path). Download at https://claude.ai/download
-- **Optional: Visual Studio Code (VS Code), or a comparable code editor**, for reading the project's files. You no longer copy code into KB fields by hand. Download VS Code at https://code.visualstudio.com
+- **Optional: Visual Studio Code (VS Code), or a comparable code editor**, for reading the project's files. When the built-in browser is available you no longer copy code into KB fields by hand. Download VS Code at https://code.visualstudio.com
 
 ---
 
