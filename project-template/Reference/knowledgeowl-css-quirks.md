@@ -797,7 +797,7 @@ Components that are light by default:
 
 KO renders the article tree into every help page's sidebar TOC server-side (`ul.documentation-outter-list`; the current renderer is `KbRenderer::toc()` and its `render*Toc*` helpers, with `help/tableofcontents.phtml` as the older twin). Collapsed branches are `style="display:none"` — **not** absent, and not lazy-loaded for the help site.
 
-**But "the full tree" is conditional, and one KB shipped with ZERO article links in its TOC.** On EvolveNXT both the homepage and an article page carried 10 category links and no `.article-link` at all, which would have sunk a homepage feature built on this section. The source explains exactly when articles are omitted rather than hidden:
+**But "the full tree" is conditional, and one KB shipped with ZERO article links in its TOC.** On one prospect's KB both the homepage and an article page carried 10 category links and no `.article-link` at all, which would have sunk a homepage feature built on this section. The source explains exactly when articles are omitted rather than hidden:
 
 - **"Hide subcategories and articles in TOC"** on a category (`toc_hide_children`, offered for Default, Topic and Basic categories) makes the renderer skip the whole branch: `if(!$hideChildren)` wraps the `renderInnerCategories` / `renderOutterArticles` calls, the category renders as a leaf link (`alt-icon` chevron, direct `href`), and its `ul.documentation-articles` is emitted **empty** with class `hide`.
 - **Blog categories** always behave that way (`$hideChildren = true` for `type == 'blog'`).

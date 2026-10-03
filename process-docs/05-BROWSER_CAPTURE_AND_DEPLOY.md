@@ -27,7 +27,7 @@ Both live in the toolkit at `process-docs/kb-io/` and are downloaded into the pr
 - **`kb_io.py`** runs locally (standard library only):
   - `python3 .claude/kb-io/kb_io.py have .` hashes every captured file in the project's dated folders plus the Minimalist defaults, and prints the `HAVE=` argument for `read()`.
   - `unpack <result>` decodes a `read()` result and reports where each live field came from (a version folder, the stock defaults, `empty`, or `NEW`). `--into DIR` writes a capture folder, `--snapshot FILE` writes an HTML snapshot, `--expect` checks a save against the last plan, and `--record DEPLOYMENTS.md` appends a row.
-  - `plan <version-folder>` compares a version with the last read of the live KB, runs the content checks, and writes the page calls plus the yes-request.
+  - `plan <version-folder>` compares a version with the last read of the live KB (`work/live.json`, or the file named by `--live`), runs the content checks, and writes the page calls plus the yes-request.
 
 Page functions (all return JSON; `read()` prefixes it with `KOIO1`):
 
