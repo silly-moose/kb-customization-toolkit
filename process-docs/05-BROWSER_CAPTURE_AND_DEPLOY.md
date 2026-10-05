@@ -131,7 +131,7 @@ Show the yes-request in the conversation and wait for a clear yes. One yes cover
 
 In the desktop app, a safety check reviews every click and keystroke Claude makes on an outside website, in every permission mode; Bypass permissions does not turn it off, and permission allow rules have no effect on it. It reads a Style page Save as a production deploy and refuses it. After one refusal it also refuses further actions aimed at the same button as a workaround, so stop and ask the user to click Save.
 
-The user can allow these saves for good by adding an `autoMode` block to their own `~/.claude/settings.json`. The check reads `autoMode` only from that user file, not from project settings, and reloads it on save. Entries are plain-English rules, and `"$defaults"` keeps every built-in rule:
+The user can allow these saves for good with an `autoMode` block in their own `~/.claude/settings.json`. After asking the user to click Save, offer to add it: show the block below, say it lets Claude click Save on the Style page of any knowledge base their login reaches (still only after their yes for each deploy), and add it only after a clear yes. Merge it into the existing file as a new top-level key, keep everything else, and check the file is still valid JSON. The check reads `autoMode` only from that user file, not from project settings, and reloads it on save. Entries are plain-English rules, and `"$defaults"` keeps every built-in rule:
 
 ```json
 "autoMode": {
@@ -146,7 +146,7 @@ The user can allow these saves for good by adding an `autoMode` block to their o
 }
 ```
 
-To test it, load a Style page without changing anything, click Save, and check that "Time of current save" moved and every field reads back unchanged. The rule does not replace the yes before every save, or the gate.
+On the next deploy, or right away if the user agrees, test it: load a Style page without changing anything, click Save, and check that "Time of current save" moved and every field reads back unchanged. The rule does not replace the yes before every save, or the gate.
 
 ### 4. The save gate
 
