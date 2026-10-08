@@ -18,7 +18,8 @@
  * are leads, not verdicts: icon glyphs drawn with ::before are not scanned, and an
  * accent the design uses on purpose (aqua text on a purple hero) shows up too.
  * koAudit.scan(window) scans the current page; run it from headless Chrome to check
- * signed-out pages such as the reader login.
+ * signed-out pages such as the reader login. simulateLoginMessages(), simulateReaderUpdate()
+ * and printView() rebuild states that are hard to reach (see 06-PAGE_COVERAGE.md section 4).
  */
 (() => {
   const hex = h => { const n = parseInt(h.replace('#', ''), 16); return `rgb(${n >> 16}, ${(n >> 8) & 255}, ${n & 255})`; };
@@ -74,6 +75,35 @@
     return results;
   }
 
-  window.koAudit = { scan, run };
+  // States that can't be reached without signing in or sending mail, rebuilt from KO's templates
+  // (service/views/scripts/help/readerlogin.phtml, readerupdate.phtml). Run on the signed-out
+  // /<root>/readerlogin page, then koAudit.scan(window, opts) and take a screenshot.
+  function simulateLoginMessages() {
+    document.querySelector('.hg-site-login').insertAdjacentHTML('afterbegin',
+      '<div class="bs-callout bs-callout-warning"><i class="fa fa-exclamation-triangle"></i> Invalid username or password.</div>' +
+      '<div class="bs-callout bs-callout-info">We have received your password reset request. If you provided a valid email address, you will receive an email shortly.</div>');
+  }
+  function simulateReaderUpdate() {
+    document.querySelector('.hg-site-login').innerHTML =
+      '<div class="alert alert-warning"><h5><i class="fa fa-exclamation-triangle"></i> Your password must be at least 8 characters.</h5></div>' +
+      '<div class="panel panel-default"><div class="panel-heading update"><h3 class="panel-title">Update Required</h3></div><div class="panel-body"><form>' +
+      '<div class="form-group"><label class="control-label">Email address:</label><input type="email" class="form-control"></div>' +
+      '<div class="form-group"><div class="password-requirements"><div>At least 8 characters.</div></div></div>' +
+      '<div class="form-group"><label class="control-label">New Password:</label><input type="password" class="form-control"></div>' +
+      '<div class="text-right"><button type="button" class="btn btn-primary">Submit</button></div></form></div></div>';
+  }
+  // The article print view, built the way public/js/public/ko-misc.js builds it, without print().
+  // Run on an article page; it replaces the page, so scan or screenshot afterwards.
+  function printView() {
+    const art = document.querySelector('.documentation-article').cloneNode(true);
+    art.querySelectorAll('.hg-article-footer, script, [id^="survey-wrapper"], .hg-article-controls').forEach(e => e.remove());
+    const head = document.head.cloneNode(true);
+    head.querySelectorAll('script').forEach(e => e.remove());
+    const html = "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>\n<html>\n<head>" +
+      head.innerHTML + "\n</head>\n<body style='padding:2em'>\n<div class='documentation-article' style='box-shadow:none;'>" + art.innerHTML + "\n</div>\n</body>\n</html>";
+    document.open(); document.write(html); document.close();
+  }
+
+  window.koAudit = { scan, run, simulateLoginMessages, simulateReaderUpdate, printView };
   return 'koAudit ready: koAudit.run(paths, {fonts, text, palette, css})';
 })();
