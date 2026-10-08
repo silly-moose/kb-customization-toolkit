@@ -46,7 +46,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§49](#49-vertically-centring-things-in-the-minimalist-top-bar--min-height-on-the-brand-and-leave-the-toggle-alone) centring in the top bar (**`min-height`, not `height`**) ·
 [§50](#50-homepage-widget-lists-list-action-is-hard-coded-to-width-40) homepage widget `.list-action` is `width: 40%` ·
 [§53](#53-login-restricted-access-and-404-each-swap-a-different-part-of-the-layout) **login / restricted-access / 404 layout matrix** ·
-[§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) custom-content categories render EMPTY
+[§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) custom-content categories render EMPTY ·
+[§57](#57-a-z-index-on-the-login-card-traps-the-reset-password-window-under-its-backdrop) **no `z-index` on the login card** (traps Reset Password)
 
 **Typography, lists & content elements**
 [§4](#4-froala-image-classes-and-no-border) Froala image classes ·
@@ -1117,3 +1118,12 @@ window.dataLayer.push({ event: 'ko_theme_toc_open', article_id: id });
 ```
 
 Keep `gtag('event', ...)` as the fallback for direct gtag.js installs. The customer then owes a Custom Event trigger, a GA4 Event tag and any custom dimensions in their GTM container; list that in the CHANGES file's manual steps, since nothing in the theme can do it for them.
+
+## 57. A `z-index` on the Login Card Traps the Reset Password Window Under Its Backdrop
+
+The Reset Password window (and the sign-up window, when reader sign-ups are on) is a Bootstrap modal whose markup comes from `[template("login-page")]`, so it sits **inside** whatever wraps that merge code in your Login HTML. Bootstrap appends the dark backdrop to `<body>` at `z-index: 1040` and gives the modal `z-index: 1050`. That only works while no ancestor of the modal is a stacking context.
+
+Give the login card `position: relative; z-index: 1` (a natural move when the page has decorative shapes behind the card) and the card becomes a stacking context. The modal's 1050 now only counts inside the card, the whole card paints at level 1, and the backdrop at 1040 covers the modal. The window looks dimmed, and every click lands on the backdrop, so readers can't type their email or press Reset. Nothing errors, and the login form itself still works, so it survives review.
+
+Fix: leave the card at `z-index: auto` and push the decoration behind it instead, for example `body::before, body::after { z-index: -1; }` (a negative z-index on a body pseudo-element paints above the page background as long as `<html>` has no background of its own). Check after any login-card change: open the window, then `document.elementFromPoint()` at the email field should return the `input`, not `.modal-backdrop`. The same trap applies to any template whose merge code renders a Bootstrap modal.
+

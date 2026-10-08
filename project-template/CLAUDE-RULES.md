@@ -4,7 +4,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 
 ## Contents
 
-**Running a session** — [At the Start of Each Session](#at-the-start-of-each-session) · [At the End of Each Session](#at-the-end-of-each-session--reflect--improve-suggest-only) · [Mandatory Checks](#mandatory-checks--the-six-that-are-easy-to-miss)
+**Running a session** — [At the Start of Each Session](#at-the-start-of-each-session) · [At the End of Each Session](#at-the-end-of-each-session--reflect--improve-suggest-only) · [Mandatory Checks](#mandatory-checks--the-seven-that-are-easy-to-miss)
 
 **Folders & versioning** — [Version Folders](#version-folders) · [Never Modify](#never-modify) · [Current-State Folders](#current-state-folders) · [CHANGES File](#changes-file)
 
@@ -28,9 +28,9 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
      - `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/Reference/knowledgeowl-css-defaults.md`
    - **`.claude/rules/project.md`** — check if it exists. If missing, fetch the template from the repo and save it locally (the user will fill in customer details). If it already exists, leave its filled-in values alone (they're customer-specific) — but if it has no `# Baseline` section, append that section from the template with its values unfilled, so projects created before it existed pick it up too. Do the same for the `# Deploy targets` section. A `# Baseline` line that is still unfilled on an older project (the content-level CSS line, say) is settled at step 2 the same way as on a first session:
      - `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/.claude/rules/project.md`
-   - **`.claude/kb-io/`**: download both capture-and-deploy helpers, overwriting any old copies:
+   - **`.claude/kb-io/`**: download the capture-and-deploy helpers and the page-coverage scan, overwriting any old copies:
      ```bash
-     mkdir -p .claude/kb-io && for f in ko-style-io.js kb_io.py; do curl -fsSL -o ".claude/kb-io/$f.new" "https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/kb-io/$f" && mv ".claude/kb-io/$f.new" ".claude/kb-io/$f"; done
+     mkdir -p .claude/kb-io && for f in ko-style-io.js kb_io.py page-audit.js; do curl -fsSL -o ".claude/kb-io/$f.new" "https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/kb-io/$f" && mv ".claude/kb-io/$f.new" ".claude/kb-io/$f"; done
      ```
    - **`CLAUDE.md`** (the project's bootstrap): download the template's copy and overwrite the local one the same way. A project's `CLAUDE.md` is only ever the bootstrap (project-specific notes belong in `.claude/rules/project.md`), so nothing is lost, and older projects stop carrying a stale bootstrap that fetches the rules with a web tool or omits newer docs. The refreshed copy takes effect next session:
      ```bash
@@ -63,7 +63,7 @@ Help the toolkit get sharper over time by capturing what caused friction in how 
 3. **One-line heads-up.** Tell the user in one line what you logged (e.g. "Added 2 items to the toolkit improvement-log's AWAITING REVIEW, suggest-only, for your review."). Keep it to one line.
 4. **Never apply during a session.** Don't edit or push the toolkit yourself, and don't move items between the log's status sections. Applying accepted suggestions — and triaging `AWAITING REVIEW` into `APPLIED`/`DECLINED`/`DEFERRED` — is Chad's separate step, done in a session opened in the toolkit repo. At **project closeout**, review/dedupe `AWAITING REVIEW` — see "Project Closeout" in `02-VERSION_CONTROL_PROCESS.md`.
 
-## Mandatory Checks — the six that are easy to miss
+## Mandatory Checks — the seven that are easy to miss
 
 These are the gates that must not be skipped. Each has a full section below; this is the list so none gets lost in the middle of a build. **State the outcome of each in the conversation** — including "not needed this version," so the decision is visible rather than silently omitted.
 
@@ -75,6 +75,7 @@ These are the gates that must not be skipped. Each has a full section below; thi
 | **Pre-deploy selector diff** | Before any deploy that changes Custom CSS | Set-difference the selectors so a customer's hand-added rule can't vanish silently. `kb_io.py plan` runs it and prints the count; state it. "Deployment Instructions" below |
 | **Save gate and read-back** | Every save to a KB | The gate armed by `stage()` must pass, and the read-back (`unpack --expect`) must say PASS; state it, e.g. "Read-back PASS: 12 fields, settings, one new save". "Capture & Deploy" below |
 | **Post-deploy verification** | After every deploy of a color / type / layout change | Sample what actually rendered; this failure class is invisible in the version folder. "Post-Deploy Verification" below |
+| **Page coverage** | Before the first version of a build is called done, and after any version that changes fonts, colors or the login card | Check every reader page type the KB has turned on, plus the widget, AI chatbot and PDFs, which Custom CSS doesn't reach. A theme reviewed on home, category and article pages leaves the rest stock. `06-PAGE_COVERAGE.md` |
 
 ## Version Folders
 
@@ -431,4 +432,6 @@ mechanism.
 | `custom-html-8-404-page.html` | Customize > Style (HTML & CSS) > Custom HTML > 404 Page |
 | `custom-html-9-restricted-access-page.html` | Customize > Style (HTML & CSS) > Custom HTML > Restricted Access Page |
 | `custom-html-10-right-column.html` | Customize > Style (HTML & CSS) > Custom HTML > Right Column |
+| `widget-custom-css.css` | Settings > Widget > Custom Widget Styles (plus Button Background Color and Button Text Color on the same page). Saved with that page's Save button, not the Style page; `06-PAGE_COVERAGE.md` §3 |
+| `chatbot-custom-css.css` | Settings > AI chatbot > Edit branding > Custom CSS (launcher colors are set in the same window). `06-PAGE_COVERAGE.md` §3 |
 | `homepage-custom-content.html` | Customize > Homepage > Homepage content > Custom content *(legacy field — only some older KBs use it; not the same as `custom-html-5-homepage.html`. Governed by `# Baseline` in `.claude/rules/project.md` — skip the file entirely when it records `empty`.)* |
