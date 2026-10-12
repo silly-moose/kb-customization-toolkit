@@ -60,7 +60,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§42](#42-every-h2-inside-faq-nav-content-is-hidden--by-a-descendant-selector) `<h2>` hidden in `.faq-nav-content` ·
 [§43](#43-breadcrumbs-are-ancestors-only--and-they-already-render-separators) breadcrumbs: ancestors-only + real separators ·
 [§44](#44-hg-project-name-is-display-none--replacing-custom-css-can-erase-the-kbs-name) `.hg-project-name` hidden by default ·
-[§52](#52-rem-is-10px-not-16px) **`rem` is 10px, not 16px**
+[§52](#52-rem-is-10px-not-16px) **`rem` is 10px, not 16px** ·
+[§59](#59-hg-article-body-text-rules-skip-paragraphs-and-reach-the-homepage-lists) `.hg-article-body` size skips paragraphs; list rules reach the homepage lists
 
 **Merge codes, templates & content hooks**
 [§34](#34-siterenderer-executes-merge-codes-everywhere--including-inside-css-comments) merge codes execute **inside CSS comments** ·
@@ -69,7 +70,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§40](#40-the-sidebar-toc-contains-the-full-article-tree-a-no-auth-all-articles-source) sidebar TOC holds the full article tree (**conditional: verify per KB**) ·
 [§51](#51-recent-articles-from-category-x-on-the-homepage-no-merge-code-exists-and-the-simplest-fix-is-a-same-origin-fetch) recent articles from a category on the homepage (**no merge code; same-origin fetch**) ·
 [§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE ·
-[§55](#55-ko_api-merge-codes-need-a-scoped-key-render-single-use-urls-and-fail-with-http-200) **`[ko_api(...)]`: scoped key, single-use URLs, errors are HTTP 200**
+[§55](#55-ko_api-merge-codes-need-a-scoped-key-render-single-use-urls-and-fail-with-http-200) **`[ko_api(...)]`: scoped key, single-use URLs, errors are HTTP 200** ·
+[§58](#58-the-seeded-backtotop-snippet-can-be-empty) seeded `backToTop` snippet can be **empty** (no arrow)
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -1127,3 +1129,39 @@ Give the login card `position: relative; z-index: 1` (a natural move when the pa
 
 Fix: leave the card at `z-index: auto` and push the decoration behind it instead, for example `body::before, body::after { z-index: -1; }` (a negative z-index on a body pseudo-element paints above the page background as long as `<html>` has no background of its own). Check after any login-card change: open the window, then `document.elementFromPoint()` at the email field should return the `input`, not `.modal-backdrop`. The same trap applies to any template whose merge code renders a Bootstrap modal.
 
+## 58. The Seeded `backToTop` Snippet Can Be Empty
+
+KnowledgeOwl seeds every new-from-scratch KB with a Back To Top snippet: `{{snippet.backToTop}}` in the Body template and the `.back-to-top` CSS in the seeded Custom CSS. The snippet itself can arrive empty. One KB created 2026-09-08 had the merge code and the CSS, but the snippet's `current_version` was null, so the arrow never appeared and nothing on the page says why. Both KB-creation paths (`KbController.php`, `SignupController.php`) copy `name`, `description`, `mergecode`, `content_type` and `current_version` from a template snippet in KnowledgeOwl's own account, and not `languages` or `pdf_hide`. An empty copy is possibly a KnowledgeOwl seeding bug, worth reporting when found.
+
+Check it during the baseline: the snippet audit (CLAUDE-RULES first-session step 2) already reads every snippet's body, and an empty `backToTop` body is this. Fill it in a version's deploy steps, with the user's yes, using KnowledgeOwl's documented code (Support article "Display a back to top icon when scrolling") plus `aria-label="Back to top"` on the link, since the documented link holds only an `aria-hidden` icon and has no accessible name:
+
+```html
+<a href="#" class="back-to-top" aria-label="Back to top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+<script>
+//back to top
+$(function(){
+  var offset = 250;
+  $(window).scroll(function() {
+    if ($(this).scrollTop() > offset && $('.back-to-top.visible').length < 1) {
+      $('.back-to-top').addClass('visible');
+    } else if($(this).scrollTop() <= offset && $('.back-to-top.visible').length > 0) {
+      $('.back-to-top').removeClass('visible');
+    }
+  });
+  $('.back-to-top').click(function(event) {
+    event.preventDefault();
+    $('html, body').animate({scrollTop: 0}, 300);
+    return false;
+  });
+});
+</script>
+```
+
+With an API key for the KB on hand, `PUT /snippet/{id}.json` with `current_version: {"en": "<code>"}`, `languages: ["en"]` and `pdf_hide: true` sets it, and a GET returns it unchanged (tested on an English KB). Without one, the user pastes the code into Library > Snippets > Back To Top in the Code Editor, with Hide from PDFs ticked.
+
+## 59. `.hg-article-body` Text Rules Skip Paragraphs and Reach the Homepage Lists
+
+Two traps when restyling article text through `.hg-article-body`:
+
+1. **A font size or line height set on `.hg-article-body` reaches list items but not paragraphs.** Paragraphs have rules of their own at (0,1,1): the generated Body font rule `.hg-article-body, .hg-article-body p { font-size }` (`KbRenderer.php`) and `ko-css.css`'s `.hg-article-body p { margin: 20px 0; line-height: 1.5 }`. List items have neither, so they take the new values while paragraphs keep the Style Settings size. One KB ran for weeks with lists at 17px / 1.75 and paragraphs at 16px / 24px. Set paragraphs explicitly: `.hg-minimalist-theme .hg-article-body p` (0,2,1). §30 has the related `em` trap.
+2. **The homepage's Popular, New and Updated lists sit inside `.hg-article-body`.** The stock homepage template wraps `.homepage-widgets` in `.hg-article > .hg-article-body`, and each list is `ul.list-unstyled.stat-list`, so an article list rule (spacing on `.hg-article-body ul li`, say) spaces them out too. Exclude them: `.hg-article-body ul:not(.list-unstyled) li`. On the KB where this came up, the category, search and glossary pages had no `.hg-article-body`; topic-based category pages do have one (`topic-based-category.phtml`).

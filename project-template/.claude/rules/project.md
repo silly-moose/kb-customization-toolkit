@@ -11,6 +11,7 @@ Facts about the KB settled **once** during setup, so later sessions don't re-che
 
 - **Homepage Custom content (legacy):** [empty / in use] — Customize > Homepage > Homepage content > Custom content. Once this says `empty`, skip `homepage-custom-content.html` in every later snapshot and don't ask about it again. If it says `in use`, include and refresh that file with each snapshot.
 - **Started from:** [customer's existing code / stock Minimalist defaults / theme template: name] — what the `no-changes` baseline was populated with. Leave unfilled on a project set up before this section existed; don't guess it retroactively.
+- **Back-to-top snippet:** [filled / empty / not used]: whether the `backToTop` snippet behind `{{snippet.backToTop}}` in the Body template has content. KnowledgeOwl can seed it empty (quirks-doc §58); if `empty`, the fix goes in a version's deploy steps.
 - **Content-level `<style>` (snippets and articles):** [none found / name + roughly how many articles use it] — Library > Snippets containing `<style>` or `<script>`, and CSS pasted into article bodies. These render inside page content, which loads *after* Custom CSS, so they can outrank the theme on every article that uses them (quirks-doc §47). Record them here rather than rediscovering them after a deploy.
 
 # Deploy targets

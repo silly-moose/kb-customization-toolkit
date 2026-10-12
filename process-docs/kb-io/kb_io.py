@@ -262,8 +262,13 @@ def decode_result(p):
                 pass
         # A result returned through browser_batch arrives as a JSON string literal
         # ("KOIO1{\"kind\"...}") inside the batch's results file, with other text
-        # around it: decode that string and look again.
+        # around it: decode that string and look again. Skip an escaped \"KOIO1: that
+        # is a string literal inside another one (a spilled result whose content
+        # part's text is the literal plus "(captured at origin ...)"), and the
+        # leading-literal decode below unwraps the outer layer first.
         j = s.find('"KOIO1')
+        while j > 0 and s[j - 1] == '\\':
+            j = s.find('"KOIO1', j + 1)
         if j >= 0:
             try:
                 v, _ = dec.raw_decode(s, j)
