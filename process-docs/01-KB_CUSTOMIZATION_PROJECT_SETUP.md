@@ -93,7 +93,7 @@ What it **does not** carry, and therefore has to be redone by hand in the target
 - **the homepage title** and the legacy **Custom content** field
 - **the contact-form on/off setting**
 - **per-category icons** (each category's editor keeps its own; a category with none renders KO's fallback glyph, so check the editors, not the homepage)
-- **the files**: the copied logo URL and any image URL in the CSS still point at the source KB's File Library, and the favicon does not copy at all (05, "Sandbox to live")
+- **the files**: unless they were on the live KB from the start (the default for sandbox builds, CLAUDE-RULES "Logo & Brand Assets"), the copied logo URL and any image URL in the CSS still point at the source KB's File Library, and the favicon does not copy at all (05, "Sandbox to live")
 - articles and categories (content is untouched in both directions)
 
 Snippets are a separate story: the copy does not create or delete them, so whatever the target KB already had is what it still has. If the theme depends on a snippet, check for it explicitly. `CLAUDE-RULES.md` ("If the deployment target is a COPIED KB") has the full list, including what a KB *copy* drops that a Reset Theme copy never touches (article tags, uploaded category Icon images).
@@ -315,7 +315,7 @@ Sampling a screenshot introduces JPEG error and guesswork. Prefer the source:
 
 **Tip — the logo goes in Style Settings, not custom code:** The logo belongs in KnowledgeOwl's native **Customize > Style > Style Settings > Logo** field. You upload the right variant per KB (e.g., a white version for a dark nav) to Library > Files, and Claude sets it as the logo in its next deploy. Don't hardcode a logo URL in Custom CSS/HTML or recolor a logo with a CSS `filter`. It's more robust and keeps the theme portable as a template. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
 
-**Tip — host other theme images in the KB:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control.
+**Tip — host other theme images in the KB:** When you reference a customer image *in the theme itself* (e.g., a homepage hero background), upload it to the **KB's file library** and use that URL in the CSS — don't hotlink the customer's live marketing site. A hotlinked URL can break if they redesign or move the file; a KB-hosted copy is stable and under your control. In a sandbox build, upload it to the live KB's library and use that URL in both KBs (CLAUDE-RULES "Logo & Brand Assets").
 
 ---
 

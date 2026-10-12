@@ -45,7 +45,7 @@ When the permission layer blocks `python3 -m http.server`, or you want the check
 })()
 ```
 
-Three things the snippet gets right that a quick version gets wrong:
+Four things the snippet gets right that a quick version gets wrong:
 
 - **It replaces every occurrence of the placeholder.** The first `REPLACE-WITH-KO-BUNDLE-URL` in the file is in the instructions comment, so a single `.replace()` leaves the real `<link>` broken and every row reads STOCK.
 - **It fills the Style-Settings slot**, lifting the generated rules from the page it runs on when none are given. Lift them from the KB being checked, not another KB's page.
@@ -75,7 +75,7 @@ KO's stock link colour `#3C80BA` measures **4.21:1** on white, below the WCAG AA
 
 ## Verified
 
-The harness was tested against three scenarios before shipping:
+The harness was tested against these scenarios:
 
 | Scenario | Expected | Got |
 |---|---|---|

@@ -237,7 +237,7 @@ Article typography is a three-layer cascade — Flat UI base → generated Style
 
 So net stock article headings are **H1 48px, H2 28px, H3 24px, H4 18px** — and note the oddity that H5 (24px, generated) renders *larger* than H4 (18px, seeded override).
 
-> **`em` / specificity traps on body text:** the generated `.hg-article-body, .hg-article-body p` rule is specificity **(0,1,1)** — a bare custom class **(0,1,0)** loses to it, so scope custom body-paragraph styling as `.hg-article-body p.my-class` **(0,2,1)** (or higher). And because the body is pinned to **16px** while the article **header** (`.hg-article-header`, *not* covered by that rule) sits on the **18px** page base, the same `em` renders at different sizes in each — `0.75em` = **12px** in the body but **13.5px** in the header. A custom body line can't match a header metadata row by copying its `em` value; measure and set the px. See `knowledgeowl-css-quirks.md` §30.
+> **`em` / specificity traps on body text:** the generated `.hg-article-body, .hg-article-body p` rule is specificity **(0,1,1)** — a bare custom class **(0,1,0)** loses to it, so scope custom body-paragraph styling as `.hg-article-body p.my-class` **(0,2,1)** (or higher). And because the body is pinned to **16px** while the article **header** (`.hg-article-header`, *not* covered by that rule) sits on the **18px** page base, the same `em` renders at different sizes in each — `0.75em` = **12px** in the body but **13.5px** in the header. A custom body line can't match a header metadata row by copying its `em` value; measure and set the px. See `knowledgeowl-css-quirks.md` §30. A size or line height set on `.hg-article-body` itself reaches list items but not paragraphs: quirks §59.
 
 ### Spacing Defaults
 
@@ -427,7 +427,7 @@ The three stock list merge codes are KB-wide (no per-category variant; see quirk
 | Selector | Default |
 |----------|---------|
 | `.homepage-widgets` | `padding: 1em 0; margin: 2em 0` (seeded Custom CSS: `margin: 2em -15px`); `h3 { margin-top: 0 }`; self-clearing `::after` |
-| `ul.stat-list` | `font-size: 18px; line-height: 22px` (seeded: `14px`, `line-height: 1.3`, `margin-left: 1px`; `li { padding: 4px 0 }`) |
+| `ul.stat-list` | `font-size: 18px; line-height: 22px` (seeded: `14px`, `line-height: 1.3`, `margin-left: 1px`; `li { padding: 4px 0 }`). The lists sit inside `.hg-article-body`, so article list rules reach them (quirks §59) |
 | `.list-action` (the "View more…" row) | **`width: 40%`**; `border-top: 1px solid #cecece; font-style: italic` (seeded removes the border). The 40% breaks at four columns; quirks doc §50 |
 | `.badge-new`, `.badge-updated` | See Tags above |
 
@@ -481,7 +481,7 @@ The homepage `[template("icon-cats…")]` renders category tiles that are distin
 
 Notes: the per-category icon **color** is set in the Category editor and rendered **inline** on the `<i>` (`help/icon-category.phtml`), so recoloring all icons from Custom CSS needs `!important`. The two "Default category icon colors" Style Settings (`categoryIcon`, `categoryIconBackground`) are not CSS at all: they are the defaults the category editor and the template fall back to (`KbController` passes `#69B2F0` / `#ffffff` when the theme has none), so changing them does not repaint categories that already have their own color.
 
-> **Check the per-category icon colors during setup — they're frequently an off-brand rainbow.** KO's category color picker offers its own stock swatches, and KBs that never curated them end up with icons in KO's alert-border palette (`#69B2F0` blue, `#E6ADA9` red, `#BDDCBC` green, `#FBD9A4` amber). Because the value is **inline**, no amount of theme CSS fixes it without `!important`. Make it an explicit decision rather than a surprise: a blanket `!important` normalize gives a cohesive theme out of the box, while leaving them per-category keeps the customer in control of each one. Pick one and say which in the CHANGES file.
+> **Check the per-category icon colors during setup — they're frequently an off-brand rainbow.** KO's category color picker offers its own stock swatches, and KBs that never curated them end up with icons in KO's alert-border palette (`#69B2F0` blue, `#E6ADA9` red, `#BDDCBC` green, `#FBD9A4` amber). The same four colors are the fallback icons KO draws for a category with no icon chosen (quirks §61), so they can appear when nobody picked a color at all. Because the value is **inline**, no amount of theme CSS fixes it without `!important`. Make it an explicit decision rather than a surprise: a blanket `!important` normalize gives a cohesive theme out of the box, while leaving them per-category keeps the customer in control of each one. Pick one and say which in the CHANGES file.
 
 > **If you resize `.category-icon i`, zero its box too.** The default carries `margin-top: 16px` + `padding: 5px`, sized for the 75px homepage glyph. Drop it into a smaller custom container (say a 54px tile) and override only `font-size`, and that stock top margin pushes the glyph ~16px low — `place-items: center` on the parent **can't** fix it, because it centers the margin-box. Set `margin: 0; padding: 0; line-height: 1` on the `<i>` as well.
 

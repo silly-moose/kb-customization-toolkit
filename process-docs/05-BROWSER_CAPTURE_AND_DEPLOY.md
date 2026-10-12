@@ -72,7 +72,7 @@ To keep inline results small, pass `HAVE`: fields that already match a local fil
 2. Reader snapshots first, before opening the Style page (see "Snapshots").
 3. In the control tab: `koIO.read('<pid>', HAVE, {home: true})`.
 4. `python3 .claude/kb-io/kb_io.py unpack <result> --into YYYY.MM.DD-no-changes`. It writes the 12 files, `homepage-custom-content.html` and `style-settings-colors.md`, re-hashes each one against the live value, and lists each field's source. Stock fields come from the Minimalist defaults, an empty Custom CSS or head shows as `empty`, and fields marked `NEW` are the customer's own code.
-5. Record the `# Baseline` facts. The legacy homepage field is read, not asked: `unpack` reports it as `empty` or its size. The snippet and article `<style>` audit is unchanged (`CLAUDE-RULES.md`).
+5. Record the `# Baseline` facts; the full list is in `CLAUDE-RULES.md` step 2. The legacy homepage field is read, not asked: `unpack` reports it as `empty` or its size. The snippet and article `<style>` audit is unchanged (`CLAUDE-RULES.md`).
 6. Ask once whether the user wants to add screenshots, then lock the folder with `chmod -R a-w`.
 
 A captured empty field (Custom CSS or head) is a 0-byte file. A file that is only a template comment ("Paste customer's ...") was never filled in: `plan` never deploys it, and `have` reads it as an empty field, because older projects left the placeholder in place to record that a field was empty. The 10 HTML sections are never empty in the editor, because KO shows its default template in any section with nothing saved; that default is what a save would store, so it is what capture records.
@@ -174,7 +174,7 @@ At the end of the session, read each target once more and `unpack` it: every fie
 ### Style Settings and the logo
 
 - Colors and fonts go in the same save as the code. The version folder's `style-settings-colors.md` is the source: its `## Values` table is what that version deploys. Custom web fonts are set by hand for now.
-- **Logo:** the user uploads the image to Library > Files. Put its File Library name in the table's `logo.file` row, and `stage()` finds it (exactly one image with that name) and sets it as the logo in the same save. KO's logo URL carries a slug, not the name, so `read()` looks the name up by file id. If an API key for the KB is on hand (KO staff, or a customer who holds one), the upload can be scripted from the local terminal instead: `POST https://app.knowledgeowl.com/api/head/file.json` (multipart, the key as the Basic-auth username) puts the file in the File Library, and `stage()` then finds it by name. That worked with an SVG on 2026-09-30. Everyone else uploads in the pane. In a sandbox build, theme files go on the live KB and the code uses its URLs (CLAUDE-RULES "Logo & Brand Assets").
+- **Logo:** the user uploads the image to Library > Files. Put its File Library name in the table's `logo.file` row, and `stage()` finds it (exactly one image with that name) and sets it as the logo in the same save. KO's logo URL carries a slug, not the name, so `read()` looks the name up by file id. If an API key for the KB is on hand (KO staff, or a customer who holds one), the upload can be scripted from the local terminal instead: `POST https://app.knowledgeowl.com/api/head/file.json` (multipart, the key as the Basic-auth username) puts the file in the File Library, and `stage()` then finds it by name. That worked with an SVG on 2026-09-30. Everyone else uploads in the pane. In a sandbox build, theme files go on the live KB and the code uses its URLs; the logo goes to both KBs, and with Image / file security on either KB, each KB gets its own copies (CLAUDE-RULES "Logo & Brand Assets").
 - **Favicon:** the user uploads it through Customize > Style > Style Settings > Favicon. It saves immediately and is separate from the Style save.
 
 ### Promotion, several KBs, and rollback
@@ -184,7 +184,7 @@ At the end of the session, read each target once more and `unpack` it: every fie
   Whichever way a theme reaches a second KB, including KO's own Reset Theme > "use settings from another knowledge base" (the user's one-click control; Claude never clicks it), check what did **not** travel with the Style fields:
   - **The files.** The copied logo URL and any image URL in the CSS (a hero `background-image`, say) still point at files in the **source** KB's File Library: `read()` on the target reports `logoFile: null`, because the file id is not in its library, and `koIO.files(<source pid>, <file id>)` finds it. Deleting or resetting the source KB would then break the live KB. When the CSS already points at the live KB's own files (the default for sandbox builds, CLAUDE-RULES "Logo & Brand Assets"), only `logo.file` needs setting. Otherwise treat it as a manual step: the user uploads the files to the target KB, and the next deploy repoints `logo.file` and the CSS URLs. `plan` lists new KB-hosted image references for exactly this reason.
   - **The favicon**, which never copies. Compare `document.querySelector('link[rel~=icon]')?.href` on a reader page of each KB; the target may have none.
-  - **Per-category icons, Default Text, the homepage title, snippets and article tags**, all per KB. The list and the checks are in `CLAUDE-RULES.md`, "If the deployment target is a COPIED KB".
+  - **Per-category icons, Default Text, the homepage title and snippets**, all per KB, and **article tags** after a full KB copy (a Reset Theme copy doesn't touch content). The list and the checks are in `CLAUDE-RULES.md`, "If the deployment target is a COPIED KB".
 - **Several KBs:** one project folder each. `# Deploy targets` lists the folder's own KB; a KB read only as a `--from` source is not a target.
 - **Rollback:** deploy the older version folder through the same steps. KO also keeps the last 10 whole-theme saves under "Revert to previous save"; reverting restores every field, color, font and the logo at once. That is the user's emergency control; Claude uses it only when asked.
 
@@ -201,7 +201,7 @@ The rules for this procedure are in `CLAUDE-RULES.md`, "Capture & Deploy", and a
 Use this in a terminal or IDE session, or when the pane cannot reach the KB.
 
 - **Capture:** KO teammates run the `ko-code-capture` bookmarklet (Silly Moose > Engineering > Dev) and unzip it into the dated folder; `have` strips its header comments when matching. Otherwise paste each field into its file (`01-KB_CUSTOMIZATION_PROJECT_SETUP.md` §2 has the table). Snapshots come from Chrome DevTools (Elements, right-click `<html>`, Copy outerHTML). Style Settings colors are read one swatch at a time.
-- **Deploy:** the CHANGES file's "Files to Deploy" list is the paste list: each file into its field in Customize > Style (HTML & CSS), plus the "Style Settings" table, then one Save.
+- **Deploy:** Claude runs the selector check first: `plan` when a live read exists, otherwise the set difference of selectors between the last captured `custom-css.css` and the new one (CLAUDE-RULES "Deployment Instructions"). The CHANGES file's "Files to Deploy" list is then the paste list: the "Style Settings" table first, then each file into its field in Customize > Style (HTML & CSS), then one Save.
 - **Whenever Claude can read the KB,** it runs the read-back after a manual save. That catches a truncated paste.
 
 ---
@@ -222,6 +222,7 @@ In `app.knowledgeowl.com`, Claude opens or fetches only these. Anything else wai
 
 | Page | What it gives |
 |---|---|
+| `https://app.knowledgeowl.com`, `/admin/index` | The sign-in pages ("Before anything: sign in and confirm the KB"); the user signs in, Claude only opens them |
 | `/kb/articles/id/<pid>` | The KB's article list: the control tab, and the page to step away to so the Style page reloads fresh |
 | `/kb/style/id/<pid>` | The Style form `#js-theme-f`: `textarea[name=custom-css]`, `head-html`, and the ten `<section>-html` textareas (`body`, `nav`, `article`, `articleversion`, `homepage`, `login`, `readersub`, `error404`, `noaccess`, `rcol`), the hidden `#js-theme-json` with colors, fonts, layout and logo, and `#revert-save-select`, KO's list of previous saves. Saving posts to `/kb/style-save/id/<pid>` |
 | `/kb/home-page/id/<pid>` | `#title` and `#content`, the legacy homepage Custom content field |
