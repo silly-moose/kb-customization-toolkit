@@ -47,7 +47,10 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§50](#50-homepage-widget-lists-list-action-is-hard-coded-to-width-40) homepage widget `.list-action` is `width: 40%` ·
 [§53](#53-login-restricted-access-and-404-each-swap-a-different-part-of-the-layout) **login / restricted-access / 404 layout matrix** ·
 [§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) custom-content categories render EMPTY ·
-[§57](#57-a-z-index-on-the-login-card-traps-the-reset-password-window-under-its-backdrop) **no `z-index` on the login card** (traps Reset Password)
+[§57](#57-a-z-index-on-the-login-card-traps-the-reset-password-window-under-its-backdrop) **no `z-index` on the login card** (traps Reset Password) ·
+[§61](#61-a-category-with-no-icon-gets-one-of-four-fallback-icons) **four** fallback category icons, on category pages too ·
+[§63](#63-overflow-hidden-on-the-homepage-hero-clips-the-search-suggestions) `overflow: hidden` hero clips the search suggestions ·
+[§64](#64-hg-site-login-has-a-min-width-400px) `.hg-site-login` has `min-width: 400px`
 
 **Typography, lists & content elements**
 [§4](#4-froala-image-classes-and-no-border) Froala image classes ·
@@ -71,7 +74,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§51](#51-recent-articles-from-category-x-on-the-homepage-no-merge-code-exists-and-the-simplest-fix-is-a-same-origin-fetch) recent articles from a category on the homepage (**no merge code; same-origin fetch**) ·
 [§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE ·
 [§55](#55-ko_api-merge-codes-need-a-scoped-key-render-single-use-urls-and-fail-with-http-200) **`[ko_api(...)]`: scoped key, single-use URLs, errors are HTTP 200** ·
-[§58](#58-the-seeded-backtotop-snippet-can-be-empty) seeded `backToTop` snippet can be **empty** (no arrow)
+[§58](#58-the-seeded-backtotop-snippet-can-be-empty) seeded `backToTop` snippet can be **empty** (no arrow) ·
+[§62](#62-a-toggle-subcategory-has-no-address-in-the-table-of-contents) a Toggle category's TOC link is `javascript:void(0);`
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -80,7 +84,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§27](#27-centering-an-icon-in-a-nav-toggle-button--use-flex-not-line-height) centring a nav toggle icon ·
 [§32](#32-detecting-a-logged-in-author-client-side-ko-app-edit) detecting a logged-in author (**incl. Preview vs live**) ·
 [§46](#46-sessionstorage-survives-a-hard-refresh) `sessionStorage` survives a hard refresh ·
-[§56](#56-under-google-tag-manager-send-events-with-datalayerpush-not-gtagevent) Google Tag Manager wants `dataLayer.push`, not `gtag('event')`
+[§56](#56-under-google-tag-manager-send-events-with-datalayerpush-not-gtagevent) Google Tag Manager wants `dataLayer.push`, not `gtag('event')` ·
+[§60](#60-image--file-security-rewrites-file-links-everywhere-including-the-theme) **Image / file security rewrites the theme's file links** (and breaks PDF previews)
 
 ---
 
@@ -1165,3 +1170,51 @@ Two traps when restyling article text through `.hg-article-body`:
 
 1. **A font size or line height set on `.hg-article-body` reaches list items but not paragraphs.** Paragraphs have rules of their own at (0,1,1): the generated Body font rule `.hg-article-body, .hg-article-body p { font-size }` (`KbRenderer.php`) and `ko-css.css`'s `.hg-article-body p { margin: 20px 0; line-height: 1.5 }`. List items have neither, so they take the new values while paragraphs keep the Style Settings size. One KB ran for weeks with lists at 17px / 1.75 and paragraphs at 16px / 24px. Set paragraphs explicitly: `.hg-minimalist-theme .hg-article-body p` (0,2,1). §30 has the related `em` trap.
 2. **The homepage's Popular, New and Updated lists sit inside `.hg-article-body`.** The stock homepage template wraps `.homepage-widgets` in `.hg-article > .hg-article-body`, and each list is `ul.list-unstyled.stat-list`, so an article list rule (spacing on `.hg-article-body ul li`, say) spaces them out too. Exclude them: `.hg-article-body ul:not(.list-unstyled) li`. On the KB where this came up, the category, search and glossary pages had no `.hg-article-body`; topic-based category pages do have one (`topic-based-category.phtml`).
+
+## 60. Image / File Security Rewrites File Links Everywhere, Including the Theme
+
+Turning on **Image / file security** ("Require login to view files/images", in the KB's Security settings) queues a migration (`Migrate/KbFileLibrary.php`) that rewrites every File Library link to `/files/<account id>/<file id>/<name>`: in articles, categories, snippets, the logo, the homepage, and the theme's Custom HTML and Custom CSS. No Style save is involved, so the theme changes without anyone touching it. Turning it off offers "Make all files and images public?" and runs the same migration back.
+
+What changes for readers:
+
+- **A `/files/` link needs a signed-in reader.** Signed out, it redirects to the KB's login (reader login, SAML, single password and so on; a plain 401 with none). Signed in, it redirects to a signed CloudFront link that expires in 60 seconds (`FilesController.php`). So a private KB's login page loses a File Library logo or backdrop unless they are embedded as data URIs in the Login template, and reader emails can't use File Library images.
+- **The old public links stop working.** `/app/image/...` returns 401 once uncached, but CloudFront keeps serving cached copies for up to 10 days (`s-maxage=864000`), so a check right after the switch can pass and fail later.
+- **Links to files in another KB or account broke**, even for signed-in readers, in testing: files owned by another KB, and a Body `<img>` of KnowledgeOwl's own "built with KnowledgeOwl" mark, which 404ed. This matters for sandbox builds that link the live KB's files (CLAUDE-RULES "Logo & Brand Assets").
+- **An SVG logo stopped rendering** for signed-in authors after the switch on one KB, while PNGs on the same route loaded. A PNG copy of the logo fixed it.
+- **PDFs can't display in an iframe preview.** The signed link served PDFs as downloads in the browsers tested, while a secured image in the same kind of iframe loaded; `?inline=1`, `?response-content-disposition=inline` and `<object>` made no difference, and KO's code sets no Content-Disposition for them. One KB with 243 PDF previews switched the setting off again.
+- **The AI chatbot's avatar and launcher icon** are saved as URLs in the chatbot's branding, which the migration doesn't touch, so they can break after a switch. Re-upload them in Edit branding.
+
+For a build:
+
+- After anyone switches the setting, run the drift check and capture a `current-state` folder before building the next version, even within a day. A version built from a folder captured before the switch puts back the public links, which then return 401. `kb_io.py plan` warns when a version links `/app/image/` addresses and the live theme uses `/files/`.
+- Then check on a reader page, signed in and signed out: the header logo, every theme `<img>`, every CSS image URL, and one PDF preview in a real browser. Nothing else flags a broken logo.
+- `read()` resolves the logo's File Library name from either address form, so `unpack --expect` works after the switch.
+
+## 61. A Category With No Icon Gets One of Four Fallback Icons
+
+A category with no icon chosen renders a fallback, and KnowledgeOwl rotates four of them (`help/icon-category.phtml`), all `fa-duotone`: `fa-aperture` `#69B2F0`, `fa-solar-system` `#E6ADA9`, `fa-grid-2` `#BDDCBC` and `fa-chart-simple` `#FBD9A4`. The counter advances only for categories without an icon, so the fifth icon-less category gets the aperture again. Category pages show fallbacks for their subcategories too: one KB looked finished on the homepage while all 25 subcategories on its category pages showed generic glyphs. Check category pages, not just the homepage.
+
+A theme can give each one a topic icon without touching category settings, because Font Awesome 6.5.1 sets each glyph as `content` (`.fa-aperture:before{content:"\e2df"}`; the duotone `:after` is the codepoint twice):
+
+```css
+.cat-icons-cntr .cat-icon-panel[href$="/sessions"] .category-icon i:is(.fa-aperture, .fa-solar-system, .fa-grid-2, .fa-chart-simple)::before { content: "\f073"; }
+.cat-icons-cntr .cat-icon-panel[href$="/sessions"] .category-icon i:is(.fa-aperture, .fa-solar-system, .fa-grid-2, .fa-chart-simple)::after { content: "\f073\f073"; }
+```
+
+The `:is()` limits it to fallbacks, so an icon chosen later in the category's settings wins.
+
+## 62. A Toggle Subcategory Has No Address in the Table of Contents
+
+A category's **Table of contents behavior** is Toggle (the default) or Navigate. In the table of contents, a Navigate category links to `/<root>/<slug>`, and a Toggle category links to `javascript:void(0);` (`KbRenderer.php`), unless it is a content category, which keeps its real URL. A theme script that copies TOC links, such as a topic page listing its subtopics, copies dead links: skip `javascript:` hrefs, and list a Toggle category's own TOC children instead.
+
+On one KB, API writes (a category setting, an article's `url_hash`) did not refresh the reader site's cached table of contents and category pages. A theme save, or saving the category unchanged in the app, did.
+
+## 63. `overflow: hidden` on the Homepage Hero Clips the Search Suggestions
+
+The large homepage search's suggestion list (`ul.ui-autocomplete`) is absolutely positioned inside the search form and drops below `.ko-homepage-top`. A hero that clips its overflow, usually to contain decorative shapes, cuts the list off at its bottom edge. A snapshot has no live suggestions, so the preview won't show it. Draw decorative shapes as `radial-gradient` backgrounds instead, and on the deployed homepage type in the large search and check that the last suggestion is on top (`document.elementFromPoint` at its center returns the row).
+
+Restyling the list: KO's search bar script sets inline `top`, `left` and `width` each time it opens (the input's width, not the input group's), so overrides need `!important`. The rows inherit the hero's `text-align: center`. And `li.highlighted` means the search matched the title, not that the row is selected; the selected row is `.ui-state-active` (`aria-selected="true"`).
+
+## 64. `.hg-site-login` Has a `min-width: 400px`
+
+`ko-css.css` gives the login card `margin: 100px auto; width: 50%; min-width: 400px`. A theme that wants a narrower card must set `min-width: 0` on it: `width: auto !important` alone does nothing, and the card's content overflows its padding (seen on a card about 470px wide).

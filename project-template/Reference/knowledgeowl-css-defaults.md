@@ -620,7 +620,7 @@ Style Settings also accepts a **custom font URL** per role (`font.title.custom_u
 Two consequences for any theme:
 
 - **`font-weight: 500` and `600` silently render at 700.** The browser snaps to the nearest available weight, so a "medium" nav link or sub-heading comes out as bold and becomes indistinguishable from the genuinely-bold elements — flattening the hierarchy the theme was trying to build. **Pick the theme's weight ramp from what's actually served** (300/400/700 gives you light / regular / bold), and check the family's CSS before designing around an intermediate weight.
-- **Don't add a Google Fonts `<link>` in Custom `<head>` for a family already set in Style Settings.** KO is already loading it; a second load of the same family is pure waste and risks a FOUT mismatch between the two copies.
+- **Don't add a Google Fonts `<link>` in Custom `<head>` for a family already set in Style Settings.** KO is already loading it; a second load of the same family is pure waste and risks a FOUT mismatch between the two copies. The rule is about weights KO already loads: a brand weight KO doesn't serve (Open Sans 800, say) can come from a link for that one weight (`family=Open+Sans:wght@800`), which the browser merges with KO's 300/400/700 faces. Custom `<head>` is not loaded in the editor (quirks §28), so headings fall back to 700 there.
 
 ### Geomanist is NOT on public KBs
 

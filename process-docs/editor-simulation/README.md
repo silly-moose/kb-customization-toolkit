@@ -12,7 +12,7 @@ Because the cascade is fully specified, [`editor-simulation.html`](editor-simula
 
 1. Copy `editor-simulation.html` into your gitignored `preview/` folder.
 2. Replace `REPLACE-WITH-KO-BUNDLE-URL` with the exact `ko-*.css` URL from the KB's page `<head>` (an absolute CDN URL, so it loads from anywhere).
-3. Replace `REPLACE-WITH-STYLE-SETTINGS-RULES` with the KB's generated Style-Settings rules. They are the first part of the page's first inline `<style>` block in any reader snapshot (`full-html-snapshot-*.html`): everything before the Custom CSS text begins, about 5 KB of minified rules such as `.documentation-article h1, .cke_editable h1{color:#212121}`. If the version changes a Style Setting, swap the old hex for the new one from the version's `style-settings-colors.md`, since KO regenerates these rules on save.
+3. Replace `REPLACE-WITH-STYLE-SETTINGS-RULES` with the KB's generated Style-Settings rules. They are the first part of the inline `<style>` block that holds them in any reader snapshot (`full-html-snapshot-*.html`), the one containing `.documentation-article h1, .cke_editable h1`; on a KB with a cookie-consent script, the first `<style>` can be that script's CSS instead: everything before the Custom CSS text begins, about 5 KB of minified rules such as `.documentation-article h1, .cke_editable h1{color:#212121}`. If the version changes a Style Setting, swap the old hex for the new one from the version's `style-settings-colors.md`, since KO regenerates these rules on save.
 4. Copy the version folder's compiled `custom-css.css` next to it.
 5. Serve the folder and open the page — see [`../03-LOCALHOST_PREVIEW.md`](../03-LOCALHOST_PREVIEW.md).
 
@@ -27,9 +27,9 @@ When the permission layer blocks `python3 -m http.server`, or you want the check
 ```js
 (async () => {
   const BUNDLE = 'REPLACE: the ko-*.css URL from the KB page <head>';
-  let SETTINGS = '';   // the generated Style-Settings rules; left empty, they are lifted from this page's first inline <style>
+  let SETTINGS = '';   // the generated Style-Settings rules; left empty, they are lifted from this page's <style> that holds them
   const CSS = 'REPLACE: the version folder\'s compiled custom-css.css, as one string';
-  if (!SETTINGS) { const t = document.querySelector('style').textContent; const i = Math.min(...[t.indexOf(':root'), t.indexOf('/*')].filter(n => n >= 0)); SETTINGS = i > 0 ? t.slice(0, i) : t; }
+  if (!SETTINGS) { const t = [...document.querySelectorAll('style')].map(s => s.textContent).find(x => x.includes('.cke_editable h1')) || ''; const i = Math.min(...[t.indexOf(':root'), t.indexOf('/*')].filter(n => n >= 0)); SETTINGS = i > 0 ? t.slice(0, i) : t; }
   const src = await (await fetch('https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/editor-simulation/editor-simulation.html')).text();
   const html = src.split('REPLACE-WITH-KO-BUNDLE-URL').join(BUNDLE)
     .replace('REPLACE-WITH-STYLE-SETTINGS-RULES', SETTINGS.replace(/<\/style/gi, '<\\/style'))

@@ -226,9 +226,10 @@ function koioFactory() {
       o.settings = settingsOf(r.theme);
       o.settingsHash = await sha(canon(o.settings));
       // The logo URL carries a slug, not the File Library name; look the name up by file id.
-      const m = o.settings.logo.match(/\/app\/image\/id\/([0-9a-f]{24})\//);
+      // With Image / file security on, the URL is /files/<account id>/<file id>/<name>.
+      const m = o.settings.logo.match(/\/app\/image\/id\/([0-9a-f]{24})\/|\/files\/[0-9a-f]{24}\/([0-9a-f]{24})\//);
       if (m) {
-        try { const f = (await findFiles(pid, m[1])).files[0]; o.logoFile = f ? { id: f.id, name: f.name } : null; }
+        try { const f = (await findFiles(pid, m[1] || m[2])).files[0]; o.logoFile = f ? { id: f.id, name: f.name } : null; }
         catch (e) { o.logoFile = null; }
       }
     }

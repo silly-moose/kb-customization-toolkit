@@ -620,6 +620,10 @@ def cmd_plan(a):
         die('work/have.json is from another copy of the helper; run `have` again.')
     fields, puts, lines, fail, notes, images, check = {}, [], [], [], [], [], {}
     chunk_no = 0
+    # Switching on Image / file security rewrites the theme's File Library links to
+    # /files/<account>/<file>/<name>; the old public /app/image/ links then return 401.
+    secured = any(re.search(r'/files/[0-9a-f]{24}/[0-9a-f]{24}/', source_text(have, s[0]))
+                  for s in (have['fields'].get(k, {}).get(live['fields'][k]['h'], []) for k, _, _ in FIELDS) if s)
     for key, fn, label in FIELDS:
         live_h = live['fields'][key]['h']
         check[key] = live_h
@@ -676,6 +680,10 @@ def cmd_plan(a):
             base_n = len(selectors(norm(source_text(have, sources[0]))))
             lines.append(f'Selector check: {len(dropped)} of {base_n} live selectors dropped'
                          + (': ' + '; '.join(dropped[:15]) + (' ...' if len(dropped) > 15 else '') if dropped else ''))
+        if secured and re.search(r'/app/image/id/[0-9a-f]{24}/', target):
+            lines.append(f'WARNING: {label} links File Library images by their public /app/image/ address, but the '
+                         'live theme uses /files/ links (Image / file security is on), and the public links return '
+                         '401. Take the /files/ addresses from the live text (quirks-doc 60).')
         image_ref = r'/app/image/id/[0-9a-f]{24}/n/[^\s"\')]+'
         before = set(re.findall(image_ref, source_text(have, sources[0]))) if sources else set()
         images += [i for i in re.findall(image_ref, target) if i not in before]

@@ -303,6 +303,8 @@ def delta_e(h1, h2):
 
 **Also worth measuring:** a logo against the nav it sits on — sample the logo PNG's **opaque** pixels, take their 10th-percentile luminance, and run `contrast()` against the nav colour. See "Logo & Brand Assets" in `CLAUDE-RULES.md`.
 
+**Trimming an SVG logo's viewBox: measure the SVG, not a PNG export of it.** One customer's PNG export placed the artwork differently, and a viewBox taken from the PNG's bounds cut off the top of the mark. In the browser, take the union of `getBBox()` over the visible shapes, skipping `display:none` groups; ImageMagick draws hidden guide shapes too.
+
 ### Getting exact palettes out of source files rather than off a render
 
 Sampling a screenshot introduces JPEG error and guesswork. Prefer the source:
