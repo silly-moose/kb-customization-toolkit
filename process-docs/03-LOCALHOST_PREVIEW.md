@@ -176,7 +176,7 @@ The preview server serves **static files**, and browsers cache them across edits
 
 Both were wrong, and neither announced itself. So after every edit, either:
 
-- **Cache-bust the URL** — append `?r=2`, `?r=3`, … on each reload (local preview only: on the live KB, `/help/<slug>?v=1` returns KO's 404 page, so reload or append a hash like `#r2` there instead); or
+- **Cache-bust the URL** — append `?r=2`, `?r=3`, … on each reload (local preview only: on the live KB, `/help/<slug>?v=1` returns KO's 404 page, so reload there instead, or open another page and come back with a hash like `#r2`, since adding a hash to the page already open does not reload it); or
 - **Assert the new code is actually present** before trusting anything — check for a marker string from the edit (e.g. look for it among `document.querySelectorAll('script')`, or read back the served CSS).
 
 Cheap, and it converts a silent false negative into a visible one. The same discipline applies to injected probe styles: re-assert from a **clean reload** and include a control that proves the injection took, before drawing a conclusion from a measurement.

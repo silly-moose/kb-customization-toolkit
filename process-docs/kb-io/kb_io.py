@@ -5,12 +5,14 @@ process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md
 
   have <build-root>
       Hash every captured file in the build's dated folders, plus the
-      Minimalist defaults, and print the HAVE argument for koIO.read().
+      Minimalist defaults and the deployed copies under work/deployed/,
+      and print the HAVE argument for koIO.read().
   unpack <result> [--into DIR | --snapshot FILE] [--expect] [--record FILE]
       Decode a koIO.read() result (a spilled tool-result file, or an inline
       result saved verbatim) and report where each live field came from.
       --into writes a capture folder, --snapshot writes an HTML snapshot,
-      --expect checks a save against the last plan, --record appends a row
+      --expect checks a save against the last plan and, on a pass, keeps a
+      copy of each deployed field under work/deployed/, --record appends a row
       to DEPLOYMENTS.md.
   plan <version-folder> [--from FILE] [--overwrite KEY ...]
       Compare a version folder with the last read of the live KB, run the
@@ -189,12 +191,14 @@ def dated_folders(root):
 
 
 def source_text(have, src):
-    """The normalized text behind one `have` source: a build file or a Minimalist default."""
+    """The normalized text behind one `have` source: a build file, a Minimalist default or a deployed copy."""
     if src.endswith(PLACEHOLDER_TAG):
         return ''
     if src.startswith('defaults/'):
         text = read(WORK / 'defaults' / src.split('/')[1].split(' ')[0])
         return without_guard(text) if src.endswith('(without the guard)') else text
+    if src.startswith('deployed/'):
+        return read(WORK / src)
     return strip_capture_header(read(Path(have['root']) / src))
 
 
@@ -204,7 +208,12 @@ def label_of(sources):
         return 'empty' if sources else 'NEW'
     if all(s.startswith('defaults/') for s in real):
         return 'stock default'
-    return sorted(Path(s).parent.name for s in real if not s.startswith('defaults/'))[-1]
+    named = [s for s in real if not s.startswith('defaults/')]
+    files = [s for s in named if not s.startswith('deployed/')]
+    if files:
+        return sorted(Path(s).parent.name for s in files)[-1]
+    # Only the copy kept at read-back matches: the version folder was corrected in place since.
+    return sorted(Path(s).parent.name for s in named)[-1] + ' (as deployed)'
 
 
 def cmd_have(a):
@@ -226,6 +235,13 @@ def cmd_have(a):
                 index[key].setdefault(h12(s), []).append(str(f.relative_to(root)))
             else:   # older projects kept a placeholder to record "empty at project start"
                 index[key].setdefault(h12(''), []).append(str(f.relative_to(root)) + PLACEHOLDER_TAG)
+    # Fields as they were deployed, kept by `unpack --expect`, so a version folder corrected
+    # in place after its deploy still knows the live text and can be patched against it.
+    deployed = sorted((WORK / 'deployed').glob('*/*'))
+    for f in deployed:
+        key = next((k for k, fn, _ in FIELDS if fn == f.name), None)
+        if key:
+            index[key].setdefault(h12(read(f)), []).append(f.relative_to(WORK).as_posix())
     offline = []
     for key, fn, _ in FIELDS:
         s = fetch_default(fn)
@@ -241,8 +257,9 @@ def cmd_have(a):
     arg = {'self': me}
     arg.update({k: sorted(v) for k, v in index.items() if v})
     print('HAVE=' + json.dumps(arg, separators=(',', ':')))
-    print(f'{sum(len(v) for v in index.values())} known hashes from {len(folders)} dated folders '
-          f'and the Minimalist defaults. Helper self-hash {me}.')
+    print(f'{sum(len(v) for v in index.values())} known hashes from {len(folders)} dated folders, '
+          f'{len(deployed)} deployed cop{"y" if len(deployed) == 1 else "ies"} and the Minimalist defaults. '
+          f'Helper self-hash {me}.')
     if offline:
         print('Minimalist defaults not fetched (offline?): ' + ', '.join(offline))
 
@@ -411,7 +428,7 @@ def cmd_unpack(a):
     save_json(WORK / f'live-{obj.get("pid", "unknown")}.json', live)
     new = [k for k in prov if prov[k] == 'NEW']
     if a.expect:
-        return check_expect(obj, a, target)
+        return check_expect(obj, a, target, texts)
     if a.into:
         if problems:
             die('Not written: fix the problems above first.')
@@ -447,7 +464,7 @@ def cmd_unpack(a):
         record(a.record, now(), '(drift check)', obj.get('host', '?'), changed, '-', 'no drift' if not new else 'current-state needed')
 
 
-def check_expect(obj, a, target):
+def check_expect(obj, a, target, texts):
     plan = load_json(WORK / 'plan.json')
     check, fails = plan['check'], []
     if obj.get('pid') != plan['page']['pid']:
@@ -478,6 +495,14 @@ def check_expect(obj, a, target):
     print(f'Read-back {verdict} for {plan["check"]["version"]} on {target}.')
     for f in fails:
         print('  ' + f)
+    if not fails:
+        kept = []
+        for key, fn, _ in FIELDS:
+            if key in plan['page']['fields'] and h12(texts.get(key, '')) == check['fields'][key]:
+                write(WORK / 'deployed' / plan['check']['version'] / fn, as_file(texts[key]))
+                kept.append(key)
+        if kept:
+            print(f'Kept the deployed text of {", ".join(kept)} in work/deployed/{plan["check"]["version"]}/ for `have`.')
     if a.record:
         record(a.record, now(), plan['check']['version'], obj.get('host', '?'), plan['check']['summary'],
                a.clicked_by, 'PASS' if not fails else 'FAIL: ' + '; '.join(fails)[:300])

@@ -31,7 +31,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§20](#20-article-panels-default-to-white-dark-theme-trap) article panels default white ·
 [§23](#23-reader-login-page-light-panels--two-flash-mechanisms-dark-theme-trap) login page + two flash mechanisms ·
 [§38](#38-native-form-controls-ignore-a-dark-background-color--and-computed-style-lies) native form controls ignore dark bg (**computed style lies**) ·
-[§39](#39-dark-theming-kos-secondary-reader-pages) secondary reader pages (component map)
+[§39](#39-dark-theming-kos-secondary-reader-pages) secondary reader pages (component map) ·
+[§66](#66-a-reader-lightdark-toggle-that-keeps-the-editor-pdfs-and-print-light) reader light/dark toggle (**never `prefers-color-scheme` in Custom CSS**)
 
 **Layout & structure**
 [§5](#5-toc-slideout-layout-coupling) TOC slideout coupling ·
@@ -50,14 +51,15 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§57](#57-a-z-index-on-the-login-card-traps-the-reset-password-window-under-its-backdrop) **no `z-index` on the login card** (traps Reset Password) ·
 [§61](#61-a-category-with-no-icon-gets-one-of-four-fallback-icons) **four** fallback category icons, on category pages too ·
 [§63](#63-overflow-hidden-on-the-homepage-hero-clips-the-search-suggestions) `overflow: hidden` hero clips the search suggestions ·
-[§64](#64-hg-site-login-has-a-min-width-400px) `.hg-site-login` has `min-width: 400px`
+[§64](#64-hg-site-login-has-a-min-width-400px) `.hg-site-login` has `min-width: 400px` ·
+[§65](#65-a-padded-category-icon-tile-pushes-wide-glyphs-out) a padded category icon tile pushes wide glyphs out
 
 **Typography, lists & content elements**
 [§4](#4-froala-image-classes-and-no-border) Froala image classes ·
 [§7](#7-alert-box-pseudo-elements) alert pseudo-elements ·
 [§11](#11-image-caption-selectors-fr-img-caption) image captions ·
 [§12](#12-nested-ordered-list-numbering) nested list numbering ·
-[§13](#13-search-bar-border-pattern) search bar border ·
+[§13](#13-search-bar-border-pattern) search bar and form-field borders ·
 [§21](#21-href-less-a-are-hidden-as-anchor-jump-targets) href-less `<a>` hidden ·
 [§30](#30-article-header-and-body-sit-on-different-font-size-bases-em-doesnt-transfer) header vs body font base (`em` doesn't transfer) ·
 [§42](#42-every-h2-inside-faq-nav-content-is-hidden--by-a-descendant-selector) `<h2>` hidden in `.faq-nav-content` ·
@@ -267,6 +269,10 @@ These are set on `.hg-article-body ol` with child combinators, in the seeded Cus
 Source: https://support.knowledgeowl.com/help/default-custom-css
 
 Individual search input elements have their borders removed (`.hg-search-bar input.form-control`, `.input-group-btn .btn` → `border: none`). The visible border is on the outer `.input-group` wrapper instead (`1px solid var(--input-border-color)` + a soft box-shadow). Focus state is handled via `.hg-search-bar .input-group:focus-within:not(:focus-visible)`, which adds a `box-shadow: 0 0 0 2px var(--input-focus-color)` ring. All of this lives in the seeded Custom CSS. Styling the search bar requires targeting the wrapper, not the input.
+
+**The same token colors the search button's text.** The seeded `.hg-minimalist-theme span.input-group-btn .btn-default { color: var(--input-border-color) }` makes the "Search" button's label the border gray, so a gray chosen to give the border 3:1 fails the label's 4.5:1. Give the button its own color.
+
+**Other form fields** (login, contact, modals) keep Flat UI's screen border, `.form-control { border: 2px solid #bdc3c7 }`, turquoise `#1abc9c` on focus. The seeded Custom CSS narrows the contact form's fields with `.hg-minimalist-theme .hg-contact-form-container .form-control { border: 1px solid #bdc3c7 }` (0,3,0), and modal fields to 1px, so a theme border color there needs that specificity, not `!important`. Flat UI's `.form-control { border: 2px solid #ddd !important }` is inside `@media print`, so it does not apply on screen.
 
 **Seeded focus-ring list has a missing comma.** The long `:focus-visible` selector list near the end of the template omits the comma after `.hg-minimalist-theme .ko-large-search input.form-control:focus-visible`, so that selector and the next one (`button.btn.btn-success:focus-visible`) fuse into one descendant selector that never matches. It happens to be harmless today because both elements are also caught by the generic `.form-control:focus-visible` and `.btn-success:focus-visible` entries in the same list, but if you copy that block into a theme and trim it, keep the comma in mind: the two specific entries are not doing anything.
 
@@ -798,6 +804,10 @@ Components that are light by default:
 | `.glossary-*`, `.ko-glossary-popover` | White |
 | `.ko-subbed-cat*` | Subscription rows |
 | `.hg-contact-form-container` | White form panel |
+| `.hg-contact-us-form` | The contact page's own wrapper, `background: #ffffff` in `ko-css.css` |
+| `#ko-ai-chatbot-btn` | The chatbot launcher. KO's launcher CSS gives it `background-color: #fff` but no text color, so its label takes the page's light text color; the bubble icon's path is `fill="black"` (set `fill: currentColor`). Colors set in the chatbot's branding are inline and win (06 §3) |
+
+Search suggestions mark every row whose title matches as `.highlighted`; the keyboard selection is only `.ui-state-active` (§63), so a dark style on `.highlighted` paints most of the list. Keep pseudo-elements out of `:is()`: an entry like `.navbar-toggle:before` is invalid there and silently drops from the list (the phone search icon stayed dark blue on one build).
 
 **Two "light notice" surfaces** mirror the login page's two flash mechanisms (§23): **restricted-access** uses `.alert.alert-danger` (KO's kept default paints it pink `#F4E2E2`), **manage-subscriptions** uses `.bs-callout-warning` / `.bs-callout-info`. Reader signup and reset modals live on the login page, so the §23 fix already covers them.
 
@@ -1218,3 +1228,26 @@ Restyling the list: KO's search bar script sets inline `top`, `left` and `width`
 ## 64. `.hg-site-login` Has a `min-width: 400px`
 
 `ko-css.css` gives the login card `margin: 100px auto; width: 50%; min-width: 400px`. A theme that wants a narrower card must set `min-width: 0` on it: `width: auto !important` alone does nothing, and the card's content overflows its padding (seen on a card about 470px wide).
+
+## 65. A Padded Category Icon Tile Pushes Wide Glyphs Out
+
+`ko-css.css` sets `.category-icon i.fa-fw { width: 1.5em }`, and Bootstrap's `box-sizing: border-box` puts padding inside that width. An icon shrunk onto a tinted tile (`font-size: 35px; padding: 10px`) keeps 32.5px for the glyph, so wider glyphs (cloud, gears, truck, users and laptop are about 1.25em) spill out on the right. Size the tile from the font size and center the glyph; 20px is twice the padding:
+
+```css
+.hg-minimalist-theme .category-icon i {
+  display: inline-flex; align-items: center; justify-content: center;
+  box-sizing: border-box; width: calc(1em + 20px); height: calc(1em + 20px); line-height: 1;
+}
+```
+
+The prefix ties `.category-icon i.fa-fw` at (0,2,1) and Custom CSS loads later, so it wins. Zero the stock margin too (defaults doc, Homepage Category Icons).
+
+## 66. A Reader Light/Dark Toggle That Keeps the Editor, PDFs and Print Light
+
+Custom CSS also loads in the article editor (§28), so `@media (prefers-color-scheme: dark)` there turns the editor dark for an author whose device is dark. Key dark styles to an attribute set by a Custom `<head>` script instead: the editor and PDFs never run those scripts (§14, §35).
+
+- **The script**, in Custom `<head>` so it runs before first paint, sets `data-<prefix>-theme` to `light` or `dark` on `<html>`: the saved choice in `localStorage`, else `prefers-color-scheme`, and always light in a frame (`window.top !== window`). It handles a `button[aria-pressed]` toggle by delegation, and listens for the device's `matchMedia` change event and for `storage`, so other tabs switch too.
+- **The CSS:** every dark rule is `html[data-<prefix>-theme="dark"] …` inside `@media screen`, so printouts stay light. Re-pointing single-purpose tokens (link, text, tint, line) does most of it; shared tokens such as `--white` and `--primary-color` need per-selector overrides. §39 lists the components that stay light.
+- **The logo:** `img.documentation-logo-image { object-position: -10000px 0; background: url(<light logo>) center / contain no-repeat }` under the dark attribute swaps the picture and keeps its size, link and alt text. `content: url()` on an `img` is not reliable in Firefox.
+- **The AI chatbot window** is a same-origin iframe (`#ko-ai-chatbot iframe`) colored by variables on `.ko-chatbot-sv` (06 §3), so its dark styles are variable re-points in the chatbot's own Custom CSS (Edit branding, saved in that window). It can't see the page's attribute, so the script copies it onto the iframe's `<html>` on each change and on the iframe's `load`, listening in the capture phase because `load` does not bubble. Fixed icon fills need their own rules: `fill="black"`, `fill="#8B8D98"`, and paths with no `fill`, which render black (`svg path:not([fill]) { fill: currentColor }`).
+- **Testing:** the built-in browser's color-scheme emulation fires no `matchMedia` change event, so check "follows the device" by reloading under each scheme.

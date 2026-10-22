@@ -107,7 +107,7 @@ Then `unpack <result> --snapshot YYYY.MM.DD-no-changes/full-html-snapshot-homepa
 
 ### 1. Plan
 
-1. `have .`, then a fresh `koIO.read('<pid>', HAVE)` in the control tab, then `unpack <result>`. This is the preflight read the plan is built against.
+1. `have .`, then a fresh `koIO.read('<pid>', HAVE)` in the control tab, then `unpack <result>`. This is the preflight read the plan is built against. If a field is built from another file (a Custom `<head>` assembled from a script file, say), rebuild it before `have`: a build made before the script's last edit deploys the old script.
 2. `python3 .claude/kb-io/kb_io.py plan YYYY.MM.DD-vN`. It:
    - scopes the deploy to fields whose live content differs from the version, and names what each is now ("live is v5, becomes v8");
    - refuses any field whose live content matches no local file (an outside edit) until it is captured, or the user approves overwriting it with `--overwrite <field>`;
@@ -124,7 +124,7 @@ Show the yes-request in the conversation and wait for a clear yes. One yes cover
 ### 3. Stage and save
 
 1. Load `/kb/style/id/<pid>` fresh in the Style tab. A hash-only change to the same URL does not reload the page; navigate to the article list and back.
-2. Inject the helper, then run each call file in order: `cat .claude/kb-io/work/calls/01-put.js`, pass its contents to `javascript_tool`, and so on, ending with the `stage` call. Each call file is one line; print it with `cat`, not the Read tool, which adds line numbers.
+2. Inject the helper, then run each call file in order: `cat .claude/kb-io/work/calls/01-put.js`, pass its contents to `javascript_tool`, and so on, ending with the `stage` call. Each call file is one line; print it with `cat`, not the Read tool, which adds line numbers. Pass exactly what `cat` printed. A call retyped from memory added lines the file did not have on one build; the hash check refused it, but only after a wasted round.
 3. `stage()` returns `ok: true` only after it has checked that the page shows exactly the preflight state, rebuilt every value, written it into the editor (CodeMirror where the section has one, the plain textarea where it does not), and read it back. It also reports `koWillWarn`, the sections that will trigger KO's "bad CSS/HTML" dialog.
 4. `koIO.save()`, then wait about 7 seconds for the page to post and reload. If the session's permission layer refuses the click, ask the user to click Save in the pane. The same gate runs either way.
 
@@ -167,7 +167,7 @@ In the control tab, `koIO.read('<pid>', HAVE)`, then:
 
 `python3 .claude/kb-io/kb_io.py unpack <result> --expect --record DEPLOYMENTS.md` (add `--clicked-by you` when the user clicked Save)
 
-It passes only when all 12 fields hash to the plan, the Style Settings match, and KO's list of previous saves gained exactly one entry (two means someone else saved in between). Then, when the version changed colors, type or layout, do the post-deploy verification on the reader page (`CLAUDE-RULES.md`), at 1440 px wide. To see the fresh page, reload it or add a hash (`/help/<slug>#r2`); never add a query string to an article URL. `/help/<slug>?v=1` returns KO's 404 page, so that cache-bust verifies the wrong page while looking right. The homepage (`/help?v=1`) and search (`/help/search?phrase=`) do accept query strings.
+It passes only when all 12 fields hash to the plan, the Style Settings match, and KO's list of previous saves gained exactly one entry (two means someone else saved in between). A pass also keeps the text of each deployed field in `.claude/kb-io/work/deployed/<version>/`, which `have` indexes, so a small correction made later in the latest version folder (02 allows these) still travels as a patch; `unpack` and `plan` call that live text "<version> (as deployed)". Then, when the version changed colors, type or layout, do the post-deploy verification on the reader page (`CLAUDE-RULES.md`), at 1440 px wide. To see the fresh page, reload it, or open another page and then the article with a hash (`/help/<slug>#r2`): adding a hash to the page already open does not reload it. Never add a query string to an article URL. `/help/<slug>?v=1` returns KO's 404 page, so that cache-bust verifies the wrong page while looking right. The homepage (`/help?v=1`), search (`/help/search?phrase=`) and the New, Updated and Popular lists (`/help/new-articles?v=1`) do accept query strings.
 
 At the end of the session, read each target once more and `unpack` it: every field should still be at the version you deployed. That catches a stale tab elsewhere that saved over the work.
 
