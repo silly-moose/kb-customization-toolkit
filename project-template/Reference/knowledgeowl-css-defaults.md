@@ -521,7 +521,7 @@ public $articleRegex = '/(\[article\((\"|&quot;)[^"]*(\"|&quot;)\)\])/';
 
 So the only valid forms are `[article("banner")]`, `[template("icon-cats")]`, `[reader("groups")]`, `[translation("search:article-tags-label")]`. A code written any other way is not an error: it simply never matches, and **SiteRenderer prints the literal text to every page** that includes that field.
 
-**Watch for this when copying from the support KB.** Its *Article merge codes* table renders the two image codes in the bracket form, `[article["thumbnail"]]` and `[article["banner"]]`, which is wrong. Copying the table verbatim printed that literal string on every article and category page after a deploy. The working form is `[article("thumbnail")]` / `[article("banner")]` (`themer/html-pane.phtml` option values; `KbRenderer::$articleMergeCodes` maps `'banner' => 'artBanner'`).
+**Watch for this when copying from the support KB.** Its *Article merge codes* table renders the two image codes in the bracket form, `[article["thumbnail"]]` and `[article["banner"]]`, which is wrong. Copying the table verbatim printed that literal string on every article and category page after a deploy. The working form is `[article("thumbnail")]` / `[article("banner")]` (`kb/themer/html-pane.phtml` option values; `KbRenderer::$articleMergeCodes` maps `'banner' => 'artBanner'`).
 
 Related: single quotes do not work either, arguments are only read by `icon-cats` (quirks doc §37), and merge codes are executed **everywhere**, including inside CSS comments (quirks doc §34).
 
