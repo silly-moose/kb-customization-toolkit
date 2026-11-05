@@ -208,6 +208,17 @@ Because these have no `height` and only a top offset, their icon sits high in a 
 | `.hg-article-controls` | Article action buttons |
 | `.documentation-padding` | Content padding wrapper |
 
+### Article Images Are Not Capped
+
+On screen, KO's reader CSS gives article images no `max-width`: the `.documentation-article img` cap in `ko-css.css` is commented out, and Bootstrap's `img { max-width: 100% !important }` sits inside `@media print` (`publicview.css`). Only PDFs get one (`pdf.css`, Source File Map), and only Froala's inline images (`img.fr-dii`) carry their own. An image with no Froala class (imported or pasted content) renders at its file's width, so a 900px screenshot makes a phone page scroll sideways and can push a fixed header's centered content off screen. The fix, measured on one KB with no change at 1440px:
+
+```css
+.hg-article-body img { max-width: 100%; height: auto; }
+.hg-article-body img[style*="width"][style*="height"] { height: auto !important; }
+```
+
+The second rule is for imported images that carry an inline `width` and `height`: the inline height beats `height: auto`, so they squash (339x319 on a phone) without it.
+
 ### Background Defaults
 
 Both `.documentation-article` and `.hg-article` default to a **solid white background** in `ko-css.css`, separate from the outer wrappers (`.documentation-body`, `.ko-content-cntr`):
@@ -314,7 +325,7 @@ The always-open TOC is a category/article navigation tree. Structure (outermost 
           a.article-link                   ← the article label link
 ```
 
-Key hooks for a docs-style TOC: **`.article-container.active`** is the "you-are-here" current article (set by JS from the page's object id); `.category-link-container` is the category-row hover target; `a.documentation-category` / `a.article-link` are the label links. The hover/active *background* is applied per-type (category link vs. article `<li>`) — see quirks doc #24.
+Key hooks for a docs-style TOC: **`.article-container.active`** is the "you-are-here" current article (set by JS from the page's object id); `.category-link-container` is the category-row hover target; `a.documentation-category` / `a.article-link` are the label links. The hover/active *background* is applied per-type (category link vs. article `<li>`) — see quirks doc #24. The category row's `.active` (`.category-link-container.active`) is added by `ko-toc.js` once the page has loaded, so a Body or `<head>` script that runs earlier finds none; read the current id from the hidden `input#object-id` instead, which the server renders on article, Default category and blog pages.
 
 Two markup facts worth knowing (`help/partials/toc.phtml`, `help/tableofcontents.phtml`): the panel is server-rendered with class `hide` on Minimalist and the slideout JS removes it (adding `slideout-menu slideout-menu-left`), so a no-JS snapshot shows a hidden TOC; and collapsed branches are rendered with `style="display:none"` on the `ul.documentation-articles.level-N`, not omitted (quirks doc §40). Each article `<li>` also carries `data-type="article" data-id="…"` plus one `data-{field}` per API-populated `meta_data` field (quirks doc §36).
 
@@ -463,6 +474,10 @@ Because Thumbnail and Banner write to the backing article rather than to the cat
 
 The trap that pairs with this: a Custom content category renders through the Article template with an **empty** `.hg-article-body` and no list of its articles, so a banner-per-category theme produces good-looking empty landings. Quirks doc §54 has the routing and the three ways out. Decide category types before designing category landings.
 
+### A Subscribe Button on Every Custom-Content Category
+
+`[template("cat-subscribe")]` in the Article template gives every custom-content category a Subscribe button, future ones included, with no snippet per category. `KbRenderer::catSubscribe()` prints it only when a category is in context, subscriptions are on, and the reader is signed in or subscriptions are public, so article pages get nothing. The markup is `.ko-cat-sub-cntr > button.btn.btn-default.ko-cat-sub` (it opens `#subscription-modal`; the container floats right by default). Default categories print the same button above their title (`faq-navigation.phtml`).
+
 ### Homepage Category Icons (`icon-cats` template)
 
 The homepage `[template("icon-cats…")]` renders category tiles that are distinct from the FAQ-style category layout above. Default selectors and values (from `ko-css.css`):
@@ -597,7 +612,7 @@ KnowledgeOwl adds its own queries in `ko-css.css` and the seeded Custom CSS (see
 | 576px | `@media (min-width: 576px)` | Seeded Custom CSS: `.hg-minimalist-theme .hg-home-page .category-list > div { width: 50% }` (25% at ≥992px). **These rules are dead**: the theme class and `.hg-home-page` sit on the same `<body>`, so the descendant selector never matches (quirks doc §15). Stock homepage tiles get their responsive behavior from `ko-css.css` instead (next two rows). |
 | 767px | `@media (max-width: 767px)` | `ko-css.css`: every `icon-cats` column count collapses to `repeat(auto-fit, minmax(190px, 1fr))`; Minimalist nav items stack; right toggle moves to `right: 15px` |
 | 991px | `@media (max-width: 991px)` | Seeded: open TOC panel stops shrinking the article (`width: 100%`). `ko-css.css`: `.toc-toggle` shows, `col5`/`col6` tile grids go auto-fit, non-home article panel padding drops to `1em` |
-| 992px | `@media (min-width: 992px)` | `ko-css.css`: the `.is-author` header/TOC offsets and **all** `.toc-always-open` layout rules (pinned TOC at `z-index: 1031`, header/article/footer shifted by 360px) live only here |
+| 992px | `@media (min-width: 992px)` | `ko-css.css`: the `.is-author` header/TOC offsets and **all** `.toc-always-open` layout rules (pinned TOC at `z-index: 1031`, header/article/footer shifted by 360px) live only here. The author bar itself is `.visible-lg.visible-md`, so a theme's own `body.is-author` offsets belong in this query too |
 | 1400px | `@media (min-width: 1400px)` | Minor wide-screen tweaks in `ko-css.css` |
 | 1473px | `@media (max-width: 1473px)` | Seeded: 3-column layout squeeze, content max-width 700px, right column widens |
 

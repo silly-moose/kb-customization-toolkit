@@ -70,6 +70,9 @@ REQUIRED = {
     'login': [['[template("login-page")]']],
 }
 NEVER_EMPTY = ('body', 'nav', 'article', 'homepage', 'login')   # KO fills its default into these when empty
+# Theme::cleanCodeOptions (service/models/Theme.php) writes these into `options` on every Style save,
+# so a theme last saved before they existed gains them on its next save with nothing visible changing.
+KO_FILLED_OPTIONS = ('code_theme', 'code_line_numbers', 'code_copy_button')
 DATED = re.compile(r'^\d{4}\.\d{2}\.\d{2}-')
 CHUNK = 25000
 COMMENTS = re.compile(r'<!--.*?-->|/\*.*?\*/', re.S)
@@ -459,9 +462,10 @@ def cmd_unpack(a):
         print(f'DRIFT: no local file matches {", ".join(new)}.')
     else:
         print('No drift: every live field matches a local file.')
-    if a.record and not a.into:
+    if a.record:
         changed = 'none' if not new else 'drift: ' + ', '.join(new)
-        record(a.record, now(), '(drift check)', obj.get('host', '?'), changed, '-', 'no drift' if not new else 'current-state needed')
+        result = ('no drift' if not new else 'current-state needed') if not a.into else f'captured to {Path(a.into).name}'
+        record(a.record, now(), '(drift check)' if not a.into else '(capture)', obj.get('host', '?'), changed, '-', result)
 
 
 def check_expect(obj, a, target, texts):
@@ -485,8 +489,19 @@ def check_expect(obj, a, target, texts):
         fails.append(f'logo: live {live_s.get("logo") or "none"}, expected the File Library image {exp["logo_name"]}')
     if exp.get('logo_url') is not None and live_s.get('logo', '') != exp['logo_url']:
         fails.append(f'logo: live {live_s.get("logo") or "none"}, expected it unchanged ({exp["logo_url"] or "none"})')
-    for k in exp.get('same', {}):
-        if json.dumps(live_s.get(k), sort_keys=True) != json.dumps(exp['same'][k], sort_keys=True):
+    notes, same = [], lambda x, y: json.dumps(x, sort_keys=True) == json.dumps(y, sort_keys=True)
+    for k, was in exp.get('same', {}).items():
+        now_v = live_s.get(k)
+        if isinstance(now_v, dict) and (isinstance(was, dict) or was in ([], None)):
+            was = was if isinstance(was, dict) else {}   # PHP stores an empty map as []
+            diff = sorted(x for x in set(was) | set(now_v) if not same(was.get(x), now_v.get(x)))
+            filled = [x for x in diff if x not in was and x in KO_FILLED_OPTIONS]
+            if filled:
+                notes.append(f'KO filled in setting {k}: ' + ', '.join(f'{x}={json.dumps(now_v[x])}' for x in filled)
+                             + ' (written on every save; nothing visible changes)')
+            if [x for x in diff if x not in filled]:
+                fails.append(f'setting {k} changed: ' + ', '.join(x for x in diff if x not in filled))
+        elif not same(now_v, was):
             fails.append(f'setting {k} changed')
     added = [s for s in obj.get('saves', []) if s not in plan['page']['base']['saves']]
     if len(added) != 1:
@@ -495,6 +510,8 @@ def check_expect(obj, a, target, texts):
     print(f'Read-back {verdict} for {plan["check"]["version"]} on {target}.')
     for f in fails:
         print('  ' + f)
+    for n in notes:
+        print('  Note: ' + n)
     if not fails:
         kept = []
         for key, fn, _ in FIELDS:
@@ -505,7 +522,7 @@ def check_expect(obj, a, target, texts):
             print(f'Kept the deployed text of {", ".join(kept)} in work/deployed/{plan["check"]["version"]}/ for `have`.')
     if a.record:
         record(a.record, now(), plan['check']['version'], obj.get('host', '?'), plan['check']['summary'],
-               a.clicked_by, 'PASS' if not fails else 'FAIL: ' + '; '.join(fails)[:300])
+               a.clicked_by, ('PASS' + ''.join('; ' + n for n in notes))[:300] if not fails else 'FAIL: ' + '; '.join(fails)[:300])
     if fails:
         sys.exit(1)
 

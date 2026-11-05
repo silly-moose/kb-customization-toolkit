@@ -77,7 +77,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE ·
 [§55](#55-ko_api-merge-codes-need-a-scoped-key-render-single-use-urls-and-fail-with-http-200) **`[ko_api(...)]`: scoped key, single-use URLs, errors are HTTP 200** ·
 [§58](#58-the-seeded-backtotop-snippet-can-be-empty) seeded `backToTop` snippet can be **empty** (no arrow) ·
-[§62](#62-a-toggle-subcategory-has-no-address-in-the-table-of-contents) a Toggle category's TOC link is `javascript:void(0);`
+[§62](#62-a-toggle-subcategory-has-no-address-in-the-table-of-contents) a Toggle category's TOC link is `javascript:void(0);` ·
+[§67](#67-theme-scripts-run-while-the-page-is-still-loading) theme scripts run on a half-parsed page
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -846,7 +847,7 @@ Markup (`help/faq-navigation.phtml` + `icon-category.phtml`, `faq_display='icons
         ├── .cat-icons-wrapper > .cat-icons-cntr > .category-list.panels.colN
         │   └── a.cat-icon-panel  (.category-icon > img.cat-icon-img, h3.category-header, .faq-description)
         ├── h2  "Articles"   (optional)
-        └── .article-block[data-id]  rows
+        └── .article-block[data-id]  rows, every article (no paging)
 ```
 
 The Icon-panels sub-cards reuse the **same** `.cat-icon-panel` markup as the homepage `icon-cats` doors, so one CSS recipe styles both levels (and both inherit §26's specificity trap).
@@ -1121,7 +1122,7 @@ Three ways out, cheapest first:
 - **Each rendered URL is single-use.** A second GET returns `{"error":"Invalid call"}` (`HelpController.php`). To debug, `fetch()` the page HTML for a fresh render and call each URL once; never re-use a URL the page has already consumed.
 - **Errors come back as HTTP 200 with an `error` key**, so a status check passes. A snippet must treat `error` in the JSON as a failure. (KO's REST API does the same: errors are 200 with `valid: false`.)
 
-Known to work: the merge code inside a snippet embedded from a Custom HTML template (`{{snippet.x}}` at the end of the Article template), and `%cur_cat_id%` resolving on a custom-content category page rendered through the Article template (§54). Not tested: `[ko_api(...)]` written directly in a template with no snippet.
+Known to work: the merge code inside a snippet embedded from a Custom HTML template (`{{snippet.x}}` at the end of the Article template, or in the Body template, which also reaches Default category pages), and `%cur_cat_id%` resolving on custom-content (§54) and Default category pages. Not tested: `[ko_api(...)]` written directly in a template with no snippet.
 
 ## 56. Under Google Tag Manager, Send Events With `dataLayer.push`, Not `gtag('event')`
 
@@ -1179,7 +1180,7 @@ With an API key for the KB on hand, `PUT /snippet/{id}.json` with `current_versi
 Two traps when restyling article text through `.hg-article-body`:
 
 1. **A font size or line height set on `.hg-article-body` reaches list items but not paragraphs.** Paragraphs have rules of their own at (0,1,1): the generated Body font rule `.hg-article-body, .hg-article-body p { font-size }` (`KbRenderer.php`) and `ko-css.css`'s `.hg-article-body p { margin: 20px 0; line-height: 1.5 }`. List items have neither, so they take the new values while paragraphs keep the Style Settings size. One KB ran for weeks with lists at 17px / 1.75 and paragraphs at 16px / 24px. Set paragraphs explicitly: `.hg-minimalist-theme .hg-article-body p` (0,2,1). §30 has the related `em` trap.
-2. **The homepage's Popular, New and Updated lists sit inside `.hg-article-body`.** The stock homepage template wraps `.homepage-widgets` in `.hg-article > .hg-article-body`, and each list is `ul.list-unstyled.stat-list`, so an article list rule (spacing on `.hg-article-body ul li`, say) spaces them out too. Exclude them: `.hg-article-body ul:not(.list-unstyled) li`. On the KB where this came up, the category, search and glossary pages had no `.hg-article-body`; topic-based category pages do have one (`topic-based-category.phtml`).
+2. **The homepage's Popular, New and Updated lists sit inside `.hg-article-body`.** The stock homepage template wraps `.homepage-widgets` in `.hg-article > .hg-article-body`, and each list is `ul.list-unstyled.stat-list`, so an article list rule (spacing on `.hg-article-body ul li`, say) spaces them out too, and so does any article-content rule (new-tab links, say). Exclude them: `.hg-article-body ul:not(.list-unstyled) li`. On the KB where this came up, the category, search and glossary pages had no `.hg-article-body`; topic-based category pages do have one (`topic-based-category.phtml`).
 
 ## 60. Image / File Security Rewrites File Links Everywhere, Including the Theme
 
@@ -1199,6 +1200,7 @@ For a build:
 - After anyone switches the setting, run the drift check and capture a `current-state` folder before building the next version, even within a day. A version built from a folder captured before the switch puts back the public links, which then return 401. `kb_io.py plan` warns when a version links `/app/image/` addresses and the live theme uses `/files/`.
 - Then check on a reader page, signed in and signed out: the header logo, every theme `<img>`, every CSS image URL, and one PDF preview in a real browser. Nothing else flags a broken logo.
 - `read()` resolves the logo's File Library name from either address form, so `unpack --expect` works after the switch.
+- A rule that works around a link the migration missed (the chatbot launcher icon) should match the old address, `img[src*="cloudfront.net/app/image/"]`, not a file id, which a re-upload changes, and swap in an embedded copy (§66's `object-position` swap). Keep it in every version, security on or off: it shows the same picture while security is off and stops matching once KO stores a `/files/` address.
 
 ## 61. A Category With No Icon Gets One of Four Fallback Icons
 
@@ -1251,3 +1253,7 @@ Custom CSS also loads in the article editor (§28), so `@media (prefers-color-sc
 - **The logo:** `img.documentation-logo-image { object-position: -10000px 0; background: url(<light logo>) center / contain no-repeat }` under the dark attribute swaps the picture and keeps its size, link and alt text. `content: url()` on an `img` is not reliable in Firefox.
 - **The AI chatbot window** is a same-origin iframe (`#ko-ai-chatbot iframe`) colored by variables on `.ko-chatbot-sv` (06 §3), so its dark styles are variable re-points in the chatbot's own Custom CSS (Edit branding, saved in that window). It can't see the page's attribute, so the script copies it onto the iframe's `<html>` on each change and on the iframe's `load`, listening in the capture phase because `load` does not bubble. Fixed icon fills need their own rules: `fill="black"`, `fill="#8B8D98"`, and paths with no `fill`, which render black (`svg path:not([fill]) { fill: currentColor }`).
 - **Testing:** the built-in browser's color-scheme emulation fires no `matchMedia` change event, so check "follows the device" by reloading under each scheme.
+
+## 67. Theme Scripts Run While the Page Is Still Loading
+
+A MutationObserver started from Custom `<head>` fires as the parser adds nodes, so a one-shot function that snapshots a list (the homepage rows, the TOC) can run on a half-parsed page and keep a partial list on a slow connection. Return while `document.readyState === 'loading'` and let a `DOMContentLoaded` run do it. To reproduce on a fast network: `fetch()` the page's HTML, `document.open()`, write it in two chunks with a pause after the first few rows, then `document.close()`.

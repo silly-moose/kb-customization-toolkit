@@ -9,10 +9,15 @@
  *     fonts: ['Open Sans'],                       // the theme's font families
  *     text: ['#222222', '#0055AA', '#FFFFFF'],    // colors allowed for text
  *     palette: ['#222222', '#0055AA', '#F2F2F2'], // every brand color (backgrounds, borders)
- *     css: ''                                     // optional: candidate CSS to preview on each page
+ *     css: '',                                    // optional: candidate CSS to preview on each page
+ *     width: 360, reader: true                    // optional: phone width, and the reader layout
  *   })
  *
- * Each path loads in a hidden same-origin iframe at 1280px. For every visible element
+ * Each path loads in a hidden same-origin iframe, 1280px wide unless `width` says otherwise;
+ * `reader: true` removes `is-author` from its body so a signed-in session gets the reader
+ * layout. Every result has `overflow` (null, or the page's scrollWidth and up to three
+ * elements that stick out past the right edge) and `squashed` (article images shown at a
+ * different aspect ratio from the file's). For every visible element
  * the scan reports text in a font outside `fonts`, text in a color outside `text`, and
  * backgrounds and borders outside `palette`, with up to three examples each. Results
  * are leads, not verdicts: icon glyphs drawn with ::before are not scanned, and an
@@ -40,6 +45,14 @@
     const visible = e => { const r = e.getBoundingClientRect(), s = cs(e); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && +s.opacity !== 0; };
     const out = { fonts: {}, textColors: {}, backgrounds: {}, borders: {} };
     const add = (bucket, key, e) => { (bucket[key] = bucket[key] || []).length < 3 && bucket[key].push(label(e)); };
+    const vw = win.innerWidth, sw = doc.documentElement.scrollWidth, wide = [];
+    if (sw > vw) for (const e of doc.body.querySelectorAll('*')) {
+      if (wide.length < 3 && !e.closest(SKIP) && e.getBoundingClientRect().right > vw + 1 && e.parentElement.getBoundingClientRect().right <= vw + 1) wide.push(`${label(e)} ${Math.round(e.getBoundingClientRect().width)}px`);
+    }
+    out.overflow = sw > vw ? { scrollWidth: sw, width: vw, wide } : null;
+    out.squashed = [...doc.querySelectorAll('.hg-article-body img')]
+      .filter(i => i.naturalWidth && i.width && i.height && Math.abs((i.width / i.height) / (i.naturalWidth / i.naturalHeight) - 1) > 0.03)
+      .slice(0, 5).map(i => `${label(i)} shown ${i.width}x${i.height}, file ${i.naturalWidth}x${i.naturalHeight}`);
     for (const e of doc.body.querySelectorAll('*')) {
       if (e.closest(SKIP) || !visible(e)) continue;
       const s = cs(e);
@@ -59,10 +72,12 @@
     const results = [];
     for (const p of paths) {
       const f = document.createElement('iframe');
-      f.style.cssText = 'position:fixed;left:-1400px;top:0;width:1280px;height:900px;border:0';
+      const w = opts.width || 1280;
+      f.style.cssText = `position:fixed;left:-${w + 120}px;top:0;width:${w}px;height:900px;border:0`;
       document.body.appendChild(f);
       await new Promise(r => { f.onload = r; f.src = p; setTimeout(r, 15000); });
       try {
+        if (opts.reader) f.contentDocument.body.classList.remove('is-author');
         if (opts.css) { const st = f.contentDocument.createElement('style'); st.textContent = opts.css; f.contentDocument.head.appendChild(st); }
         await new Promise(r => setTimeout(r, 1500));
         await f.contentDocument.fonts.ready;
@@ -105,5 +120,5 @@
   }
 
   window.koAudit = { scan, run, simulateLoginMessages, simulateReaderUpdate, printView };
-  return 'koAudit ready: koAudit.run(paths, {fonts, text, palette, css})';
+  return 'koAudit ready: koAudit.run(paths, {fonts, text, palette, css, width, reader})';
 })();
