@@ -10,7 +10,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 
 **Tools & environment** — [Browser Tooling](#browser-tooling) · [Capture & Deploy](#capture--deploy) · [Localhost Preview](#localhost-preview-optional) · [KnowledgeOwl Source CSS Lookup](#knowledgeowl-source-css-lookup-chads-machine-only)
 
-**Starting a build** — [Fresh or Stock-Minimalist Builds](#fresh-or-stock-minimalist-builds) · [Using a Pre-Built Template](#using-a-pre-built-template--only-on-explicit-request) · [Capturing Exact Brand Colors](#capturing-exact-brand-colors)
+**Starting a build** — [Fresh or Stock-Minimalist Builds](#fresh-or-stock-minimalist-builds) · [Capturing Exact Brand Colors](#capturing-exact-brand-colors)
 
 **Design rules** — [Brand Color Tokens](#brand-color-tokens) · [Logo & Brand Assets](#logo--brand-assets) · [Style Settings Colors](#style-settings-colors) · [Editor Readability Guard](#editor-readability-guard-mandatory--every-build)
 
@@ -41,7 +41,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 2. Review the latest version folder, the most recent `YYYY.MM.DD-current-state` folder (if one exists), or the `YYYY.MM.DD-no-changes` folder if no versions exist yet. **If this is the first session** (only the no-changes folder exists, still holding the template placeholders), capture the baseline from the live KB through the built-in browser as soon as the user has signed in (see "Capture & Deploy"). Ask once whether they want to add screenshots, then run `chmod -R a-w [no-changes-folder]/` to make it read-only. Do not lock a folder that is only partly captured. (The same lock-when-complete rule applies to `current-state` folders in step 3.)
    - **Settle the `# Baseline` facts here, once.** While confirming first-session content, fill in the `# Baseline` section of `.claude/rules/project.md` so later sessions never have to re-check the live KB for them:
      - **Homepage Custom content (legacy)** — the baseline read covers **Customize > Homepage > Homepage content > Custom content** (`read()` with `home: true`), and `unpack` reports it as `empty` or with its size. Record `empty` or `in use`. Only on the manual path do you ask the user, and have them paste the field into `homepage-custom-content.html` if it is in use. Settle this **one time only**; from then on, read the recorded answer instead of re-checking (later `current-state` snapshots skip the file when it says `empty`; see step 3).
-     - **Started from** — record whether the baseline came from the customer's existing code, the stock Minimalist defaults, or a theme template (and which).
+     - **Started from** — record whether the baseline came from the customer's existing code or the stock Minimalist defaults.
      - **Back-to-top snippet:** when the Body template carries `{{snippet.backToTop}}`, check that the snippet has content (the snippet audit below reads it). KnowledgeOwl can seed it empty, so the arrow never shows. Record `filled`, `empty` or `not used`; if `empty`, propose filling it in the first version's deploy steps, with `aria-label="Back to top"` on the link. Code and API call: quirks-doc §58.
      - **Features on:** record which reader features are turned on, from the settings `06-PAGE_COVERAGE.md` §1 lists, so the page-coverage check knows which pages exist.
    - **Audit content-level CSS — snippets AND representative articles — and record what you find.** The 12 code fields are *not* the whole story: a `<style>` block inside page content renders **after** Custom CSS, so it beats the theme at equal specificity, and it is invisible to the documented field-by-field capture. **"The Custom CSS is stock" is therefore not evidence that a KB has no custom styling.** Two places to look, and the first alone is not sufficient:
@@ -202,20 +202,6 @@ Add each that applies to the CHANGES file's **Manual Steps in KnowledgeOwl** sec
 
 **One consequence you must handle if you take either defaults route:** `style-settings-colors.md` then holds the Minimalist defaults, not the customer's actual swatches — so it no longer describes the live KB. That silently breaks the Color-Change Checkpoint, which needs a real "Current value" or it produces a table of fiction. **Read the live Style Settings before deploying the first version** (any live read reports them) and record those as the current values. Nothing else prompts you to do this.
 
-## Using a Pre-Built Template — Only on Explicit Request
-
-**Design bespoke by default.** Do **not** start a build from a pre-built theme template, and do **not** propose one, unless the user explicitly asks. The templates are generic in layout by construction, so reaching for one unprompted caps the design at whatever that template already does. That trade-off is the user's to make, not yours.
-
-**"Explicitly asks" means** the user names a template ("apply `modern-docs`") or asks for the template path in substance ("start from one of the toolkit templates", "re-skin an existing template for this"). It does **not** include a stylistic brief that merely echoes a template's name — a prospect who wants a "modern" or "bright, airy" look is describing a **design direction**, not requesting `modern-docs` or `aurora-docs`. Design to the brief.
-
-**When the user does ask**, follow the toolkit's `process-docs/theme-templates/README.md`: fetch the template's raw files into the current version folder, then swap the `--brand-*` tokens to the prospect's brand, reconcile the Style Settings, and set the logo + hero. The available templates and each one's token-by-token swap map live under `process-docs/theme-templates/`. Fetch the how-to on demand:
-`https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/theme-templates/README.md`
-
-**This gate covers using a template's files as a build's starting point — nothing else.** Still fine without asking:
-- **The stock Minimalist defaults** (`process-docs/minimalist-theme-defaults/`) — that's the `no-changes` baseline, not a designed theme. See "Fresh or Stock-Minimalist Builds" above.
-- **`theme-templates/_reference-snapshots/`** — a genericized homepage + article used as a preview harness, not a theme.
-- **Reading a template for reference** — e.g. to see how a pattern was tokenized. Take the technique, not the design; the build should still be its own.
-
 ## Brand Color Tokens
 
 Define the brand palette as CSS custom properties at the top of Custom CSS (a `:root` block) and reference them everywhere — one place to swap when the theme is reused for another brand. For any brand color used in **translucent effects** (glows, tints, gradient washes, an animated ambient), also define its **`-rgb` components** and compose the alpha with `rgba(var(--…-rgb), α)`:
@@ -229,7 +215,7 @@ Define the brand palette as CSS custom properties at the top of Custom CSS (a `:
 .some-glow { box-shadow: 0 24px 60px -20px rgba(var(--brand-primary-rgb), .34); }
 ```
 
-Without the `-rgb` pair, `rgba()` effects keep hardcoded color literals and *don't* follow a token change — so the theme only half-re-skins. This is what makes a build cleanly reusable as a template (see the `theme-templates/` templates and their extraction process).
+Without the `-rgb` pair, `rgba()` effects keep hardcoded color literals and *don't* follow a token change — so the theme only half-re-skins.
 
 **Rotating an accent across items (category tiles, cards, steps): assign one per-item custom property, then write the styling ONCE.** Do not duplicate a block per hue. Give each item its hue with an `:nth-child` cycle, and let a single rule set consume it:
 
@@ -390,7 +376,7 @@ inside the editor iframe — never on public pages or in PDF), so it never affec
 site. Keep it even when in doubt; the cost of having it is zero.
 
 **Why a rule and not just the baseline:** the guard ships inside the toolkit's Minimalist file
-(`minimalist-theme-defaults/custom-css.css`) and each theme template, but a baseline captured
+(`minimalist-theme-defaults/custom-css.css`), but a baseline captured
 from a live KB never has it, because KO's own stock Custom CSS does not include it. So v1 of
 every build adds it unless it is already there; this rule is what guarantees that.
 

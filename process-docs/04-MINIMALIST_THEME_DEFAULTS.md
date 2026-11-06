@@ -87,8 +87,7 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 
   **Leave it as-is *here*.** Apart from the appended guard, this folder is a byte-for-byte mirror of what a stock KB ships, and its whole value is that a live stock KB matches it exactly; "fixing" it would break that.
 
-  - **The theme templates DO fix it** (`theme-templates/*/custom-css.css`) — for correctness, and because a template that ever narrows or drops those two general selectors would turn a latent defect into a real keyboard-accessibility bug. Cheap insurance, not an urgent fix.
-  - **It's worth reporting upstream** so new KBs stop inheriting it. Until that lands, expect a one-line diff between this mirror and any template's copy of that block.
+  - **It's worth reporting upstream** so new KBs stop inheriting it.
 - The footer in `custom-html-1-body.html` reads `Copyright © [template("current-year")] [template("account-name")]. All rights reserved.` (KO's current stock, refreshed 2026-10-03 from `default-body.phtml`). So a live footer that already shows the customer's name and this year is stock, not a customer edit. KBs created before KO switched to the merge codes hold the older `Copyright © 2025 Your Company, LLC.` line instead; `unpack` reports that body as `NEW` (05, "Older KBs can hold older stock code"), and the fix is to compare it with this file rather than treat it as custom code.
 
 ---

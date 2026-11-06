@@ -234,7 +234,7 @@ Two colour questions come up on nearly every build, and both are judgment calls 
 
 **Use it for:**
 
-- **Contrast, before assigning a brand colour to anything that colours TEXT.** The theme templates *require* AA (≥4.5:1) on their text tokens, and real brands routinely fail: a logo terracotta `#D05030` measures **4.31:1** on white — under the floor — and a brand orange `#ff5f14` is only **3.04:1**, unreadable as body-link text. Without a prescribed check, the natural move is to paste the brand hex and move on.
+- **Contrast, before assigning a brand colour to anything that colours TEXT.** Text needs AA (≥4.5:1), and real brands routinely fail: a logo terracotta `#D05030` measures **4.31:1** on white — under the floor — and a brand orange `#ff5f14` is only **3.04:1**, unreadable as body-link text. Without a prescribed check, the natural move is to paste the brand hex and move on.
 - **Perceptual delta, when a customer sends "revised" colours** with no statement of what changed. CIEDE2000 turns "should we redo anything?" into a number: on one build all four revised hues came in under **ΔE 2.0** (three under 0.6) — perceptually the same colour, so nothing needed redoing.
 
 ```python

@@ -230,7 +230,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 
-**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md` through `05-`, plus `theme-templates/`) live in the repo only; they are never copied into customer folders. The two capture-and-deploy helpers in `process-docs/kb-io/` are the exception: Claude downloads fresh copies into `.claude/kb-io/` at the start of each session.
+**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md` through `06-`) live in the repo only; they are never copied into customer folders. The two capture-and-deploy helpers in `process-docs/kb-io/` are the exception: Claude downloads fresh copies into `.claude/kb-io/` at the start of each session.
 
 ### Example
 

@@ -7,7 +7,6 @@ You're in the **KB Customization Toolkit**: the shared, reusable how-to + assets
 ## What a session opened here is usually for
 
 - **Maintaining the toolkit** — editing the process docs / Minimalist defaults / reference CSS docs, or reviewing and applying the improvement log.
-- **Building or polishing theme templates** — the subsystem lives in `process-docs/theme-templates/`; preview new templates against its `_reference-snapshots/`.
 
 ## Where to look (read these for detail — this file just points)
 
@@ -18,7 +17,6 @@ You're in the **KB Customization Toolkit**: the shared, reusable how-to + assets
 | Editor Readability Guard harness | `process-docs/editor-simulation/README.md` |
 | Browser capture and deploy (the procedure) | `process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md` |
 | Capture-and-deploy helpers (page script + local CLI) | `process-docs/kb-io/` (`ko-style-io.js`, `kb_io.py`) |
-| Theme-template subsystem (build a new one + apply one) | `process-docs/theme-templates/README.md` |
 | Suggestions / friction awaiting review | `improvement-log.md` *(local-only, git-ignored)* |
 
 `project-template/` is what teammates **duplicate** per KB (one project folder per KB, inside a folder for the customer); its own `CLAUDE.md` bootstraps *those* copied sessions, not this one.
