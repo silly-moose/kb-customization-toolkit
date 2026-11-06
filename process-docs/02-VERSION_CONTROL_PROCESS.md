@@ -119,7 +119,7 @@ Claude then deploys it through the built-in browser (`05-BROWSER_CAPTURE_AND_DEP
 
 ## Permanent Backup Folder
 
-The `YYYY.MM.DD-no-changes` folder is the permanent backup. It is created at project start and contains the customer's original code (or placeholder comments if a field was empty).
+The `YYYY.MM.DD-no-changes` folder is the permanent backup. It is created at project start and contains the customer's original code (an empty file where a field was empty; a file still holding its placeholder comment was never captured).
 
 **Never modify files in this folder.** It serves as the emergency rollback point and the baseline reference for all changes.
 
@@ -176,7 +176,7 @@ When returning to a project after any gap — whether days, weeks, or months —
 
 **Claude automatically syncs template files.** The toolkit evolves over time — new reference files get added, existing ones get updated. At the start of every session, Claude fetches the latest `Reference/knowledgeowl-css-quirks.md`, `Reference/knowledgeowl-css-defaults.md`, the `kb-io/` helpers and the project's `CLAUDE.md` bootstrap from the GitHub repo and overwrites the local copies. It also checks `.claude/rules/project.md`: it creates the file from the template if missing, and appends any `# Baseline` or `# Deploy targets` section an older copy lacks. The full list is step 1 of "At the Start of Each Session" in `CLAUDE-RULES.md`. This means older projects automatically pick up new reference files without any manual copying.
 
-**Check the live KB for drift if more than one day has passed since the last session** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Claude reads the live KB through the built-in browser and compares every field with the project's files (the drift check in `05-BROWSER_CAPTURE_AND_DEPLOY.md`). If everything matches, it says which version each field is at, adds a row to `DEPLOYMENTS.md`, and carries on with no new folder. If any field matches no local file, it records the live KB in a `current-state` folder.
+**Check the live KB for drift if more than one day has passed since the latest version or `current-state` folder** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Claude reads the live KB through the built-in browser and compares every field with the project's files (the drift check in `05-BROWSER_CAPTURE_AND_DEPLOY.md`). If everything matches, it says which version each field is at, adds a row to `DEPLOYMENTS.md`, and carries on with no new folder. If any field matches no local file, it records the live KB in a `current-state` folder.
 
 A `current-state` folder holds the 12 code fields as they are live, `style-settings-colors.md` (the Style Settings colors, fonts and logo), and fresh HTML snapshots of reader pages. Claude writes all of them from the live read. If the KB uses the legacy Homepage Custom content field, the folder also gets `homepage-custom-content.html`, from Customize > Homepage > Homepage content > Custom content. Whether it applies is settled once at setup and recorded in the `# Baseline` section of `.claude/rules/project.md`; Claude reads that record rather than re-checking the KB each time, and skips the file entirely when it says `empty`.
 
@@ -230,7 +230,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 
-**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md` through `06-`) live in the repo only; they are never copied into customer folders. The two capture-and-deploy helpers in `process-docs/kb-io/` are the exception: Claude downloads fresh copies into `.claude/kb-io/` at the start of each session.
+**Note:** You don't need to manually update process docs. `CLAUDE.md` fetches the latest `CLAUDE-RULES.md` from the GitHub repo at the start of each session, and process docs (`00-README.md` through `06-`) live in the repo only; they are never copied into customer folders. The two capture-and-deploy helpers and the page-coverage scan in `process-docs/kb-io/` are the exception: Claude downloads fresh copies into `.claude/kb-io/` at the start of each session.
 
 ### Example
 

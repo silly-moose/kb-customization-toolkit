@@ -77,8 +77,7 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§54](#54-custom-content-and-topic-categories-render-through-the-article-template-with-an-empty-body) category Thumbnail / Banner fields write to the backing ARTICLE ·
 [§55](#55-ko_api-merge-codes-need-a-scoped-key-render-single-use-urls-and-fail-with-http-200) **`[ko_api(...)]`: scoped key, single-use URLs, errors are HTTP 200** ·
 [§58](#58-the-seeded-backtotop-snippet-can-be-empty) seeded `backToTop` snippet can be **empty** (no arrow) ·
-[§62](#62-a-toggle-subcategory-has-no-address-in-the-table-of-contents) a Toggle category's TOC link is `javascript:void(0);` ·
-[§67](#67-theme-scripts-run-while-the-page-is-still-loading) theme scripts run on a half-parsed page
+[§62](#62-a-toggle-subcategory-has-no-address-in-the-table-of-contents) a Toggle category's TOC link is `javascript:void(0);`
 
 **Theme-level & client-side**
 [§10](#10-custom-utility-classes-to-know) utility classes ·
@@ -88,7 +87,8 @@ For full documentation, see: https://support.knowledgeowl.com/help/look-and-feel
 [§32](#32-detecting-a-logged-in-author-client-side-ko-app-edit) detecting a logged-in author (**incl. Preview vs live**) ·
 [§46](#46-sessionstorage-survives-a-hard-refresh) `sessionStorage` survives a hard refresh ·
 [§56](#56-under-google-tag-manager-send-events-with-datalayerpush-not-gtagevent) Google Tag Manager wants `dataLayer.push`, not `gtag('event')` ·
-[§60](#60-image--file-security-rewrites-file-links-everywhere-including-the-theme) **Image / file security rewrites the theme's file links** (and breaks PDF previews)
+[§60](#60-image--file-security-rewrites-file-links-everywhere-including-the-theme) **Image / file security rewrites the theme's file links** (and breaks PDF previews) ·
+[§67](#67-theme-scripts-run-while-the-page-is-still-loading) theme scripts run on a half-parsed page
 
 ---
 

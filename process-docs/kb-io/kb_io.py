@@ -764,7 +764,7 @@ def cmd_plan(a):
     for n in notes:
         print('  Note: ' + n)
     if images:
-        print('  New KB-hosted image references (each must be in this KB\'s File Library): ' + ', '.join(sorted(set(images))[:8]))
+        print('  New KB-hosted image references (each must be in this KB\'s File Library, or the live KB\'s on a sandbox build): ' + ', '.join(sorted(set(images))[:8]))
     print(f'Page calls, in order: {", ".join(p.name for p in sorted(calls.glob("*.js")))}')
 
 

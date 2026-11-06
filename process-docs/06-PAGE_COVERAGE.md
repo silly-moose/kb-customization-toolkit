@@ -2,7 +2,7 @@
 
 A theme is usually built and reviewed on the homepage, a category and an article. Readers also land on search results, the login and Restricted Access pages, the 404 page, article lists, the contact form, and on surfaces Custom CSS never reaches: the help widget, the AI chatbot and article PDFs. This doc lists all of them, says what styles each one, and gives the check that finds the gaps.
 
-**When:** the "Page coverage" mandatory check in `CLAUDE-RULES.md`. Run it before the first version of a build is called done, and again after any version that changes fonts, colors or the login card. State the outcome in the conversation and in the CHANGES file, including the surfaces you skipped and why (feature off, not reachable).
+**When:** the "Page coverage" mandatory check in `CLAUDE-RULES.md`. Run it before the first version of a build is called done, and again after any version that changes fonts, colors, layout, images or the login card. State the outcome in the conversation and in the CHANGES file, including the surfaces you skipped and why (feature off, not reachable).
 
 ## 1. Find out which features are on
 

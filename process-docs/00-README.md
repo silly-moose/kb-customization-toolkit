@@ -66,7 +66,7 @@ If more than a day has passed, Claude reads the live KB and compares it with the
 
 Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` is a small bootstrap file that tells Claude to fetch the latest process rules (`CLAUDE-RULES.md`) from the GitHub repo. This ensures you always have the latest rules without any manual copying. `.claude/rules/project.md` contains customer-specific settings like the deployment target — if it's already set, Claude uses it automatically; otherwise it asks.
 
-Claude also **syncs template files** at the start of each session — it fetches the latest KnowledgeOwl CSS reference docs and the capture-and-deploy helpers (`.claude/kb-io/`) from the repo and creates any missing project files (like `.claude/rules/project.md`) from the template. This means older customer projects automatically pick up new reference files without any manual copying.
+Claude also **syncs template files** at the start of each session — it fetches the latest KnowledgeOwl CSS reference docs and the capture-and-deploy helpers (`.claude/kb-io/`) from the repo, refreshes the project's `CLAUDE.md` bootstrap, and creates any missing project files (like `.claude/rules/project.md`) or sections from the template. The full list is step 1 of "At the Start of Each Session" in `CLAUDE-RULES.md`. This means older customer projects automatically pick up new reference files without any manual copying.
 
 Use the prompt templates from the Quick Setup checklists above to kick off each session.
 
