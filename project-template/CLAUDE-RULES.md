@@ -132,8 +132,7 @@ Create a `current-state` folder when the drift check finds a field that matches 
 
 Before locking the `current-state` folder, write `CHANGES_FROM_v[last].md` from `unpack`'s report, which names every field that differs from the project's files. These changes were not made through this system; note that their origin (customer, teammate, direct KO edit) may be unknown. When creating the next version folder from `current-state`, name its CHANGES file `CHANGES_FROM_current-state.md`.
 
-When a `current-state` folder is created, also refresh supporting files. Old screenshots and reference materials can be actively misleading: they may show a design or layout that no longer exists. Remind the user to:
-- Add fresh screenshots to `current-state/Screenshots/` if they want a visual record (optional; Claude can look at the live KB any time)
+When a `current-state` folder is created, also refresh supporting files. Old reference materials can be actively misleading: they may show a design or layout that no longer exists. Remind the user to:
 - Remove outdated materials from `Reference/` (e.g., deployed mockups, completed task exports) and add any new reference files for upcoming work
 - Leave `knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md` in place — they're permanent references
 
@@ -199,7 +198,7 @@ When the KB is **brand-new or still on the stock Minimalist theme** with no real
 
 If accepted, follow `04-MINIMALIST_THEME_DEFAULTS.md` (fetch on demand) — it `curl`s the 12 code files from the repo byte-exact, before the folder is locked. Record `stock Minimalist defaults` under **Started from** in `# Baseline`.
 
-On a fresh build the *rest* of the capture is largely moot too — scale it to what actually exists rather than asking for the full set (Style Settings values, snapshots, screenshots, the legacy field: see "Scaling the rest of the capture" in `04-MINIMALIST_THEME_DEFAULTS.md`).
+On a fresh build the *rest* of the capture is largely moot too, so scale it to what actually exists rather than asking for the full set (Style Settings values, snapshots, the legacy field: see "Scaling the rest of the capture" in `04-MINIMALIST_THEME_DEFAULTS.md`).
 
 **Don't use this path to overwrite a KB whose custom code is worth keeping** — the `no-changes` folder exists to preserve the customer's real work as the rollback baseline. **But "has custom code" isn't automatically "worth keeping":** a sandbox carrying a trial-era or pre-sales first-pass theme that this build is meant to replace is a legitimate restart-from-stock case. Don't bulldoze it silently either — ask which the user wants (capture it as a real rollback point / defaults as baseline / defaults plus the old theme archived in `Reference/`). Options and trade-offs: `04-MINIMALIST_THEME_DEFAULTS.md`.
 

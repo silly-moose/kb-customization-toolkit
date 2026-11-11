@@ -124,21 +124,9 @@ Many customer KBs aren't — reader-restricted KBs are the norm rather than the 
 A reader-restricted KB needs no reader login at all: once you are signed in to the admin app, Claude reaches the reader site through the admin's "View knowledge base" link (`05-BROWSER_CAPTURE_AND_DEPLOY.md`, "Snapshots"), and those snapshots are the author view. If you'd rather not sign in to the admin app in the pane, or the account is behind SSO that won't authenticate a separate browser profile:
 
 - Capture from **your own** authenticated browser instead (the DevTools steps below work unchanged). Check that the page is not KO's "Warmup Page" and note that a signed-in capture carries the editor bar.
-- Or **mark the snapshots and screenshots pending and leave the `no-changes` folder UNLOCKED** until you have them. Don't `chmod` an incomplete baseline read-only — the lock is meant to protect a finished record, not to freeze a half-captured one.
+- Or **mark the snapshots pending and leave the `no-changes` folder UNLOCKED** until you have them. Don't `chmod` an incomplete baseline read-only: the lock is meant to protect a finished record, not to freeze a half-captured one.
 
 Either way the build isn't blocked: the 12 code files and `style-settings-colors.md` can be filled from the documented Minimalist defaults on a stock KB (see `04-MINIMALIST_THEME_DEFAULTS.md`), and the localhost-preview path that works with **no KB access at all** is in `03-LOCALHOST_PREVIEW.md` → "Previewing a Build BEFORE Anything Is Deployed."
-
-### Screenshots (optional)
-Claude can look at the live KB any time, but its screenshots come back to the conversation, not to disk, so saved screenshots are yours to add if you want a visual record of the starting point. Claude asks once before locking the folder. Useful pages, in the `Screenshots/` folder inside the no-changes folder:
-- Homepage
-- An article page
-- A category page
-- Any other pages relevant to the project
-
-**Tip: Use full-page screenshots.** A regular screenshot only captures the visible viewport. To capture the *entire* page (including content below the fold), use Chrome's built-in DevTools command:
-1. Open DevTools: **Cmd+Option+I** (Mac) or **Ctrl+Shift+I** (Windows)
-2. Open the command menu: **Cmd+Shift+P** (Mac) or **Ctrl+Shift+P** (Windows)
-3. Type `screenshot` and select **Capture full size screenshot**
 
 Chrome saves a full-length PNG automatically. This is especially useful for long article and category pages where the below-the-fold layout matters.
 
@@ -359,14 +347,12 @@ Your project should look like this:
             ├── full-html-snapshot-article.html
             ├── homepage-custom-content.html    (legacy - only older KBs)
             ├── style-settings-colors.md
-            ├── CHANGES_FROM_no-changes.md
-            └── Screenshots/
-                └── (current state screenshots)
+            └── CHANGES_FROM_no-changes.md
 ```
 
 **Note:** Process docs (`00-README.md`, `01-KB_CUSTOMIZATION_PROJECT_SETUP.md`, etc.) are not included in customer folders. They live in the template repo and Claude fetches them on demand.
 
-**Claude automatically protects the backup folder.** During your first session, once the capture is complete (code files, HTML snapshots and `style-settings-colors.md`, plus any screenshots you chose to add), Claude runs `chmod -R a-w YYYY.MM.DD-no-changes/` to make the folder read-only, preventing accidental edits. It does the same for every `current-state` folder. If you need to correct a setup mistake before any real work has started, ask Claude to unlock the folder for you (or run `chmod -R u+w [folder-name]/` yourself).
+**Claude automatically protects the backup folder.** During your first session, once the capture is complete (code files, HTML snapshots and `style-settings-colors.md`), Claude runs `chmod -R a-w YYYY.MM.DD-no-changes/` to make the folder read-only, preventing accidental edits. It does the same for every `current-state` folder. If you need to correct a setup mistake before any real work has started, ask Claude to unlock the folder for you (or run `chmod -R u+w [folder-name]/` yourself).
 
 ---
 

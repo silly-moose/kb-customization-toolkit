@@ -73,7 +73,7 @@ done
 
 **Timing note:** do this during initial setup, *before* the `no-changes` folder is locked read-only (`chmod -R a-w`). A folder locked while it still held the template placeholders was locked by mistake: unlock it (`chmod -R u+w <folder>`), copy, then re-lock. A baseline that was actually captured is never unlocked and edited (`CLAUDE-RULES.md`, "Never Modify"). See [`01-KB_CUSTOMIZATION_PROJECT_SETUP.md`](01-KB_CUSTOMIZATION_PROJECT_SETUP.md) §5 for the locking step.
 
-**What this does and doesn't touch:** it populates the 12 code files only. The HTML snapshots (`full-html-snapshot-*.html`), `style-settings-colors.md`, any screenshots, and `CHANGES_FROM_no-changes.md` are still captured the normal way during setup — though on a fresh build they can be scaled down; see "Fresh or Stock-Minimalist Builds" in `CLAUDE-RULES.md`.
+**What this does and doesn't touch:** it populates the 12 code files only. The HTML snapshots (`full-html-snapshot-*.html`), `style-settings-colors.md` and `CHANGES_FROM_no-changes.md` are still captured the normal way during setup, though on a fresh build they can be scaled down; see "Fresh or Stock-Minimalist Builds" in `CLAUDE-RULES.md`.
 
 **If the live KB still holds a throwaway theme** when the defaults are the baseline, `plan` refuses to overwrite those fields on the first deploy, because their live content matches no local file. Once the user confirms that replacing the old theme is the point, rerun `plan` with `--overwrite` for each field it names.
 
@@ -98,7 +98,6 @@ The defaults cover the 12 code files. On a genuinely fresh KB the *rest* of the 
 
 - **Style Settings colors** — Claude's capture reads them with the code fields, so there's nothing extra to do. On the manual path: on a **brand-new** KB the values *are* the Minimalist defaults already listed at the bottom of `style-settings-colors.md`, so copy them into the `## Values` table rather than clicking through every swatch. On an **older KB that merely looks stock, confirm each swatch instead** — Style Settings live in their own UI, so the colors can have been changed without Custom CSS/HTML ever being touched.
 - **HTML snapshots** — still capture one homepage and one article. They show KO's stock rendered DOM, which is exactly what the build will be overriding.
-- **Screenshots** — one homepage and one article is enough. There's no customer design to preserve, so don't chase a full page inventory.
 - **Legacy Homepage Custom content** — always empty on a brand-new KB, so there's nothing to check: record `empty` in `# Baseline` and move on.
 
 ### Deliberately discarding a throwaway theme

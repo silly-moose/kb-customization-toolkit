@@ -138,8 +138,7 @@ Project/
 │   ├── full-html-snapshot-article.html
 │   ├── homepage-custom-content.html   # legacy Homepage Custom content (older KBs only)
 │   ├── style-settings-colors.md
-│   ├── CHANGES_FROM_no-changes.md
-│   └── Screenshots/
+│   └── CHANGES_FROM_no-changes.md
 ├── 2026.01.21-v1/               # First iteration (copied from no-changes)
 │   ├── (all files from no-changes)
 │   └── CHANGES_FROM_no-changes.md
@@ -187,12 +186,11 @@ Without the built-in browser (a terminal or IDE session), drift can't be checked
 1. **Run the drift check.** If every field matches a local file, stop here: no folder, and the next version folder copies from the latest version as usual.
 2. **Create a `YYYY.MM.DD-current-state` folder** (using today's date). `kb_io.py unpack --into` writes the 12 code files and `style-settings-colors.md` from the live read, and Claude takes fresh HTML snapshots of the same reader pages the most recent version folder has snapshots of. Include `homepage-custom-content.html` only when the `# Baseline` section of `.claude/rules/project.md` records the legacy Homepage Custom content field as `in use`. If the answer isn't recorded yet (a project set up before that section existed), Claude reads the field once and records it, so it doesn't come up again. On the manual path the user pastes each field and snapshot instead (Chrome DevTools > Elements > right-click `<html>` > Copy outerHTML), and updates `style-settings-colors.md` only if the Style Settings may have changed.
 3. **Confirm the capture came from the right KB.** If the project has both a sandbox and a live KB, it's easy to snapshot the wrong one, and the mistake is invisible once the code is in the folder. On one project the target was a sandbox but the code files and both HTML snapshots came from live; the two had diverged in both directions, so the wrong baseline would have silently reverted real work. `read()` reports the host it read and `unpack --snapshot` reports each snapshot's `rel="canonical"` host. Claude checks both against the targets in `.claude/rules/project.md` and states which KB it captured. If it's the wrong one, recapture rather than reconcile.
-4. **Screenshots are optional.** Claude doesn't ask for them, since it reads the live KB whenever it needs to see it. If you want a visual record, add them to the `Screenshots/` folder inside the `current-state` folder before it's locked.
-5. **Document what changed since the last version** — see "CHANGES File in Current-State Folders" below.
-6. **Lock the folder** — once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, any screenshots, and the CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
-7. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
-8. **Refresh the `Reference/` folder** — clean up outdated materials and add current ones (see details below)
-9. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
+4. **Document what changed since the last version:** see "CHANGES File in Current-State Folders" below.
+5. **Lock the folder** once all files are in place (code files, HTML snapshots, `style-settings-colors.md`, and the CHANGES file), run `chmod -R a-w YYYY.MM.DD-current-state/` to make it read-only.
+6. **Create the next version folder** by copying from the `current-state` snapshot (not from the old last version)
+7. **Refresh the `Reference/` folder:** clean up outdated materials and add current ones (see details below)
+8. **Note the new baseline** in your CHANGES file (e.g., "Based on `2026.03.15-current-state`")
 
 ### CHANGES File in Current-State Folders
 
@@ -209,15 +207,11 @@ This preserves a record of what drifted between sessions. Without it, the gap be
 
 ### Why Refreshing Supporting Files Matters
 
-Claude reads what you put in front of it. Old screenshots and reference files aren't just clutter — they're **misleading context** that can cause Claude to make decisions based on a design or layout that no longer exists. Every irrelevant file dilutes Claude's attention and wastes context window on information that doesn't help the current task.
+Claude reads what you put in front of it. Old reference files aren't just clutter; they're **misleading context** that can cause Claude to make decisions based on a design or layout that no longer exists. Every irrelevant file dilutes Claude's attention and wastes context window on information that doesn't help the current task.
 
 The goal: **the `current-state` folder and `Reference/` folder should reflect the truth _right now_ and the work _coming next_.** Old version folders already preserve the past — that's their job.
 
 ### What to Clean Up
-
-**Screenshots (in `current-state/Screenshots/`):**
-- Don't copy screenshots over from previous version folders — they show what the KB _used to_ look like
-- Fresh screenshots of the KB's current appearance, if you want them, are added in step 4, before the folder is locked (homepage, category page, article page, and any pages relevant to the upcoming work)
 
 **Reference files (in `Reference/` at the project root):**
 - Remove files no longer relevant to upcoming work (e.g., mockups for designs already deployed, Asana exports of completed tasks)
@@ -226,7 +220,7 @@ The goal: **the `current-state` folder and `Reference/` folder should reflect th
 
 ### What NOT to Clean Up
 
-- **Old version folders** — never touch these; their screenshots and contents stay as-is as a historical record
+- **Old version folders:** never touch these; their contents stay as-is as a historical record
 - **The `no-changes` folder** — never modify for any reason
 - **`knowledgeowl-css-quirks.md` and `knowledgeowl-css-defaults.md`** — these are permanent references, always stay
 

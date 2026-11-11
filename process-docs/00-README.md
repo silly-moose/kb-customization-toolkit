@@ -136,7 +136,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `.claude/launch.json` | Dev-server config for the optional localhost preview (see `03-LOCALHOST_PREVIEW.md`) |
 | `DEPLOYMENTS.md` | One row per save and drift check: which version reached which KB, when, and whether the read-back passed. Claude writes it |
 | `Reference/` | KnowledgeOwl CSS reference docs (quirks + defaults) and space for customer-specific reference materials (e.g., screenshots, mockups, emails, Asana tasks, assets) |
-| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, screenshots folder, `style-settings-colors.md`, and CHANGES template |
+| `TEMPLATE-no-changes/` | Blank files for all KnowledgeOwl code sections, HTML snapshots, `style-settings-colors.md`, and CHANGES template |
 
 **What's in `process-docs/`:**
 

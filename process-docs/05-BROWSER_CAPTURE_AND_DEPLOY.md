@@ -13,7 +13,7 @@ This doc is the procedure. The rules that govern it are in `CLAUDE-RULES.md` und
 | Captures the 12 Style fields, the legacy homepage field, the Style Settings and the rendered HTML snapshots | Sign in to KnowledgeOwl in the browser pane. KO staff: Super Admin "log in as" a user with Style admin rights |
 | Checks the live KB for drift at the start of a session | Say yes to each deploy |
 | Deploys code, colors, fonts and the logo, and checks every save | Upload the logo, favicon and any images (the pane has no file picker) |
-| Records every save and drift check in `DEPLOYMENTS.md` | Add screenshots when you want a visual record (optional) |
+| Records every save and drift check in `DEPLOYMENTS.md` | Give a standing yes for sandbox deploys, if you want Claude to deploy there as it goes |
 
 Every save is credited in KO's history to whoever the pane is signed in as. Sign in as the account that should own the change.
 
