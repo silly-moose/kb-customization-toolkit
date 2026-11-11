@@ -23,11 +23,12 @@ Use this when you're starting work on a customer's knowledge base for the first 
 7. **Optional: Download the customer's marketing site** using the Save All Resources Chrome extension and add it to the `Reference/` folder. Claude can read the HTML/CSS to match their brand exactly
 8. **Open Claude Code in the KB's project folder and paste:**
    ```
-   Capture the baseline for [customer name]'s KB at [KB URL], then review Reference/ and let me know when you're ready to start.
+   Use the browser pane in the Claude app, not Chrome. Capture the baseline for [customer name]'s KB at [KB URL], then build what the brief in Reference/ asks for (ask me if there isn't one) and stop when the first version is ready to deploy.
    ```
+   To have Claude deploy each version to a sandbox without waiting for your yes, add `Deploy to the sandbox as you go.` Deploys to the live KB always wait for your yes.
 9. **Sign in to KnowledgeOwl when Claude asks**, in the browser pane inside the Claude app. KO staff: use Super Admin "log in as" a user with Style admin rights, because every save is credited to whoever is signed in. Claude never types credentials.
 
-Claude then captures the baseline itself: all 12 Customize > Style fields, the legacy homepage field, the Style Settings and HTML snapshots of the homepage and an article, each checked against the live KB. It also audits content-level CSS (Library > Snippets *and* a rendered article or two, because a `<style>` block in page content loads after Custom CSS and can override the theme), records the one-time facts under `# Baseline` in `.claude/rules/project.md`, asks once whether you want to add screenshots, and locks the folder. How it works: `05-BROWSER_CAPTURE_AND_DEPLOY.md`.
+Claude then captures the baseline itself: all 12 Customize > Style fields, the legacy homepage field, the Style Settings and HTML snapshots of the homepage and an article, each checked against the live KB. It also audits content-level CSS (Library > Snippets *and* a rendered article or two, because a `<style>` block in page content loads after Custom CSS and can override the theme), records the one-time facts under `# Baseline` in `.claude/rules/project.md`, and locks the folder. How it works: `05-BROWSER_CAPTURE_AND_DEPLOY.md`. After that it works through the brief without stopping, except to sign in, for files only you can upload, and for your yes before each save (`CLAUDE-RULES.md`, "When to Stop and Ask").
 
 **No built-in browser?** In a terminal or IDE session, use the manual path: KnowledgeOwl teammates run the `ko-code-capture` bookmarklet (Silly Moose > Engineering > Dev) and unzip it into the no-changes folder; anyone else pastes each field into its file. `01-KB_CUSTOMIZATION_PROJECT_SETUP.md` has the file-to-KnowledgeOwl mapping table (§2), the DevTools snapshot steps (§3) and a folder structure diagram (§5).
 
@@ -43,11 +44,11 @@ Use this when you're resuming work on a customer's knowledge base that you've wo
 2. **Update the `Reference/` folder**: remove outdated materials and add any new ones (e.g., screenshots, mockups, emails, Asana tasks, assets)
 3. **Open Claude Code in the folder and paste:**
    ```
-   I want to resume work on [customer name]. Check the live KB for changes, then let me know when you're ready to start.
+   Use the browser pane in the Claude app, not Chrome. I want to resume work on [customer name]. Check the live KB for changes, then [what to do next, or: let me know when you're ready to start].
    ```
 4. **Sign in to KnowledgeOwl in the browser pane if Claude asks**
 
-If more than a day has passed, Claude reads the live KB and compares it with the project's folders. If nothing changed outside the project, it says so and you carry on. If something did, it captures a `YYYY.MM.DD-current-state` folder, writes down what drifted, locks it, and builds the next version from it. Screenshots are optional; Claude asks once. The full walkthrough is the "Returning to an Existing Project After a Gap" section in `02-VERSION_CONTROL_PROCESS.md`; without the built-in browser you paste the fields as before (05's manual path).
+If more than a day has passed, Claude reads the live KB and compares it with the project's folders. If nothing changed outside the project, it says so and you carry on. If something did, it captures a `YYYY.MM.DD-current-state` folder, writes down what drifted, locks it, and builds the next version from it. The full walkthrough is the "Returning to an Existing Project After a Gap" section in `02-VERSION_CONTROL_PROCESS.md`; without the built-in browser you paste the fields as before (05's manual path).
 
 ---
 
@@ -64,7 +65,7 @@ If more than a day has passed, Claude reads the live KB and compares it with the
 
 ## Starting a New Claude Code Session
 
-Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` is a small bootstrap file that tells Claude to fetch the latest process rules (`CLAUDE-RULES.md`) from the GitHub repo. This ensures you always have the latest rules without any manual copying. `.claude/rules/project.md` contains customer-specific settings like the deployment target — if it's already set, Claude uses it automatically; otherwise it asks.
+Claude Code has no memory between sessions, but it **automatically reads `CLAUDE.md` and `.claude/rules/project.md`** at the start of every session. `CLAUDE.md` is a small bootstrap file that tells Claude to fetch the latest process rules (`CLAUDE-RULES.md`) from the GitHub repo. This ensures you always have the latest rules without any manual copying. `.claude/rules/project.md` contains customer-specific settings like the deployment target. If it's already set, Claude uses it automatically; otherwise it works it out from the KB's name or the brief, and asks only if neither says.
 
 Claude also **syncs template files** at the start of each session — it fetches the latest KnowledgeOwl CSS reference docs and the capture-and-deploy helpers (`.claude/kb-io/`) from the repo, refreshes the project's `CLAUDE.md` bootstrap, and creates any missing project files (like `.claude/rules/project.md`) or sections from the template. The full list is step 1 of "At the Start of Each Session" in `CLAUDE-RULES.md`. This means older customer projects automatically pick up new reference files without any manual copying.
 
@@ -112,7 +113,7 @@ Every session, Claude adds any **suggest-only** improvement ideas — things tha
 
 At **project closeout**, Claude reviews and de-dupes `AWAITING REVIEW`. Chad reviews the items, applies the good ones to the toolkit (Claude can make the edits in a toolkit-repo session), moves each into `APPLIED` / `DECLINED` / `DEFERRED`, and pushes — and because `CLAUDE-RULES.md` and the CSS reference docs are re-fetched from GitHub every session, accepted changes reach the whole team automatically on their next session.
 
-Teammates other than Chad don't have the central log; if their Claude hits friction, it just flags it and suggests they share the idea with Chad in Slack.
+Teammates other than Chad don't have the central log. On a KnowledgeOwl teammate's Mac, Claude adds the same entries to a shared Asana task named in the `ko` plugin's `/ko:kb-toolkit-build` skill, and Chad's triage moves them into the log. Anyone else's Claude flags the friction in the conversation and suggests sharing it with Chad in Slack.
 
 ---
 

@@ -379,10 +379,10 @@ Once setup is complete, fill in the customer name and KB in `.claude/rules/proje
 Paste this prompt to kick off the first session:
 
 ```
-Capture the baseline for [customer name]'s KB at [KB URL], then review Reference/ and let me know when you're ready to start.
+Use the browser pane in the Claude app, not Chrome. Capture the baseline for [customer name]'s KB at [KB URL], then build what the brief in Reference/ asks for (ask me if there isn't one) and stop when the first version is ready to deploy.
 ```
 
-Claude will ask you to sign in to KnowledgeOwl in its browser pane, capture the baseline, check the deployment target (or ask if it hasn't been set yet), and ask what you want to work on. It will create versioned folders (e.g., `2026.01.28-v1`) as it works, and deploy each one after your yes. If you already filled the no-changes folder by hand (the manual path), ask it to review that folder instead.
+Claude will ask you to sign in to KnowledgeOwl in its browser pane, capture the baseline, settle the deployment target (asking only if the KB's name and the brief don't say), and build what the brief asks for. It will create versioned folders (e.g., `2026.01.28-v1`) as it works, and deploy each one after your yes. If you already filled the no-changes folder by hand (the manual path), ask it to review that folder instead.
 
 **Alternatively**, if you'd rather have Claude walk you through setup instead of doing it on your own first, see the guided setup prompts in "Starting a New Claude Code Session" in `00-README.md`.
 
