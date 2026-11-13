@@ -413,6 +413,11 @@ def cmd_unpack(a):
           f'Save label: {obj.get("saveLabel") or "?"}. Previous saves: {len(obj.get("saves", []))}.')
     for p in obj.get('problems', []) + problems:
         print('PROBLEM: ' + p)
+    if obj.get('logoLookup'):
+        print(f'PROBLEM: the logo\'s File Library lookup {obj["logoLookup"]}, so this read cannot say which image the logo is.')
+    s = obj.get('settings') or {}
+    if s:
+        print(f'Theme: {s.get("theme_name") or "?"}{" (locked)" if s.get("__themeLocked") else ""}.')
     for key, _, label in FIELDS:
         if key in prov:
             f = obj['fields'][key]
@@ -430,6 +435,12 @@ def cmd_unpack(a):
     save_json(WORK / 'live.json', live)
     save_json(WORK / f'live-{obj.get("pid", "unknown")}.json', live)
     new = [k for k in prov if prov[k] == 'NEW']
+    if home and c['n'] and label_of(src) == 'NEW':
+        new.append('legacy')
+    if new and not a.expect:
+        print(f'Time of current save: {obj.get("curSave") or "?"}. Previous saves, as KO lists them (local time, author):')
+        for lbl in obj.get('saveLabels', []):
+            print('  ' + lbl)
     if a.expect:
         return check_expect(obj, a, target, texts)
     if a.into:
@@ -485,7 +496,9 @@ def check_expect(obj, a, target, texts):
         for p in ('family', 'size', 'weight'):
             if live_s.get('font', {}).get(k, {}).get(p, '') != f.get(p, ''):
                 fails.append(f'font.{k}.{p}: live {live_s.get("font", {}).get(k, {}).get(p)}, expected {f[p]}')
-    if exp.get('logo_name') is not None and logo_file_name(obj) != exp['logo_name']:
+    if exp.get('logo_name') is not None and obj.get('logoLookup'):
+        fails.append(f'logo: the File Library lookup {obj["logoLookup"]}; read again from the article list tab')
+    elif exp.get('logo_name') is not None and logo_file_name(obj) != exp['logo_name']:
         fails.append(f'logo: live {live_s.get("logo") or "none"}, expected the File Library image {exp["logo_name"]}')
     if exp.get('logo_url') is not None and live_s.get('logo', '') != exp['logo_url']:
         fails.append(f'logo: live {live_s.get("logo") or "none"}, expected it unchanged ({exp["logo_url"] or "none"})')

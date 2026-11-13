@@ -9,11 +9,12 @@
 
 Facts about the KB settled **once** during setup, so later sessions don't re-check the live KB for them. Claude fills these in during the first session and reads them afterward.
 
-- **Homepage Custom content (legacy):** [empty / in use] — Customize > Homepage > Homepage content > Custom content. Once this says `empty`, skip `homepage-custom-content.html` in every later snapshot and don't ask about it again. If it says `in use`, include and refresh that file with each snapshot.
+- **Homepage Custom content (legacy):** [empty / in use] — Customize > Homepage > Homepage content > Custom content. Every drift read checks it again; update this line when the answer changes. When it is `in use`, a current-state folder includes `homepage-custom-content.html`.
 - **Started from:** [customer's existing code / stock Minimalist defaults] — what the `no-changes` baseline was populated with. Leave unfilled on a project set up before this section existed; don't guess it retroactively.
+- **Base theme:** [theme_name, locked or not]: from `unpack`'s "Theme:" line. A Classic KB needs a switch to Minimalist before a Minimalist-scoped theme works (05, "Switching the base theme").
 - **Back-to-top snippet:** [filled / empty / not used]: whether the `backToTop` snippet behind `{{snippet.backToTop}}` in the Body template has content. KnowledgeOwl can seed it empty (quirks-doc §58); if `empty`, the fix goes in a version's deploy steps.
 - **Features on:** [list]: which reader features are turned on (contact form, glossary, ratings, comments, favorites, subscriptions, required reading, AI chatbot, widget, reader login), so later sessions know which pages and surfaces to check. `06-PAGE_COVERAGE.md` §1 has the list and where each setting lives.
-- **Content-level `<style>` (snippets and articles):** [none found / name + roughly how many articles use it] — Library > Snippets containing `<style>` or `<script>`, and CSS pasted into article bodies. These render inside page content, which loads *after* Custom CSS, so they can outrank the theme on every article that uses them (quirks-doc §47). Record them here rather than rediscovering them after a deploy.
+- **Content-level `<style>` (snippets and articles):** [none found / name + roughly how many articles use it] — Library > Snippets containing `<style>` or `<script>`, and CSS pasted into article bodies. These render inside page content, which loads *after* Custom CSS, so they can outrank the theme on every article that uses them (quirks-doc §47). Record them here rather than rediscovering them after a deploy. For a dark design, also how many articles set dark inline text colors (CLAUDE-RULES step 2).
 
 # Deploy targets
 

@@ -127,14 +127,24 @@ function koioFactory() {
     try { r.theme = JSON.parse(doc.querySelector('#js-theme-json').value.trim()); }
     catch (e) { r.theme = null; r.problems.push('the theme JSON does not parse'); }
     r.saves = Array.from(doc.querySelectorAll('#revert-save-select option'), o => o.value);
+    // The option values are raw UTC keys, not save times; the labels carry KO's
+    // local time and the author. The current save is not in the list.
+    r.saveLabels = Array.from(doc.querySelectorAll('#revert-save-select option'), o => o.textContent.trim());
+    const cur = Array.from(doc.querySelectorAll('label')).find(l => /^Time of current save/.test(l.textContent.trim()));
+    r.curSave = cur && cur.nextElementSibling ? cur.nextElementSibling.textContent.trim() : '';
+    const tok = doc.querySelector('#csrf-token');
+    r.token = tok ? tok.value : '';
     return r;
   }
-  async function findFiles(pid, name) {
-    const token = document.querySelector('#csrf-token');
+  // The File Library search needs KO's CSRF token. Pages such as the admin
+  // dashboard have none, so fall back to the token on the KB's article list.
+  async function findFiles(pid, name, token) {
+    if (!token) { const t = document.querySelector('#csrf-token'); token = t ? t.value : ''; }
+    if (!token) { const t = (await fetchDoc('/kb/articles/id/' + pid)).doc.querySelector('#csrf-token'); token = t ? t.value : ''; }
     const body = new URLSearchParams({ pid, term: name, typeFilter: 'image', start: '0', limit: '50' });
     const r = await fetch('/library/ajax-file-search', {
       method: 'POST', credentials: 'same-origin', body,
-      headers: { 'X-CSRF-Token': token ? token.value : '', 'X-Requested-With': 'XMLHttpRequest' }
+      headers: { 'X-CSRF-Token': token, 'X-Requested-With': 'XMLHttpRequest' }
     });
     const html = await r.text();
     if (html.trim() === 'false') throw new Error('the File Library search failed');
@@ -214,7 +224,8 @@ function koioFactory() {
     const r = await readStyle(pid);
     const o = {
       kind: 'read', v: K.v, ok: !r.problems.length, pid, url: r.url, host: r.host || '', root: r.root || '',
-      kbName: r.kbName || '', admin: !!r.admin, saveLabel: r.saveLabel || '', problems: r.problems, fields: {}, saves: r.saves || []
+      kbName: r.kbName || '', admin: !!r.admin, saveLabel: r.saveLabel || '', problems: r.problems, fields: {}, saves: r.saves || [],
+      saveLabels: r.saveLabels || [], curSave: r.curSave || ''
     };
     for (const [key] of FIELDS) {
       if (!r.texts || !(key in r.texts)) continue;
@@ -229,8 +240,8 @@ function koioFactory() {
       // With Image / file security on, the URL is /files/<account id>/<file id>/<name>.
       const m = o.settings.logo.match(/\/app\/image\/id\/([0-9a-f]{24})\/|\/files\/[0-9a-f]{24}\/([0-9a-f]{24})\//);
       if (m) {
-        try { const f = (await findFiles(pid, m[1] || m[2])).files[0]; o.logoFile = f ? { id: f.id, name: f.name } : null; }
-        catch (e) { o.logoFile = null; }
+        try { const f = (await findFiles(pid, m[1] || m[2], r.token)).files[0]; o.logoFile = f ? { id: f.id, name: f.name } : null; }
+        catch (e) { o.logoFile = null; o.logoLookup = 'failed: ' + e.message; }
       }
     }
     if (opts.home) {

@@ -79,10 +79,10 @@ A captured empty field (Custom CSS or head) is a 0-byte file. A file that is onl
 
 ### Session start after a gap: the drift check
 
-1. `have .`, then `koIO.read('<pid>', HAVE)` in the control tab.
+1. `have .`, then `koIO.read('<pid>', HAVE, {home: true})` in the control tab. The legacy homepage field is read every time: a `# Baseline` answer of `empty` can go stale.
 2. `unpack <result> --record DEPLOYMENTS.md`.
    - Every field matches a local file: `unpack` says "No drift" and names which version each field is at. Say that in one line and carry on. No folder.
-   - Any field is `NEW`: someone changed the KB outside this project. Create `YYYY.MM.DD-current-state` with `unpack <result> --into YYYY.MM.DD-current-state`, take fresh snapshots of the pages the latest version folder has (see "Snapshots"), confirm both came from the target KB, write `CHANGES_FROM_v[last].md` from the report, lock it, and base the next version on it (02, "Returning to an Existing Project After a Gap").
+   - Any field is `NEW`: someone changed the KB outside this project. Create `YYYY.MM.DD-current-state` with `unpack <result> --into YYYY.MM.DD-current-state`, take fresh snapshots of the pages the latest version folder has (see "Snapshots"), confirm both came from the target KB, write `CHANGES_FROM_v[last].md` from the report (who saved and when come from the save times and authors `unpack` prints; never guess them), lock it, and base the next version on it (02, "Returning to an Existing Project After a Gap").
    - Switching Image / file security rewrites every File Library link in the theme, so each field holding one shows as `NEW` the same day. Capture it the same way before building: a version from an older folder would put back links that then return 401 (quirks-doc §60).
 
 ### Snapshots
@@ -177,11 +177,17 @@ At the end of the session, read each target once more and `unpack` it: every fie
 - **Logo:** the user uploads the image to Library > Files. Put its File Library name in the table's `logo.file` row, and `stage()` finds it (exactly one image with that name) and sets it as the logo in the same save. KO's logo URL carries a slug, not the name, so `read()` looks the name up by file id. If an API key for the KB is on hand (KO staff, or a customer who holds one), the upload can be scripted from the local terminal instead: `POST https://app.knowledgeowl.com/api/head/file.json` (multipart, the key as the Basic-auth username) puts the file in the File Library, and `stage()` then finds it by name. That worked with an SVG on 2026-09-30. Everyone else uploads in the pane. In a sandbox build, theme files go on the live KB and the code uses its URLs; the logo goes to both KBs, and with Image / file security on either KB, each KB gets its own copies (CLAUDE-RULES "Logo & Brand Assets").
 - **Favicon:** the user uploads it through Customize > Style > Style Settings > Favicon. It saves immediately and is separate from the Style save.
 
+### Switching the base theme
+
+`plan` and `stage()` deploy code, colors, fonts and the logo, and expect every other setting unchanged, so the gate blocks a save that changes `theme_name` or `layout`. A switch (a Classic KB moving to Minimalist, say) is its own save, made before the first version's deploy and again on the live KB at go-live. After a yes: copy `work/live.json` aside, load the Style page fresh, pick the theme under Themes (KO's theme picker changes only `theme_name`; the code is untouched), and save. Then read and `unpack`: every field should match the version it was at, and the settings should differ from the copy only in `theme_name`, plus the `background: []` an old theme gains ("Facts worth knowing"). Add the `DEPLOYMENTS.md` row by hand.
+
 ### Preview on the live page without saving
 
 The pane blocks a KB page's requests to `localhost` (`net::ERR_BLOCKED_BY_CLIENT`, even with CORS headers), so a reader page can't load a version from the preview server. Two ways work:
 
 - **CSS and scripts:** pass the code inline through `javascript_tool` and append it as a `<style>` or `<script>`. A feature built on `[ko_api(...)]` can be checked before its data exists by wrapping `window.fetch` to answer the rendered URLs with sample JSON.
+  - Inject `*,*::before,*::after{transition:none !important}` before swapping in new CSS. KO gives links and buttons transitions, the pane freezes them, and elements already on the page keep reporting their old colors to `getComputedStyle` and axe (03, "Kill transitions before measuring a state change").
+  - A Custom `<head>` script appended this way runs after the page has loaded, so it sees elements that snippets add on load. The real script runs earlier and can miss them: a clean preview had 18 tile images without alt text live. Run the post-deploy check on every page the script touches.
 - **Template changes:** store the version's text hunks once in the reader origin's `localStorage`; for each test, `fetch()` the page's HTML, apply the hunks and `document.write` the result. KO serves the custom code with CRLF line endings, so convert the hunks first, and anchor each hunk on text that occurs once: a page can hold the same link twice (a menu and the tiles).
 
 A preview shows the code working on real content; only the read-back proves the save.
