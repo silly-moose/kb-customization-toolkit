@@ -151,6 +151,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `05-BROWSER_CAPTURE_AND_DEPLOY.md` | How Claude captures a KB and deploys versions through the built-in browser: sign-in, the yes before each save, the save gate and read-back, uploads, and the manual path. The helpers it uses are in `kb-io/` |
 | `06-PAGE_COVERAGE.md` | Every page and surface a reader can reach, what styles each (Custom CSS, Widget settings, AI chatbot branding, PDF settings), and the check that finds the unbranded ones. `kb-io/page-audit.js` runs the scan |
 | `editor-simulation/` | A ready-made harness that reproduces the article editor's CSS cascade locally, so the mandatory Editor Readability Guard can be verified **before** deploying instead of eyeballed after. Start at its `README.md`. |
+| `accessibility/` | The shared reader-side accessibility layer (WCAG 2.2 AA): a script for Custom `<head>`, a CSS section, the template edits, and a table of what KnowledgeOwl's own accessibility release covers. Every build adopts it in its first version. |
 
 ---
 

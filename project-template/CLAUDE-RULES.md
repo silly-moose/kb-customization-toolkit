@@ -4,7 +4,7 @@ You are helping customize a KnowledgeOwl knowledge base. Follow these rules for 
 
 ## Contents
 
-**Running a session**: [When to Stop and Ask](#when-to-stop-and-ask) · [At the Start of Each Session](#at-the-start-of-each-session) · [At the End of Each Session](#at-the-end-of-each-session--reflect--improve-suggest-only) · [Mandatory Checks](#mandatory-checks-the-eight-that-are-easy-to-miss)
+**Running a session**: [When to Stop and Ask](#when-to-stop-and-ask) · [At the Start of Each Session](#at-the-start-of-each-session) · [At the End of Each Session](#at-the-end-of-each-session--reflect--improve-suggest-only) · [Mandatory Checks](#mandatory-checks-the-nine-that-are-easy-to-miss)
 
 **Folders & versioning**: [Version Folders](#version-folders) · [Never Modify](#never-modify) · [Current-State Folders](#current-state-folders) · [CHANGES File](#changes-file)
 
@@ -80,7 +80,7 @@ Help the toolkit get sharper over time by capturing what caused friction in how 
 3. **One-line heads-up.** Tell the user in one line what you logged (e.g. "Added 2 items to the toolkit improvement-log's AWAITING REVIEW, suggest-only, for your review."). Keep it to one line.
 4. **Never apply during a session.** Don't edit or push the toolkit yourself, and don't move items between the log's status sections. Applying accepted suggestions — and triaging `AWAITING REVIEW` into `APPLIED`/`DECLINED`/`DEFERRED` — is Chad's separate step, done in a session opened in the toolkit repo. At **project closeout**, review/dedupe `AWAITING REVIEW` — see "Project Closeout" in `02-VERSION_CONTROL_PROCESS.md`.
 
-## Mandatory Checks: the eight that are easy to miss
+## Mandatory Checks: the nine that are easy to miss
 
 These are the gates that must not be skipped. Each has a full section below; this is the list so none gets lost in the middle of a build. **State the outcome of each in the conversation** — including "not needed this version," so the decision is visible rather than silently omitted.
 
@@ -94,6 +94,7 @@ These are the gates that must not be skipped. Each has a full section below; thi
 | **Save gate and read-back** | Every save to a KB | The gate armed by `stage()` must pass, and the read-back (`unpack --expect`) must say PASS; state it, e.g. "Read-back PASS: 12 fields, settings, one new save". "Capture & Deploy" below |
 | **Post-deploy verification** | After every deploy of a color / type / layout change | Sample what actually rendered; this failure class is invisible in the version folder. "Post-Deploy Verification" below |
 | **Page coverage** | Before the first version of a build is called done, and after any version that changes fonts, colors, layout, images or the login card | Check every reader page type the KB has turned on, plus the widget, AI chatbot and PDFs, which Custom CSS doesn't reach. A theme reviewed on home, category and article pages leaves the rest stock. `06-PAGE_COVERAGE.md` |
+| **Accessibility layer** | First version of every build | Adopt `process-docs/accessibility/` (fetch its README) unless Chad says otherwise |
 
 ## Version Folders
 

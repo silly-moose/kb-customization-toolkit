@@ -1,0 +1,116 @@
+/* ============================================================================
+   ACCESSIBILITY: reader-side WCAG 2.2 AA fixes. Works with a11y-script.js in
+   Custom <head>. Source of truth: process-docs/accessibility/ in the toolkit;
+   README.md there says how to adopt it.
+
+   Paste this section at the end of Custom CSS, then set the tokens below to the
+   brand's colors. Each token's comment says what it must reach; measure every
+   value on the backgrounds it sits on (CLAUDE-RULES "Color-Change Checkpoint").
+   The defaults are measured on white.
+   ============================================================================ */
+:root {
+  --ko-a11y-ink: #1d284f;           /* headings, hover and the skip link: 14.3:1 on white. Needs 4.5:1 */
+  --ko-a11y-link: #0060c7;          /* links: 6.0:1 on white. Needs 4.5:1 on every background links sit on */
+  --ko-a11y-link-visited: #2c5f8d;  /* visited links: 6.7:1 on white. Needs 4.5:1 */
+  --ko-a11y-focus: #0060c7;         /* focus rings: needs 3:1 against every background a focused control sits on */
+  --ko-a11y-border: #6e7b8c;        /* form fields and the search box: 4.3:1 on white. Needs 3:1 */
+  --ko-a11y-muted: #5f6b7a;         /* muted text (disabled pager links): 5.4:1 on white. Needs 4.5:1 */
+  --ko-a11y-toc-icon: #a5562a;      /* table-of-contents expand icons: 5.3:1 on white (stock #f8b88b is 1.7:1). Needs 3:1 on the TOC background and its hover */
+  --input-border-color: var(--ko-a11y-border);
+  --input-focus-color: var(--ko-a11y-focus);
+}
+/* A dark band (a banner, a dark footer) gets its own ring color: .my-dark-band { --ko-a11y-focus: #ffffff; } */
+
+/* ---- Skip link: off screen until it takes focus (WCAG 2.4.1) ---- */
+.ko-a11y-skip-link {
+  position: absolute;
+  left: 8px;
+  top: -200px;
+  z-index: 3000;
+  padding: 10px 16px;
+  border: 2px solid var(--ko-a11y-ink);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ko-a11y-ink) !important;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.ko-a11y-skip-link:focus { top: 8px; }
+#ko-a11y-main:focus, #ko-article-cntr:focus, .login-container:focus, .error-page-container:focus, .reader-subscriptions-container:focus, .documentation-article:focus { outline: none; }
+
+/* ---- Focus rings on every control (WCAG 2.4.7, 2.4.11) ---- */
+.hg-site :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ko-a11y-focus) !important;
+  outline-offset: 2px !important;
+}
+.hg-site :is(input, select, textarea):focus-visible { outline-offset: 0 !important; }
+
+/* ---- Form fields: a border readers can see (WCAG 1.4.11). !important because Flat UI sets the field border with !important ---- */
+.hg-minimalist-theme .form-control { border-color: var(--ko-a11y-border) !important; }
+.hg-minimalist-theme .form-control:focus { border-color: var(--ko-a11y-focus) !important; }
+
+/* ---- Dialog close buttons: a dark glyph, not #cccccc (WCAG 1.4.11) ---- */
+.hg-site .modal .close { color: var(--ko-a11y-ink); opacity: 1; text-shadow: none; }
+.hg-site .modal .close:hover, .hg-site .modal .close:focus { color: var(--ko-a11y-link); opacity: 1; }
+
+/* ---- Article actions below the title instead of inside the h1, with 28px targets (WCAG 1.3.1, 2.5.8).
+        Needs the Article template edit in README.md ---- */
+.hg-minimalist-theme .hg-article-actions-bar { margin: 4px 0 8px; }
+.hg-minimalist-theme .hg-article-actions-bar .ko-article-actions { display: inline-flex; gap: 10px; margin: 0; float: none; font-size: 18px; vertical-align: baseline; }
+.hg-minimalist-theme .hg-article-actions-bar .ko-article-actions a { color: var(--ko-a11y-link); display: inline-flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; border-radius: 6px; }
+.hg-minimalist-theme .hg-article-actions-bar .ko-article-actions a:hover,
+.hg-minimalist-theme .hg-article-actions-bar .ko-article-actions a:focus-visible { color: var(--ko-a11y-ink); text-decoration: none; }
+
+/* ---- Section links in headings show on keyboard focus as well as hover (WCAG 2.4.7) ---- */
+.hg-minimalist-theme .ko-anchor-icon:focus-visible { opacity: 1; }
+
+/* ---- Table-of-contents expand icons: a contrasting color, and 24px wide now that they are buttons (WCAG 1.4.11, 2.5.8) ---- */
+.hg-minimalist-theme .documentation-categories .cat-icon,
+.hg-minimalist-theme .documentation-categories .home-icon,
+.hg-minimalist-theme .documentation-categories .alt-icon { color: var(--ko-a11y-toc-icon) !important; }
+.hg-minimalist-theme .documentation-categories .cat-icon[role="button"] { cursor: pointer; min-width: 24px; box-sizing: border-box; border-radius: 3px; }
+
+/* ---- Links inside running text are underlined, so color is not the only cue (WCAG 1.4.1).
+        Link lists (homepage lists, related articles, the in-article and topic TOCs, tiles) stay plain ---- */
+.hg-minimalist-theme .hg-article-body :is(p, li, td, th, dd, blockquote, figcaption):not(:is(.stat-list, .toc-top, .topics-toc-cntr, .ko-related-articles, .homepage-widgets, .category-list, .cat-icons-wrapper) *) a:not(.btn),
+.hg-minimalist-theme :is(.hg-article-blurb, .hg-article-info, .glossary-term-def, .error-page-lead, .ko-site-footer, .faq-top-description, .blog-top-description, .blog-blurb) a:not(.btn),
+.hg-minimalist-theme .hg-article-body :is(.alert, .well) a:not(.btn) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* ---- Headings that changed level keep their size. Adjust the sizes to the theme's type scale ---- */
+.hg-minimalist-theme .ko-related-articles h2 { font-size: 24px; line-height: 1.1; margin: 30px 0 15px; }                    /* was h3 */
+.hg-minimalist-theme .homepage-widgets h2 { font-size: 24px; line-height: 1.1; margin: 0 0 15px; }                          /* was h3 (homepage, 404) */
+.hg-minimalist-theme.hg-home-page .homepage-widgets h2 { margin-bottom: 10px; }
+.hg-minimalist-theme .category-list h2.category-header { font-size: 18px; font-weight: 400; line-height: 1.1; margin: 30px 0 10px; }  /* category tiles, was h3 */
+.hg-minimalist-theme:is(.hg-widget-page, .hg-search-page) h2.hg-list-title { font-size: 18px; line-height: 1.4; margin: 15px 0 0; }   /* list and search titles, was h4 */
+.hg-minimalist-theme:is(.hg-widget-page, .hg-search-page) h2.hg-list-title > a { display: inline-block; padding: 2px 0; }   /* a 28px target (WCAG 2.5.8) */
+.hg-minimalist-theme.hg-blog-page .blog-article-cntr > h2 { font-size: 24px; line-height: 1.1; }                             /* blog post titles, was h3 */
+.hg-minimalist-theme .hg-contact-form-container h1 { font-size: 28px; line-height: 1.1; margin: 30px 0 40px; }              /* contact page title, was h2 */
+.hg-minimalist-theme .hg-site-login .alert h1 { font-size: 18px; line-height: 1.4; font-weight: 600; }                      /* Restricted Access, was h4 */
+.hg-minimalist-theme .hg-site-login h1.panel-title { font-size: 16px; margin: 0; }                                           /* login card, was h3 */
+.hg-minimalist-theme .error-page-lead { font-size: 24px; line-height: 1.1; font-weight: 700; color: var(--ko-a11y-ink); margin: 30px 0 15px; }  /* 404 sentences, were h3 */
+
+/* ---- Disabled pager links on blog-style categories (stock #aaaaaa is 2.3:1; WCAG 1.4.3) ---- */
+.hg-minimalist-theme .pager .disabled,
+.hg-minimalist-theme .pager .disabled > a,
+.hg-minimalist-theme .pager .disabled > span { color: var(--ko-a11y-muted) !important; opacity: 1; }
+
+/* ---- "New" and "Updated" badges: full opacity and darker fills, so the white count reads at 4.5:1
+        (stock is half opacity on #478f31 and #2380ac, 1.7:1 as rendered; WCAG 1.4.3) ---- */
+.hg-minimalist-theme .badge.badge-new, .hg-minimalist-theme .badge.badge-updated { opacity: 1; }
+.hg-minimalist-theme .badge.badge-new { background-color: #3a7a28; }      /* 5.3:1 with white */
+.hg-minimalist-theme .badge.badge-updated { background-color: #1f6f96; }  /* 5.6:1 with white */
+
+/* ---- Motion: readers who ask for less get none (WCAG 2.3.3) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hg-minimalist-theme *, .hg-minimalist-theme *::before, .hg-minimalist-theme *::after { transition-duration: 0s !important; animation-duration: 0s !important; scroll-behavior: auto !important; }
+  .hg-minimalist-theme .faq-nav-content .faq-cat-container:hover,
+  .hg-minimalist-theme .faq-nav-content .faq-cat-panel-container:hover,
+  .hg-minimalist-theme .btn.btn-default.ko-cat-sub:hover { transform: none; }
+}
