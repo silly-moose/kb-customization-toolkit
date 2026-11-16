@@ -1,0 +1,43 @@
+<p>A guided path is a normal article. You write steps as headings, text, and bullets, and the knowledge base turns them into a step-by-step view. There's no code, and a mistake can't break anything: readers get a normal article, and authors get a Path check that says what to fix.</p>
+<h2>Write a path in five moves</h2>
+<ol>
+<li><strong>Start from the template.</strong> Copy the <a href="/help/guided-path-template">Guided path template</a>. The first paragraph becomes the path's summary. A "Before you start:" line followed by a bulleted list becomes a checklist box.</li>
+<li><strong>Write your steps.</strong> Each Heading 2 is one step. Start it with a type word and a colon (Action:, Decision:, or Judgement:), then the step's name. Everything under the heading belongs to that step.</li>
+<li><strong>Give decisions their options.</strong> Under a Decision: heading, add a bulleted list with one bullet per option: the option's text, an arrow, then the name of the step it leads to, like "Wrong password → Reset the password". Typing -&gt; works too.</li>
+<li><strong>Add special lines where you need them.</strong> Each is a paragraph that starts with a word and a colon:
+<ul>
+<li><strong>Confirm:</strong> a tick-box the reader must check before continuing.</li>
+<li><strong>End:</strong> ends this branch. The rest of the line is the completion message.</li>
+<li><strong>Escalate:</strong> when to stop and hand off. Shown as a note in the step.</li>
+<li><strong>Go to:</strong> where this step continues, by step name. Use it when a branch rejoins a later step.</li>
+</ul>
+</li>
+<li><strong>View the article.</strong> An article with at least two step headings becomes a path automatically. Authors see the Path check bar at the top of the article page.</li>
+</ol>
+<p>Examples to open in the editor: <a href="/help/a-customer-cant-sign-in">A customer can't sign in</a> (for agents on a call), <a href="/help/why-cant-i-see-an-article">Why can't I see an article?</a> (for readers finding their own answer), and <a href="/help/example-with-a-mistake">Example with a mistake</a> (what the Path check shows when something is wrong).</p>
+<h2>Step types</h2>
+<table style="width: 100%;" class="table-bordered">
+<colgroup><col style="width: 40.0000%;"><col style="width: 60.0000%;"></colgroup>
+<tbody>
+<tr><td><strong>You type</strong></td><td><strong>Readers get</strong></td></tr>
+<tr><td>Action: Reset the password</td><td>Something to do, then Next. Also the default when a heading has no type word.</td></tr>
+<tr><td>Decision: What happens when they sign in?</td><td>A choice: the reader picks an option and jumps to that step.</td></tr>
+<tr><td>Judgement: Locked account</td><td>A step that needs the reader's judgment, usually with an Escalate: line.</td></tr>
+</tbody>
+</table>
+<h2>When branches rejoin</h2>
+<p>By default, Next goes to the step written below. When two branches lead to the same later step, each branch above the last one needs a Go to: line naming that step. Otherwise Next walks the reader into the other branch. The Path check marks these steps with "continues at step N".</p>
+<h2>What the Path check tells you</h2>
+<ul>
+<li><strong>Green:</strong> every step, option, and ending checks out.</li>
+<li><strong>Amber:</strong> the path works, but something needs a look, such as a step nothing leads to.</li>
+<li><strong>Red:</strong> the path is off, for example because an option names a step that doesn't exist. Readers see a normal article, and the panel names each problem.</li>
+</ul>
+<p>The Path check appears on the article page (preview or live), not in the editor.</p>
+<h2>Editing a live path</h2>
+<ul>
+<li>Changing wording or images is always safe.</li>
+<li>Renaming a step: update the options and Go to: lines that name it. Its usage history starts over.</li>
+<li>Moving steps: check where Next goes afterwards.</li>
+</ul>
+<p>Step types and special lines also work in German (Aktion, Entscheidung, Ermessen, Bestätigen, Ende, Eskalieren, Weiter zu) and Spanish (Acción, Decisión, Criterio, Confirmar, Fin, Escalar, Ir a).</p>

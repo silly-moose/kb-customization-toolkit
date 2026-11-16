@@ -1,0 +1,125 @@
+/* ==========================================================================
+   GUIDED PATHS (KB Customization Toolkit, process-docs/guided-paths/)
+   Styles for guided-paths.js. Append to the end of Custom CSS. Set the tokens below to the
+   brand and check text contrast on each background it sits on (README, "Branding it").
+   Everything is scoped to .gp-guided-path (the class the script's bridge adds to the article
+   body) except the .gp-callout-confirm, -end and -escalation boxes, which are styled wherever
+   they appear (the engine wraps End: lines in one; authors can also add them as divs in Code View).
+   ========================================================================== */
+:root {
+  --gp-ink: #1f2933;
+  --gp-muted: #616e7c;
+  --gp-line: #d9e2ec;
+  --gp-soft: #f5f7fa;
+  --gp-accent: #2f6fed;
+  --gp-accent-soft: #e8f0fe;
+  --gp-green: #1f8a5b;
+  --gp-green-soft: #e6f4ed;
+  --gp-purple: #6b4fd8;
+  --gp-purple-soft: #efebfc;
+  --gp-amber: #a86500;
+  --gp-amber-soft: #fff4e0;
+  --gp-red: #c0392b;
+  --gp-red-soft: #fdecea;
+  --gp-surface: #fff;        /* step cards and the active mode button */
+  --gp-on-accent: #fff;      /* text on --gp-accent (step numbers, primary buttons) */
+  --gp-accent-hover: #1f57c9;
+  --gp-accent-line: #9db8f5;
+  --gp-green-line: #bfe3cf;
+  --gp-amber-line: #e0b36a;
+  --gp-red-line: #e8a29a;
+}
+.gp-guided-path #gp-root { color: var(--gp-ink); }
+.gp-guided-path #gp-root .gp-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: var(--gp-accent-soft); color: var(--gp-accent); padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
+.gp-guided-path #gp-root .gp-summary { font-size: 15px; color: var(--gp-muted); line-height: 1.6; padding: 2px 0 2px 14px; border-left: 3px solid var(--gp-accent); margin-bottom: 14px; }
+.gp-guided-path #gp-root .gp-before { padding: 2px 0 2px 14px; font-size: 15px; color: var(--gp-muted); line-height: 1.6; margin-bottom: 20px; border-left: 3px solid var(--gp-purple); }
+.gp-guided-path #gp-root .gp-before strong { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gp-purple); margin-bottom: 6px; }
+.gp-guided-path #gp-root .gp-before ul { padding-left: 18px; margin: 0; }
+.gp-guided-path #gp-root .gp-divider { border: none; border-top: 1px solid var(--gp-line); margin: 18px 0; }
+.gp-guided-path #gp-root .gp-mode-toggle { display: flex; background: var(--gp-soft); border: 1px solid var(--gp-line); border-radius: 8px; padding: 2px; gap: 2px; margin-bottom: 20px; width: fit-content; }
+.gp-guided-path #gp-root .gp-mode-btn { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; color: var(--gp-muted); background: transparent; }
+.gp-guided-path #gp-root .gp-mode-btn.active { background: var(--gp-surface); color: var(--gp-accent); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+.gp-guided-path #gp-root .gp-progress-wrap { margin-bottom: 20px; }
+.gp-guided-path #gp-root .gp-progress-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--gp-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+.gp-guided-path #gp-root .gp-progress-label span:last-child { color: var(--gp-accent); }
+.gp-guided-path #gp-root .gp-progress-track { height: 4px; background: var(--gp-line); border-radius: 4px; overflow: hidden; }
+.gp-guided-path #gp-root .gp-progress-fill { height: 100%; background: var(--gp-accent); border-radius: 4px; transition: width 0.3s ease; }
+.gp-guided-path #gp-root .gp-step-card, .gp-guided-path #gp-root .gp-scroll-step { border: 1px solid var(--gp-line); border-radius: 12px; overflow: hidden; background: var(--gp-surface); margin-bottom: 16px; box-shadow: 0 4px 14px rgba(31,41,51,0.06); }
+.gp-guided-path #gp-root .gp-step-card-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--gp-line); background: var(--gp-soft); }
+.gp-guided-path #gp-root .gp-step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--gp-accent); color: var(--gp-on-accent); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.gp-guided-path #gp-root .gp-step-title-text { font-size: 18px; font-weight: 700; color: var(--gp-ink); line-height: 1.3; }
+.gp-guided-path #gp-root .gp-step-type { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-left: auto; flex-shrink: 0; }
+.gp-guided-path #gp-root .type-action { background: var(--gp-green-soft); color: var(--gp-green); }
+.gp-guided-path #gp-root .type-decision { background: var(--gp-accent-soft); color: var(--gp-accent); }
+.gp-guided-path #gp-root .type-judgement { background: var(--gp-purple-soft); color: var(--gp-purple); }
+.gp-guided-path #gp-root .gp-step-body { padding: 16px 18px; }
+.gp-guided-path #gp-root .gp-step-body p { line-height: 1.65; margin-bottom: 12px; }
+.gp-guided-path #gp-root .gp-choices { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.gp-guided-path #gp-root .gp-choice-btn { font-size: 15px; font-weight: 600; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--gp-line); background: var(--gp-surface); color: var(--gp-ink); cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 10px; line-height: 1.4; width: 100%; transition: border-color 0.15s, background 0.15s; }
+.gp-guided-path #gp-root .gp-choice-btn:hover { border-color: var(--gp-accent); background: var(--gp-accent-soft); }
+.gp-guided-path #gp-root .gp-choice-btn .arrow { color: var(--gp-accent); flex-shrink: 0; }
+.gp-guided-path #gp-root .gp-choice-btn:disabled { opacity: 0.4; cursor: default; }
+.gp-guided-path #gp-root .gp-choice-static { cursor: default; opacity: 0.85; }
+.gp-guided-path #gp-root .gp-choice-static:hover { border-color: var(--gp-line); background: var(--gp-surface); }
+.gp-guided-path #gp-root .gp-choice-target { font-size: 12px; color: var(--gp-muted); flex-shrink: 0; }
+.gp-guided-path #gp-root .gp-jblock { background: var(--gp-amber-soft); border: 1px dashed var(--gp-amber-line); border-radius: 8px; padding: 10px 14px; margin-top: 10px; }
+.gp-guided-path #gp-root .gp-jblock-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gp-amber); margin-bottom: 4px; }
+.gp-guided-path #gp-root .gp-jblock p { margin-bottom: 0; }
+.gp-guided-path #gp-root .gp-gate { display: flex; align-items: flex-start; gap: 10px; background: var(--gp-accent-soft); border: 1px dashed var(--gp-accent-line); border-radius: 8px; padding: 10px 14px; margin-top: 12px; cursor: pointer; line-height: 1.5; }
+.gp-guided-path #gp-root .gp-gate input { margin-top: 3px; flex-shrink: 0; accent-color: var(--gp-accent); cursor: pointer; }
+.gp-guided-path #gp-root .gp-nav { display: flex; gap: 10px; align-items: center; }
+.gp-guided-path #gp-root .gp-btn { font-size: 14px; font-weight: 700; padding: 10px 22px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; }
+.gp-guided-path #gp-root .gp-btn-primary { background: var(--gp-accent); color: var(--gp-on-accent); }
+.gp-guided-path #gp-root .gp-btn-primary:hover { background: var(--gp-accent-hover); }
+.gp-guided-path #gp-root .gp-btn-ghost { background: var(--gp-surface); color: var(--gp-muted); border-color: var(--gp-line); }
+.gp-guided-path #gp-root .gp-btn:disabled { opacity: 0.35; cursor: default; }
+.gp-guided-path #gp-root .gp-step-counter { font-size: 13px; color: var(--gp-muted); margin-left: auto; font-weight: 600; }
+.gp-guided-path #gp-root .gp-complete { text-align: center; padding: 28px 16px; border: 1px solid var(--gp-green-line); border-radius: 12px; background: var(--gp-green-soft); }
+.gp-guided-path #gp-root .gp-complete-tick { width: 48px; height: 48px; border-radius: 50%; background: var(--gp-green); color: var(--gp-on-accent); font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.gp-guided-path #gp-root .gp-complete h3 { margin: 0 0 6px; }
+.gp-guided-path #gp-root .gp-btn-restart { font-size: 13px; font-weight: 600; padding: 7px 16px; border-radius: 8px; border: 1px solid var(--gp-line); background: var(--gp-surface); color: var(--gp-muted); cursor: pointer; }
+.gp-guided-path #gp-root .gp-scroll-list { display: flex; flex-direction: column; gap: 8px; }
+.gp-guided-path #gp-root .gp-scroll-connector { width: 1px; height: 10px; background: var(--gp-line); margin: 0 auto; }
+/* End, gate, and escalation boxes: also how they read without the script (editor, PDF) */
+.gp-callout-confirm, .gp-callout-end, .gp-callout-escalation { margin: 1.2em 0; border-radius: 8px; padding: 10px 14px; }
+.gp-callout-end { background: var(--gp-green-soft); border: 1px solid var(--gp-green-line); }
+.gp-callout-confirm { background: var(--gp-accent-soft); border: 1px dashed var(--gp-accent-line); }
+.gp-callout-escalation { background: var(--gp-amber-soft); border: 1px dashed var(--gp-amber-line); }
+/* Author-only warnings and the Path check panel */
+.gp-guided-path #gp-root .gp-author-warning, .gp-untagged-note { background: var(--gp-amber-soft); border: 1px solid var(--gp-amber-line); border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; line-height: 1.6; }
+.gp-guided-path #gp-root .gp-author-warning strong, .gp-untagged-note strong { display: block; color: var(--gp-amber); margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.gp-untagged-note p { margin: 0; }
+.gp-guided-path #gp-root .gp-path-check { background: var(--gp-soft); border: 1px solid var(--gp-line); border-radius: 10px; margin: 0 0 18px; font-size: 13px; line-height: 1.6; }
+.gp-guided-path #gp-root .gp-path-check summary { cursor: pointer; padding: 10px 14px; font-weight: 600; list-style: none; display: block; }
+.gp-guided-path #gp-root .gp-path-check summary::-webkit-details-marker { display: none; }
+.gp-guided-path #gp-root .gp-path-check summary::before { content: "\25B8  "; opacity: 0.6; }
+.gp-guided-path #gp-root .gp-path-check[open] summary::before { content: "\25BE  "; opacity: 0.6; }
+.gp-guided-path #gp-root .gp-pc-ok { border-color: var(--gp-green-line); }
+.gp-guided-path #gp-root .gp-pc-ok summary { color: var(--gp-green); }
+.gp-guided-path #gp-root .gp-pc-warn { border-color: var(--gp-amber-line); background: var(--gp-amber-soft); }
+.gp-guided-path #gp-root .gp-pc-warn summary { color: var(--gp-amber); }
+.gp-guided-path #gp-root .gp-pc-err { border-color: var(--gp-red-line); background: var(--gp-red-soft); }
+.gp-guided-path #gp-root .gp-pc-err summary { color: var(--gp-red); }
+.gp-guided-path #gp-root .gp-pc-body { padding: 0 14px 12px; }
+.gp-guided-path #gp-root .gp-pc-intro { margin: 10px 0 4px; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gp-muted); }
+.gp-guided-path #gp-root .gp-pc-intro-err { color: var(--gp-red); }
+.gp-guided-path #gp-root .gp-pc-intro-warn { color: var(--gp-amber); }
+.gp-guided-path #gp-root .gp-pc-issues { margin: 4px 0 8px; padding-left: 18px; }
+.gp-guided-path #gp-root .gp-pc-map { margin: 4px 0 0; padding-left: 22px; }
+.gp-guided-path #gp-root .gp-pc-map > li { margin: 6px 0; }
+.gp-guided-path #gp-root .gp-pc-step { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.gp-guided-path #gp-root .gp-pc-title { font-weight: 600; }
+.gp-guided-path #gp-root .gp-pc-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 1px 8px; border-radius: 999px; }
+.gp-guided-path #gp-root .gp-pc-type-action { background: var(--gp-green-soft); color: var(--gp-green); }
+.gp-guided-path #gp-root .gp-pc-type-decision { background: var(--gp-accent-soft); color: var(--gp-accent); }
+.gp-guided-path #gp-root .gp-pc-type-judgement { background: var(--gp-purple-soft); color: var(--gp-purple); }
+.gp-guided-path #gp-root .gp-pc-chip { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--gp-line); border-radius: 999px; padding: 0 7px; color: var(--gp-muted); background: var(--gp-surface); }
+.gp-guided-path #gp-root .gp-pc-chip-warn { border-color: var(--gp-amber-line); color: var(--gp-amber); }
+.gp-guided-path #gp-root .gp-pc-branches { margin: 3px 0 0; padding-left: 16px; list-style: none; }
+.gp-guided-path #gp-root .gp-pc-branches li { font-size: 12px; margin: 2px 0; }
+.gp-guided-path #gp-root .gp-pc-okline { color: var(--gp-muted); }
+.gp-guided-path #gp-root .gp-pc-badline { color: var(--gp-red); }
+.gp-guided-path #gp-root .gp-pc-foot { margin: 10px 0 0; font-size: 11px; color: var(--gp-muted); }
+/* Without the script (editor, PDF): the plain article reads as a tidy linear page */
+.gp-guided-path #gp-root h2 { margin: 22px 0 8px; padding-top: 14px; border-top: 1px solid var(--gp-line); }
+.gp-guided-path #gp-root .ko-anchor-icon, .gp-guided-path #gp-root .ko-header-anchor::after { display: none; content: none; }

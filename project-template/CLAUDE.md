@@ -29,6 +29,7 @@ Available docs (fetch from GitHub when needed):
 - `05-BROWSER_CAPTURE_AND_DEPLOY.md`: how Claude captures the KB and deploys versions through the built-in browser, with the `kb-io/` helpers. Fetch it before the first capture or deploy of a session
 - `06-PAGE_COVERAGE.md`: every page and surface a reader can reach (login, Restricted Access, search, lists, widget, AI chatbot, PDFs), what styles each, and the check that finds unbranded ones. Fetch it for the Page coverage mandatory check
 - `editor-simulation/README.md` — harness that reproduces the article editor's cascade locally; use it to verify the mandatory Editor Readability Guard before deploying
+- `guided-paths/README.md`: guided paths (decision trees), the script, CSS and author articles that turn an ordinary article into a step-by-step path, with how to adopt and brand it. Fetch it when the customer wants guided paths or decision trees
 
 If the user asks a question about the process, setup, or version control, fetch the relevant doc from:
 `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/[filename]`
