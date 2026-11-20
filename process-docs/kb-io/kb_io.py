@@ -17,6 +17,10 @@ process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md
   plan <version-folder> [--from FILE] [--overwrite KEY ...]
       Compare a version folder with the last read of the live KB, run the
       content checks, and write the page calls plus the yes-request.
+  inject
+      Print the page call that fetches ko-style-io.js from the toolkit's
+      GitHub repo at the last commit that changed it and runs it only if its
+      SHA-256 matches the local file. Also saved as work/inject.js.
 
 Summaries only go to stdout. Payloads are written under work/ next to this file.
 """
@@ -152,6 +156,37 @@ def helper_self():
     src = read(HERE / 'ko-style-io.js')
     i = src.index('function koioFactory()')
     return h12(src[i:src.index('\n}\n', i) + 2])
+
+
+def get_url(url):
+    try:
+        with urllib.request.urlopen(url, timeout=20) as r:
+            return r.read()
+    except Exception:   # some Python installs lack CA certificates; curl uses the system's
+        return subprocess.run(['curl', '-fsSL', url], capture_output=True, check=True, timeout=30).stdout
+
+
+def cmd_inject(a):
+    repo, path = 'silly-moose/kb-customization-toolkit', 'process-docs/kb-io/ko-style-io.js'
+    want = hashlib.sha256((HERE / 'ko-style-io.js').read_bytes()).hexdigest()
+    try:
+        commit = json.loads(get_url(f'https://api.github.com/repos/{repo}/commits?sha=main&per_page=1&path={path}'))[0]['sha']
+        url = f'https://raw.githubusercontent.com/{repo}/{commit}/{path}'
+        same = hashlib.sha256(get_url(url)).hexdigest() == want
+    except Exception as e:
+        die(f'Could not reach GitHub ({e}). Paste the helper whole instead: cat .claude/kb-io/ko-style-io.js')
+    if not same:
+        die(f'The local ko-style-io.js is not the toolkit\'s copy at {commit[:7]}, the last commit that changed it. '
+            'Run the session-start sync again, or paste the helper whole.')
+    call = ("(async()=>{const t=await(await fetch('" + url + "')).text();"
+            "const d=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t))),"
+            "b=>b.toString(16).padStart(2,'0')).join('');"
+            "if(d!=='" + want + "')return 'NOT INJECTED: the fetched helper hashes to '+d;"
+            "return await(0,eval)(t);})()")
+    write(WORK / 'inject.js', call + '\n')
+    print(call)
+    print(f'Fetches ko-style-io.js at {commit[:7]} and runs it only if it matches the local file. '
+          f'Saved as work/inject.js. It should return self-hash {helper_self()}.')
 
 
 def fetch_default(fn):
@@ -819,8 +854,9 @@ def main():
     p.add_argument('--live')
     p.add_argument('--from', dest='source')
     p.add_argument('--overwrite', nargs='*', default=[])
+    sub.add_parser('inject')
     a = ap.parse_args()
-    {'have': cmd_have, 'unpack': cmd_unpack, 'plan': cmd_plan}[a.cmd](a)
+    {'have': cmd_have, 'unpack': cmd_unpack, 'plan': cmd_plan, 'inject': cmd_inject}[a.cmd](a)
 
 
 if __name__ == '__main__':
