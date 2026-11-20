@@ -265,8 +265,60 @@ function koioFactory() {
     catch (e) { return fail(e.message); }
   };
 
-  // put(i, text, h): holds one payload chunk for stage(). ok is false when the
-  // chunk arrived altered (its raw SHA-256 prefix is not h).
+  // A build: the field assembled in the page from text the page can already
+  // reach, so only the new parts travel through the conversation. f.src lists
+  // the sources: {live} is this field as the page loaded it, {from, h} the same
+  // field saved on another KB (read fresh, checked against its hash) and
+  // {url, sha} a toolkit file on GitHub at a pinned commit (checked by full
+  // SHA-256). f.pieces are joined in order: {s, a, b} is a slice of source s in
+  // UTF-16 offsets, {text} typed text, {put} put() chunks. Every piece carries
+  // the hash of its own text. Fetched text is only ever joined into the field's
+  // value, never run.
+  const TOOLKIT_RAW = /^https:\/\/raw\.githubusercontent\.com\/silly-moose\/kb-customization-toolkit\/[0-9a-f]{40}\/[\w.\/-]+$/;
+  async function build(key, f, ta, reads) {
+    const src = [];
+    for (const s of f.src || []) {
+      let text;
+      if (s.live) text = ta.defaultValue;
+      else if (s.from) {
+        const r = reads[s.from] = reads[s.from] || await readStyle(s.from);
+        if (r.problems.length) throw new Error(r.problems.join('; '));
+        text = r.texts[key];
+        if ((await hash(text)) !== s.h) throw new Error('the field saved on ' + s.from + ' changed since the plan');
+      } else if (s.url) {
+        if (!TOOLKIT_RAW.test(s.url) || s.url.indexOf('..') >= 0) throw new Error('not a toolkit file at a pinned commit: ' + s.url);
+        const r = await fetch(s.url, { credentials: 'omit', cache: 'no-store' });
+        if (!r.ok) throw new Error(s.url + ' returned ' + r.status);
+        text = await r.text();
+        const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+        const got = Array.from(new Uint8Array(d), b => b.toString(16).padStart(2, '0')).join('');
+        if (got !== s.sha) throw new Error(s.url + ' hashes to ' + got.slice(0, 12) + ', not ' + String(s.sha).slice(0, 12));
+      } else throw new Error('unknown build source ' + JSON.stringify(s));
+      src.push(norm(text));
+    }
+    const buf = window.__koioBuf || {};
+    let all = '';
+    for (let n = 0; n < (f.pieces || []).length; n++) {
+      const p = f.pieces[n];
+      let t;
+      if (p.put) {
+        t = p.put.map(i => {
+          if (buf[i] == null) throw new Error('chunk ' + i + ' is missing; run its put() call first');
+          return buf[i];
+        }).join('');
+      } else if (typeof p.text === 'string') t = p.text;
+      else if (src[p.s] != null) t = src[p.s].slice(p.a, p.b);
+      else throw new Error('piece ' + n + ' names no source');
+      const got = await sha(t);
+      if (got !== p.h) throw new Error('build piece ' + n + ' hashes to ' + got + ', not ' + p.h);
+      all += t;
+    }
+    return all;
+  }
+
+  // put(i, text, h): holds one payload chunk for stage(), for a field sent in
+  // chunks or a build's longer typed parts. ok is false when the chunk arrived
+  // altered (its raw SHA-256 prefix is not h).
   K.put = async function (i, text, h) {
     const buf = window.__koioBuf = window.__koioBuf || {};
     buf[i] = text;
@@ -305,7 +357,7 @@ function koioFactory() {
     if (canon(saves) !== canon(plan.base.saves)) P.push('someone saved this theme since the preflight read');
 
     // Rebuild every new value before touching the page.
-    const next = {};
+    const next = {}, reads = {};
     for (const key of Object.keys(plan.fields || {})) {
       const f = plan.fields[key];
       let text;
@@ -319,10 +371,11 @@ function koioFactory() {
           }).join('');
         } else if (f.via === 'patch') text = applyEdits(norm(tas[key].defaultValue), f.edits);
         else if (f.via === 'from') {
-          const src = await readStyle(f.pid);
+          const src = reads[f.pid] = reads[f.pid] || await readStyle(f.pid);
           if (src.problems.length) throw new Error(src.problems.join('; '));
           text = src.texts[key];
-        } else throw new Error('unknown transfer ' + f.via);
+        } else if (f.via === 'build') text = await build(key, f, tas[key], reads);
+        else throw new Error('unknown transfer ' + f.via);
       } catch (e) { P.push(key + ': ' + e.message); continue; }
       text = norm(text);
       const got = await sha(text);

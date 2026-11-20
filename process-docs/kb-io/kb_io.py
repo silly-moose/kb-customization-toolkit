@@ -13,10 +13,13 @@ process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md
       --into writes a capture folder, --snapshot writes an HTML snapshot,
       --expect checks a save against the last plan and, on a pass, keeps a
       copy of each deployed field under work/deployed/, --record appends a row
-      to DEPLOYMENTS.md.
-  plan <version-folder> [--from FILE] [--overwrite KEY ...]
+      to DEPLOYMENTS.md. Each field's text is kept in work/live-<pid>/, where
+      plan finds another KB's field to build from.
+  plan <version-folder> [--live FILE] [--from FILE] [--overwrite KEY ...]
       Compare a version folder with the last read of the live KB, run the
-      content checks, and write the page calls plus the yes-request.
+      content checks, choose how each field travels (a copy from another KB,
+      a patch, a build in the page, or chunks), and write the page calls plus
+      the yes-request.
   inject
       Print the page call that fetches ko-style-io.js from the toolkit's
       GitHub repo at the last commit that changed it and runs it only if its
@@ -25,6 +28,7 @@ process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md
 Summaries only go to stdout. Payloads are written under work/ next to this file.
 """
 import argparse
+import bisect
 import difflib
 import hashlib
 import json
@@ -37,8 +41,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 WORK = HERE / 'work'
-DEFAULTS_URL = ('https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/'
-                'process-docs/minimalist-theme-defaults/')
+REPO = 'silly-moose/kb-customization-toolkit'
+RAW = f'https://raw.githubusercontent.com/{REPO}/'
+DEFAULTS_URL = RAW + 'main/process-docs/minimalist-theme-defaults/'
 FIELDS = [
     ('css', 'custom-css.css', 'Custom CSS'),
     ('head', 'custom-head.html', 'Custom <head>'),
@@ -80,6 +85,10 @@ KO_FILLED_OPTIONS = ('code_theme', 'code_line_numbers', 'code_copy_button')
 DATED = re.compile(r'^\d{4}\.\d{2}\.\d{2}-')
 CHUNK = 25000
 PATCH_MAX = 60000   # a patch travels inside the stage call; one of about 34 KB staged and saved fine
+BUILD_MIN = 80      # a build reuses a stretch of text only when it is longer than describing it
+BLOCK = 48          # the length of the source blocks a build looks for in the version's text
+TYPED_MAX = 20000   # a build's typed parts beyond this travel as put() chunks, largest first
+TOOLKIT_RAW = re.compile(r'https://raw\.githubusercontent\.com/silly-moose/kb-customization-toolkit/[0-9a-f]{40}/[\w./-]+', re.A)
 COMMENTS = re.compile(r'<!--.*?-->|/\*.*?\*/', re.S)
 CAPTURE_HEADER = re.compile(r'\A(?:<!--\n(?: \*[^\n]*\n)+-->\n\n|/\*\*\n(?: \*[^\n]*\n)+ \*/\n\n)')
 GUARD = re.compile(r'\n/\* =+\n[ \t]*EDITOR READABILITY GUARD')
@@ -166,12 +175,17 @@ def get_url(url):
         return subprocess.run(['curl', '-fsSL', url], capture_output=True, check=True, timeout=30).stdout
 
 
+def commits_of(path, n):
+    """The last n commits on main that changed one toolkit file, newest first."""
+    return [c['sha'] for c in json.loads(get_url(f'https://api.github.com/repos/{REPO}/commits?sha=main&per_page={n}&path={path}'))]
+
+
 def cmd_inject(a):
-    repo, path = 'silly-moose/kb-customization-toolkit', 'process-docs/kb-io/ko-style-io.js'
+    path = 'process-docs/kb-io/ko-style-io.js'
     want = hashlib.sha256((HERE / 'ko-style-io.js').read_bytes()).hexdigest()
     try:
-        commit = json.loads(get_url(f'https://api.github.com/repos/{repo}/commits?sha=main&per_page=1&path={path}'))[0]['sha']
-        url = f'https://raw.githubusercontent.com/{repo}/{commit}/{path}'
+        commit = commits_of(path, 1)[0]
+        url = f'{RAW}{commit}/{path}'
         same = hashlib.sha256(get_url(url)).hexdigest() == want
     except Exception as e:
         die(f'Could not reach GitHub ({e}). Paste the helper whole instead: cat .claude/kb-io/ko-style-io.js')
@@ -470,6 +484,13 @@ def cmd_unpack(a):
         live['home'] = {'title': home.get('title', ''), 'h': home['content']['h'], 'n': home['content']['n']}
     save_json(WORK / 'live.json', live)
     save_json(WORK / f'live-{obj.get("pid", "unknown")}.json', live)
+    # The text of each field, so that a later plan can build another KB's version from this one.
+    for key, fn, _ in FIELDS:
+        kept = WORK / f'live-{obj.get("pid", "unknown")}' / fn
+        if key in texts and h12(texts[key]) == obj['fields'][key]['h']:
+            write(kept, as_file(texts[key]))
+        elif kept.is_file():
+            kept.unlink()
     new = [k for k in prov if prov[k] == 'NEW']
     if home and c['n'] and label_of(src) == 'NEW':
         new.append('legacy')
@@ -653,6 +674,201 @@ def js_str(s):
     return json.dumps(s, ensure_ascii=False).replace('\u2028', '\\u2028').replace('\u2029', '\\u2029')
 
 
+def js_json(obj):
+    return js_str(obj) if isinstance(obj, str) else \
+        json.dumps(obj, ensure_ascii=False, separators=(',', ':')).replace('\u2028', '\\u2028').replace('\u2029', '\\u2029')
+
+
+def put_line(n, piece):
+    return f'koIO.put({n},{js_str(piece)},"{raw12(piece)}")'
+
+
+def nbytes(s):
+    return len(s.encode('utf-8'))
+
+
+# ---- the build transfer: a field assembled in the page from text it can already reach -----
+def utf16(text):
+    """Turns a character offset in text into the UTF-16 offset JavaScript's slice() uses."""
+    astral = [m.start() for m in re.finditer('[\U00010000-\U0010ffff]', text)]
+    return lambda i: i + bisect.bisect_left(astral, i)
+
+
+def same_ahead(x, i, y, j):
+    """How many characters x[i:] and y[j:] have in common at their start."""
+    lim, n, step = min(len(x) - i, len(y) - j), 0, 1
+    while n + step <= lim and x[i + n:i + n + step] == y[j + n:j + n + step]:
+        n += step
+        step *= 2
+    while step > 1:
+        step //= 2
+        if n + step <= lim and x[i + n:i + n + step] == y[j + n:j + n + step]:
+            n += step
+    return n
+
+
+def same_behind(x, i, y, j, floor):
+    """How many characters x[:i] and y[:j] have in common at their end, not reaching below x[floor]."""
+    lim, n, step = min(i - floor, j), 0, 1
+    while n + step <= lim and x[i - n - step:i - n] == y[j - n - step:j - n]:
+        n += step
+        step *= 2
+    while step > 1:
+        step //= 2
+        if n + step <= lim and x[i - n - step:i - n] == y[j - n - step:j - n]:
+            n += step
+    return n
+
+
+def cover(target, texts):
+    """target as a list of slices of texts, (k, start, end) in characters, and typed strings.
+    Each text is cut into fixed blocks; every place the target holds one is grown both ways, the
+    longest growth wins (ties go to the earlier text), and stretches no text holds are typed."""
+    index = {}
+    for k, s in enumerate(texts):
+        for p in range(0, len(s) - BLOCK + 1, BLOCK):
+            index.setdefault(s[p:p + BLOCK], []).append((k, p))
+    out, done, t = [], 0, 0
+    while t + BLOCK <= len(target):
+        cands = index.get(target[t:t + BLOCK], ())
+        best = None
+        if len(cands) <= 64:   # a block found everywhere (a run of spaces) is no guide
+            for k, p in cands:
+                back = same_behind(target, t, texts[k], p, done)
+                n = back + same_ahead(target, t, texts[k], p)
+                if best is None or n > best[0]:
+                    best = (n, k, p - back, t - back)
+        if best and best[0] >= BUILD_MIN:
+            n, k, a, start = best
+            if start > done:
+                out.append(target[done:start])
+            out.append((k, a, a + n))
+            done = t = start + n
+        else:
+            t += 1
+    if done < len(target):
+        out.append(target[done:])
+    return out
+
+
+def kb_text(pid, key, fn, h, have):
+    """Another KB's saved field, normalized, from the last unpack of that KB or a local file; None
+    when neither hashes to h."""
+    kept = WORK / f'live-{pid}' / fn
+    if kept.is_file() and h12(read(kept)) == h:
+        return norm(read(kept))
+    for src in have['fields'].get(key, {}).get(h, []):
+        text = source_text(have, src)
+        if h12(text) == h:
+            return norm(text)
+    return None
+
+
+class Toolkit:
+    """Toolkit files a build can fetch: each local copy is matched to the toolkit's file at one of
+    its last ten commits on main by SHA-256, the same check `inject` makes. Matches are kept in
+    work/toolkit-pins.json, since a file at a commit never changes."""
+
+    def __init__(self):
+        self.pins = load_json(WORK / 'toolkit-pins.json', missing={})
+        self.tree, self.problem = None, None
+
+    def pin(self, local, path=None):
+        data = Path(local).read_bytes()
+        want = hashlib.sha256(data).hexdigest()
+        if want in self.pins:
+            return self.pins[want]
+        if self.problem:
+            return None
+        try:
+            if path is None:
+                if self.tree is None:
+                    tree = json.loads(get_url(f'https://api.github.com/repos/{REPO}/git/trees/main?recursive=1'))
+                    self.tree = [x['path'] for x in tree.get('tree', []) if x.get('type') == 'blob']
+                found = [p for p in self.tree if p.startswith('process-docs/') and p.rsplit('/', 1)[-1] == Path(local).name]
+                if len(found) != 1:
+                    return None
+                path = found[0]
+            for commit in commits_of(path, 10):
+                url = f'{RAW}{commit}/{path}'
+                if TOOLKIT_RAW.fullmatch(url) and '..' not in url and hashlib.sha256(get_url(url)).hexdigest() == want:
+                    self.pins[want] = {'url': url, 'sha': want}
+                    save_json(WORK / 'toolkit-pins.json', self.pins)
+                    return self.pins[want]
+        except Exception as e:
+            self.problem = f'GitHub could not be reached ({e}), so no build fetches a toolkit file'
+        return None
+
+
+def make_build(key, fn, target, vdir, live_text, src, toolkit):
+    """A build of target, as (entry, typed parts that go by put(), bytes to send, a description,
+    whether it draws on the live text alone), or None when nothing reachable is worth reusing.
+    Sources: this field's live text, the same field saved on the --from KB, and toolkit files
+    (copies in the version folder, and the Minimalist default)."""
+    cands = []   # (what the page fetches, normalized text, how the plan names it)
+    if live_text is not None:
+        cands.append(({'live': True}, live_text, 'the live text'))
+    if src:
+        cands.append(({'from': src['pid'], 'h': src['h']}, src['text'], f'the field saved on {src["host"]}'))
+    files = [(p, None) for p in sorted(vdir.iterdir()) if p.is_file() and p.suffix in ('.js', '.css', '.html', '.htm')
+             and p.name not in {f for _, f, _ in FIELDS} | {LEGACY}]
+    if (WORK / 'defaults' / fn).is_file():
+        files.append((WORK / 'defaults' / fn, 'process-docs/minimalist-theme-defaults/' + fn))
+    for p, path in files:
+        try:
+            text = norm(read(p))
+        except UnicodeDecodeError:
+            continue
+        if len(text) >= BUILD_MIN:
+            cands.append(({'file': p, 'path': path}, text, p.name if path is None else f'the Minimalist default {fn}'))
+    while True:
+        pieces = cover(target, [c[1] for c in cands])
+        used = sorted({p[0] for p in pieces if isinstance(p, tuple)})
+        unpinned = [k for k in used if 'file' in cands[k][0] and not toolkit.pin(cands[k][0]['file'], cands[k][0]['path'])]
+        if not unpinned:
+            break
+        cands = [c for k, c in enumerate(cands) if k not in unpinned]
+    if not used:
+        return None
+    srcs, names = [], []
+    for k in used:
+        what, _, name = cands[k]
+        if 'file' in what:
+            pin = toolkit.pin(what['file'], what['path'])
+            what, name = {'url': pin['url'], 'sha': pin['sha']}, f'{name} at {pin["url"][len(RAW):len(RAW) + 7]}'
+        srcs.append(what)
+        names.append(name)
+    at = {k: n for n, k in enumerate(used)}
+    off = {k: utf16(cands[k][1]) for k in used}
+    out, typed = [], {}
+    for p in pieces:
+        if isinstance(p, tuple):
+            k, a, b = p
+            out.append({'s': at[k], 'a': off[k](a), 'b': off[k](b), 'h': raw12(cands[k][1][a:b])})
+        else:
+            out.append({'text': p, 'h': raw12(p)})
+    # The typed parts ride in the stage call; the largest move to put() chunks until the rest fits.
+    rest = sum(nbytes(js_str(p['text'])) for p in out if 'text' in p)
+    for i in sorted((i for i, p in enumerate(out) if 'text' in p), key=lambda i: -len(out[i]['text'])):
+        if rest <= TYPED_MAX:
+            break
+        typed[i] = out[i].pop('text')
+        out[i]['put'] = []
+        rest -= nbytes(js_str(typed[i]))
+    entry = {'via': 'build', 'src': srcs, 'pieces': out, 'to': h12(target)}
+    chunks = [t[c:c + CHUNK] for t in typed.values() for c in range(0, len(t), CHUNK)]
+    sent = nbytes(js_json(entry)) + sum(nbytes(put_line(0, c)) for c in chunks)
+    n_typed = sum(nbytes(p) for p in pieces if isinstance(p, str))
+    how = 'build from ' + (', '.join(names[:-1]) + ' and ' + names[-1] if len(names) > 1 else names[0])
+    if n_typed:
+        how += f', plus {n_typed:,} typed bytes'
+    if chunks:
+        how += (f' ({sum(nbytes(t) for t in typed.values()):,} of them in {len(chunks)} put() '
+                f'chunk{"s" if len(chunks) != 1 else ""})')
+    only_live = all('live' in s for s in srcs)
+    return entry, typed, sent, how, only_live
+
+
 def settings_plan(vdir, live, fail):
     """The settings part of the page plan, and the full settings the read-back must find."""
     cur = live.get('settings', {})
@@ -720,7 +936,7 @@ def cmd_plan(a):
     if have.get('self') != helper_self():
         die('work/have.json is from another copy of the helper; run `have` again.')
     fields, puts, lines, fail, notes, images, check = {}, [], [], [], [], [], {}
-    chunk_no = 0
+    chunk_no, toolkit, no_src = 0, Toolkit(), []
     # Switching on Image / file security rewrites the theme's File Library links to
     # /files/<account>/<file>/<name>; the old public /app/image/ links then return 401.
     secured = any(re.search(r'/files/[0-9a-f]{24}/[0-9a-f]{24}/', source_text(have, s[0]))
@@ -748,32 +964,68 @@ def cmd_plan(a):
             fail.append(f'{label}: the live content matches no local file (an outside edit). Capture it first, '
                         f'or rerun with --overwrite {key} once the user has approved replacing it.')
             continue
-        entry, size = None, 0
+        entry, how, weighed = None, '', []
         if src_live and src_live['fields'].get(key, {}).get('h') == th:
             entry = {'via': 'from', 'pid': src_live['pid'], 'to': th}
             how = f'copied from {src_live.get("host")} in the page'
-        elif sources:
-            edits = make_edits(norm(source_text(have, sources[0])), target)
-            size = len(js_str(edits)) if edits is not None else 0
-            if edits is not None and size < min(PATCH_MAX, len(target) // 2):
-                entry = {'via': 'patch', 'edits': edits, 'to': th}
-                n = -(-len(target) // CHUNK)
-                how = (f'patch, {len(edits)} edit{"s" if len(edits) != 1 else ""} in {size:,} bytes '
-                       f'instead of {n} chunk{"s" if n != 1 else ""}')
-        if entry is None:
-            parts = []
-            for i in range(0, len(target), CHUNK):
-                piece = target[i:i + CHUNK]
-                puts.append(f'koIO.put({chunk_no},{js_str(piece)},"{raw12(piece)}")')
-                parts.append(chunk_no)
-                chunk_no += 1
-            entry = {'via': 'chunks', 'parts': parts, 'to': th}
-            how = f'{len(parts)} chunk{"s" if len(parts) != 1 else ""}' + \
-                (f'; a patch would be {size:,} bytes' if sources and size else '')
+        else:
+            # Weigh the ways this field can travel by the bytes each sends through the conversation.
+            base = norm(source_text(have, sources[0])) if sources else None
+            chunked = [target[i:i + CHUNK] for i in range(0, len(target), CHUNK)]
+            best = (sum(nbytes(put_line(0, c)) for c in chunked), 'chunks', None)
+            weighed.append(f'chunks {best[0]:,}')
+            patched = False
+            if base is not None:
+                edits = make_edits(base, target)
+                size = len(js_str(edits)) if edits is not None else 0
+                if edits is None:
+                    weighed.append('patch not possible (no anchor occurs once)')
+                elif size < min(PATCH_MAX, len(target) // 2):
+                    best, patched = (nbytes(js_str(edits)), 'patch', edits), True
+                    weighed.append(f'patch {best[0]:,}')
+                else:
+                    weighed.append(f'patch {nbytes(js_str(edits)):,} (over '
+                                   f'{"half the field" if size >= len(target) // 2 else f"{PATCH_MAX:,} characters"})')
+            src = None
+            if src_live and src_live['fields'].get(key, {}).get('h'):
+                sh = src_live['fields'][key]['h']
+                st = kb_text(src_live['pid'], key, fn, sh, have)
+                if st is None:
+                    no_src.append(key)
+                else:
+                    src = {'pid': src_live['pid'], 'h': sh, 'host': src_live.get('host'), 'text': st}
+            built = make_build(key, fn, target, vdir, base, src, toolkit)
+            # A build from the live text alone is a patch by offsets; the patch is used where it can be.
+            if built and not (built[4] and patched):
+                weighed.append(f'build {built[2]:,}')
+                if built[2] < best[0]:
+                    best = (built[2], 'build', built)
+            if best[1] == 'build':
+                entry, typed, _, how, _ = best[2]
+                for i in sorted(typed):
+                    ids = []
+                    for c in range(0, len(typed[i]), CHUNK):
+                        puts.append(put_line(chunk_no, typed[i][c:c + CHUNK]))
+                        ids.append(chunk_no)
+                        chunk_no += 1
+                    entry['pieces'][i]['put'] = ids
+            elif best[1] == 'patch':
+                entry = {'via': 'patch', 'edits': best[2], 'to': th}
+                how = f'patch, {len(best[2])} edit{"s" if len(best[2]) != 1 else ""}'
+            else:
+                parts = []
+                for piece in chunked:
+                    puts.append(put_line(chunk_no, piece))
+                    parts.append(chunk_no)
+                    chunk_no += 1
+                entry = {'via': 'chunks', 'parts': parts, 'to': th}
+                how = f'{len(parts)} chunk{"s" if len(parts) != 1 else ""}'
         fields[key] = entry
         check[key] = th
         was = label_of(sources) if sources else 'an outside edit (overwrite approved)'
         lines.append(f'{label}: live is {was}, becomes {vdir.name} ({how}, {len(target.encode("utf-8")):,} bytes)')
+        if len(weighed) > 1:
+            lines.append('  weighed, in bytes to send: ' + ', '.join(weighed))
         if key == 'css':
             rem = re.findall(r'(?<![\w.-])\d*\.?\d+rem\b', target)
             if rem:
@@ -800,6 +1052,11 @@ def cmd_plan(a):
         images += [i for i in re.findall(image_ref, target) if i not in before]
     page_settings, expect_settings, setting_lines = settings_plan(vdir, live, fail)
     lines += setting_lines
+    if toolkit.problem:
+        notes.append(toolkit.problem)
+    if no_src:
+        notes.append(f'the text of {", ".join(no_src)} as saved on {src_live.get("host")} is not on disk, so no build '
+                     'draws on it; read that KB and unpack the result again')
     if fail:
         print('NOT PLANNED. Fix these first:')
         for f in fail:
