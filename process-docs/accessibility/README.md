@@ -47,17 +47,17 @@ Record these in the CHANGES file's "Not covered by this version" list, and in th
 
 ## When KnowledgeOwl's release ships
 
-KnowledgeOwl PR 1573 (branch `accessible-default-theme`, in code review on 2026-11-13) adds an Accessible built-in theme and a set of fixes for every theme. Its skip link (`.ko-skip-link`) is on every page once it ships; the script looks for it and stands down on the fixes KnowledgeOwl then does itself, so a live KB doesn't get them twice. After the release:
+KnowledgeOwl's upcoming accessibility release (not yet shipped on 2026-11-13) adds an Accessible built-in theme and a set of fixes for every theme. Its skip link (`.ko-skip-link`) is on every page once it ships; the script looks for it and stands down on the fixes KnowledgeOwl then does itself, so a live KB doesn't get them twice. After the release:
 
-1. Re-check this table against the released code and change "PR 1573" to the release.
+1. Re-check this table against the released code and change "upcoming accessibility release" to the release's name.
 2. Delete the script steps marked **every theme** below, and the CSS the Accessible theme covers if new builds start from that theme.
 3. Decide whether new builds start from the Accessible theme instead of Minimalist; the base theme is a `# Baseline` fact (05, "Switching the base theme").
 
 ### Fix table
 
-"PR 1573" says what the release covers: **every theme**, **Accessible only** (the theme's own templates and CSS; Minimalist keeps the problem), or **no**. "Where" is this layer's fix: S (script), C (CSS), T (template edit).
+"Release" says what the release covers: **every theme**, **Accessible only** (the theme's own templates and CSS; Minimalist keeps the problem), or **no**. "Where" is this layer's fix: S (script), C (CSS), T (template edit).
 
-| Problem | WCAG | Where | PR 1573 |
+| Problem | WCAG | Where | Release |
 |---|---|---|---|
 | No skip link | 2.4.1 | S, C | every theme |
 | No main landmark | 1.3.1 | S | every theme |
