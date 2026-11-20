@@ -374,7 +374,8 @@
            rule, unchanged - this is what auto-detects legacy decisions);
          - a step explicitly marked "Decision:" (v36): its first <ul> is the options list
            even with plain-text items. Each item resolves by its anchor link if it has one,
-           else by step NAME - "option label → step name" (also "->"), or just the name.
+           else by step NAME - "option label → step name" (also "->", and "-->", "=>" or a dash
+           the editor autocorrected, so a typed long arrow leaves no stray hyphen), or just the name.
            Plain-text lists on non-Decision steps stay ordinary content (no false positives). */
       for (var b = 0; b < s.bodyNodes.length; b++) {
         var node = s.bodyNodes[b];
@@ -410,7 +411,7 @@
             return { label: it.a.textContent.trim(), rawHref: tid, targetIndex: idToIndex[tid] };
           }
           var txt = it.li.textContent.trim(), label = txt, name = txt;
-          var parts = txt.split(/\s*(?:→|->)\s*/);
+          var parts = txt.split(/\s*(?:→|[-–—=]+>)\s*/);
           if (parts.length > 1) { label = parts[0].trim(); name = parts[parts.length - 1].trim(); }
           var hits = titleToIndexes[normName(name)] || [];
           if (hits.length === 1) {

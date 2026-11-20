@@ -22,7 +22,7 @@ Fix it here, not in a customer's copy: a build that finds a problem logs it to t
 | The first paragraph | The path's summary |
 | A "Before you start:" paragraph and the bulleted list after it | A checklist box above the steps |
 | A Heading 2 starting `Action:`, `Decision:` or `Judgement:` | One step of that type. A Heading 2 with no type word is an Action |
-| Under a `Decision:` step, a bulleted list of `answer → step name` (or `->`) | One button per answer, each going to the named step. A bullet that links to a step's anchor works too |
+| Under a `Decision:` step, a bulleted list of `answer → step name` (or `->`, `-->` or `=>`) | One button per answer, each going to the named step. A bullet that links to a step's anchor works too |
 | A paragraph starting `Confirm:` | A tick-box that must be checked before Next works |
 | A paragraph starting `End:` | This branch ends here; the rest of the line is the completion message |
 | A paragraph starting `Escalate:` | An escalation note in the step |
@@ -136,4 +136,5 @@ Tell the customer these at the start, and record them in the CHANGES file's "Not
 
 | Toolkit version | Notes |
 |---|---|
+| 1.1 (2026-11-20) | Options also accept `-->`, `=>` and an autocorrected dash before `>` as the arrow. Before, `-->` worked but left a hyphen at the end of the button text (seen on a customer's first draft). |
 | 1.0 (2026-11-16) | First toolkit copy, from engine version 57 of the production theme: the theme's design, names and customer content removed; `GP_CONFIG` settings, built-in German and Spanish labels, the `guidedpath:event` DOM event and color tokens added. Behavior matches the source on every example path. |
