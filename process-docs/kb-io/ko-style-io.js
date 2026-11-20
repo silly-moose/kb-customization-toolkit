@@ -218,6 +218,7 @@ function koioFactory() {
   // would otherwise show inline spills to a tool-results file instead; unpack
   // ignores anything after the JSON.
   K.read = async function (pid, have, opts) {
+    if (typeof pid !== 'string') return 'KOIO1' + fail('read() takes (pid, HAVE, opts): the first argument must be the project id, then the HAVE= value from kb_io.py have');
     have = have || {};
     opts = opts || {};
     if (have.self !== K.self) return 'KOIO1' + fail('helper self-hash ' + K.self + ' does not match ' + have.self + '; re-inject ko-style-io.js exactly as downloaded');

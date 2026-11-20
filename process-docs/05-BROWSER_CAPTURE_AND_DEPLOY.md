@@ -99,7 +99,7 @@ On a reader page of the KB (e.g. the homepage or an article), run:
 })()
 ```
 
-Then `unpack <result> --snapshot YYYY.MM.DD-no-changes/full-html-snapshot-homepage.html`. It refuses KO's "Warmup Page" (load the page once and try again), reports the canonical host (check it against the deploy target), and says whether the page is the author view. Once the pane has opened the Style page it holds an author session on the KB for about two hours, so snapshots taken after that show the editor bar. Take them first. If the reader site is restricted (a reader password, SSO or reader groups), don't ask the user for reader credentials: reach it through the "View knowledge base" link (`/kb/kb-admin-login/id/<pid>?r=/help`, see "Admin pages Claude may open"), and accept that the snapshots will be the author view.
+Then `unpack <result> --snapshot YYYY.MM.DD-no-changes/full-html-snapshot-homepage.html`. It refuses KO's "Warmup Page" (load the page once and try again), reports the canonical host (check it against the deploy target), says whether the page is the author view, and warns when the page type in the body classes doesn't match the file's name (a homepage link can lead to a category). Once the pane has opened the Style page it holds an author session on the KB for about two hours, so snapshots taken after that show the editor bar. Take them first. If the reader site is restricted (a reader password, SSO or reader groups), don't ask the user for reader credentials: reach it through the "View knowledge base" link (`/kb/kb-admin-login/id/<pid>?r=/help`, see "Admin pages Claude may open"), and accept that the snapshots will be the author view.
 
 ---
 
@@ -114,7 +114,7 @@ Then `unpack <result> --snapshot YYYY.MM.DD-no-changes/full-html-snapshot-homepa
    - refuses a placeholder, an empty body/nav/article/homepage/login, a missing required merge code (`[template("layout")]`, `[article("body")]`, `[homepage("body")]`, `[template("login-page")]`), `[template("rcol")]` in the body, and control characters, because KO would change or reject those on save;
    - runs the selector check for Custom CSS (the mandatory pre-deploy diff) and lists new KB-hosted image references;
    - diffs the Style Settings table in the version's `style-settings-colors.md` against the live settings;
-   - chooses how each field travels: a copy from another KB in the same session, an anchored patch against the live text, or chunks of 25,000 characters or less;
+   - chooses how each field travels: a copy from another KB in the same session, an anchored patch against the live text (when it is under half the field and 60,000 characters), or chunks of 25,000 characters or less;
    - writes the page calls to `.claude/kb-io/work/calls/` and prints the yes-request.
 
 ### 2. Ask

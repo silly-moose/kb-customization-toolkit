@@ -7,13 +7,13 @@ Fix it here, not in a customer's copy: a build that finds a problem in the layer
 | File | What it is | Where it goes |
 |---|---|---|
 | `a11y-script.js` | Landmarks and a skip link, heading levels, breadcrumb and table-of-contents semantics, form labels, dialogs, names for icon-only controls, the feedback announcement, decorative images | Unchanged, in a `<script>` at the end of Custom `<head>`; a copy as `a11y-script.js` in the version folder |
-| `a11y.css` | Tokens, the skip link, focus rings, field borders, underlined links in running text, sizes for re-levelled headings, target sizes, badge and pager contrast, reduced motion | At the end of Custom CSS, with the tokens set to the brand |
+| `a11y.css` | Tokens, the skip link, focus rings, field borders, underlined links in running text, sizes for re-levelled headings, target sizes, badge, pager and button contrast, reduced motion | At the end of Custom CSS, with the tokens set to the brand |
 | This README | How to adopt it, the template edits, the checks, and the fix table | Read it; nothing to copy |
 
 ## Adopting it in a build
 
 1. **Script.** Fetch `a11y-script.js` from the toolkit (`curl -fsSL https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/accessibility/a11y-script.js`) and append it to Custom `<head>` inside `<script>...</script>`. Don't edit it; the class prefix `ko-a11y-` is generic. If a build needs a change, make it in the build, log it, and say so in the CHANGES file.
-2. **CSS.** Append `a11y.css` to the end of Custom CSS. Set each token to the brand's colors and measure it on every background it sits on; the comments say what each must reach. A dark band (banner, footer) gets its own `--ko-a11y-focus`. On a theme whose rules aren't scoped to `.hg-minimalist-theme`, change the scope to match.
+2. **CSS.** Append `a11y.css` to the end of Custom CSS. Set each token to the brand's colors and measure it on every background it sits on; the comments say what each must reach. A dark band (banner, footer) gets its own `--ko-a11y-focus`. A dark top navigation bar sets `--ko-a11y-on-header` to the bar's text color (its focus rings and the list pager, which KO paints the bar's color) and usually `--ko-a11y-on-accent`, since KO puts the bar's text color on primary buttons. On a theme whose rules aren't scoped to `.hg-minimalist-theme`, change the scope to match.
 3. **Templates.** Make the edits below in the version's Custom HTML. They are markup the script can't safely change after the page loads.
 4. **Check it** (below), then record in the CHANGES file which toolkit commit the layer came from (`git log -1 --format=%h -- process-docs/accessibility`).
 
@@ -96,5 +96,9 @@ KnowledgeOwl's upcoming accessibility release (not yet shipped on 2026-11-13) ad
 | Links in running text told apart by color alone | 1.4.1 | C | Accessible only |
 | Table-of-contents icons 1.7:1; 24px targets | 1.4.11, 2.5.8 | C | partly: 24px on Accessible only, not recolored |
 | Disabled pager links 2.3:1 | 1.4.3 | C | no |
+| List pager band takes the top bar's color, its text stays #555 | 1.4.3 | C | no |
+| Primary and success buttons take the top bar's text color on the accent: white on peach is 1.7:1 | 1.4.3 | C | no |
+| Tag links 22.7px tall | 2.5.8 | C | no |
+| Contact form "send to" menu's label has no `for` | 1.3.1, 4.1.2 | S | no |
 | Motion for readers who ask for less | 2.3.3 | C | Accessible only |
 | Expand/collapse toggles in articles lack state | 4.1.2 | T | no |

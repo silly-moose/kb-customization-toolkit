@@ -16,10 +16,15 @@
   --ko-a11y-border: #6e7b8c;        /* form fields and the search box: 4.3:1 on white. Needs 3:1 */
   --ko-a11y-muted: #5f6b7a;         /* muted text (disabled pager links): 5.4:1 on white. Needs 4.5:1 */
   --ko-a11y-toc-icon: #a5562a;      /* table-of-contents expand icons: 5.3:1 on white (stock #f8b88b is 1.7:1). Needs 3:1 on the TOC background and its hover */
+  --ko-a11y-on-header: #1d284f;     /* text and focus rings on the Top navigation bar color: 14.3:1 on the stock white bar. On a dark bar, its text color. Needs 4.5:1 */
+  --ko-a11y-on-accent: #1d284f;     /* primary and success button text on the Highlights & Accents color: 8.3:1 on the stock #f8b88b. Needs 4.5:1, and on the button's hover */
   --input-border-color: var(--ko-a11y-border);
   --input-focus-color: var(--ko-a11y-focus);
 }
 /* A dark band (a banner, a dark footer) gets its own ring color: .my-dark-band { --ko-a11y-focus: #ffffff; } */
+/* The top navigation bar: its own links and the menu button. At phone width the links sit in the collapse panel instead */
+.hg-site .navbar-header > :is(a, button) { --ko-a11y-focus: var(--ko-a11y-on-header); }
+@media (min-width: 768px) { .hg-site .navbar-nav > li > a { --ko-a11y-focus: var(--ko-a11y-on-header); } }
 
 /* ---- Skip link: off screen until it takes focus (WCAG 2.4.1) ---- */
 .ko-a11y-skip-link {
@@ -100,6 +105,19 @@
 .hg-minimalist-theme .pager .disabled,
 .hg-minimalist-theme .pager .disabled > a,
 .hg-minimalist-theme .pager .disabled > span { color: var(--ko-a11y-muted) !important; opacity: 1; }
+
+/* ---- The New, Updated and Popular list pager: KO paints the band the Top navigation bar color and leaves
+        its "Viewing 1 - 10" text #555, 1.9:1 on a dark bar (WCAG 1.4.3) ---- */
+.hg-minimalist-theme.hg-widget-page .pager { color: var(--ko-a11y-on-header); }
+
+/* ---- Primary and success buttons (contact Submit, subscriptions Update): KO fills them with the Highlights & Accents
+        color and gives their text the Top navigation text color, so a dark bar's white text sits on the accent,
+        1.7:1 on the stock #f8b88b (WCAG 1.4.3) ---- */
+.hg-site :is(.btn-primary, .btn-success),
+.hg-site :is(.btn-primary, .btn-success):is(:hover, :focus, :active) { color: var(--ko-a11y-on-accent); }
+
+/* ---- Tags: 24px tall targets (stock is 22.7px; WCAG 2.5.8) ---- */
+.hg-minimalist-theme a.ko-tag { padding-top: 2px; padding-bottom: 2px; }
 
 /* ---- "New" and "Updated" badges: full opacity and darker fills, so the white count reads at 4.5:1
         (stock is half opacity on #478f31 and #2380ac, 1.7:1 as rendered; WCAG 1.4.3) ---- */

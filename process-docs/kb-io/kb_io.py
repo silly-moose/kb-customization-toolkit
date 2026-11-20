@@ -75,6 +75,7 @@ NEVER_EMPTY = ('body', 'nav', 'article', 'homepage', 'login')   # KO fills its d
 KO_FILLED_OPTIONS = ('code_theme', 'code_line_numbers', 'code_copy_button')
 DATED = re.compile(r'^\d{4}\.\d{2}\.\d{2}-')
 CHUNK = 25000
+PATCH_MAX = 60000   # a patch travels inside the stage call; one of about 34 KB staged and saved fine
 COMMENTS = re.compile(r'<!--.*?-->|/\*.*?\*/', re.S)
 CAPTURE_HEADER = re.compile(r'\A(?:<!--\n(?: \*[^\n]*\n)+-->\n\n|/\*\*\n(?: \*[^\n]*\n)+ \*/\n\n)')
 GUARD = re.compile(r'\n/\* =+\n[ \t]*EDITOR READABILITY GUARD')
@@ -552,9 +553,19 @@ def unpack_snapshot(obj, a):
     canon = re.search(r'<link[^>]*rel=["\']canonical["\'][^>]*href=["\']([^"\']+)', text) or \
         re.search(r'<link[^>]*href=["\']([^"\']+)["\'][^>]*rel=["\']canonical["\']', text)
     author = bool(re.search(r'<body[^>]*class=["\'][^"\']*\bis-author\b', text))
+    # KO's body class names the page type; category pages also carry hg-article-page, so it is checked last.
+    body = re.search(r'<body[^>]*class=["\']([^"\']*)', text)
+    classes = body.group(1).split() if body else []
+    kind = next((k for k in ('home', 'search', 'contact', 'login', 'glossary', 'blog', 'category', 'widget', 'article')
+                 if f'hg-{k}-page' in classes), None)
     print(f'Wrote {a.snapshot} ({len(text.encode("utf-8")):,} bytes) from {obj.get("url")}. '
           f'Canonical: {canon.group(1) if canon else "none found"}. '
-          f'{"Author view (editor bar present)." if author else "Reader view."}')
+          f'{"Author view (editor bar present)." if author else "Reader view."} '
+          f'Page type: {kind or "unknown"}.')
+    named = re.search(r'snapshot-(homepage|article|category|search|contact)\b', Path(a.snapshot).name)
+    if named and kind and {'homepage': 'home'}.get(named.group(1), named.group(1)) != kind:
+        print(f'WARNING: the file name says {named.group(1)}, but the page is a {kind} page '
+              f'(hg-{kind}-page). Pick another link and capture again.')
 
 
 # ---- the deploy plan ----------------------------------------------------------------
@@ -702,15 +713,18 @@ def cmd_plan(a):
             fail.append(f'{label}: the live content matches no local file (an outside edit). Capture it first, '
                         f'or rerun with --overwrite {key} once the user has approved replacing it.')
             continue
-        entry = None
+        entry, size = None, 0
         if src_live and src_live['fields'].get(key, {}).get('h') == th:
             entry = {'via': 'from', 'pid': src_live['pid'], 'to': th}
             how = f'copied from {src_live.get("host")} in the page'
         elif sources:
             edits = make_edits(norm(source_text(have, sources[0])), target)
-            if edits is not None and len(js_str(edits)) < min(CHUNK, len(target) // 2):
+            size = len(js_str(edits)) if edits is not None else 0
+            if edits is not None and size < min(PATCH_MAX, len(target) // 2):
                 entry = {'via': 'patch', 'edits': edits, 'to': th}
-                how = f'patch, {len(edits)} edit{"s" if len(edits) != 1 else ""}'
+                n = -(-len(target) // CHUNK)
+                how = (f'patch, {len(edits)} edit{"s" if len(edits) != 1 else ""} in {size:,} bytes '
+                       f'instead of {n} chunk{"s" if n != 1 else ""}')
         if entry is None:
             parts = []
             for i in range(0, len(target), CHUNK):
@@ -719,7 +733,8 @@ def cmd_plan(a):
                 parts.append(chunk_no)
                 chunk_no += 1
             entry = {'via': 'chunks', 'parts': parts, 'to': th}
-            how = f'{len(parts)} chunk{"s" if len(parts) != 1 else ""}'
+            how = f'{len(parts)} chunk{"s" if len(parts) != 1 else ""}' + \
+                (f'; a patch would be {size:,} bytes' if sources and size else '')
         fields[key] = entry
         check[key] = th
         was = label_of(sources) if sources else 'an outside edit (overwrite approved)'
@@ -735,10 +750,16 @@ def cmd_plan(a):
             base_n = len(selectors(norm(source_text(have, sources[0]))))
             lines.append(f'Selector check: {len(dropped)} of {base_n} live selectors dropped'
                          + (': ' + '; '.join(dropped[:15]) + (' ...' if len(dropped) > 15 else '') if dropped else ''))
-        if secured and re.search(r'/app/image/id/[0-9a-f]{24}/', target):
-            lines.append(f'WARNING: {label} links File Library images by their public /app/image/ address, but the '
-                         'live theme uses /files/ links (Image / file security is on), and the public links return '
-                         '401. Take the /files/ addresses from the live text (quirks-doc 60).')
+        # Only links the version adds: one the live text already holds is not this version's doing,
+        # and can be another account's public file, which still returns 200.
+        app_link = r'/app/image/id/[0-9a-f]{24}/'
+        new_app = set(re.findall(app_link, target)) - \
+            (set(re.findall(app_link, source_text(have, sources[0]))) if sources else set())
+        if secured and new_app:
+            lines.append(f'WARNING: {label} adds {len(new_app)} File Library link{"s" if len(new_app) != 1 else ""} '
+                         'by the public /app/image/ address, but the live theme uses /files/ links (Image / file '
+                         'security is on), and the public links return 401. Take the /files/ addresses from the '
+                         'live text (quirks-doc 60).')
         image_ref = r'/app/image/id/[0-9a-f]{24}/n/[^\s"\')]+'
         before = set(re.findall(image_ref, source_text(have, sources[0]))) if sources else set()
         images += [i for i in re.findall(image_ref, target) if i not in before]

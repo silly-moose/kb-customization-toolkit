@@ -108,10 +108,13 @@
     if (noaccess && !/^Restricted access/.test(d.title)) d.title = 'Restricted access | ' + d.title;  /* WCAG 2.4.2: the page title named only the KB */
     qa('h1, h2, h3, h4, h5, h6').forEach(function (h) { if (!text(h) && !h.querySelector('img')) h.setAttribute('aria-hidden', 'true'); });
 
-    /* Form labels: a label whose "for" points outside its own form group is re-pointed at the group's field (WCAG 1.3.1, 4.1.2) */
+    /* Form labels: a label whose "for" points outside its own form group is re-pointed at the group's field, and a
+       label with no "for" (the contact form's "send to" menu, axe select-name) is tied to it (WCAG 1.3.1, 4.1.2) */
     qa('.form-group').forEach(function (g) {
       var label = q('label[for]', g), fields = qa('input:not([type=hidden]), select, textarea', g);
       if (label && fields.length === 1 && fields[0].id && label.getAttribute('for') !== fields[0].id && !g.querySelector('[id="' + label.getAttribute('for') + '"]')) label.setAttribute('for', fields[0].id);
+      var bare = q('label:not([for])', g), f = fields[0];
+      if (!label && bare && fields.length === 1 && !(f.labels && f.labels.length) && !f.getAttribute('aria-label')) { if (!f.id) f.id = uid('ko-a11y-field'); bare.htmlFor = f.id; }
     });
 
     /* role="search" belongs on the form, not the field (axe aria-allowed-role) */
