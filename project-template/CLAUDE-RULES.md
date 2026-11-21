@@ -234,7 +234,9 @@ Define the brand palette as CSS custom properties at the top of Custom CSS (a `:
 .some-glow { box-shadow: 0 24px 60px -20px rgba(var(--brand-primary-rgb), .34); }
 ```
 
-Without the `-rgb` pair, `rgba()` effects keep hardcoded color literals and *don't* follow a token change — so the theme only half-re-skins.
+Without the `-rgb` pair, `rgba()` effects keep hardcoded color literals and *don't* follow a token change, so the theme only half-re-skins.
+
+**Give each token one job.** One for links, one for body text, one for muted text, one for surfaces, one for lines: never one token used as a text color in some rules and a background in others (KnowledgeOwl's own `--white` and `--primary-color` are both). A theme built this way can take a dark mode later by re-pointing its tokens; a mixed-use token needs a separate dark rule for every selector that uses it. Dark mode itself is opt-in, for customers who ask: `process-docs/light-dark-mode/` (fetch its README).
 
 **Rotating an accent across items (category tiles, cards, steps): assign one per-item custom property, then write the styling ONCE.** Do not duplicate a block per hue. Give each item its hue with an `:nth-child` cycle, and let a single rule set consume it:
 

@@ -1248,6 +1248,8 @@ The prefix ties `.category-icon i.fa-fw` at (0,2,1) and Custom CSS loads later, 
 
 Custom CSS also loads in the article editor (§28), so `@media (prefers-color-scheme: dark)` there turns the editor dark for an author whose device is dark. Key dark styles to an attribute set by a Custom `<head>` script instead: the editor and PDFs never run those scripts (§14, §35).
 
+**The toolkit's light/dark layer, `process-docs/light-dark-mode/`, does everything below** (attribute `data-kb-theme`); adopt it rather than writing these again. The notes stay here for builds that predate it.
+
 - **The script**, in Custom `<head>` so it runs before first paint, sets `data-<prefix>-theme` to `light` or `dark` on `<html>`: the saved choice in `localStorage`, else `prefers-color-scheme`, and always light in a frame (`window.top !== window`). It handles a `button[aria-pressed]` toggle by delegation, and listens for the device's `matchMedia` change event and for `storage`, so other tabs switch too.
 - **The CSS:** every dark rule is `html[data-<prefix>-theme="dark"] …` inside `@media screen`, so printouts stay light. Re-pointing single-purpose tokens (link, text, tint, line) does most of it; shared tokens such as `--white` and `--primary-color` need per-selector overrides. §39 lists the components that stay light.
 - **The logo:** `img.documentation-logo-image { object-position: -10000px 0; background: url(<light logo>) center / contain no-repeat }` under the dark attribute swaps the picture and keeps its size, link and alt text. `content: url()` on an `img` is not reliable in Firefox.

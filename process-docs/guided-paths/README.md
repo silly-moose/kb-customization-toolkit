@@ -95,7 +95,7 @@ Set the tokens at the top of `guided-paths.css`. Each text color must reach 4.5:
 | `--gp-amber`, `--gp-amber-soft`, `--gp-amber-line` | Escalation notes and amber Path check warnings |
 | `--gp-red`, `--gp-red-soft`, `--gp-red-line` | A red Path check |
 
-The defaults are a neutral light design. On a dark theme, set `--gp-surface`, `--gp-soft`, `--gp-line`, `--gp-ink` and `--gp-muted` together, then re-check every text token.
+The defaults are a neutral light design. On a dark theme, set `--gp-surface`, `--gp-soft`, `--gp-line`, `--gp-ink` and `--gp-muted` together, then re-check every text token. With the light/dark mode layer (`process-docs/light-dark-mode/`), its CSS re-points every `--gp-*` token in dark mode; set those values to the brand there.
 
 ## Analytics
 

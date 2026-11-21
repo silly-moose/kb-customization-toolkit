@@ -153,6 +153,7 @@ The template repo (https://github.com/silly-moose/kb-customization-toolkit) is o
 | `editor-simulation/` | A ready-made harness that reproduces the article editor's CSS cascade locally, so the mandatory Editor Readability Guard can be verified **before** deploying instead of eyeballed after. Start at its `README.md`. |
 | `accessibility/` | The shared reader-side accessibility layer (WCAG 2.2 AA): a script for Custom `<head>`, a CSS section, the template edits, and a table of what KnowledgeOwl's own accessibility release covers. Every build adopts it in its first version. |
 | `guided-paths/` | Guided paths (decision trees): a script and CSS that turn an ordinary article into a step-by-step path, author articles to load into the KB, and how to adopt and brand it. Opt-in, for customers who ask for guided paths or decision trees. |
+| `light-dark-mode/` | A reader light/dark mode: a script that picks the mode before the page draws and adds a "Dark mode" switch, CSS that darkens KnowledgeOwl's components, and the AI chatbot window's dark styles. The editor, PDFs and print stay light. Opt-in, for customers who ask for dark mode. |
 
 ---
 

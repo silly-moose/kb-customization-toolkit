@@ -1,0 +1,42 @@
+/* ==========================================================================
+   LIGHT AND DARK MODE: THE AI CHATBOT WINDOW (KB Customization Toolkit, process-docs/light-dark-mode/)
+   Goes in Settings > AI chatbot > Edit branding > Custom CSS, saved with that window's own Save,
+   not the Style page. The KB's Custom <head> script copies data-kb-theme onto this window's <html>
+   (a same-site iframe), so the chatbot follows the reader's mode. Embedded anywhere else, the
+   attribute is never set and the window stays light.
+   KnowledgeOwl styles the window through the variables on .ko-chatbot-sv, so re-pointing them
+   covers most of it. The window can't read the page's --dm-* tokens: copy the values from the
+   build's palette. Defaults match light-dark-mode.css; contrast on --color-white (#1a1d21):
+   text 13.5:1, subdued text 7.8:1, links 9.2:1.
+   ========================================================================== */
+html[data-kb-theme="dark"] { color-scheme: dark; }
+html[data-kb-theme="dark"] .ko-chatbot-sv {
+  --fontColor: #e3e6ea;
+  --fontSubdued: #a9b1bb;
+  --disabled: #959daa;
+  --borderSubtle: #3a4049;
+  --buttonBorder: #4a525c;
+  --bgGray: #2a2f35;
+  --bgGrayHover: #333941;
+  --bgChat: #22262b;
+  --link: #8cc4ff;
+  --linkHover: #c2ddff;
+  --codeBg: #22262b;
+  --chatShadow: 0 1px 24px rgba(0, 0, 0, .5);
+  --chatImgShadow: 0 1px 10px rgba(0, 0, 0, .5);
+  --color-white: #1a1d21;     /* the window background (bg-white) */
+  --color-black: #1f68b3;     /* the Submit button once a question is typed (bg-black); its white arrow is 5.7:1 */
+  --color-gray-100: #2a2f35;
+  --color-gray-400: #a9b1bb;
+  --color-gray-600: #c9ced5;
+}
+html[data-kb-theme="dark"] .ko-chatbot-sv .cta-button:hover { background-color: rgba(255, 255, 255, .06); }
+html[data-kb-theme="dark"] .ko-chatbot-sv ::placeholder { color: #959daa; }  /* KO uses the text color at half opacity, under 4.5:1 here */
+/* Icons drawn with fixed colors in their SVG markup */
+html[data-kb-theme="dark"] .ko-chatbot-sv svg [fill="black" i] { fill: currentColor; }
+html[data-kb-theme="dark"] .ko-chatbot-sv svg [fill="#8B8D98" i] { fill: var(--fontSubdued); }
+html[data-kb-theme="dark"] .ko-chatbot-sv svg:not([fill]) { fill: currentColor; }  /* the warning triangle, which has no fill and draws black */
+/* The owl in "Powered by KnowledgeOwl": the navy body turns white and its white face shows the window through,
+   so the blue eyes stay. Keyed to the owl's own navy, which no other icon uses */
+html[data-kb-theme="dark"] .ko-chatbot-sv svg:has([fill="#191D33" i]) [fill="#191D33" i] { fill: #fff; }
+html[data-kb-theme="dark"] .ko-chatbot-sv svg:has([fill="#191D33" i]) [fill="white" i] { fill: transparent; }

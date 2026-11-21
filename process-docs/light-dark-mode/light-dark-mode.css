@@ -1,0 +1,348 @@
+/* ==========================================================================
+   LIGHT AND DARK MODE (KB Customization Toolkit, process-docs/light-dark-mode/)
+   Styles for light-dark-mode.js. Append to the end of Custom CSS, after the theme layer and the
+   accessibility layer (and guided paths, if the build has them).
+   - The switch styles apply in both modes. Set the --kb-toggle-* tokens to the top navigation.
+   - Every dark rule is keyed to html[data-kb-theme="dark"], which only the Custom <head> script
+     sets, and sits inside @media screen. So the article editor and PDF exports (which never run
+     Custom <head>) and printouts stay light. Never use @media (prefers-color-scheme) in Custom
+     CSS: the editor loads Custom CSS and would turn dark (quirks §66).
+   - The --dm-* values below are a neutral floor that passes WCAG 2.2 AA, so nothing is unreadable
+     while the build designs its own. Design them for the brand and re-measure (README, "Designing
+     the dark palette"). The selectors are the coverage: KnowledgeOwl's components that stay light
+     unless something darkens them. Keep them; add the theme layer's own dark rules at the end.
+   ========================================================================== */
+
+/* ---- The switch (both modes) ---- */
+:root {
+  --kb-toggle-ink: #1f2933;        /* label: 14.8:1 on a white bar. Needs 4.5:1 on the top navigation bar */
+  --kb-toggle-line: #7b8794;       /* pill border: 3.7:1 on white. Needs 3:1 */
+  --kb-toggle-track: #616e7c;      /* switch track, off: 5.2:1 on white. Needs 3:1 */
+  --kb-toggle-track-on: #2f6fed;   /* switch track, on (the light bar is only seen briefly when switching) */
+  --kb-toggle-knob: #ffffff;
+}
+.hg-site .kb-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  margin: 9px 0 9px 6px;
+  padding: 4px 12px 4px 6px;
+  border: 1px solid var(--kb-toggle-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--kb-toggle-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease;
+}
+.hg-site .kb-theme-toggle:hover { border-color: var(--kb-toggle-ink); }
+.hg-site .kb-theme-toggle:focus-visible { outline: 2px solid var(--ko-a11y-focus, var(--input-focus-color, #378DFF)); outline-offset: 2px; }
+.hg-site .kb-theme-switch {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--kb-toggle-track);
+  transition: background-color .2s ease;
+}
+.hg-site .kb-theme-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--kb-toggle-knob);
+  color: var(--kb-toggle-track);
+  transition: transform .2s ease;
+}
+.hg-site .kb-theme-knob svg { width: 11px; height: 11px; fill: currentColor; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.hg-site .kb-theme-knob .kb-theme-moon { stroke: none; display: none; }
+.hg-site .kb-theme-toggle[aria-pressed="true"] .kb-theme-switch { background: var(--kb-toggle-track-on); }
+.hg-site .kb-theme-toggle[aria-pressed="true"] .kb-theme-knob { transform: translateX(14px); color: var(--kb-toggle-track-on); }
+.hg-site .kb-theme-toggle[aria-pressed="true"] .kb-theme-sun { display: none; }
+.hg-site .kb-theme-toggle[aria-pressed="true"] .kb-theme-moon { display: block; }
+@media (max-width: 767px) {
+  .hg-site .navbar-nav > li.kb-theme-item { padding: 4px 15px 10px; }
+  .hg-site .kb-theme-toggle { margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hg-site :is(.kb-theme-toggle, .kb-theme-switch, .kb-theme-knob) { transition: none; }
+}
+/* The help widget and the Style page preview show the KB's default mode, with no switch */
+.kb-theme-framed :is(.kb-theme-item, .kb-theme-toggle) { display: none !important; }
+/* While switching, nothing fades: colors that lag behind their background dip below AA mid-fade.
+   The switch itself keeps its slide. */
+html.kb-theme-switching :not(.kb-theme-toggle, .kb-theme-toggle *),
+html.kb-theme-switching :not(.kb-theme-toggle, .kb-theme-toggle *)::before,
+html.kb-theme-switching :not(.kb-theme-toggle, .kb-theme-toggle *)::after { transition: none !important; }
+
+@media screen {
+  /* ---- Dark palette. Contrast measured against --dm-bg unless noted ---- */
+  html[data-kb-theme="dark"] {
+    color-scheme: dark;                 /* dark scrollbars and native form controls */
+    background: #121417;
+    --dm-bg: #121417;                   /* page */
+    --dm-surface: #1a1d21;              /* top navigation, table of contents, cards, panels */
+    --dm-raised: #22262b;               /* inputs, menus, pop-ups */
+    --dm-tint: #1c2a3a;                 /* accent-tinted surface: active row, icon discs, notes */
+    --dm-line: #30353c;                 /* hairlines */
+    --dm-border: #737c88;               /* input and button borders: 3.6:1 on --dm-raised. Needs 3:1 */
+    --dm-text: #e3e6ea;                 /* 14.7:1; 12.2:1 on --dm-raised */
+    --dm-heading: #f2f4f6;              /* 16.7:1 */
+    --dm-muted: #a9b1bb;                /* 8.5:1; 7.0:1 on --dm-raised */
+    --dm-link: #8cc4ff;                 /* 10.1:1; 8.0:1 on --dm-tint */
+    --dm-link-hover: #c2ddff;           /* 13.3:1 */
+    --dm-link-visited: #c4b3ff;         /* 9.9:1 */
+    --dm-accent: #6cb6f5;               /* icons, focus rings, active markers: 8.5:1; 7.0:1 on --dm-raised */
+    --dm-button: #1f68b3;               /* primary buttons: white text 5.7:1 */
+    --dm-button-hover: #1a5a9c;         /* white text 7.0:1 */
+    --dm-on-button: #ffffff;
+    --dm-highlight: #294a6e;            /* the keyboard row in search suggestions: white text 9.1:1 */
+    --dm-footer: #0d0f11;               /* footer text #b9c0c8, 10.5:1 */
+
+    /* KnowledgeOwl's single-purpose variables. --white and --primary-color are left alone: KO uses
+       each for text in some places and backgrounds in others, so the rules below override per selector. */
+    --text-links-color: var(--dm-link);
+    --border-color: var(--dm-line);
+    --border-hover-color: var(--dm-border);
+    --box-shadow-color: rgba(0, 0, 0, .55);
+    --toc-border-color: var(--dm-line);
+    --input-border-color: var(--dm-border);
+    --input-focus-color: var(--dm-accent);
+    --image-caption-link-color: var(--dm-link);
+    --toc-box-shadow-color: var(--dm-surface);
+    --toc-category-hover-color: var(--dm-tint);
+    --toc-article-hover-color: var(--dm-tint);
+
+    /* The accessibility layer (process-docs/accessibility/) */
+    --ko-a11y-ink: var(--dm-heading);
+    --ko-a11y-link: var(--dm-link);
+    --ko-a11y-link-visited: var(--dm-link-visited);
+    --ko-a11y-focus: var(--dm-accent);
+    --ko-a11y-border: var(--dm-border);
+    --ko-a11y-muted: var(--dm-muted);
+    --ko-a11y-toc-icon: var(--dm-accent);
+    --ko-a11y-on-header: var(--dm-link);
+    --ko-a11y-on-accent: var(--dm-on-button);
+
+    /* Guided paths (process-docs/guided-paths/), if the build has them */
+    --gp-ink: var(--dm-text);
+    --gp-muted: var(--dm-muted);
+    --gp-line: var(--dm-line);
+    --gp-soft: var(--dm-raised);
+    --gp-surface: var(--dm-surface);
+    --gp-accent: var(--dm-accent);
+    --gp-accent-soft: var(--dm-tint);
+    --gp-accent-hover: var(--dm-link-hover);
+    --gp-accent-line: #3d6a96;
+    --gp-on-accent: #0b1a2a;            /* 8.1:1 on --dm-accent */
+    --gp-green: #6fd39a;
+    --gp-green-soft: #142a1e;
+    --gp-green-line: #3d7a52;
+    --gp-purple: #c4b3ff;
+    --gp-purple-soft: #241f3a;
+    --gp-amber: #ffcc7a;
+    --gp-amber-soft: #2e2614;
+    --gp-amber-line: #8a6d2b;
+    --gp-red: #ff9b94;
+    --gp-red-soft: #341a1c;
+    --gp-red-line: #9b3b3b;
+
+    /* The switch */
+    --kb-toggle-ink: var(--dm-link);
+    --kb-toggle-line: var(--dm-border);
+    --kb-toggle-track: var(--dm-border);
+    --kb-toggle-track-on: var(--dm-accent);
+    --kb-toggle-knob: var(--dm-bg);
+
+    /* The theme layer's own single-purpose tokens go here: --brand-link: var(--dm-link); and so on */
+  }
+
+  /* ---- Page canvas and text ---- */
+  html[data-kb-theme="dark"] body.hg-site,
+  html[data-kb-theme="dark"] .hg-site,
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.documentation-body, .documentation-article, .hg-article, .ko-content-cntr) {
+    background-color: var(--dm-bg);
+    color: var(--dm-text);
+  }
+  html[data-kb-theme="dark"] .hg-site :is(h1, h2, h3, h4, h5, h6),
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-article :is(h1, h2, h3, h4, h5, h6),
+  html[data-kb-theme="dark"] .hg-minimalist-theme .ko-homepage-top .hg-article-title { color: var(--dm-heading); }
+  html[data-kb-theme="dark"] .hg-site :is(p, li, dt, dd, td, th, label, legend, caption, figcaption, small, .help-block) { color: inherit; }
+  html[data-kb-theme="dark"] .hg-site :is(.text-muted, .metadata, .hg-article-info, .hg-date, .version-metadata) { color: var(--dm-muted); }
+  html[data-kb-theme="dark"] .hg-site hr { border-top-color: var(--dm-line); }
+
+  /* ---- Links. KO paints hover from the Highlights & Accents color ---- */
+  html[data-kb-theme="dark"] .hg-minimalist-theme a:not(.btn):is(:hover, :focus) { color: var(--dm-link-hover); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.stat-list li a, .hg-breadcrumbs a, .faq-cat-container:hover a) { color: var(--dm-link); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .hg-breadcrumbs .fa { color: var(--dm-muted); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(span.fr-inner a, .fr-inner a:hover) { color: var(--dm-link); }
+
+  /* ---- Top navigation ---- */
+  html[data-kb-theme="dark"] .hg-minimalist-theme .hg-header.navbar { background: var(--dm-surface); border-color: var(--dm-line); box-shadow: 0 1px 0 var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-default .navbar-nav > li > a,
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-default .navbar-nav > li > a.hg-header-link,
+  html[data-kb-theme="dark"] .hg-minimalist-theme .hg-project-name { color: var(--dm-link); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-default .navbar-nav > li > a:is(:hover, :focus) { color: var(--dm-link-hover); background: transparent; }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.toc-toggle, .ko-slideout-left-toggle, .ko-slideout-left-toggle i, .ko-slideout-right-toggle i),
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-default .navbar-toggle:before { color: var(--dm-link); }  /* :before can't go inside :is() */
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-default .navbar-toggle { border-color: var(--dm-border); background: transparent; }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-default .navbar-toggle .icon-bar { background-color: var(--dm-link); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme #navbar-collapse:is(.in, .collapsing) { background: var(--dm-surface); border-color: var(--dm-line); box-shadow: 0 10px 20px -8px rgba(0, 0, 0, .7); }
+  /* The logo: a version for dark backgrounds, drawn as the image's background so it keeps its size, link and
+     alt text (quirks §66). Upload it to the live KB's File Library and put its URL here:
+  html[data-kb-theme="dark"] .hg-minimalist-theme .navbar-brand img.documentation-logo-image {
+    object-position: -10000px 0;
+    background: url("https://<File Library URL of the dark-background logo>") center / contain no-repeat;
+  } */
+
+  /* ---- Search boxes and suggestions ---- */
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.hg-search-bar, .ko-large-search) .input-group { background: var(--dm-raised); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.hg-search-bar, .ko-large-search) :is(input.form-control, .input-group-btn .btn) {
+    background: var(--dm-raised);
+    color: var(--dm-text);
+  }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(span.input-group-btn .btn-default, .input-group-btn .btn-default.dropdown-toggle),
+  html[data-kb-theme="dark"] .hg-minimalist-theme span.input-group-btn .btn-default:hover { color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-site ::placeholder { color: #959daa; opacity: 1; }  /* 5.6:1 on --dm-raised */
+  html[data-kb-theme="dark"] .hg-site :is(.ui-autocomplete, .ui-widget-content) { background: var(--dm-raised); border-color: #4a525c; color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site .ui-autocomplete :is(li, a, .ui-menu-item-wrapper, .highlighted) { color: var(--dm-text); background: transparent; border-color: transparent; }
+  /* The keyboard row is .ui-state-active; .highlighted marks every row that matches the search (quirks §63) */
+  html[data-kb-theme="dark"] .hg-site .ui-autocomplete :is(.ui-state-active, .ui-state-focus, li:hover) { background: var(--dm-highlight); color: #fff; box-shadow: inset 3px 0 0 var(--dm-accent); }
+
+  /* ---- Forms, buttons, menus and pop-ups ---- */
+  html[data-kb-theme="dark"] .hg-site :is(.form-control, select, textarea, input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="url"]) {
+    -webkit-appearance: none;           /* search fields and selects otherwise paint OS-native light (quirks §38) */
+    appearance: none;
+    background-color: var(--dm-raised);
+    border-color: var(--dm-border);
+    color: var(--dm-text);
+  }
+  html[data-kb-theme="dark"] .hg-site select:not([multiple]) {  /* appearance: none drops the arrow; draw one */
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a9b1bb' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 6px;
+  }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.hg-search-bar, .ko-large-search) input.form-control { border-color: transparent; }
+  html[data-kb-theme="dark"] .hg-site .form-group.focus .form-control { color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site :is(.btn-default, .btn.btn-default.ko-cat-sub) { background: var(--dm-raised); border: 1px solid var(--dm-border); color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site .btn-default:is(:hover, :focus) { background: var(--dm-tint); border-color: var(--dm-link); color: var(--dm-heading); }
+  html[data-kb-theme="dark"] .hg-site :is(.btn-primary, .btn-success, .btn-danger) { background: var(--dm-button); border-color: var(--dm-button); color: var(--dm-on-button); }
+  html[data-kb-theme="dark"] .hg-site :is(.btn-primary, .btn-success, .btn-danger):is(:hover, :focus, :active) { background: var(--dm-button-hover); border-color: var(--dm-button-hover); color: var(--dm-on-button); }
+  html[data-kb-theme="dark"] .hg-site :is(.dropdown-menu, .popover, .modal-content, .panel, .panel-body, .well, .list-group-item, .toc-top, pre, .ko-glossary-popover, .hg-contact-form-container, .hg-contact-us-form) {
+    background-color: var(--dm-raised);
+    border-color: var(--dm-line);
+    color: var(--dm-text);
+  }
+  html[data-kb-theme="dark"] .hg-site :is(.dropdown-menu, .popover) { border-color: #4a525c; box-shadow: 0 8px 24px rgba(0, 0, 0, .5); }
+  html[data-kb-theme="dark"] .hg-site .dropdown-menu > li > a { color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site .dropdown-menu > li > a:is(:hover, :focus) { background: var(--dm-tint); color: var(--dm-heading); }
+  html[data-kb-theme="dark"] .hg-site :is(.modal-header, .modal-footer, .panel-heading, .popover-title) { border-color: var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-site :is(.popover-title, .panel-heading) { background: var(--dm-surface); color: var(--dm-heading); }
+  html[data-kb-theme="dark"] .hg-site .popover.top > .arrow:after { border-top-color: var(--dm-raised); }
+  html[data-kb-theme="dark"] .hg-site .popover.bottom > .arrow:after { border-bottom-color: var(--dm-raised); }
+  html[data-kb-theme="dark"] .hg-site .popover.left > .arrow:after { border-left-color: var(--dm-raised); }
+  html[data-kb-theme="dark"] .hg-site .popover.right > .arrow:after { border-right-color: var(--dm-raised); }
+  html[data-kb-theme="dark"] .hg-site .close { color: var(--dm-text); opacity: .85; text-shadow: none; }
+  html[data-kb-theme="dark"] .hg-site code { background: var(--dm-raised); color: var(--dm-heading); }
+  html[data-kb-theme="dark"] .hg-site :is(.label, .ko-tag) { opacity: 1; background: var(--dm-tint); border-color: var(--dm-line); color: var(--dm-heading); }
+  html[data-kb-theme="dark"] .hg-site .pager li > :is(a, span),
+  html[data-kb-theme="dark"] .hg-minimalist-theme .ko-search-pager li:not(.current) a:not(.btn) { background: var(--dm-raised); border-color: var(--dm-line); color: var(--dm-link); }
+  html[data-kb-theme="dark"] .hg-site .pager li > a:is(:hover, :focus) { background: var(--dm-tint); color: var(--dm-link-hover); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .ko-search-pager li.current { background: var(--dm-button); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .ko-search-pager li.current a { color: var(--dm-on-button); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme.hg-widget-page .pager { background: var(--dm-surface); }
+  html[data-kb-theme="dark"] .hg-site :is(.ko-subbed-cat, .ko-subbed-cat-container) { background: var(--dm-surface); border-color: var(--dm-line); color: var(--dm-text); }
+
+  /* ---- Homepage and category pages ---- */
+  html[data-kb-theme="dark"] .hg-minimalist-theme .ko-homepage-top { background-color: var(--dm-bg); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.cat-icon-panel, .faq-nav-content .faq-cat-container, .faq-nav-content .faq-cat-panel-container, .faq-nav-content .faq-cat-panel),
+  html[data-kb-theme="dark"] .hg-minimalist-theme .faq-nav-content :is(.faq-cat-container, .faq-cat-panel-container):hover { background-color: var(--dm-surface); border-color: var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.cat-icon-panel, .faq-cat-panel):is(:hover, :focus-within) { border-color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.cat-icon, .home-icon, .alt-icon) { color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .stat-list li { border-color: var(--dm-line); }
+
+  /* ---- Table of contents. KO paints hover and active colors on rows AND links (quirks §24) ---- */
+  html[data-kb-theme="dark"] .hg-minimalist-theme.hg-2column-layout .slideout-menu,
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories { background-color: var(--dm-surface); border-color: var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-site:not(.hg-modern-theme) .documentation-categories li a { color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories :is(.active > a, a.active) { color: var(--dm-link); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories li a:hover,
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories .level-0 > .category-link-container a:hover,
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-outter-list > .article-container .article-link:is(:hover, .active),
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories li.active { background-color: transparent; }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories :is(.category-link-container, .article-container):hover,
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.level-0 > .category-link-container, .documentation-outter-list > .article-container):hover { background-color: rgba(108, 182, 245, .10); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-categories :is(.category-link-container.active, li.active > .category-link-container, .article-container.active),
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.documentation-outter-list > .article-container.active, .level-0 > .category-link-container.active) {
+    background-color: var(--dm-tint);
+    box-shadow: inset 3px 0 0 var(--dm-accent);
+  }
+
+  /* ---- Article page ---- */
+  html[data-kb-theme="dark"] .hg-minimalist-theme :is(.ko-article-actions a, .hg-article-title a):hover { color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .hg-article-body blockquote { border-left-color: var(--dm-accent); color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site .hg-ratings :is(.hg-helpful, .hg-unhelpful) { color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-site .hg-ratings :is(.hg-helpful, .hg-unhelpful):hover { color: var(--dm-link-hover); }
+  html[data-kb-theme="dark"] .hg-site .ko-glossary-term { text-decoration-color: var(--dm-accent); border-bottom-color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .hg-article-footer { border-color: var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .documentation-article .fr-img-caption .fr-img-wrap > span { background: var(--dm-surface); color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .right-col-panel .panel-heading { background: var(--dm-surface); color: var(--dm-heading); }
+  /* Tables. KO's header row is --primary-color with --white text, which stays readable; borders go dark */
+  html[data-kb-theme="dark"] .hg-site :is(.table, .hg-article-body table) { background-color: transparent; }
+  html[data-kb-theme="dark"] .hg-site :is(.table-bordered, .table-bordered > * > tr > *) { border-color: var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-site .table-striped > tbody > tr:nth-of-type(odd) { background-color: rgba(255, 255, 255, .03); }
+  /* Authors' near-white fills and light gray borders: the script adds these classes in dark mode
+     (README, "Authors' colors"); colored fills and borders keep their color */
+  html[data-kb-theme="dark"] .hg-site .hg-article-body .kb-ct-fill { background-color: var(--dm-surface) !important; }
+  html[data-kb-theme="dark"] .hg-site .hg-article-body .kb-ct-line { border-color: var(--dm-line) !important; }
+  /* Images with transparent parts (diagrams, screenshots of light UI) on a white card. Article pages only: the
+     homepage wraps its category tiles in .hg-article-body too, and their icons are drawn for the tile */
+  html[data-kb-theme="dark"] .hg-article-page .hg-article-body img { background-color: #fff; }
+  /* PDF previews: the browser's viewer can't be restyled, so dim the glare. Black text stays above 12:1 */
+  html[data-kb-theme="dark"] .hg-site .hg-article-body iframe { background: #fff; }
+  html[data-kb-theme="dark"] .hg-site .hg-article-body iframe[src*=".pdf" i] { filter: brightness(.8); }
+
+  /* ---- Notes and alerts, including Restricted Access (.alert-danger) and subscriptions (.bs-callout) ---- */
+  html[data-kb-theme="dark"] .hg-site :is(.alert, .bs-callout) { color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site :is(.alert.alert-info, .bs-callout-info) { background: #13283f; border-color: #2f6aa3; }
+  html[data-kb-theme="dark"] .hg-site .alert.alert-info:before { color: var(--dm-accent); }
+  html[data-kb-theme="dark"] .hg-site :is(.alert.alert-danger, .bs-callout-danger) { background: #341a1c; border-color: #9b3b3b; }
+  html[data-kb-theme="dark"] .hg-site .alert.alert-danger:before { color: #ff9b94; }
+  html[data-kb-theme="dark"] .hg-site :is(.alert.alert-success, .bs-callout-success) { background: #142a1e; border-color: #3d7a52; }
+  html[data-kb-theme="dark"] .hg-site .alert.alert-success:before { color: #6fd39a; }
+  html[data-kb-theme="dark"] .hg-site :is(.alert.alert-warning, .bs-callout-warning) { background: #2e2614; border-color: #8a6d2b; }
+  html[data-kb-theme="dark"] .hg-site .alert.alert-warning:before { color: #ffcc7a; }
+  html[data-kb-theme="dark"] .hg-site .alert-default { background: var(--dm-raised); border-color: var(--dm-line); }
+  html[data-kb-theme="dark"] .hg-site :is(.alert, .bs-callout) :is(h1, h2, h3, h4, h5, h6, p, li) { color: inherit; }
+  html[data-kb-theme="dark"] .hg-site :is(.alert, .bs-callout) a:not(.btn) { color: var(--dm-link); }
+
+  /* ---- Login, shared-password and Restricted Access cards (quirks §23) ---- */
+  html[data-kb-theme="dark"] .hg-site :is(.hg-site-login, .login-container) :is(.panel, .panel-default, .panel-body) { background: var(--dm-surface); border-color: var(--dm-line); color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-site .hg-site-login .panel-heading { background: var(--dm-raised); color: var(--dm-heading); }
+
+  /* ---- AI chatbot launcher and window frame. The window's contents: chatbot-custom-css.css ---- */
+  /* !important: launcher colors set in the chatbot's branding are inline styles (06 §3) */
+  html[data-kb-theme="dark"] #ko-ai-chatbot-btn { background-color: var(--dm-raised) !important; border-color: var(--dm-border) !important; color: var(--dm-text) !important; box-shadow: 0 4px 24px rgba(0, 0, 0, .5); }
+  html[data-kb-theme="dark"] #ko-ai-chatbot-btn svg path { fill: currentColor !important; }
+  html[data-kb-theme="dark"] #ko-ai-chatbot { border-color: var(--dm-border); box-shadow: 0 8px 40px rgba(0, 0, 0, .6); }
+
+  /* ---- Back-to-top button and footer ---- */
+  html[data-kb-theme="dark"] .back-to-top { background-color: var(--dm-raised); border-color: var(--dm-border); }
+  html[data-kb-theme="dark"] .back-to-top i { color: var(--dm-text); }
+  html[data-kb-theme="dark"] .hg-minimalist-theme .ko-site-footer { background: var(--dm-footer); color: #b9c0c8; border-top: 1px solid var(--dm-line); }
+
+  /* ---- The theme layer's own dark rules go below this line ---- */
+}

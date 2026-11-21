@@ -30,6 +30,7 @@ Available docs (fetch from GitHub when needed):
 - `06-PAGE_COVERAGE.md`: every page and surface a reader can reach (login, Restricted Access, search, lists, widget, AI chatbot, PDFs), what styles each, and the check that finds unbranded ones. Fetch it for the Page coverage mandatory check
 - `editor-simulation/README.md` — harness that reproduces the article editor's cascade locally; use it to verify the mandatory Editor Readability Guard before deploying
 - `guided-paths/README.md`: guided paths (decision trees), the script, CSS and author articles that turn an ordinary article into a step-by-step path, with how to adopt and brand it. Fetch it when the customer wants guided paths or decision trees
+- `light-dark-mode/README.md`: a reader light/dark mode, the script, CSS and AI chatbot styles, with how to adopt it and design the dark palette. Fetch it when the customer wants dark mode
 
 If the user asks a question about the process, setup, or version control, fetch the relevant doc from:
 `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/[filename]`
