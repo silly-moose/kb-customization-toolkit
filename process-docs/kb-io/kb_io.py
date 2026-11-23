@@ -6,10 +6,13 @@ process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md
   have <build-root>
       Hash every captured file in the build's dated folders, plus the
       Minimalist defaults and the deployed copies under work/deployed/,
+      index the Style Settings values in each folder's style-settings-colors.md,
       and print the HAVE argument for koIO.read().
   unpack <result> [--into DIR | --snapshot FILE] [--expect] [--record FILE]
       Decode a koIO.read() result (a spilled tool-result file, or an inline
-      result saved verbatim) and report where each live field came from.
+      result saved verbatim) and report where each live field came from, which
+      live Style Settings values no local folder holds, and any Style page save
+      since the last state this project accepted (work/known-<pid>.json).
       --into writes a capture folder, --snapshot writes an HTML snapshot,
       --expect checks a save against the last plan and, on a pass, keeps a
       copy of each deployed field under work/deployed/, --record appends a row
@@ -19,7 +22,10 @@ process-docs/05-BROWSER_CAPTURE_AND_DEPLOY.md
       Compare a version folder with the last read of the live KB, run the
       content checks, choose how each field travels (a copy from another KB,
       a patch, a build in the page, or chunks), and write the page calls plus
-      the yes-request.
+      the yes-request. It refuses to replace a field or Style Setting whose
+      live value matches no local file until it is captured or approved with
+      --overwrite: a field key (css, body ...), a setting key (font.title,
+      colors.accent, logo.file ...) or `settings` for every setting.
   inject
       Print the page call that fetches ko-style-io.js from the toolkit's
       GitHub repo at the last commit that changed it and runs it only if its
@@ -71,6 +77,10 @@ COLORS = [
     ('categoryIconBackground', 'Default category icon colors: Icon background'),
 ]
 FONTS = [('title', 'Headers font'), ('body', 'Article text font')]
+# The keys of style-settings-colors.md's Values table, which is what a version deploys.
+SETTING_LABEL = dict([(f'colors.{k}', label) for k, label in COLORS] + [(f'font.{k}', label) for k, label in FONTS]
+                     + [('logo.file', 'Logo (File Library name)')])
+SETTINGS_MD = 'style-settings-colors.md'
 # Merge codes KO adds on save when they are missing, which would silently change the saved field.
 REQUIRED = {
     'body': [['[template("layout")]', '[template("contents")]']],
@@ -305,14 +315,31 @@ def cmd_have(a):
             index[key].setdefault(h12(s), []).append('defaults/' + fn)
         if key == 'css' and without_guard(s):
             index['css'].setdefault(h12(without_guard(s)), []).append('defaults/custom-css.css (without the guard)')
+    # Every Style Settings value a dated folder records, so unpack can tell an outside change
+    # (a value no folder holds) from one this project deployed, and plan can refuse to undo it.
+    settings, with_table = {}, 0
+    for d in folders:
+        vals = parse_settings_md(d / SETTINGS_MD)
+        if not vals:
+            continue
+        with_table += 1
+        for key, v in vals.items():
+            v = norm_setting(key, v)
+            if key in SETTING_LABEL and v not in ('', '#'):
+                settings.setdefault(key, {}).setdefault(v, []).append(d.relative_to(root).as_posix())
     me = helper_self()
-    save_json(WORK / 'have.json', {'root': str(root), 'self': me, 'fields': index})
+    save_json(WORK / 'have.json', {'root': str(root), 'self': me, 'fields': index, 'settings': settings})
     arg = {'self': me}
     arg.update({k: sorted(v) for k, v in index.items() if v})
     print('HAVE=' + json.dumps(arg, separators=(',', ':')))
     print(f'{sum(len(v) for v in index.values())} known hashes from {len(folders)} dated folders, '
           f'{len(deployed)} deployed cop{"y" if len(deployed) == 1 else "ies"} and the Minimalist defaults. '
           f'Helper self-hash {me}.')
+    if with_table:
+        print(f'Style Settings: {sum(len(v) for v in settings.values())} known values from {with_table} '
+              f'folder{"s" if with_table != 1 else ""} with a {SETTINGS_MD} Values table.')
+    else:
+        print(f'Style Settings: no dated folder has a {SETTINGS_MD} Values table, so unpack cannot check them for drift.')
     if offline:
         print('Minimalist defaults not fetched (offline?): ' + ', '.join(offline))
 
@@ -438,6 +465,110 @@ def parse_settings_md(p):
     return vals or None
 
 
+def norm_setting(key, v):
+    v = re.sub(r'\s+', ' ', (v or '').strip())
+    return v.lower() if key.startswith('colors.') else v
+
+
+def live_setting_values(obj):
+    """The live Style Settings as style-settings-colors.md's Values table writes them. A logo with
+    no File Library name in this KB (another KB's file, or a failed lookup) is left out."""
+    s = obj.get('settings') or {}
+    vals = {}
+    for k, _ in COLORS:
+        v = norm_setting('colors.' + k, (s.get('colors') or {}).get(k, ''))
+        if v:
+            vals['colors.' + k] = v
+    for k, _ in FONTS:
+        v = norm_setting('font.' + k, settings_md_font((s.get('font') or {}).get(k) or {}))
+        if v:
+            vals['font.' + k] = v
+    if logo_file_name(obj) and not obj.get('logoLookup'):
+        vals['logo.file'] = logo_file_name(obj)
+    return vals
+
+
+def folder_order(name):
+    """Sort key for dated folders: date, then version number (v10 after v9)."""
+    m = re.match(r'(\d{4}\.\d{2}\.\d{2})-(?:v(\d+))?', name)
+    return (m.group(1), int(m.group(2) or 0), name) if m else ('', 0, name)
+
+
+def settings_drift(obj, have):
+    """Live Style Settings values that no dated folder holds, as (key, live value, newest folder that
+    records the key, its value). None when have.json has no settings index to compare with."""
+    known = (have or {}).get('settings')
+    if not known:
+        return None
+    out = []
+    for key, v in live_setting_values(obj).items():
+        vals = known.get(key)
+        if not vals or v in vals:
+            continue
+        folder, local = max(((Path(f).name, lv) for lv, fs in vals.items() for f in fs),
+                            key=lambda t: folder_order(t[0]))
+        out.append((key, v, folder, local))
+    return out
+
+
+def other_settings(s):
+    """The stored settings that style-settings-colors.md does not hold: layout, theme, options and so on."""
+    s = s or {}
+    out = {k: v for k, v in s.items() if k not in ('colors', 'font', 'logo')}
+    for k, v in (s.get('colors') or {}).items():
+        if 'colors.' + k not in SETTING_LABEL:
+            out['colors.' + k] = v
+    return out
+
+
+def other_settings_diff(was, now_s):
+    """Names of the settings outside the Values table that differ, ignoring the code-block options
+    KO fills in on every save and the `background: []` an old theme gains."""
+    a, b = other_settings(was), other_settings(now_s)
+    same = lambda x, y: json.dumps(x, sort_keys=True) == json.dumps(y, sort_keys=True)
+    out = []
+    for k in sorted(set(a) | set(b)):
+        x, y = a.get(k), b.get(k)
+        if isinstance(x, dict) or isinstance(y, dict):
+            x, y = (x if isinstance(x, dict) else {}), (y if isinstance(y, dict) else {})
+            out += [f'{k}.{p}' for p in sorted(set(x) | set(y))
+                    if not same(x.get(p), y.get(p)) and not (p not in x and p in KO_FILLED_OPTIONS)]
+        elif not same(x, y) and not (x in (None, []) and y in (None, [])):
+            out.append(k)
+    return out
+
+
+def known_path(pid):
+    return WORK / f'known-{pid or "unknown"}.json'
+
+
+def remember(obj, how):
+    """Record the KB's state as accepted by this project: after a read-back pass, a capture, or a
+    drift check that found nothing. The next drift check compares KO's current save with it."""
+    save_json(known_path(obj.get('pid')), {'when': now(), 'how': how, 'curSave': obj.get('curSave', ''),
+                                           'saves': obj.get('saves', []), 'settings': obj.get('settings', {})})
+
+
+def outside_changes(obj):
+    """Changes on the Style page since the state this project last accepted that the field and
+    Style Settings checks do not cover: a newer save, and settings such as layout or theme.
+    Returns (record or None, notes)."""
+    k = load_json(known_path(obj.get('pid')), missing={})
+    if not k:
+        return None, [], False
+    notes = []
+    saved = bool(obj.get('curSave') and k.get('curSave') and obj['curSave'] != k['curSave'])
+    if saved:
+        notes.append(f'KO\'s current save is {obj["curSave"]}, but this project last accepted the save of '
+                     f'{k["curSave"]} ({k.get("how", "?")}, {k.get("when", "?")}): someone saved the Style page '
+                     'outside this project since then. The saves are listed below.')
+    diff = other_settings_diff(k.get('settings'), obj.get('settings'))
+    if diff:
+        notes.append('Style Settings outside the Values table changed since then: ' + ', '.join(diff)
+                     + '. A deploy keeps them as they are live now.')
+    return k, notes, saved
+
+
 def record(path, when, version, target, changed, clicked, readback):
     p = Path(path)
     head = ('# Deployments\n\nOne row per save or drift check, newest last. Written by `kb_io.py unpack --record`.\n\n'
@@ -494,12 +625,28 @@ def cmd_unpack(a):
     new = [k for k in prov if prov[k] == 'NEW']
     if home and c['n'] and label_of(src) == 'NEW':
         new.append('legacy')
-    if new and not a.expect:
+    if a.expect:
+        return check_expect(obj, a, target, texts)
+    # Style Settings: a live color, font or logo that no dated folder records was changed outside
+    # this project, and a version folder copied from the last one would put the old value back.
+    sdrift = settings_drift(obj, have)
+    if sdrift is None and have and 'settings' not in have:
+        print(f'  {"settings":15} not compared: work/have.json predates the Style Settings index; run `have` again')
+    elif sdrift is None:
+        print(f'  {"settings":15} not compared: no dated folder has a {SETTINGS_MD} Values table')
+    elif not sdrift:
+        print(f'  {"settings":15} {"local":28} every color, font and logo value is in a dated folder')
+    for key, v, folder, local in sdrift or []:
+        print(f'  {key:15} {"NEW":28} live `{v}`; newest local `{local}` ({folder})  {SETTING_LABEL[key]}')
+    if sdrift:
+        new.append('settings (' + ', '.join(k for k, *_ in sdrift) + ')')
+    was, outside, saved_outside = outside_changes(obj)
+    for n in outside:
+        print('Note: ' + n)
+    if new or saved_outside:
         print(f'Time of current save: {obj.get("curSave") or "?"}. Previous saves, as KO lists them (local time, author):')
         for lbl in obj.get('saveLabels', []):
             print('  ' + lbl)
-    if a.expect:
-        return check_expect(obj, a, target, texts)
     if a.into:
         if problems:
             die('Not written: fix the problems above first.')
@@ -527,11 +674,21 @@ def cmd_unpack(a):
         if new:
             print(f'Taken from the live text (no local match): {", ".join(new)}.')
     elif new:
-        print(f'DRIFT: no local file matches {", ".join(new)}.')
+        print(f'DRIFT: no local file matches {", ".join(new)}. Capture a current-state folder before building '
+              'the next version (05, "the drift check").')
     else:
-        print('No drift: every live field matches a local file.')
+        print('No drift: every live field and Style Settings value matches a local file.')
+    # Accept this state as the one later drift checks compare KO's saves with, unless it still needs capturing.
+    if not problems and (a.into or not new):
+        remember(obj, f'captured to {Path(a.into).name}' if a.into else 'drift check')
+        if was is None:
+            print(f'Note: no earlier record of this KB\'s saves; later drift checks compare with this one '
+                  f'(work/{known_path(obj.get("pid")).name}).')
     if a.record:
-        changed = 'none' if not new else 'drift: ' + ', '.join(new)
+        bits = ['drift: ' + ', '.join(new)] if new else []
+        if outside:
+            bits.append('outside save' if saved_outside else 'outside settings change')
+        changed = '; '.join(bits) or 'none'
         result = ('no drift' if not new else 'current-state needed') if not a.into else f'captured to {Path(a.into).name}'
         record(a.record, now(), '(drift check)' if not a.into else '(capture)', obj.get('host', '?'), changed, '-', result)
 
@@ -590,6 +747,7 @@ def check_expect(obj, a, target, texts):
                 kept.append(key)
         if kept:
             print(f'Kept the deployed text of {", ".join(kept)} in work/deployed/{plan["check"]["version"]}/ for `have`.')
+        remember(obj, f'read-back of {plan["check"]["version"]}')
     if a.record:
         record(a.record, now(), plan['check']['version'], obj.get('host', '?'), plan['check']['summary'],
                a.clicked_by, ('PASS' + ''.join('; ' + n for n in notes))[:300] if not fails else 'FAIL: ' + '; '.join(fails)[:300])
@@ -869,7 +1027,7 @@ def make_build(key, fn, target, vdir, live_text, src, toolkit):
     return entry, typed, sent, how, only_live
 
 
-def settings_plan(vdir, live, fail):
+def settings_plan(vdir, live, fail, have=None, overwrite=()):
     """The settings part of the page plan, and the full settings the read-back must find."""
     cur = live.get('settings', {})
     expect = {'colors': dict(cur.get('colors', {})),
@@ -877,20 +1035,38 @@ def settings_plan(vdir, live, fail):
               'logo_url': cur.get('logo', ''),
               'same': {k: v for k, v in cur.items() if k not in ('colors', 'font', 'logo')}}
     page, lines = {}, []
-    vals = parse_settings_md(vdir / 'style-settings-colors.md')
+    vals = parse_settings_md(vdir / SETTINGS_MD)
     if vals is None:
-        lines.append('Style Settings: style-settings-colors.md has no Values table, so none are deployed')
+        lines.append(f'Style Settings: {SETTINGS_MD} has no Values table, so none are deployed')
         return page, expect, lines
+    known, live_vals = (have or {}).get('settings') or {}, live_setting_values(live)
+
+    def outside(key):
+        """Refuse to replace a live value no dated folder records (changed outside this project), the
+        way code fields are refused, unless the user approved it with --overwrite <key> or settings."""
+        lv = live_vals.get(key)
+        if not lv or not known.get(key) or lv in known[key]:
+            return ''
+        if {key, 'settings'} & set(overwrite):
+            return ' (outside change, overwrite approved)'
+        fail.append(f'{SETTING_LABEL[key]}: the live value `{lv}` matches no local folder (an outside change). '
+                    f'Capture it first (a current-state folder), or rerun with --overwrite {key} once the user '
+                    'has approved replacing it.')
+        return None
+
     colors = {}
     for k, label in COLORS:
         v = vals.get('colors.' + k, '').lower()
         if v in ('', '#'):
             continue
         if not re.fullmatch(r'#[0-9a-f]{6}', v):
-            fail.append(f'style-settings-colors.md: colors.{k} is not #rrggbb ({v})')
+            fail.append(f'{SETTINGS_MD}: colors.{k} is not #rrggbb ({v})')
         elif v != cur.get('colors', {}).get(k, ''):
+            why = outside('colors.' + k)
+            if why is None:
+                continue
             colors[k] = v
-            lines.append(f'Style Settings: {label}: {cur.get("colors", {}).get(k) or "unset"} -> {v}')
+            lines.append(f'Style Settings: {label}: {cur.get("colors", {}).get(k) or "unset"} -> {v}{why}')
     if colors:
         page['colors'] = colors
         expect['colors'].update(colors)
@@ -907,18 +1083,24 @@ def settings_plan(vdir, live, fail):
         m = re.fullmatch(r'(.+?)\s+(\d+)\s+(\d+)', v)
         want = {'family': m.group(1), 'size': m.group(2), 'weight': m.group(3)} if m else {'family': v}
         if any(c.get(p, '') != want[p] for p in want):
+            why = outside('font.' + k)
+            if why is None:
+                continue
             fonts[k] = want
-            lines.append(f'Style Settings: {label}: {settings_md_font(c) or "unset"} -> {v}')
+            lines.append(f'Style Settings: {label}: {settings_md_font(c) or "unset"} -> {v}{why}')
     if fonts:
         page['font'] = fonts
         for k, want in fonts.items():
             expect['font'].setdefault(k, {}).update(want)
     name = vals.get('logo.file', '')
     if name and name != logo_file_name(live):
+        why = outside('logo.file')
+        if why is None:
+            return page, expect, lines
         page['logo'] = {'name': name}
         expect['logo_name'] = name
         expect.pop('logo_url')
-        lines.append(f'Style Settings: logo -> the File Library image {name} (must already be uploaded to this KB)')
+        lines.append(f'Style Settings: logo -> the File Library image {name} (must already be uploaded to this KB){why}')
     return page, expect, lines
 
 
@@ -1050,8 +1232,11 @@ def cmd_plan(a):
         image_ref = r'/app/image/id/[0-9a-f]{24}/n/[^\s"\')]+'
         before = set(re.findall(image_ref, source_text(have, sources[0]))) if sources else set()
         images += [i for i in re.findall(image_ref, target) if i not in before]
-    page_settings, expect_settings, setting_lines = settings_plan(vdir, live, fail)
+    page_settings, expect_settings, setting_lines = settings_plan(vdir, live, fail, have, a.overwrite)
     lines += setting_lines
+    if 'settings' not in have:
+        notes.append('work/have.json has no Style Settings index (made by an older kb_io.py), so a setting '
+                     'changed outside this project is not caught; run `have` again')
     if toolkit.problem:
         notes.append(toolkit.problem)
     if no_src:

@@ -75,7 +75,7 @@ done
 
 **What this does and doesn't touch:** it populates the 12 code files only. The HTML snapshots (`full-html-snapshot-*.html`), `style-settings-colors.md` and `CHANGES_FROM_no-changes.md` are still captured the normal way during setup, though on a fresh build they can be scaled down; see "Fresh or Stock-Minimalist Builds" in `CLAUDE-RULES.md`.
 
-**If the live KB still holds a throwaway theme** when the defaults are the baseline, `plan` refuses to overwrite those fields on the first deploy, because their live content matches no local file. Once the user confirms that replacing the old theme is the point, rerun `plan` with `--overwrite` for each field it names.
+**If the live KB still holds a throwaway theme** when the defaults are the baseline, `plan` refuses to overwrite those fields on the first deploy, because their live content matches no local file. The same goes for Style Settings colors and fonts that no local folder records. Once the user confirms that replacing the old theme is the point, rerun `plan` with `--overwrite` for each field and setting it names (`--overwrite settings` covers every setting).
 
 The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, so leave its placeholder as-is there. On an *older* KB that merely looks stock, confirm it rather than assuming: **Customize > Homepage > Homepage content > Custom content** lives outside the Style editor entirely, so someone can have put content there without ever touching Custom CSS/HTML. Either way it's a one-time check — record the answer under `# Baseline` in `.claude/rules/project.md` and later sessions read it instead of asking again.
 
