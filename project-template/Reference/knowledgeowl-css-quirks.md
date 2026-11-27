@@ -1229,7 +1229,7 @@ Restyling the list: KO's search bar script sets inline `top`, `left` and `width`
 
 ## 64. `.hg-site-login` Has a `min-width: 400px`
 
-`ko-css.css` gives the login card `margin: 100px auto; width: 50%; min-width: 400px`. A theme that wants a narrower card must set `min-width: 0` on it: `width: auto !important` alone does nothing, and the card's content overflows its padding (seen on a card about 470px wide).
+`ko-css.css` gives the login card `margin: 100px auto; width: 50%; min-width: 400px`. A theme that wants a narrower card must set `min-width: 0` on it: `width: auto !important` alone does nothing, and the card's content overflows its padding (seen on a card about 470px wide). The same min-width makes the login and Restricted Access pages scroll sideways on a phone (WCAG 1.4.10); the accessibility layer's `a11y.css` resets it below 480px.
 
 ## 65. A Padded Category Icon Tile Pushes Wide Glyphs Out
 

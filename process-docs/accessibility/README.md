@@ -7,7 +7,7 @@ Fix it here, not in a customer's copy: a build that finds a problem in the layer
 | File | What it is | Where it goes |
 |---|---|---|
 | `a11y-script.js` | Landmarks and a skip link, heading levels, breadcrumb and table-of-contents semantics, form labels, dialogs, names for icon-only controls, the feedback announcement, decorative images | Unchanged, in a `<script>` at the end of Custom `<head>`; a copy as `a11y-script.js` in the version folder |
-| `a11y.css` | Tokens, the skip link, focus rings, field borders, underlined links in running text, sizes for re-levelled headings, target sizes, badge, pager and button contrast, reduced motion | At the end of Custom CSS, with the tokens set to the brand |
+| `a11y.css` | Tokens, the skip link, focus rings, field borders, underlined links in running text, sizes for re-levelled headings, target sizes, badge, pager and button contrast, the login card's width on phones, reduced motion | At the end of Custom CSS, with the tokens set to the brand |
 | This README | How to adopt it, the template edits, the checks, and the fix table | Read it; nothing to copy |
 
 ## Adopting it in a build
@@ -99,6 +99,7 @@ KnowledgeOwl's upcoming accessibility release (not yet shipped on 2026-11-13) ad
 | List pager band takes the top bar's color, its text stays #555 | 1.4.3 | C | no |
 | Primary and success buttons take the top bar's text color on the accent: white on peach is 1.7:1 | 1.4.3 | C | no |
 | Tag links 22.7px tall | 2.5.8 | C | no |
+| Login card at least 400px wide: the login and Restricted Access pages scroll sideways on a phone | 1.4.10 | C | no |
 | Contact form "send to" menu's label has no `for` | 1.3.1, 4.1.2 | S | no |
 | Motion for readers who ask for less | 2.3.3 | C | Accessible only |
 | Expand/collapse toggles in articles lack state | 4.1.2 | T | no |

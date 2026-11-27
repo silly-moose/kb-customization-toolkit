@@ -92,7 +92,7 @@
 .hg-minimalist-theme .ko-related-articles h2 { font-size: 24px; line-height: 1.1; margin: 30px 0 15px; }                    /* was h3 */
 .hg-minimalist-theme .homepage-widgets h2 { font-size: 24px; line-height: 1.1; margin: 0 0 15px; }                          /* was h3 (homepage, 404) */
 .hg-minimalist-theme.hg-home-page .homepage-widgets h2 { margin-bottom: 10px; }
-.hg-minimalist-theme .category-list h2.category-header { font-size: 18px; font-weight: 400; line-height: 1.1; margin: 30px 0 10px; }  /* category tiles, was h3 */
+.hg-minimalist-theme .category-list h2.category-header { display: block; font-size: 18px; font-weight: 400; line-height: 1.1; margin: 30px 0 10px; }  /* category tiles, was h3; display: block outranks the stock rule that hides every h2 in .faq-nav-content (quirks §42) */
 .hg-minimalist-theme:is(.hg-widget-page, .hg-search-page) h2.hg-list-title { font-size: 18px; line-height: 1.4; margin: 15px 0 0; }   /* list and search titles, was h4 */
 .hg-minimalist-theme:is(.hg-widget-page, .hg-search-page) h2.hg-list-title > a { display: inline-block; padding: 2px 0; }   /* a 28px target (WCAG 2.5.8) */
 .hg-minimalist-theme.hg-blog-page .blog-article-cntr > h2 { font-size: 24px; line-height: 1.1; }                             /* blog post titles, was h3 */
@@ -115,6 +115,10 @@
         1.7:1 on the stock #f8b88b (WCAG 1.4.3) ---- */
 .hg-site :is(.btn-primary, .btn-success),
 .hg-site :is(.btn-primary, .btn-success):is(:hover, :focus, :active) { color: var(--ko-a11y-on-accent); }
+
+/* ---- The login card: KO's min-width: 400px makes the login and Restricted Access pages scroll sideways on a phone
+        (quirks §64; WCAG 1.4.10) ---- */
+@media (max-width: 479px) { .hg-minimalist-theme .hg-site-login { min-width: 0; width: auto; } }
 
 /* ---- Tags: 24px tall targets (stock is 22.7px; WCAG 2.5.8) ---- */
 .hg-minimalist-theme a.ko-tag { padding-top: 2px; padding-bottom: 2px; }
