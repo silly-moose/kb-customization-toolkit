@@ -78,7 +78,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hg-site :is(.kb-theme-toggle, .kb-theme-switch, .kb-theme-knob) { transition: none; }
 }
-/* The help widget and the Style page preview show the KB's default mode, with no switch */
+/* The help widget and the Style page preview show light (dark when the default is dark), with no switch */
 .kb-theme-framed :is(.kb-theme-item, .kb-theme-toggle) { display: none !important; }
 /* While switching, nothing fades: colors that lag behind their background dip below AA mid-fade.
    The switch itself keeps its slide. */
@@ -343,6 +343,9 @@ html.kb-theme-switching :not(.kb-theme-toggle, .kb-theme-toggle *)::after { tran
   html[data-kb-theme="dark"] .back-to-top { background-color: var(--dm-raised); border-color: var(--dm-border); }
   html[data-kb-theme="dark"] .back-to-top i { color: var(--dm-text); }
   html[data-kb-theme="dark"] .hg-minimalist-theme .ko-site-footer { background: var(--dm-footer); color: #b9c0c8; border-top: 1px solid var(--dm-line); }
+
+  /* ---- The accessibility layer's skip link: a11y.css fills it white, and its text takes --ko-a11y-ink, near-white here ---- */
+  html[data-kb-theme="dark"] .ko-a11y-skip-link { background: var(--dm-raised); }
 
   /* ---- The theme layer's own dark rules go below this line ---- */
 }

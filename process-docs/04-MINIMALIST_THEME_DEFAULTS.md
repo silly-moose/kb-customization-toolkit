@@ -25,7 +25,7 @@ The 12 editable code sections of a stock Minimalist KB. Each row maps the raw fi
 | File | KnowledgeOwl section | Default content | Lines |
 |------|----------------------|-----------------|-------|
 | `custom-css.css` | Custom CSS | KO's **default Custom CSS** — the template KO seeds into every new Minimalist KB's Custom CSS field: `:root` color variables plus layout, typography, TOC, search, homepage, and component tweaks, followed by the toolkit's Editor Readability Guard (the one addition to KO's stock). Deployable into Custom CSS as-is. (The bulk of the theme's styling lives in KO's compiled platform bundle, not here — see "CSS Architecture" in `project-template/Reference/knowledgeowl-css-defaults.md`.) | ~925 |
-| `custom-head.html` | Custom `<head>` | **Empty by default** — a fresh Minimalist KB ships with no Custom `<head>` code. The file is just the template's placeholder comment, which `kb_io.py` reads as empty; a field Claude captures empty is a 0-byte file instead. | 1 |
+| `custom-head.html` | Custom `<head>` | **Empty by default** — a fresh Minimalist KB ships with no Custom `<head>` code. The file is empty (0 bytes), as a field Claude captures empty is. | 0 |
 | `custom-html-1-body.html` | Custom HTML > Body | Site body wrapper (`[template("layout")]`) + back-to-top + the default copyright / "Made with KnowledgeOwl" footer (the copyright line uses `[template("current-year")]` and `[template("account-name")]`) | 8 |
 | `custom-html-2-top-navigation.html` | Custom HTML > Top Navigation | Navbar: logo/brand, project name, search bar, TOC + nav toggles, and the right-side search / contact / login items | 29 |
 | `custom-html-3-article.html` | Custom HTML > Article | Article header (title + action icons + last-modified), body, and footer (related articles, rating, comments) | 21 |
@@ -77,7 +77,7 @@ done
 
 **If the live KB still holds a throwaway theme** when the defaults are the baseline, `plan` refuses to overwrite those fields on the first deploy, because their live content matches no local file. The same goes for Style Settings colors and fonts that no local folder records. Once the user confirms that replacing the old theme is the point, rerun `plan` with `--overwrite` for each field and setting it names (`--overwrite settings` covers every setting).
 
-The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, so leave its placeholder as-is there. On an *older* KB that merely looks stock, confirm it rather than assuming: **Customize > Homepage > Homepage content > Custom content** lives outside the Style editor entirely, so someone can have put content there without ever touching Custom CSS/HTML. Either way it's a one-time check — record the answer under `# Baseline` in `.claude/rules/project.md` and later sessions read it instead of asking again.
+The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, so empty its file there (delete the placeholder comment). On an *older* KB that merely looks stock, confirm it rather than assuming: **Customize > Homepage > Homepage content > Custom content** lives outside the Style editor entirely, so someone can have put content there without ever touching Custom CSS/HTML. Either way, record the answer under `# Baseline` in `.claude/rules/project.md`; every drift read checks the field again, since the answer can go stale.
 
 **Fidelity notes** — these files reproduce KO's stock code exactly, including KO's own oddities:
 
@@ -97,7 +97,7 @@ The legacy `homepage-custom-content.html` field is empty on a **brand-new** KB, 
 The defaults cover the 12 code files. On a genuinely fresh KB the *rest* of the setup capture is largely moot too, so scale it to what exists instead of asking for the full inventory:
 
 - **Style Settings colors** — Claude's capture reads them with the code fields, so there's nothing extra to do. On the manual path: on a **brand-new** KB the values *are* the Minimalist defaults already listed at the bottom of `style-settings-colors.md`, so copy them into the `## Values` table rather than clicking through every swatch. On an **older KB that merely looks stock, confirm each swatch instead** — Style Settings live in their own UI, so the colors can have been changed without Custom CSS/HTML ever being touched.
-- **HTML snapshots** — still capture one homepage and one article. They show KO's stock rendered DOM, which is exactly what the build will be overriding.
+- **HTML snapshots** — still capture one homepage and one article. They show KO's stock rendered DOM, which is exactly what the build will be overriding. A KB with no published articles has none to capture (05, "Snapshots").
 - **Legacy Homepage Custom content** — always empty on a brand-new KB, so there's nothing to check: record `empty` in `# Baseline` and move on.
 
 ### Deliberately discarding a throwaway theme

@@ -76,7 +76,7 @@ Since you copied the entire previous version folder (step 1), a CHANGES file alr
 - **First version (v1):** The file is already named `CHANGES_FROM_no-changes.md` — keep that name, since v1 is based on the no-changes folder
 - **Subsequent versions:** Rename the file to `CHANGES_FROM_v[previous].md` (e.g., in the v3 folder, rename it to `CHANGES_FROM_v2.md`)
 
-Clear out the previous version's content and update the title, Date, and Based On fields. Then fill in each section. See the template for the required sections: summary, files modified, color palette, visible changes, Style Settings, manual steps, and files to deploy.
+Clear out the previous version's content and update the title, Date, and Based On fields. Then fill in each section. See the template for the required sections: summary, files modified, color palette, visible changes, Style Settings, manual steps, what this version doesn't cover, and files to deploy.
 
 ### 4. Deploy
 
@@ -87,7 +87,7 @@ In the CHANGES file, always specify:
 - Expected results after deployment
 - Where it deploys (sandbox or live KB, based on the deployment target for this project)
 
-Claude then deploys it through the built-in browser (`05-BROWSER_CAPTURE_AND_DEPLOY.md`): it plans the deploy against a fresh read of the live KB, shows the list of what it will save where, waits for your yes, saves, reads the result back, records it in `DEPLOYMENTS.md`, and, when the version changed colors, type or layout, verifies the live page (`CLAUDE-RULES.md`, "Post-Deploy Verification"). On the manual path, the same list is what you paste, and Claude reads the KB back afterwards whenever it can (05, "Manual path").
+Claude then deploys it through the built-in browser (`05-BROWSER_CAPTURE_AND_DEPLOY.md`): it plans the deploy against a fresh read of the live KB, shows the list of what it will save where, waits for your yes, saves, reads the result back, records it in `DEPLOYMENTS.md`, and, when the version changed colors, type, layout or a Custom `<head>` script, verifies the live page (`CLAUDE-RULES.md`, "Post-Deploy Verification"). On the manual path, the same list is what you paste, and Claude reads the KB back afterwards whenever it can (05, "Manual path").
 
 **Color-Change Checkpoint:** If this version changed any color in Custom CSS, reconcile it against the Style Settings and surface a `Setting | Current | New | Why` table **in the conversation** (not only in the CHANGES file), listing Style Settings changes first. If colors changed but no Style Setting is affected, say so explicitly. The authoritative definition lives under "Style Settings Colors → Color-Change Checkpoint" in `CLAUDE-RULES.md`.
 
@@ -177,7 +177,7 @@ When returning to a project after any gap — whether days, weeks, or months —
 
 **Check the live KB for drift if more than one day has passed since the latest version or `current-state` folder** (or sooner if you know that you or the customer made changes directly in KnowledgeOwl). The customer (or another teammate) may have made changes outside this system in the meantime. Claude reads the live KB through the built-in browser and compares every field and Style Settings value (colors, fonts, logo) with the project's files (the drift check in `05-BROWSER_CAPTURE_AND_DEPLOY.md`). If everything matches, it says which version each field is at, adds a row to `DEPLOYMENTS.md`, and carries on with no new folder. If any field or Style Setting matches no local file, it records the live KB in a `current-state` folder: a customer who switches a font in Style Settings changes no code field, but the next version folder, copied from the last one, would switch it back. The check also notes any Style page save made outside the project since the last state it accepted, even when nothing differs.
 
-A `current-state` folder holds the 12 code fields as they are live, `style-settings-colors.md` (the Style Settings colors, fonts and logo), and fresh HTML snapshots of reader pages. Claude writes all of them from the live read. If the KB uses the legacy Homepage Custom content field, the folder also gets `homepage-custom-content.html`, from Customize > Homepage > Homepage content > Custom content. Whether it applies is settled once at setup and recorded in the `# Baseline` section of `.claude/rules/project.md`; Claude reads that record rather than re-checking the KB each time, and skips the file entirely when it says `empty`.
+A `current-state` folder holds the 12 code fields as they are live, `style-settings-colors.md` (the Style Settings colors, fonts and logo), and fresh HTML snapshots of reader pages. Claude writes all of them from the live read. If the KB uses the legacy Homepage Custom content field, the folder also gets `homepage-custom-content.html`, from Customize > Homepage > Homepage content > Custom content. Whether it is in use is recorded in the `# Baseline` section of `.claude/rules/project.md`, and every drift read checks the field again, since that answer can go stale.
 
 Without the built-in browser (a terminal or IDE session), drift can't be checked, so the user pastes each field and snapshot into a new `current-state` folder every time (05's manual path).
 

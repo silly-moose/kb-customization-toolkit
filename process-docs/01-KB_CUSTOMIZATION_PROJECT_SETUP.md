@@ -85,18 +85,18 @@ The admin endpoints Claude reads (the Style form, the homepage page, Default Tex
 
 Read both KBs (`koIO.read` on each project ID) and compare the field hashes and the settings; `unpack` on each read reports them. This is how to confirm that **Customize > Style > Reset Theme > "use settings from another knowledge base"** actually did what you expect, which matters whenever a sandbox is seeded from a source KB.
 
-What that copy **does** carry: the 12 code fields, the Style Settings colors, and the logo *setting* (a URL).
+What that copy **does** carry: the 12 code fields, the Style Settings colors and fonts, the layout and base theme, and the logo *setting* (a URL).
 
 What it **does not** carry, and therefore has to be redone by hand in the target KB:
 
-- **Default Text** (every string stays at KO's stock wording)
+- **Default Text** (the target keeps its own strings, KO's stock wording on a new KB)
 - **the homepage title** and the legacy **Custom content** field
 - **the contact-form on/off setting**
 - **per-category icons** (each category's editor keeps its own; a category with none renders KO's fallback glyph, so check the editors, not the homepage)
 - **the files**: the copied logo URL points at the source KB's File Library (the logo is uploaded to both KBs, so set `logo.file` on the target), and so does any image URL in the CSS unless the files were on the live KB from the start (the default for sandbox builds, CLAUDE-RULES "Logo & Brand Assets"); the favicon does not copy at all (05, "Sandbox to live")
 - articles and categories (content is untouched in both directions)
 
-Snippets are a separate story: the copy does not create or delete them, so whatever the target KB already had is what it still has. If the theme depends on a snippet, check for it explicitly. `CLAUDE-RULES.md` ("If the deployment target is a COPIED KB") has the full list, including what a KB *copy* drops that a Reset Theme copy never touches (article tags, uploaded category Icon images).
+Snippets are a separate story: the copy does not create or delete them, so whatever the target KB already had is what it still has. If the theme depends on a snippet, check for it explicitly. `CLAUDE-RULES.md` ("If the deployment target is a COPIED KB") has the full list, including what a KB *copy* changes that a Reset Theme copy never touches (article tags get new ids; uploaded category Icon images keep the source KB's address).
 
 ### Uploading files to the KB's File Library
 
@@ -106,7 +106,7 @@ Snippets are a separate story: the copy does not create or delete them, so whate
 
 The capture also records the Style Settings (the 8 colors, the two fonts and the logo) in `style-settings-colors.md`, read from the Style page's theme data rather than one swatch at a time. That is the customer's original theme-level configuration: if the project later changes brand colors, Claude reconciles these settings, and the original values are the rollback reference.
 
-On the manual path the color picker only reveals one hex code at a time, so record each swatch separately: click each color to reveal its hex and type it into the `## Values` table in `style-settings-colors.md` (or screenshot each swatch into `Screenshots/`).
+On the manual path the color picker only reveals one hex code at a time, so record each swatch separately: click each color to reveal its hex and type it into the `## Values` table in `style-settings-colors.md`.
 
 ---
 
@@ -127,9 +127,6 @@ A reader-restricted KB needs no reader login at all: once you are signed in to t
 - Or **mark the snapshots pending and leave the `no-changes` folder UNLOCKED** until you have them. Don't `chmod` an incomplete baseline read-only: the lock is meant to protect a finished record, not to freeze a half-captured one.
 
 Either way the build isn't blocked: the 12 code files and `style-settings-colors.md` can be filled from the documented Minimalist defaults on a stock KB (see `04-MINIMALIST_THEME_DEFAULTS.md`), and the localhost-preview path that works with **no KB access at all** is in `03-LOCALHOST_PREVIEW.md` → "Previewing a Build BEFORE Anything Is Deployed."
-
-Chrome saves a full-length PNG automatically. This is especially useful for long article and category pages where the below-the-fold layout matters.
-
 ### Full HTML Snapshots (for Claude reference)
 Claude captures snapshots of the homepage and an article page from the live KB (`05-BROWSER_CAPTURE_AND_DEPLOY.md`, "Snapshots"). Each gives Claude visibility into a different template structure, and the preview harness in `03-LOCALHOST_PREVIEW.md` runs on them.
 
@@ -320,7 +317,7 @@ Your project should look like this:
         ├── DEPLOYMENTS.md                  (one row per save and drift check, written by Claude)
         ├── .claude/
         │   ├── launch.json                 (localhost preview server config — see 03-LOCALHOST_PREVIEW.md)
-        │   ├── kb-io/                      (capture-and-deploy helpers, re-downloaded each session; work/ holds scratch files, but keep work/deployed/)
+        │   ├── kb-io/                      (capture-and-deploy helpers, re-downloaded each session; work/ holds scratch files, but keep work/deployed/ and work/known-*.json)
         │   └── rules/
         │       └── project.md              (auto-read by Claude Code — customer-specific settings)
         ├── Reference/

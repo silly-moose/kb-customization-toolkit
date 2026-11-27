@@ -1229,7 +1229,7 @@ def cmd_plan(a):
                          'by the public /app/image/ address, but the live theme uses /files/ links (Image / file '
                          'security is on), and the public links return 401. Take the /files/ addresses from the '
                          'live text (quirks-doc 60).')
-        image_ref = r'/app/image/id/[0-9a-f]{24}/n/[^\s"\')]+'
+        image_ref = r'/(?:app/image/id/[0-9a-f]{24}/n|files/[0-9a-f]{24}/[0-9a-f]{24})/[^\s"\')]+'
         before = set(re.findall(image_ref, source_text(have, sources[0]))) if sources else set()
         images += [i for i in re.findall(image_ref, target) if i not in before]
     page_settings, expect_settings, setting_lines = settings_plan(vdir, live, fail, have, a.overwrite)
@@ -1295,7 +1295,7 @@ def main():
     p.add_argument('version')
     p.add_argument('--live')
     p.add_argument('--from', dest='source')
-    p.add_argument('--overwrite', nargs='*', default=[])
+    p.add_argument('--overwrite', nargs='*', action='extend', default=[])
     sub.add_parser('inject')
     a = ap.parse_args()
     {'have': cmd_have, 'unpack': cmd_unpack, 'plan': cmd_plan, 'inject': cmd_inject}[a.cmd](a)

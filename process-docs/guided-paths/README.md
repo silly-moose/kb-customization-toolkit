@@ -38,7 +38,7 @@ The keywords work in English, German and Spanish (`Aktion`, `Entscheidung`, `Erm
 
 1. **Config and strings** reads `window.GP_CONFIG` (below), picks the reader labels for the KB's language and puts both on `window.GuidedPaths`.
 2. **The bridge** adds the class `gp-guided-path` to the article body when the article has the guided-path tag or, with `activate: 'auto'` (the default), at least two Heading 2s that start with a step keyword. Every style is scoped to that class, so other articles are untouched.
-3. **The engine** parses the marked article and checks it (nothing on the page changes if it fails), builds the steps and renders the views. It runs again when KnowledgeOwl adds an article body after the page loads, such as in the homepage slide-out, and marks each body so it runs once.
+3. **The engine** parses the marked article and checks it (nothing on the page changes if it fails), builds the steps and renders the views. The bridge runs once, at page load, so an article body KnowledgeOwl adds later (the homepage slide-out) stays a plain article.
 
 **Step ids** (used in analytics): a step heading's own `id`, or one built from the step's name. Rewording a step's text keeps its history; renaming the step starts a new one. The author guide says so.
 
@@ -79,7 +79,7 @@ Create these in the customer's KB, in a category for authors (for example "Guide
 | `04-example-self-serve-path.html` | Why can't I see an article? | A reader-facing example |
 | `05-example-with-a-mistake.html` | Example with a mistake | Shows authors a red Path check. Readers see a normal article |
 
-Paste each file into the editor's Code View, or create them through the API. If the KB is open to readers, restrict the category to authors' reader groups or leave the examples unpublished once authors have seen them. When the build uses `activate: 'tag'`, tag the template and examples `guided-path`, and change step 5 of the author guide to "Add the tag guided-path, then view the article."
+The user pastes each file into the editor's Code View, or creates them through the API, from the CHANGES file's Manual Steps; first change `/help/` in their links to the KB's root if it differs. If the KB is open to readers, restrict the category to authors' reader groups or leave the examples unpublished once authors have seen them. When the build uses `activate: 'tag'`, tag the template and examples `guided-path`, and change step 5 of the author guide to "Add the tag guided-path, then view the article."
 
 ## Branding it
 
@@ -118,7 +118,7 @@ Where they go: a `dataLayer` push when the page loads Google Tag Manager, otherw
 - **Before saving**, preview on the live page (05, "Preview on the live page without saving") with one of the examples pasted into a draft article: the badge, summary, checklist, Step by step and All steps render, and a walk through each answer reaches the right step and ends with the completion card.
 - **As an author**, the Path check shows on the article page and on the Preview page; "Example with a mistake" shows red and stays a normal article.
 - **Logged out** (or in a private window, if the KB is public): no Path check, no warnings.
-- **Tags**, when the build uses them: a tagged article becomes a path; with `activate: 'tag'`, an untagged one with step headings shows authors the "isn't tagged" note.
+- **Tags**, when the build uses them: a tagged article becomes a path; with `activate: 'tag'`, an untagged one with step headings shows authors the "isn't tagged" note. With `'auto'`, an article with a step heading that the bridge didn't switch on shows authors a note that it needs two step headings.
 - **Language**: the labels match the KB's language, or the `strings` the build set.
 - **Contrast** of every token as set, in both Step by step and All steps.
 

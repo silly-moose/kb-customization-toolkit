@@ -53,6 +53,12 @@
      - Configure redirect rules
 -->
 
+## Not Covered by This Version
+<!-- Delete this section if nothing applies. What this version leaves undone and why: surfaces the
+     page-coverage check skipped (06), and the items the accessibility, guided-path or light/dark
+     mode layer can't fix that apply to this KB.
+-->
+
 ---
 
 ## Files to Deploy

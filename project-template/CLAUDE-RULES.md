@@ -38,7 +38,7 @@ Decide everything else: take this file's default or the most reasonable choice, 
    - **`Reference/knowledgeowl-css-quirks.md`** and **`Reference/knowledgeowl-css-defaults.md`** — fetch the latest versions from the template repo and overwrite the local copies (these are maintained centrally and should always match the repo):
      - `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/Reference/knowledgeowl-css-quirks.md`
      - `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/Reference/knowledgeowl-css-defaults.md`
-   - **`.claude/rules/project.md`** — check if it exists. If missing, fetch the template from the repo and save it locally (the user will fill in customer details). If it already exists, leave its filled-in values alone (they're customer-specific) — but if it has no `# Baseline` section, append that section from the template with its values unfilled, so projects created before it existed pick it up too. Do the same for the `# Deploy targets` section. A `# Baseline` line that is still unfilled on an older project (the content-level CSS line, say) is settled at step 2 the same way as on a first session, except **Started from**, which stays unfilled rather than guessed:
+   - **`.claude/rules/project.md`** — check if it exists. If missing, fetch the template from the repo and save it locally (the user will fill in customer details). If it already exists, leave its filled-in values alone (they're customer-specific) — but if it has no `# Baseline` section, append that section from the template with its values unfilled, and if the section lacks a line the template has, append that line unfilled, so projects created before them pick them up too. Do the same for the `# Deploy targets` section. A `# Baseline` line that is still unfilled on an older project (the content-level CSS line, say) is settled at step 2 the same way as on a first session, except **Started from**, which stays unfilled rather than guessed:
      - `https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/project-template/.claude/rules/project.md`
    - **`.claude/kb-io/`**: download the capture-and-deploy helpers and the page-coverage scan, overwriting any old copies:
      ```bash
@@ -82,7 +82,7 @@ Help the toolkit get sharper over time by capturing what caused friction in how 
 
 ## Mandatory Checks: the nine that are easy to miss
 
-These are the gates that must not be skipped. Each has a full section below; this is the list so none gets lost in the middle of a build. **State the outcome of each in the conversation** — including "not needed this version," so the decision is visible rather than silently omitted.
+These are the gates that must not be skipped. Each has a full section below or in the doc its row names; this is the list so none gets lost in the middle of a build. **State the outcome of each in the conversation** — including "not needed this version," so the decision is visible rather than silently omitted.
 
 | Check | Fires when | Detail |
 |---|---|---|
@@ -91,8 +91,8 @@ These are the gates that must not be skipped. Each has a full section below; thi
 | **Editor Readability Guard** | Every build | The guard block must be present in Custom CSS, and verified with the editor-simulation harness *before* deploying — "Editor Readability Guard" below |
 | **Mockup match** | Before handing over a version built to match a mockup | Exact values read in the browser, side-by-side compare, fix and repeat; state what's left. "Matching a Mockup" below |
 | **Pre-deploy selector diff** | Before any deploy that changes Custom CSS | Set-difference the selectors so a customer's hand-added rule can't vanish silently. `kb_io.py plan` runs it and prints the count; state it. "Deployment Instructions" below |
-| **Save gate and read-back** | Every save to a KB | The gate armed by `stage()` must pass, and the read-back (`unpack --expect`) must say PASS; state it, e.g. "Read-back PASS: 12 fields, settings, one new save". "Capture & Deploy" below |
-| **Post-deploy verification** | After every deploy of a color / type / layout change | Sample what actually rendered; this failure class is invisible in the version folder. "Post-Deploy Verification" below |
+| **Save gate and read-back** | Every Style page save (the user saves widget and chatbot CSS on their own pages, from the CHANGES file's Manual Steps) | The gate armed by `stage()` must pass, and the read-back (`unpack --expect`) must say PASS; state it, e.g. "Read-back PASS: 12 fields, settings, one new save". "Capture & Deploy" below |
+| **Post-deploy verification** | After every deploy of a color / type / layout change or a Custom `<head>` script | Sample what actually rendered; this failure class is invisible in the version folder. "Post-Deploy Verification" below |
 | **Page coverage** | Before the first version of a build is called done, and after any version that changes fonts, colors, layout, images or the login card | Check every reader page type the KB has turned on, plus the widget, AI chatbot and PDFs, which Custom CSS doesn't reach. A theme reviewed on home, category and article pages leaves the rest stock. `06-PAGE_COVERAGE.md` |
 | **Accessibility layer** | First version of every build | Adopt `process-docs/accessibility/` (fetch its README) unless Chad says otherwise |
 
@@ -206,7 +206,7 @@ On a fresh build the *rest* of the capture is largely moot too, so scale it to w
 
 **Don't use this path to overwrite a KB whose custom code is worth keeping** — the `no-changes` folder exists to preserve the customer's real work as the rollback baseline. **But "has custom code" isn't automatically "worth keeping":** a sandbox carrying a trial-era or pre-sales first-pass theme that this build is meant to replace is a legitimate restart-from-stock case. Don't bulldoze it silently either — ask which the user wants (capture it as a real rollback point / defaults as baseline / defaults plus the old theme archived in `Reference/`). Options and trade-offs: `04-MINIMALIST_THEME_DEFAULTS.md`.
 
-**If the deployment target is a COPIED KB, several things did not come across with the copy.** Copying a KB inside KnowledgeOwl, and the Reset Theme > "use settings from another knowledge base" path, both carry the 12 code fields, the Style Settings colors and the logo *setting*. A Reset Theme copy carries nothing else. A KB copy also brings the source KB's settings, Default Text, snippets, glossary, tags, categories and articles (KO's `ProjectCopy.php`), so fewer of these apply to it. Check:
+**If the deployment target is a COPIED KB, several things did not come across with the copy.** Copying a KB inside KnowledgeOwl, and the Reset Theme > "use settings from another knowledge base" path, both carry the 12 code fields, the Style Settings colors and fonts, the layout and base theme, and the logo *setting* (KO copies the whole theme record). A Reset Theme copy carries nothing else. A KB copy also brings the source KB's settings, Default Text, snippets, glossary, tags, categories and articles (KO's `ProjectCopy.php`), so fewer of these apply to it. Check:
 
 - **the homepage title**: a KB copy takes the source KB's, so a sandbox copied from a migration workspace shows that workspace's name to anyone who looks; a Reset Theme copy keeps the target's own;
 - **Default Text**, after a Reset Theme copy: the target keeps its own strings, KO's stock ones ("articles", "Search", and the rest) on a new KB, silently undoing any wording the customer had agreed to;
@@ -280,6 +280,7 @@ Copy the template from the no-changes folder and update it. Include these sectio
 - What the user will see after deployment
 - Style Settings (only if a color, font or the logo changes: the Color-Change Checkpoint table)
 - Manual steps needed in KnowledgeOwl (only if applicable: uploads and anything outside the Style page)
+- Not covered by this version (only if applicable: what it leaves undone, such as the page-coverage skips and each layer's "can't fix" list)
 - Files to deploy (see below)
 
 Delete any sections that don't apply to the current version. Only include files that were actually modified — do not list all 12 files every time. The record of when each version reached which KB goes in `DEPLOYMENTS.md` at the project root, not in the CHANGES file.
@@ -340,7 +341,7 @@ When a build produces an author guide or any doc the customer will follow, two t
 
 **Deploying is not the same as done.** A class of failure exists that is invisible in the version folder, in Style Settings, and in every deployed field — most notably a `<style>` block living in **page content** (a snippet or hand-written article HTML), which loads after Custom CSS and wins at equal specificity (quirks-doc §47). The version folder can be perfect and the live page still wrong.
 
-So after every deploy (Claude's or a manual one) of a version that changed colors, typography, or layout:
+So after every deploy (Claude's or a manual one) of a version that changed colors, typography, or layout, or added or changed a Custom `<head>` script (check every page it touches):
 
 1. **Sample what actually rendered** — look at the live page and compare the real values against the intended tokens. A screenshot plus a pixel sample is enough to catch a wrong color; reading computed styles is better where you can, after killing transitions (03): the pane freezes them, so after a light/dark switch links kept the old mode's colors. **Include font sizes:** read `getComputedStyle(el).fontSize` on a heading and a body paragraph and compare with the intended px, since a rem-based size renders at 62.5% without looking broken (quirks-doc §52). Reload the page, or come back to it from another page with a hash, to see the fresh version (a hash added to the page already open does not reload it); a query string on an article URL (`/help/<slug>?v=1`) is KO's 404 page, so it verifies the wrong page (05, "Read back and record").
 2. **If something doesn't match, enumerate the matching rules in cascade order** rather than reasoning about specificity by hand — use the **guarded** diagnostic in quirks-doc §47 (the naïve version reports a false "nothing else matches"; §47 explains why and ships the fixed snippet).

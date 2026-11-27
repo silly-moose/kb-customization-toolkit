@@ -15,7 +15,7 @@ Fix it here, not in a customer's copy: a build that finds a problem logs it to t
 
 **The editor, PDFs and print stay light.** The script sets `data-kb-theme="light"` or `"dark"` on `<html>`, and every dark rule is keyed to that attribute inside `@media screen`. The article editor and PDF exports never run Custom `<head>`, so the attribute is never set there. Never use `@media (prefers-color-scheme)` in Custom CSS: the editor loads Custom CSS and would go dark for an author whose device is dark (quirks §66).
 
-**Which mode a reader gets:** their saved choice, else the KB's default, which is the device setting unless the build fixes one. The script runs in `<head>`, so there is no flash of the wrong mode. Without a saved choice, the page follows the device when it changes. Pages shown inside another page (the help widget, the Style page preview) get the default mode and no switch.
+**Which mode a reader gets:** their saved choice, else the KB's default, which is the device setting unless the build fixes one. The script runs in `<head>`, so there is no flash of the wrong mode. Without a saved choice, the page follows the device when it changes. Pages shown inside another page (the help widget, the Style page preview) get light, or dark when the build's default is `dark`, and no switch.
 
 **The switch** is a real `<button>` with `aria-pressed`, a fixed name and visible label ("Dark mode"), a sun or moon on the knob, and a 36px target. The script adds it to the end of the top navigation's right-hand list, which sits in the menu at phone width. Choosing the default mode clears the saved choice, so the page goes back to following the device. The choice is kept per browser (`localStorage`), other open tabs follow it, and blocked storage keeps it until the page reloads.
 
@@ -34,7 +34,7 @@ Switching to light puts every author color back as written. Late content (a slid
 3. **Script.** Fetch `light-dark-mode.js` (`curl -fsSL https://raw.githubusercontent.com/silly-moose/kb-customization-toolkit/main/process-docs/light-dark-mode/light-dark-mode.js`) and put it at the **top** of Custom `<head>` inside `<script>...</script>`, above everything else, so it runs before the page draws. Don't edit it; change behavior through the settings, and log anything that needs a code change.
 4. **CSS.** Append `light-dark-mode.css` to the end of Custom CSS, after the theme layer, the accessibility layer and guided paths. Design the palette ("Designing the dark palette", below), re-point the theme layer's own tokens in the marked spot, and add the theme's own dark rules (hero, tiles, anything bespoke) at the end of the `@media screen` block, each keyed to `html[data-kb-theme="dark"]`.
 5. **Logo.** If the logo doesn't read on the dark top bar, have the customer upload a version for dark backgrounds to the live KB's File Library (the user uploads; CLAUDE-RULES, "Logo & Brand Assets") and uncomment the logo rule in the CSS with its URL. It keeps the image's size, link and alt text.
-6. **AI chatbot**, when the KB has it on: paste `chatbot-custom-css.css` into the chatbot's branding Custom CSS with the build's palette values, and list it under the CHANGES file's deploy steps, since it is saved in that window, not the Style page.
+6. **AI chatbot**, when the KB has it on: set the build's palette values in `chatbot-custom-css.css` and list it under the CHANGES file's Manual Steps: the user pastes it into the chatbot's branding Custom CSS, which is saved in that window, not the Style page.
 7. **Authors' colors.** Before the first version, count articles that set inline colors (CLAUDE-RULES, "At the Start of Each Session", step 2) and say what the script will do with them.
 8. **Check it** (below), then record in the CHANGES file which toolkit commit the files came from (`git log -1 --format=%h -- process-docs/light-dark-mode`) and any settings the build uses.
 
@@ -105,7 +105,7 @@ Tell the customer these at the start, and record them in the CHANGES file's "Not
 
 - **Images.** Photos stay as they are; article images get a white backing so transparent diagrams stay visible, which shows as a white edge on some. Screenshots of light screens stay bright.
 - **Embedded content:** PDF previews are only dimmed, and videos and other sites' embeds keep their own colors.
-- **The help widget and the Style page preview** show the default mode, not the reader's choice (setting `frames: 'follow'` changes this).
+- **The help widget and the Style page preview** show light, or dark when the build's default is `dark`, not the reader's choice (setting `frames: 'follow'` changes this).
 - **PDFs, print and the editor** are always light, by design.
 - **Authors' colors outside article bodies,** and colors set by a `<style>` block in an article (quirks §47): the script only reads inline styles.
 - **The AI chatbot embedded on the customer's own site** stays light: it can't see the KB page's mode.

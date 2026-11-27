@@ -139,6 +139,8 @@
     pcFoot: 'Only authors see this panel; readers never do. It appears on the article page (preview or published), not inside the editor.',
     untaggedTitle: 'This looks like a guided path, but it isn\'t tagged',
     untaggedBody: 'The article has guided-path structure but no "{tag}" tag, so it renders as a normal article. Add the tag {tag} in the editor\'s Tags field and re-save to activate the step-by-step experience.',
+    untaggedTitleAuto: 'This looks like a guided path, but it isn\'t one yet',
+    untaggedBodyAuto: 'The article has a step heading, so it looks like a guided path, but it renders as a normal article until it has at least two Heading 2s that start with Action:, Decision: or Judgement:.',
     /* v36 - Phase 1 strings */
     badgeLabel: 'Guided path',
     pcByName: '(matched by name)',
@@ -996,8 +998,9 @@
     /* if the article IS tagged, the bridge will add the class momentarily - don't nag */
     if (window.GuidedPaths && window.GuidedPaths.hasTag()) return;
     var n = el('div', 'gp-author-warning gp-untagged-note');
-    n.appendChild(el('strong', '', S.untaggedTitle));
-    var p = el('p', ''); p.textContent = fmt(S.untaggedBody, { tag: (window.GuidedPaths && window.GuidedPaths.tag) || 'guided-path' }); n.appendChild(p);
+    var auto = !(window.GuidedPaths && window.GuidedPaths.activate === 'tag');  /* with 'auto', a tag alone may do nothing (README) */
+    n.appendChild(el('strong', '', auto ? S.untaggedTitleAuto : S.untaggedTitle));
+    var p = el('p', ''); p.textContent = fmt(auto ? S.untaggedBodyAuto : S.untaggedBody, { tag: (window.GuidedPaths && window.GuidedPaths.tag) || 'guided-path' }); n.appendChild(p);
     host.insertBefore(n, host.firstChild);
   }
 
